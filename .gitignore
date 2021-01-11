@@ -1,0 +1,6 @@
+/.git/*
+/.vs/*
+/.Logs/*
+/.tmp.drivedownload/*
+/Library/*
+/obj/*
