@@ -101,7 +101,7 @@ namespace Virterix.AdMediation
             Chartboost.setAutoCacheAds(autocache);
         }
 
-        public override void Prepare(AdType adType, AdInstanceData adInstance = null)
+        public override void Prepare(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
             switch (adType)
             {
@@ -114,7 +114,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool Show(AdType adType, AdInstanceData adInstance = null)
+        public override bool Show(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
             if (IsReady(adType))
             {

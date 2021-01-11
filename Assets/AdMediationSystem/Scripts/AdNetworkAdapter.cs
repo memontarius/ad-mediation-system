@@ -99,7 +99,13 @@ namespace Virterix.AdMediation
         //_______________________________________________________________________________
         #region Properties
         //-------------------------------------------------------------------------------
-        string AdInstanceParametersPath
+
+        public string BannerPlacement
+        {
+            set; get;
+        } = null;
+
+        private string AdInstanceParametersPath
         {
             get
             {
@@ -191,18 +197,13 @@ namespace Virterix.AdMediation
 #endif
 
             this.enabled = false;
-            /*
-            int count = Enum.GetNames(typeof(AdType)).Length;
-            for (int i = 0; i < count; i++) {
-                SetEnabledState((AdType)i, false);
-            }*/
         }
 
         public virtual bool IsReady(AdType adType, AdInstanceData adInstance = null) { return false; }
 
-        public virtual void Prepare(AdType adType, AdInstanceData adInstance = null) { }
+        public virtual void Prepare(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME) { }
 
-        public virtual bool Show(AdType adType, AdInstanceData adInstance = null) { return false; }
+        public virtual bool Show(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME) { return false; }
 
         public virtual void Hide(AdType adType, AdInstanceData adInstance = null) { }
 
@@ -517,10 +518,10 @@ namespace Virterix.AdMediation
         protected virtual void InitializeAdInstanceData(AdInstanceData adInstance, JSONValue jsonAdInstance)
         {
             adInstance.Name = jsonAdInstance.Obj.GetString("name");
-            adInstance.ParametersName = jsonAdInstance.Obj.ContainsKey("paramName") ? jsonAdInstance.Obj.GetString("paramName") : AdInstanceData._AD_INSTANCE_DEFAULT_NAME;
+            string parametersName = jsonAdInstance.Obj.ContainsKey("param") ? jsonAdInstance.Obj.GetString("param") : AdInstanceData._AD_INSTANCE_DEFAULT_NAME;
             adInstance.m_adType = AdTypeConvert.StringToAdType(jsonAdInstance.Obj.GetString("adType"));
             adInstance.m_adID = jsonAdInstance.Obj.GetString("id");
-            adInstance.m_adInstanceParams = GetAdInstanceParams(adInstance.m_adType, adInstance.ParametersName);
+            adInstance.m_adInstanceParams = GetAdInstanceParams(adInstance.m_adType, parametersName);
             if (jsonAdInstance.Obj.ContainsKey("timeout"))
             {
                 TimeoutParams timeoutParameters = new TimeoutParams();

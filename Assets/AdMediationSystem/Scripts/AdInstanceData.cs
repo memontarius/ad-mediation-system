@@ -35,7 +35,7 @@ namespace Virterix.AdMediation
 
         public string ParametersName
         {
-            get; set;
+            get { return m_adInstanceParams != null ? m_adInstanceParams.Name : AdInstanceParameters._AD_INSTANCE_PARAMETERS_DEFAULT_NAME; }
         }
 
         public bool IsDefault
@@ -48,7 +48,7 @@ namespace Virterix.AdMediation
         public string m_adID;
         public AdNetworkAdapter.TimeoutParams? m_timeout;
         public bool m_isBannerAdTypeVisibled;
-        public Vector2 m_bannerCoordinates;
+        //public Vector2 m_bannerCoordinates;
         public AdNetworkAdapter.AdState m_state = AdNetworkAdapter.AdState.Uncertain;
         public bool m_lastAdPrepared;
         public bool m_enabledState;

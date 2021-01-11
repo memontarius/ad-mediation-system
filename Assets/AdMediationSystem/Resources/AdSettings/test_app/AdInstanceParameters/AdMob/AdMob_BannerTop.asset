@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_name: Top
   m_bannerSize: 2
-  m_bannerPosition: 1
+  m_bannerPositions:
+  - m_placementName: Top
+    m_bannerPosition: 1

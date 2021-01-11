@@ -1,18 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+#if UNITY_EDITOR
 using UnityEditor;
-using System.IO;
+#endif
 
 namespace Virterix.AdMediation
 {
     public class AdMobAdInstanceBannerParameters : AdInstanceParameters
     {
+        [Serializable]
+        public struct BannerPosition
+        {
+            public string m_placementName;
+            public AdMobAdapter.AdMobBannerPosition m_bannerPosition;
+        }
+
         public const string _AD_INSTANCE_PARAMETERS_FOLDER = "AdMob";
         public const string _PARAMETERS_FILE_NAME = "AdMob_AdInstanceBannerParameters";
 
         public AdMobAdapter.AdMobBannerSize m_bannerSize;
-        public AdMobAdapter.AdMobBannerPosition m_bannerPosition;
+        public BannerPosition[] m_bannerPositions;
 
         public override AdType AdvertiseType
         {

@@ -5,6 +5,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Boomlagoon.JSON;
+using System.Linq;
 
 #if _MS_ADMOB
 using GoogleMobileAds;
@@ -40,18 +41,6 @@ namespace Virterix.AdMediation
             BottomRight
         }
 
-        [System.Serializable]
-        public struct AdMobParameters
-        {
-            public string m_bannerUnitId;
-            public string m_interstitialUnitId;
-            public string m_rewardVideoUnitId;
-        }
-
-        [SerializeField]
-        public AdMobParameters m_defaultAndroidParams;
-        [SerializeField]
-        public AdMobParameters m_defaultIOSParams;
         public bool m_tagForChildDirectedTreatment = false;
         public Color m_adBackgoundColor = Color.gray;
         public bool m_isAddTestDevices = false;
@@ -64,7 +53,7 @@ namespace Virterix.AdMediation
                 return AdMobAdInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER;
             }
         }
-
+        
 #if _MS_ADMOB
         public class AdMobAdInstanceData : AdInstanceData
         {
@@ -77,8 +66,14 @@ namespace Virterix.AdMediation
             {
             }
 
-            public AdPosition m_bannerPosition;
-            public AdSize m_bannerSize;
+            public AdPosition GetBannerPosition(string placement)
+            {
+                AdPosition nativeBannerPosition = AdPosition.Bottom;
+                var adMobAdInstanceParams = m_adInstanceParams as AdMobAdInstanceBannerParameters;
+                var bannerPosition = adMobAdInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
+                nativeBannerPosition = ConvertToAdPosition(bannerPosition.m_bannerPosition);
+                return nativeBannerPosition;
+            }
 
             public EventHandler<EventArgs> onAdLoadedHandler;
             public EventHandler<AdFailedToLoadEventArgs> onAdFailedToLoadHandler;
@@ -147,18 +142,6 @@ namespace Virterix.AdMediation
                     appId = "";
                 }
             }
-            else
-            {
-#if UNITY_ANDROID
-                m_bannerUnitId = m_defaultAndroidParams.m_bannerUnitId;
-                m_interstitialUnitId = m_defaultAndroidParams.m_interstitialUnitId;
-                m_rewardVideoUnitId = m_defaultAndroidParams.m_rewardVideoUnitId;
-#elif UNITY_IOS
-                    m_bannerUnitId = m_defaultIOSParams.m_bannerUnitId;
-                    m_interstitialUnitId = m_defaultIOSParams.m_interstitialUnitId;
-                    m_rewardVideoUnitId = m_defaultIOSParams.m_rewardVideoUnitId;
-#endif
-            }
 
             if (IsSupported(AdType.Banner))
             {
@@ -190,7 +173,7 @@ namespace Virterix.AdMediation
         {
         }
 
-        public override void Prepare(AdType adType, AdInstanceData adInstance = null)
+        public override void Prepare(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
 
@@ -199,7 +182,7 @@ namespace Virterix.AdMediation
                 switch (adType)
                 {
                     case AdType.Banner:
-                        RequestBanner(adMobAdInstance);
+                        RequestBanner(adMobAdInstance, placement);
                         break;
                     case AdType.Interstitial:
                         RequestInterstitial(adMobAdInstance);
@@ -211,7 +194,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool Show(AdType adType, AdInstanceData adInstance = null)
+        public override bool Show(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
             bool isAdAvailable = GetAdState(adType, adMobAdInstance) == AdState.Received;
@@ -230,8 +213,11 @@ namespace Virterix.AdMediation
                         isAdAvailable = bannerView != null;
                         if (isAdAvailable)
                         {
+#if UNITY_EDITOR
+                            bannerView.Hide();
+#endif
                             bannerView.Show();
-                            bannerView.SetPosition(adMobAdInstance.m_bannerPosition);
+                            bannerView.SetPosition(adMobAdInstance.GetBannerPosition(placement));
                         }
                         break;
                     case AdType.Interstitial:
@@ -258,6 +244,8 @@ namespace Virterix.AdMediation
                     if (GetAdState(adType, adInstance) == AdState.Received)
                     {
                         BannerView bannerView = adInstance.m_adView as BannerView;
+
+                        Debug.Log("_--BANNER HIDE--_ name:" + adInstance.Name + " params:" + adInstance.ParametersName);
                         bannerView.Hide();
                     }
                     AddEvent(AdType.Banner, AdEvent.Hide, adInstance);
@@ -276,6 +264,9 @@ namespace Virterix.AdMediation
                     if (GetAdState(adType, adInstance) == AdState.Received)
                     {
                         BannerView bannerView = adInstance.m_adView as BannerView;
+
+                        Debug.Log("_--BANNER HIDE--_ name:" + adInstance.Name + " params:" + adInstance.ParametersName);
+
                         bannerView.Hide();
                     }
                     break;
@@ -286,21 +277,22 @@ namespace Virterix.AdMediation
         {
 #if UNITY_EDITOR
             return false;
-#else
-                bool isReady = GetAdState(adType, adInstance) == AdState.Received;
-                AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
-
-                switch(adType) {
-                    case AdType.Incentivized:
-                        isReady = m_rewardVideo.IsLoaded();
-                        break;
-                }
-
-                return isReady;
 #endif
+
+            bool isReady = GetAdState(adType, adInstance) == AdState.Received;
+            AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
+
+            switch (adType)
+            {
+                case AdType.Incentivized:
+                    isReady = m_rewardVideo.IsLoaded();
+                    break;
+            }
+
+            return isReady;
         }
 
-        public AdSize ConvertToAdSize(AdMobBannerSize bannerSize)
+        public static AdSize ConvertToAdSize(AdMobBannerSize bannerSize)
         {
             AdSize admobAdSize = AdSize.Banner;
 
@@ -325,7 +317,7 @@ namespace Virterix.AdMediation
             return admobAdSize;
         }
 
-        public AdPosition ConvertToAdPosition(AdMobBannerPosition bannerPosition)
+        public static AdPosition ConvertToAdPosition(AdMobBannerPosition bannerPosition)
         {
             AdPosition admobAdPosition = AdPosition.Center;
 
@@ -356,26 +348,23 @@ namespace Virterix.AdMediation
             return admobAdPosition;
         }
 
-        private void RequestBanner(AdMobAdInstanceData adInstance)
+        private void RequestBanner(AdMobAdInstanceData adInstance, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
             DestroyBanner(adInstance);
 
 #if AD_MEDIATION_DEBUG_MODE
             print("AdMobAdapter.RequestBanner() " + " AdInstance: " + adInstance.Name + " ID : " + adInstance.m_adID);
 #endif
-
             SetAdState(AdType.Banner, adInstance, AdState.Loading);
 
-            AdMobAdInstanceBannerParameters bannerParams = adInstance.m_adInstanceParams as AdMobAdInstanceBannerParameters;
-            adInstance.m_bannerSize = ConvertToAdSize(bannerParams.m_bannerSize);
-            adInstance.m_bannerPosition = ConvertToAdPosition(bannerParams.m_bannerPosition);
-
-            BannerView bannerView = new BannerView(adInstance.m_adID, adInstance.m_bannerSize, adInstance.m_bannerPosition);
+            AdMobAdInstanceBannerParameters bannerParams = adInstance.m_adInstanceParams as AdMobAdInstanceBannerParameters;  
+            AdPosition bannerPosition = adInstance.GetBannerPosition(placement);
+  
+            BannerView bannerView = new BannerView(adInstance.m_adID, ConvertToAdSize(bannerParams.m_bannerSize), bannerPosition);
             adInstance.m_adView = bannerView;
             bannerView.Hide();
 
             // Register for ad events.
-
             adInstance.onAdLoadedHandler = delegate (object sender, EventArgs args)
             {
                 HandleAdLoaded(adInstance, sender, args);
@@ -542,8 +531,13 @@ namespace Virterix.AdMediation
             BannerView bannerView = adInstance.m_adView as BannerView;
             if (adInstance.m_isBannerAdTypeVisibled)
             {
+                Debug.Log("_--BANNER SHOW--_ name:" + adInstance.Name + " params:" + adInstance.ParametersName);
+
+#if UNITY_EDITOR
+                bannerView.Hide();
+#endif
                 bannerView.Show();
-                bannerView.SetPosition(adInstance.m_bannerPosition);
+                //bannerView.SetPosition(adInstance.CurrAdPosition);
             }
             else
             {
@@ -712,6 +706,5 @@ namespace Virterix.AdMediation
         #endregion // Reward Video callback handlers
 
 #endif // _MS_ADMOB
-
     }
 } // namespace Virterix.AdMediation

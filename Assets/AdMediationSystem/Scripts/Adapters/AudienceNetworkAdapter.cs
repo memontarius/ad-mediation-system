@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Boomlagoon.JSON;
+using System.Linq;
 
 #if _MS_AUDIENCE_NETWORK
 using AudienceNetwork;
@@ -19,7 +20,6 @@ namespace Virterix.AdMediation
         public const string _INTERSTITIAL_ID_KEY = "interstitialId";
         public const string _REWARDED_ID_KEY = "rewardedId";
         public const string _BANNER_REFRESH_TIME_KEY = "bannerRefreshTime";
-        //public const string _NATIVE_REFRESH_TIME_KEY = "nativeRefreshTime";
         public const string _REFRESH_TIME_KEY = "refreshTime";
 
         public enum AudienceNetworkBannerSize
@@ -36,19 +36,6 @@ namespace Virterix.AdMediation
             Top
         }
 
-        [System.Serializable]
-        public struct AudienceNetworkIDs
-        {
-            public string m_bannerId;
-            public string m_interstitialId;
-            public string m_rewardVideoId;
-            public string m_nativeId;
-        }
-
-        [SerializeField]
-        public AudienceNetworkIDs m_defaultAndroidIds;
-        [SerializeField]
-        public AudienceNetworkIDs m_defaultIOSIds;
         [Tooltip("In Seconds")]
         public float m_defaultBannerRefreshTime = 60f;
         [Tooltip("In Seconds")]
@@ -67,7 +54,6 @@ namespace Virterix.AdMediation
         }
 
 #if _MS_AUDIENCE_NETWORK
-
         class AudienceNetworkAdInstanceData : AdInstanceData
         {
             public AudienceNetworkAdInstanceData() : base()
@@ -77,6 +63,16 @@ namespace Virterix.AdMediation
                 base(adType, adID, adInstanceName)
             {
             }
+
+            public Vector2 GetBannerPosition(string placement)
+            {
+                Vector2 nativeBannerCoordinates = Vector2.zero;
+                var adMobAdInstanceParams = m_adInstanceParams as AudienceNetworkAdInstanceBannerParameters;
+                var bannerPosition = adMobAdInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
+                nativeBannerCoordinates = CalculateBannerPosition(this, placement);
+                return nativeBannerCoordinates;
+            }
+
             public Coroutine m_procRefresh;
             public float m_refreshTime;
             public bool m_isServerValidation; // Is S2S validation
@@ -117,18 +113,6 @@ namespace Virterix.AdMediation
                 {
                     bannerRefreshTime = Convert.ToInt32(parameters[_BANNER_REFRESH_TIME_KEY]);
                 }
-            }
-            else
-            {
-#if UNITY_ANDROID
-                m_bannerId = m_defaultAndroidIds.m_bannerId;
-                m_interstitialId = m_defaultAndroidIds.m_interstitialId;
-                m_rewardVideoId = m_defaultAndroidIds.m_rewardVideoId;
-#elif UNITY_IOS
-                m_bannerId = m_defaultIOSIds.m_bannerId;
-                m_interstitialId = m_defaultIOSIds.m_interstitialId;
-                m_rewardVideoId = m_defaultIOSIds.m_rewardVideoId;
-#endif
             }
 
             if (IsSupported(AdType.Banner))
@@ -181,7 +165,7 @@ namespace Virterix.AdMediation
             return adInstance;
         }
 
-        public override void Prepare(AdType adType, AdInstanceData adInstance = null)
+        public override void Prepare(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
             AudienceNetworkAdInstanceData audienceNetworkAdInstance = adInstance as AudienceNetworkAdInstanceData;
 
@@ -190,7 +174,7 @@ namespace Virterix.AdMediation
                 switch (adType)
                 {
                     case AdType.Banner:
-                        RequestBanner(audienceNetworkAdInstance);
+                        RequestBanner(audienceNetworkAdInstance, placement);
                         break;
                     case AdType.Interstitial:
                         RequestInterstitial(audienceNetworkAdInstance);
@@ -202,7 +186,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool Show(AdType adType, AdInstanceData adInstance = null)
+        public override bool Show(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
             AudienceNetworkAdInstanceData audienceNetworkAdInstance = adInstance == null ? null : adInstance as AudienceNetworkAdInstanceData;
 
@@ -211,11 +195,11 @@ namespace Virterix.AdMediation
             {
                 case AdType.Banner:
                     audienceNetworkAdInstance.m_isBannerAdTypeVisibled = true;
-
                     if (GetAdState(adType, audienceNetworkAdInstance) == AdState.Received)
                     {
                         AdView bannerView = audienceNetworkAdInstance.m_adView as AdView;
-                        Vector2 bannerPosition = audienceNetworkAdInstance.m_bannerCoordinates;
+                        Vector2 bannerPosition = CalculateBannerPosition(audienceNetworkAdInstance, placement);
+
                         isShowSuccessful = bannerView.Show(bannerPosition.x, bannerPosition.y);
                         if (isShowSuccessful)
                         {
@@ -307,7 +291,7 @@ namespace Virterix.AdMediation
             return isReady;
         }
 
-        AdSize ConvertToAdSize(AudienceNetworkBannerSize bannerSize)
+        private AdSize ConvertToAdSize(AudienceNetworkBannerSize bannerSize)
         {
             AdSize nativeAdSize = AdSize.BANNER_HEIGHT_50;
             switch (bannerSize)
@@ -325,10 +309,15 @@ namespace Virterix.AdMediation
             return nativeAdSize;
         }
 
-        void CalculateBannerPosition(AudienceNetworkAdInstanceData adInstance)
+        private static Vector2 CalculateBannerPosition(AudienceNetworkAdInstanceData adInstance, string placement)
         {
+#if UNITY_EDITOR
+            return Vector2.zero;
+#endif
+            Vector2 bannerCoordinates = Vector2.zero;
             float bannerHight = 0;
             AudienceNetworkAdInstanceBannerParameters adInstanceParams = adInstance.m_adInstanceParams as AudienceNetworkAdInstanceBannerParameters;
+            var bannerPosition = adInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
 
             switch (adInstanceParams.m_bannerSize)
             {
@@ -343,14 +332,12 @@ namespace Virterix.AdMediation
                     break;
             }
 
-            Vector2 bannerCoordinates = Vector2.zero;
-
-            switch (adInstanceParams.m_bannerPosition)
+            switch (bannerPosition.m_bannerPosition)
             {
                 case AudienceNetworkBannerPosition.Bottom:
                     bannerCoordinates.x = 0f;
-#if UNITY_IOS || UNITY_ANDROID && !UNITY_EDITOR
-                        bannerCoordinates.y = (float)AudienceNetwork.Utility.AdUtility.Height() - bannerHight;
+#if UNITY_IOS || UNITY_ANDROID
+                    bannerCoordinates.y = (float)AudienceNetwork.Utility.AdUtility.Height() - bannerHight;
 #endif
                     break;
                 case AudienceNetworkBannerPosition.Top:
@@ -358,8 +345,7 @@ namespace Virterix.AdMediation
                     bannerCoordinates.y = 0f;
                     break;
             }
-
-            adInstance.m_bannerCoordinates = bannerCoordinates;
+            return bannerCoordinates;
         }
 
         IEnumerator ProcRefreshBannerAdType(AdType adType, AudienceNetworkAdInstanceData adInstance, float refreshTime)
@@ -393,12 +379,9 @@ namespace Virterix.AdMediation
             }
         }
 
-        void RequestBanner(AudienceNetworkAdInstanceData adInstance)
+        void RequestBanner(AudienceNetworkAdInstanceData adInstance, string placement)
         {
             DestroyBanner(adInstance);
-
-            CalculateBannerPosition(adInstance);
-
             SetAdState(AdType.Banner, adInstance, AdState.Loading);
 
             adInstance.m_procRefresh = StartCoroutine(ProcRefreshBannerAdType(AdType.Banner, adInstance, adInstance.m_refreshTime));
@@ -410,22 +393,27 @@ namespace Virterix.AdMediation
                 return;
             }
 
-#if UNITY_IOS || UNITY_ANDROID && !UNITY_EDITOR
-                AudienceNetworkAdInstanceBannerParameters adInstanceParams = adInstance.m_adInstanceParams as AudienceNetworkAdInstanceBannerParameters;
-                AdView bannerView = new AdView(adInstance.m_adID, ConvertToAdSize(adInstanceParams.m_bannerSize));
-                adInstance.m_adView = bannerView;
-                bannerView.Register(this.gameObject);
- 
-                bannerView.AdViewDidLoad += delegate { BannerAdViewDidLoad(adInstance); };
-                bannerView.AdViewDidFailWithError += delegate(string error) { BannerAdViewDidFailWithError(adInstance, error); };
-                bannerView.AdViewWillLogImpression += delegate { BannerAdViewWillLogImpression(adInstance); };
-                bannerView.AdViewDidClick += delegate { BannerAdViewDidClick(adInstance); };
-                bannerView.LoadAd();
+#if UNITY_EDITOR
+            return;
+#endif
+
+#if UNITY_IOS || UNITY_ANDROID
+            AudienceNetworkAdInstanceBannerParameters adInstanceParams = adInstance.m_adInstanceParams as AudienceNetworkAdInstanceBannerParameters;
+            AdView bannerView = new AdView(adInstance.m_adID, ConvertToAdSize(adInstanceParams.m_bannerSize));
+            adInstance.m_adView = bannerView;
+            bannerView.Register(this.gameObject);
+
+            bannerView.AdViewDidLoad += delegate { BannerAdViewDidLoad(adInstance, placement); };
+            bannerView.AdViewDidFailWithError += delegate (string error) { BannerAdViewDidFailWithError(adInstance, error); };
+            bannerView.AdViewWillLogImpression += delegate { BannerAdViewWillLogImpression(adInstance); };
+            bannerView.AdViewDidClick += delegate { BannerAdViewDidClick(adInstance); };
+            bannerView.LoadAd();
+#endif
 
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("AudienceNetworkAdapter.RequestBanner()");
+            Debug.Log("AudienceNetworkAdapter.RequestBanner()");
 #endif
-#endif
+
         }
 
         void DestroyBanner(AudienceNetworkAdInstanceData adInstance)
@@ -464,7 +452,12 @@ namespace Virterix.AdMediation
         {
             DestroyInterstitial(adInstance);
             SetAdState(AdType.Interstitial, adInstance, AdState.Loading);
-#if UNITY_IOS || UNITY_ANDROID && !UNITY_EDITOR
+
+#if UNITY_EDITOR
+            return;
+#endif
+
+#if UNITY_IOS || UNITY_ANDROID
             InterstitialAd interstitialAd = new InterstitialAd(adInstance.m_adID);
             interstitialAd.Register(this.gameObject);
 
@@ -476,10 +469,10 @@ namespace Virterix.AdMediation
             // Initiate the request to load the ad.
             interstitialAd.LoadAd();
             adInstance.m_adView = interstitialAd;
+#endif
 
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AudienceNetworkAdapter.RequestInterstitial()");
-#endif
 #endif
         }
 
@@ -522,27 +515,33 @@ namespace Virterix.AdMediation
             Debug.Log("AudienceNetworkAdapter.RequestRewardVideo()");
 #endif
 
-#if UNITY_IOS || UNITY_ANDROID && !UNITY_EDITOR
-                RewardedVideoAd rewardVideo = new RewardedVideoAd(adInstance.m_adID);
-                adInstance.m_adView = rewardVideo;
-                rewardVideo.Register(this.gameObject);
+#if UNITY_EDITOR
+            return;
+#endif
 
-                rewardVideo.RewardedVideoAdDidLoad += delegate { RewardedVideoAdDidLoad(adInstance); };
-                rewardVideo.RewardedVideoAdDidFailWithError += delegate(string error) { RewardedVideoAdDidFailWithError(adInstance, error); };
-                rewardVideo.RewardedVideoAdDidClick += delegate { RewardedVideoAdDidClick(adInstance); };
-                rewardVideo.RewardedVideoAdDidClose += delegate { RewardedVideoAdDidClose(adInstance); };
+#if UNITY_IOS || UNITY_ANDROID
+            RewardedVideoAd rewardVideo = new RewardedVideoAd(adInstance.m_adID);
+            adInstance.m_adView = rewardVideo;
+            rewardVideo.Register(this.gameObject);
 
-                if (adInstance.m_isServerValidation) {
-                    // For S2S validation you need to register the following two callback
-                    rewardVideo.RewardedVideoAdDidSucceed += delegate { RewardedVideoAdDidSucceed(adInstance); };
-                    rewardVideo.RewardedVideoAdDidFail += delegate { RewardedVideoAdDidFail(adInstance); };
-                }
-                else {
-                    rewardVideo.RewardedVideoAdComplete += delegate { RewardedVideoAdComplete(adInstance); };
-                }
-                    
-                // Initiate the request to load the ad.
-                rewardVideo.LoadAd();
+            rewardVideo.RewardedVideoAdDidLoad += delegate { RewardedVideoAdDidLoad(adInstance); };
+            rewardVideo.RewardedVideoAdDidFailWithError += delegate (string error) { RewardedVideoAdDidFailWithError(adInstance, error); };
+            rewardVideo.RewardedVideoAdDidClick += delegate { RewardedVideoAdDidClick(adInstance); };
+            rewardVideo.RewardedVideoAdDidClose += delegate { RewardedVideoAdDidClose(adInstance); };
+
+            if (adInstance.m_isServerValidation)
+            {
+                // For S2S validation you need to register the following two callback
+                rewardVideo.RewardedVideoAdDidSucceed += delegate { RewardedVideoAdDidSucceed(adInstance); };
+                rewardVideo.RewardedVideoAdDidFail += delegate { RewardedVideoAdDidFail(adInstance); };
+            }
+            else
+            {
+                rewardVideo.RewardedVideoAdComplete += delegate { RewardedVideoAdComplete(adInstance); };
+            }
+
+            // Initiate the request to load the ad.
+            rewardVideo.LoadAd();
 #endif
         }
 
@@ -581,7 +580,7 @@ namespace Virterix.AdMediation
         //------------------------------------------------------------------------
         #region Banner callback handlers
 
-        void BannerAdViewDidLoad(AudienceNetworkAdInstanceData adInstance)
+        void BannerAdViewDidLoad(AudienceNetworkAdInstanceData adInstance, string placement)
         {
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AudienceNetworkAdapter.BannerAdViewDidLoad() adInstanceName:" + adInstance.Name);
@@ -592,7 +591,7 @@ namespace Virterix.AdMediation
             {
                 AudienceNetworkAdInstanceBannerParameters adInstanceParams = adInstance.m_adInstanceParams as AudienceNetworkAdInstanceBannerParameters;
                 AdView bannerView = adInstance.m_adView as AdView;
-                Vector2 bannerPosition = adInstance.m_bannerCoordinates;
+                Vector2 bannerPosition = CalculateBannerPosition(adInstance, placement);
                 bool success = bannerView.Show(bannerPosition.x, bannerPosition.y);
             }
 

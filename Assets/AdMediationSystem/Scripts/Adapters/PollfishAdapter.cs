@@ -168,7 +168,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override void Prepare(AdType adType, AdInstanceData adInstance = null)
+        public override void Prepare(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
             if (GetAdState(adType, null) != AdState.Loading)
             {
@@ -181,7 +181,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool Show(AdType adType, AdInstanceData adInstance = null)
+        public override bool Show(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
             if (IsReady(adType))
             {

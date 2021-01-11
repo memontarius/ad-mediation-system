@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e13d8dc32e2c0941a669685f602cf0a, type: 3}
   m_Name: AdMob_BannerDefault
   m_EditorClassIdentifier: 
-  m_placementName: Default
+  m_name: Default
   m_bannerSize: 0
-  m_bannerPosition: 4
+  m_bannerPositions:
+  - m_placementName: Default
+    m_bannerPosition: 4
+  - m_placementName: Top
+    m_bannerPosition: 1

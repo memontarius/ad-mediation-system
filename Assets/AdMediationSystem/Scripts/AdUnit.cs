@@ -174,7 +174,7 @@ namespace Virterix.AdMediation
             bool showed = false;
             if (IsEnabled)
             {
-                showed = m_network.Show(m_adapterAdType, AdInstance);
+                showed = m_network.Show(m_adapterAdType, AdInstance, PlacementName);
             }
             Impressions = showed ? Impressions + 1 : Impressions;
             m_wasLastImpressionSuccessful = showed;
@@ -204,7 +204,7 @@ namespace Virterix.AdMediation
 
         public void PrepareAd()
         {
-            m_network.Prepare(m_adapterAdType, AdInstance);
+            m_network.Prepare(m_adapterAdType, AdInstance, PlacementName);
         }
 
         public void ResetAd()

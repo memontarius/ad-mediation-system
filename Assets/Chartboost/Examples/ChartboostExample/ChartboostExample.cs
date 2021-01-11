@@ -325,7 +325,6 @@ public class ChartboostExample: MonoBehaviour
 		}
 	}
 
-
 	void LayoutAgeGate(int windowID)
 	{
 		GUILayout.Space(BANNER_HEIGHT);

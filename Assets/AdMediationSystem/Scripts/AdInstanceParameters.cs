@@ -14,9 +14,9 @@ namespace Virterix.AdMediation
 
     public class AdInstanceParameters : ScriptableObject, IAdInstanceParameters
     {
-        public const string _ADINSTANCE_PARAMETERS_DEFAULT_NAME = "Default";
+        public const string _AD_INSTANCE_PARAMETERS_DEFAULT_NAME = "Default";
         [SerializeField]
-        private string m_name = _ADINSTANCE_PARAMETERS_DEFAULT_NAME;
+        private string m_name = _AD_INSTANCE_PARAMETERS_DEFAULT_NAME;
 
         public virtual AdType AdvertiseType
         {

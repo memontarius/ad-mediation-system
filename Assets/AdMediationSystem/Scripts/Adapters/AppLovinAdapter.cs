@@ -45,7 +45,7 @@ namespace Virterix.AdMediation
             {
                 if (!parameters.TryGetValue("sdkKey", out sdkKey))
                 {
-                    sdkKey = "StxIgPTR5H-CHX-VolnxtbADt94m_rWShRlMsIpxan8sJ6M6s72ikCxaM_KLqsoWIXu8rg4PSCGnJcu9lwtS7o";
+                    sdkKey = "";
                 }
 
                 parameters.TryGetValue("interstitialId", out _interstitialAdUnitId);
@@ -174,9 +174,8 @@ namespace Virterix.AdMediation
             return isReady;
         }
 
-        public override void Prepare(AdType adType, AdInstanceData adInstance = null)
+        public override void Prepare(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
-
 #if UNITY_ANDROID || UNITY_IOS
             if (!IsReady(adType))
             {
@@ -197,7 +196,7 @@ namespace Virterix.AdMediation
 #endif
         }
 
-        public override bool Show(AdType adType, AdInstanceData adInstance = null)
+        public override bool Show(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
             bool success = false;
             if (IsReady(adType))
