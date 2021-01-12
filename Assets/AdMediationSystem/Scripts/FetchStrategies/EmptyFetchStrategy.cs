@@ -20,5 +20,10 @@ namespace Virterix.AdMediation
         public void Reset(AdMediator mediator, AdUnit unit)
         {
         }
+
+        public AdUnit FetchFromTier(AdUnit[] units)
+        {
+            return null;
+        }
     }
 } // namespace Virterix.AdMediation

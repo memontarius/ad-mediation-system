@@ -19,8 +19,5 @@ MonoBehaviour:
   - _name: 
     _androidId: 
     _iosId: 
-  - _name: 
-    _androidId: 
-    _iosId: 
   _interstitialUnits: []
   _rewardUnits: []

@@ -6,7 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Boomlagoon.JSON;
+#if UNITY_ANDROID || UNITY_IPHONE
 using AppLovinMax;
+#endif
 
 namespace Virterix.AdMediation
 {

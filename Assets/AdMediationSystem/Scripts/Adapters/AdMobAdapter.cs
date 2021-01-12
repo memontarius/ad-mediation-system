@@ -244,8 +244,6 @@ namespace Virterix.AdMediation
                     if (GetAdState(adType, adInstance) == AdState.Received)
                     {
                         BannerView bannerView = adInstance.m_adView as BannerView;
-
-                        Debug.Log("_--BANNER HIDE--_ name:" + adInstance.Name + " params:" + adInstance.ParametersName);
                         bannerView.Hide();
                     }
                     AddEvent(AdType.Banner, AdEvent.Hide, adInstance);
@@ -264,9 +262,6 @@ namespace Virterix.AdMediation
                     if (GetAdState(adType, adInstance) == AdState.Received)
                     {
                         BannerView bannerView = adInstance.m_adView as BannerView;
-
-                        Debug.Log("_--BANNER HIDE--_ name:" + adInstance.Name + " params:" + adInstance.ParametersName);
-
                         bannerView.Hide();
                     }
                     break;
@@ -531,8 +526,6 @@ namespace Virterix.AdMediation
             BannerView bannerView = adInstance.m_adView as BannerView;
             if (adInstance.m_isBannerAdTypeVisibled)
             {
-                Debug.Log("_--BANNER SHOW--_ name:" + adInstance.Name + " params:" + adInstance.ParametersName);
-
 #if UNITY_EDITOR
                 bannerView.Hide();
 #endif

@@ -257,5 +257,13 @@ namespace Virterix.AdMediation
                 }
             }
         }
+
+
+
+
+        public AdUnit FetchFromTier(AdUnit[] units)
+        {
+            return units[0];
+        }
     }
 } // namespace Virterix.AdMediation

@@ -74,6 +74,7 @@ namespace Virterix.AdMediation
 
         private void OnEnable()
         {
+#if UNITY_ANDROID || UNITY_IOS
             Pollfish.surveyCompletedEvent += surveyCompleted;
             Pollfish.surveyOpenedEvent += surveyOpened;
             Pollfish.surveyClosedEvent += surveyClosed;
@@ -81,12 +82,14 @@ namespace Virterix.AdMediation
             Pollfish.surveyNotAvailableEvent += surveyNotAvailable;
             Pollfish.userNotEligibleEvent += userNotEligible;
             Pollfish.userRejectedSurveyEvent += userRejectedSurvey;
+#endif
         }
 
         private new void OnDisable()
         {
             base.OnDisable();
 
+#if UNITY_ANDROID || UNITY_IOS
             Pollfish.surveyCompletedEvent -= surveyCompleted;
             Pollfish.surveyOpenedEvent -= surveyOpened;
             Pollfish.surveyClosedEvent -= surveyClosed;
@@ -94,6 +97,7 @@ namespace Virterix.AdMediation
             Pollfish.surveyNotAvailableEvent -= surveyNotAvailable;
             Pollfish.userNotEligibleEvent -= userNotEligible;
             Pollfish.userRejectedSurveyEvent -= userRejectedSurvey;
+#endif
 
             if (m_procAutoPrepereSurvey != null)
             {
@@ -320,7 +324,7 @@ namespace Virterix.AdMediation
         }
 
         //------------------------------------------------------------------------
-        #region Pollfish callback
+            #region Pollfish callback
 
         private void surveyCompleted(string surveyInfo)
         {
@@ -439,10 +443,10 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Incentivized, AdEvent.PrepareFailure);
         }
 
-        #endregion // Pollfish callback
+            #endregion // Pollfish callback
 
 #endif // _MS_POLLFISH
 
-    }
-} // namespace Virterix.AdMediation
+        }
+    } // namespace Virterix.AdMediation
 

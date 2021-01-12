@@ -24,5 +24,7 @@ namespace Virterix.AdMediation
         /// <param name="unit">New current ad unit</param>
         void Reset(AdMediator mediator, AdUnit unit);
         bool IsAllowAutoFillUnits();
+
+        AdUnit FetchFromTier(AdUnit[] units);
     }
 } // namespace Virterix.AdMediation

@@ -38,9 +38,7 @@ namespace Virterix.AdMediation
 
         [Tooltip("In Seconds")]
         public float m_defaultBannerRefreshTime = 60f;
-        [Tooltip("In Seconds")]
-        public float m_defaultNativeRefreshTime = 60f;
-
+ 
         public bool m_isDefaultServerValidation;
         public bool m_isAddTestDevices = false;
         public string m_testDeviceId;
@@ -73,7 +71,7 @@ namespace Virterix.AdMediation
                 return nativeBannerCoordinates;
             }
 
-            public Coroutine m_procRefresh;
+            public Coroutine m_coroutineRefresh;
             public float m_refreshTime;
             public bool m_isServerValidation; // Is S2S validation
         }
@@ -92,8 +90,7 @@ namespace Virterix.AdMediation
             base.InitializeParameters(parameters, jsonAdInstances);
 
             float bannerRefreshTime = m_defaultBannerRefreshTime;
-            float nativeRefreshTime = m_defaultNativeRefreshTime;
-
+   
             if (parameters != null)
             {
                 if (!parameters.TryGetValue(_BANNER_ID_KEY, out m_bannerId))
@@ -348,7 +345,7 @@ namespace Virterix.AdMediation
             return bannerCoordinates;
         }
 
-        IEnumerator ProcRefreshBannerAdType(AdType adType, AudienceNetworkAdInstanceData adInstance, float refreshTime)
+        private IEnumerator CoroutineRefreshBanner(AdType adType, AudienceNetworkAdInstanceData adInstance, float refreshTime)
         {
             float lifeTime = 0.0f;
             float period = 0.5f;
@@ -370,6 +367,7 @@ namespace Virterix.AdMediation
                             lifeTime = 0.0f;
                             if (adInstance.m_adView != null)
                             {
+                                SetAdState(AdType.Banner, adInstance, AdState.Loading);
                                 AdView adView = adInstance.m_adView as AdView;
                                 adView.LoadAd();
                             }
@@ -379,12 +377,27 @@ namespace Virterix.AdMediation
             }
         }
 
+        private void StartRefreshBannerProcess(AudienceNetworkAdInstanceData adInstance)
+        {
+            StopRefreshBannerProcess(adInstance);
+            adInstance.m_coroutineRefresh = StartCoroutine(CoroutineRefreshBanner(AdType.Banner, adInstance, adInstance.m_refreshTime));
+        }
+
+        private void StopRefreshBannerProcess(AudienceNetworkAdInstanceData adInstance)
+        {
+            if (adInstance.m_coroutineRefresh != null)
+            {
+                StopCoroutine(adInstance.m_coroutineRefresh);
+                adInstance.m_coroutineRefresh = null;
+            }
+        }
+
         void RequestBanner(AudienceNetworkAdInstanceData adInstance, string placement)
         {
             DestroyBanner(adInstance);
             SetAdState(AdType.Banner, adInstance, AdState.Loading);
 
-            adInstance.m_procRefresh = StartCoroutine(ProcRefreshBannerAdType(AdType.Banner, adInstance, adInstance.m_refreshTime));
+            //StartRefreshBannerProcess(adInstance);
 
             if (adInstance.m_adView != null)
             {
@@ -418,11 +431,7 @@ namespace Virterix.AdMediation
 
         void DestroyBanner(AudienceNetworkAdInstanceData adInstance)
         {
-            if (adInstance.m_procRefresh != null)
-            {
-                StopCoroutine(adInstance.m_procRefresh);
-                adInstance.m_procRefresh = null;
-            }
+            StopRefreshBannerProcess(adInstance);
 
             if (adInstance.m_adView != null)
             {

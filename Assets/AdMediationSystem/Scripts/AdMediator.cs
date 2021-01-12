@@ -120,11 +120,14 @@ namespace Virterix.AdMediation
 
         private AdUnit[] m_units;
         private List<AdUnit> m_fetchUnits = new List<AdUnit>();
+
+        private List<AdUnit[]> m_tiers;
+
         protected AdUnit m_currUnit;
         private int m_lastActiveUnitId;
         private bool m_isBannerTypeAdViewDisplayed = false;
-        private Coroutine m_procWaitNetworkPrepare;
-        private Coroutine m_procDeferredFetch;
+        private Coroutine m_coroutineWaitNetworkPrepare;
+        private Coroutine m_coroutineDeferredFetch;
 
         //===============================================================================
         #region MonoBehavior Methods
@@ -157,8 +160,12 @@ namespace Virterix.AdMediation
         /// <summary>
         /// Should be called only once when initialize
         /// </summary>
-        public void Initialize(AdUnit[] units)
+        public void Initialize(AdUnit[] units, List<AdUnit[]> tiers)
         {
+            m_tiers = tiers;
+
+            Debug.Log("_________________ " + m_tiers.ToString());
+
             m_units = units;
             m_lastActiveUnitId = -1;
             int index = 0;
@@ -194,13 +201,14 @@ namespace Virterix.AdMediation
                 FillFetchUnits(true);
             }
 
-            if (m_procDeferredFetch != null)
+            if (m_coroutineDeferredFetch != null)
             {
-                StopCoroutine(m_procDeferredFetch);
-                m_procDeferredFetch = null;
+                StopCoroutine(m_coroutineDeferredFetch);
+                m_coroutineDeferredFetch = null;
             }
 
-            AdUnit unit = FetchUnits.Count == 0 ? null : m_fetchStrategy.Fetch(this, FetchUnits.ToArray());
+            //AdUnit unit = FetchUnits.Count == 0 ? null : m_fetchStrategy.Fetch(this, FetchUnits.ToArray());
+            AdUnit unit = FetchUnits.Count == 0 ? null : m_fetchStrategy.FetchFromTier(m_tiers[0]);
 
             if (unit != null)
             {
@@ -392,7 +400,7 @@ namespace Virterix.AdMediation
         {
             CancelWaitNetworkPrepare();
             float waitingTime = unit.FetchStrategyParams.m_waitingResponseTime;
-            m_procWaitNetworkPrepare = StartCoroutine(WaitingNetworkPrepare(unit, waitingTime));
+            m_coroutineWaitNetworkPrepare = StartCoroutine(WaitingNetworkPrepare(unit, waitingTime));
             unit.PrepareAd();
         }
 
@@ -430,17 +438,17 @@ namespace Virterix.AdMediation
         private IEnumerator DeferredFetch(float delay)
         {
             yield return new WaitForSecondsRealtime(delay);
-            m_procDeferredFetch = null;
+            m_coroutineDeferredFetch = null;
             Fetch();
             yield return null;
         }
 
         private void CancelWaitNetworkPrepare()
         {
-            if (m_procWaitNetworkPrepare != null)
+            if (m_coroutineWaitNetworkPrepare != null)
             {
-                StopCoroutine(m_procWaitNetworkPrepare);
-                m_procWaitNetworkPrepare = null;
+                StopCoroutine(m_coroutineWaitNetworkPrepare);
+                m_coroutineWaitNetworkPrepare = null;
             }
         }
 
@@ -564,11 +572,11 @@ namespace Virterix.AdMediation
 
                         if (m_deferredFetchDelay >= 0.0f)
                         {
-                            if (m_procDeferredFetch != null)
+                            if (m_coroutineDeferredFetch != null)
                             {
-                                StopCoroutine(m_procDeferredFetch);
+                                StopCoroutine(m_coroutineDeferredFetch);
                             }
-                            m_procDeferredFetch = StartCoroutine(DeferredFetch(m_deferredFetchDelay));
+                            m_coroutineDeferredFetch = StartCoroutine(DeferredFetch(m_deferredFetchDelay));
                         }
                     }
                     else

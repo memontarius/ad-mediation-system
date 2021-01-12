@@ -22,6 +22,11 @@ namespace Virterix.AdMediation
             return true;
         }
 
+        public AdUnit FetchFromTier(AdUnit[] units)
+        {
+            return null;
+        }
+
         public AdUnit Fetch(AdMediator mediator, AdUnit[] units)
         {
             AdUnit unit = null;

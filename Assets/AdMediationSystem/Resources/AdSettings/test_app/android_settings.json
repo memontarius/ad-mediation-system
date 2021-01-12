@@ -8,24 +8,18 @@
             "strategy":
 			{
 				"type":"sequence",
-				"units":[
+				"tiers": [
 					[
 						{ "network":"admob", "instance":"BannerHighCpm" },
-						{ "network":"audienceNetwork", "instance":"BannerHighCpm" }
-						{ "network":"unity", "instance":"BannerHighCpm" }
+						{ "network":"admob", "replaced":true }
 					],
 					[
-						{ "network":"admob", "instance":"BannerMidCpm" },
-						{ "network":"audienceNetwork", "instance":"BannerMidCpm" }
-						{ "network":"unity", "instance":"BannerMidCpm" }
-					],
-					[
-						{ "network":"admob" },
-						{ "network":"audienceNetwork" }
-						{ "network":"unity" }
+						{ "network":"audienceNetwork", "instance":"BannerHighCpm" },
+						{ "network":"audienceNetwork", "replaced":true }
 					]
-					
-					
+				],
+				"units":[
+					{ "network":"admob", "instance":"BannerHighCpm", "ifShowedSkipNextUnit":"admob" },
 					{ "network":"admob" },
 					{ "network":"audienceNetwork", "instance":"BannerHighCpm", "ifShowedSkipNextUnit":"audienceNetwork" },
 					{ "network":"audienceNetwork" }
@@ -49,29 +43,26 @@
             "strategy":
 			{
 				"type":"sequence",
-				"units":[
+				"tiers": [
 					[
 						{ "network":"admob", "instance":"InterstitialHighCpm" },
 						{ "network":"audienceNetwork", "instance":"InterstitialHighCpm" },
-						{ "network":"unity", "instance":"InterstitialHighCpm" }
+						{ "network":"unity", "instance":"InterstitialHighCpm" },
+						{ "network":"admob", "replaced":true }
 					],
 					[
 						{ "network":"admob", "instance":"InterstitialMidCpm" },
-						{ "network":"audienceNetwork", "instance":"InterstitialMidCpm" }
-						{ "network":"unity", "instance":"InterstitialMidCpm" }
+						{ "network":"audienceNetwork", "instance":"InterstitialMidCpm" },
+						{ "network":"unity", "instance":"InterstitialMidCpm" },
+						{ "network":"audienceNetwork", "replaced":true}
 					],
 					[
-						{ "network":"admob" },
-						{ "network":"audienceNetwork" }
 						{ "network":"unity" },
 						{ "network":"applovin" },
 						{ "network":"chartboost" }
 					]
-					
-					{ "network":"admob", "instance":["InterstitialHighCpm","InterstitialMidCpm","Default"]},
-					
-					
-				
+				],		
+				"units":[
 					{ "network":"admob", "instance":"InterstitialHighCpm", "ifShowedSkipNextUnit":"admob", "prepareWhenChangeNetwork":false },
 					{ "network":"admob" },
 					{ "network":"audienceNetwork", "instance":"InterstitialHighCpm", "ifShowedSkipNextUnit":"audienceNetwork" },
@@ -138,6 +129,12 @@
 					"adType":"interstitial",
 					"id":"ca-app-pub-1726624045989422/1675135716",
 					"timeout":240
+				},
+				{
+					"name":"InterstitialMidCpm",
+					"adType":"interstitial",
+					"id":"ca-app-pub-1726624045989422/1675135716",
+					"timeout":240
 				}
 			]
         },
@@ -167,7 +164,12 @@
 				},
 				{
 					"name":"InterstitialHighCpm",
-					"param":"Default",
+					"adType":"interstitial",
+					"id":"932838540097052_1545958872118346",
+					"timeout":240
+				},
+				{
+					"name":"InterstitialMidCpm",
 					"adType":"interstitial",
 					"id":"932838540097052_1545958872118346",
 					"timeout":240
