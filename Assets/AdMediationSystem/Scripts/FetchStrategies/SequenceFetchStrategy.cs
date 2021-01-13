@@ -258,12 +258,21 @@ namespace Virterix.AdMediation
             }
         }
 
-
-
+        private int m_currTierUnitIndex;
 
         public AdUnit FetchFromTier(AdUnit[] units)
         {
-            return units[0];
+            if (m_currTierUnitIndex >= units.Length)
+            {
+                m_currTierUnitIndex = 0;
+            }
+
+            AdUnit fetchedUnit = units[m_currTierUnitIndex];
+
+            Debug.Log("----------------- " + m_currTierUnitIndex + " " + fetchedUnit.AdNetwork.m_networkName);
+
+            m_currTierUnitIndex++;
+            return fetchedUnit;
         }
     }
 } // namespace Virterix.AdMediation

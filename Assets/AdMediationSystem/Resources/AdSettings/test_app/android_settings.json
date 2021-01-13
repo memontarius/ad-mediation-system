@@ -47,17 +47,17 @@
 					[
 						{ "network":"admob", "instance":"InterstitialHighCpm" },
 						{ "network":"audienceNetwork", "instance":"InterstitialHighCpm" },
-						{ "network":"unity", "instance":"InterstitialHighCpm" },
+						{ "network":"unityads" },
 						{ "network":"admob", "replaced":true }
 					],
 					[
 						{ "network":"admob", "instance":"InterstitialMidCpm" },
 						{ "network":"audienceNetwork", "instance":"InterstitialMidCpm" },
-						{ "network":"unity", "instance":"InterstitialMidCpm" },
+						{ "network":"unityads", "instance":"InterstitialMidCpm" },
 						{ "network":"audienceNetwork", "replaced":true}
 					],
 					[
-						{ "network":"unity" },
+						{ "network":"unityads" },
 						{ "network":"applovin" },
 						{ "network":"chartboost" }
 					]

@@ -164,8 +164,6 @@ namespace Virterix.AdMediation
         {
             m_tiers = tiers;
 
-            Debug.Log("_________________ " + m_tiers.ToString());
-
             m_units = units;
             m_lastActiveUnitId = -1;
             int index = 0;
@@ -208,7 +206,7 @@ namespace Virterix.AdMediation
             }
 
             //AdUnit unit = FetchUnits.Count == 0 ? null : m_fetchStrategy.Fetch(this, FetchUnits.ToArray());
-            AdUnit unit = FetchUnits.Count == 0 ? null : m_fetchStrategy.FetchFromTier(m_tiers[0]);
+            AdUnit unit = m_fetchStrategy.FetchFromTier(m_tiers[0]);
 
             if (unit != null)
             {
