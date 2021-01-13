@@ -122,12 +122,14 @@ namespace Virterix.AdMediation
         private List<AdUnit> m_fetchUnits = new List<AdUnit>();
 
         private List<AdUnit[]> m_tiers;
+        private int m_totalUnits;
 
         protected AdUnit m_currUnit;
         private int m_lastActiveUnitId;
         private bool m_isBannerTypeAdViewDisplayed = false;
         private Coroutine m_coroutineWaitNetworkPrepare;
         private Coroutine m_coroutineDeferredFetch;
+       
 
         //===============================================================================
         #region MonoBehavior Methods
@@ -163,6 +165,11 @@ namespace Virterix.AdMediation
         public void Initialize(AdUnit[] units, List<AdUnit[]> tiers)
         {
             m_tiers = tiers;
+
+            for(int i = 0; i < m_tiers.Count; i++)
+            {
+                m_totalUnits += m_tiers[i].Length;
+            }
 
             m_units = units;
             m_lastActiveUnitId = -1;
@@ -206,7 +213,7 @@ namespace Virterix.AdMediation
             }
 
             //AdUnit unit = FetchUnits.Count == 0 ? null : m_fetchStrategy.Fetch(this, FetchUnits.ToArray());
-            AdUnit unit = m_fetchStrategy.FetchFromTier(m_tiers[0]);
+            AdUnit unit = m_fetchStrategy.Fetch(m_tiers, m_totalUnits);
 
             if (unit != null)
             {

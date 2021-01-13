@@ -113,7 +113,9 @@ namespace Virterix.AdMediation
 
         public bool WasLastImpressionSuccessful
         {
-            get { return m_wasLastImpressionSuccessful; }
+            get {
+                return true;
+                return m_wasLastImpressionSuccessful; }
         }
         bool m_wasLastImpressionSuccessful;
 
@@ -136,6 +138,14 @@ namespace Virterix.AdMediation
             }
         }
         float m_displayTime;
+
+        public bool IsTimeout
+        {
+            get
+            {
+                return AdNetwork.IsTimeout(AdapterAdType, AdInstance);
+            }
+        }
 
         private float StartImpressionTime
         {

@@ -412,20 +412,20 @@ namespace Virterix.AdMediation
         #region Other internal methods
         //-------------------------------------------------------------------------------
 
-        void CalculateAndSaveSettingsHash(string settings)
+        private void CalculateAndSaveSettingsHash(string settings)
         {
             string hash = AdUtils.GetHash(settings);
             string encodedHash = CryptString.Encode(hash, m_hashCryptKey);
             PlayerPrefs.SetString(_HASH_SAVE_KEY, encodedHash);
         }
 
-        void SaveSettingsHash(string settingsHash)
+        private void SaveSettingsHash(string settingsHash)
         {
             string encodedHash = CryptString.Encode(settingsHash, m_hashCryptKey);
             PlayerPrefs.SetString(_HASH_SAVE_KEY, encodedHash);
         }
 
-        bool IsSettingsHashValid(string settings)
+        private bool IsSettingsHashValid(string settings)
         {
             string encodedHash = PlayerPrefs.GetString(_HASH_SAVE_KEY, "");
             string savedHash = CryptString.Decode(encodedHash, m_hashCryptKey);
@@ -434,7 +434,26 @@ namespace Virterix.AdMediation
             return isValid;
         }
 
-        string JsonValueToString(JSONValue jsonValue)
+        private object JsonValueToObject(JSONValue jsonValue)
+        {
+            object result = null;
+
+            switch(jsonValue.Type)
+            {
+                case JSONValueType.String:
+                    result = jsonValue.Str;
+                    break;
+                case JSONValueType.Boolean:
+                    result = jsonValue.Boolean;
+                    break;
+                case JSONValueType.Number:
+                    result = jsonValue.Number;
+                    break;
+            }
+            return result;
+        }
+
+        private string JsonValueToString(JSONValue jsonValue)
         {
             string valueStr = "";
             if (jsonValue.Type == JSONValueType.String)
@@ -448,7 +467,7 @@ namespace Virterix.AdMediation
             return valueStr;
         }
 
-        AdMediator GetOrCreateMediator(AdType adType, string placementName = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        private AdMediator GetOrCreateMediator(AdType adType, string placementName = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
             AdMediator foundMediator = null;
             foreach (AdMediator mediator in m_mediators)
@@ -471,7 +490,7 @@ namespace Virterix.AdMediation
             return foundMediator;
         }
 
-        void NotifyInitializeCompleted()
+        private void NotifyInitializeCompleted()
         {
             m_isInitialized = true;
             OnInitializeCompleted();
@@ -612,7 +631,7 @@ namespace Virterix.AdMediation
 
                 // Initialized mediators
                 JSONArray jsonArrMediators = jsonSettings.GetArray(mediatorsKey);
-                Dictionary<string, string> dictUnitParams = new Dictionary<string, string>();
+                Dictionary<string, object> dictUnitParams = new Dictionary<string, object>();
 
                 foreach (JSONValue jsonMediationParams in jsonArrMediators)
                 {
@@ -676,7 +695,7 @@ namespace Virterix.AdMediation
                             // Parse ad unit parameters
                             foreach (KeyValuePair<string, JSONValue> pairValue in jsonNetworkUnits.Obj)
                             {
-                                dictUnitParams.Add(pairValue.Key, JsonValueToString(pairValue.Value));
+                                dictUnitParams.Add(pairValue.Key, JsonValueToObject(pairValue.Value));
                             }
                             dictUnitParams["index"] = units.Count.ToString();
                             if (!dictUnitParams.ContainsKey(waitingResponseTimeKey))
@@ -762,7 +781,7 @@ namespace Virterix.AdMediation
                                     // Parse ad unit parameters
                                     foreach (KeyValuePair<string, JSONValue> pairValue in jsonNetworkUnits.Obj)
                                     {
-                                        dictUnitParams.Add(pairValue.Key, JsonValueToString(pairValue.Value));
+                                        dictUnitParams.Add(pairValue.Key, JsonValueToObject(pairValue.Value));
                                     }
                                     dictUnitParams["index"] = units.Count.ToString();
                                     if (!dictUnitParams.ContainsKey(waitingResponseTimeKey))

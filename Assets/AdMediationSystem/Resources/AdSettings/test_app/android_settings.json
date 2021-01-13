@@ -11,7 +11,7 @@
 				"tiers": [
 					[
 						{ "network":"admob", "instance":"BannerHighCpm" },
-						{ "network":"admob", "replaced":true }
+						{ "network":"admob", "replaced":false }
 					],
 					[
 						{ "network":"audienceNetwork", "instance":"BannerHighCpm" },
@@ -19,7 +19,7 @@
 					]
 				],
 				"units":[
-					{ "network":"admob", "instance":"BannerHighCpm", "ifShowedSkipNextUnit":"admob" },
+					{ "network":"admob", "impressions":5, "instance":"BannerHighCpm", "ifShowedSkipNextUnit":"admob" },
 					{ "network":"admob" },
 					{ "network":"audienceNetwork", "instance":"BannerHighCpm", "ifShowedSkipNextUnit":"audienceNetwork" },
 					{ "network":"audienceNetwork" }
@@ -37,7 +37,7 @@
 					{ "network":"audienceNetwork", "instance":"Top" }
 				]
 			}
-        },	
+        },
 		{
             "adType":"interstitial",
             "strategy":
@@ -47,13 +47,13 @@
 					[
 						{ "network":"admob", "instance":"InterstitialHighCpm" },
 						{ "network":"audienceNetwork", "instance":"InterstitialHighCpm" },
-						{ "network":"unityads" },
-						{ "network":"admob", "replaced":true }
+						{ "network":"unityads", "replaced":true },
+						{ "network":"chartboost", "replaced":true }
 					],
 					[
 						{ "network":"admob", "instance":"InterstitialMidCpm" },
 						{ "network":"audienceNetwork", "instance":"InterstitialMidCpm" },
-						{ "network":"unityads", "instance":"InterstitialMidCpm" },
+						{ "network":"unityads" },
 						{ "network":"audienceNetwork", "replaced":true}
 					],
 					[

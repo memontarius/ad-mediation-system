@@ -21,7 +21,7 @@ namespace Virterix.AdMediation
             return fetchStrategy;
         }
 
-        public static IFetchStrategyParams CreateFetchStrategyParams(string strategyTypeName, AdType adType, Dictionary<string, string> networkParams)
+        public static IFetchStrategyParams CreateFetchStrategyParams(string strategyTypeName, AdType adType, Dictionary<string, object> networkParams)
         {
             IFetchStrategyParams fetchStrategyParams = null;
 
@@ -35,7 +35,7 @@ namespace Virterix.AdMediation
                     }
                     catch
                     {
-                        Debug.Log("AdFactory: not found key in network parameter dictionary");
+                        Debug.LogWarning("AdFactory: not found key in network parameter dictionary");
                     }
                     break;
                 case "sequence":
@@ -46,7 +46,7 @@ namespace Virterix.AdMediation
                     }
                     catch
                     {
-                        Debug.Log("AdFactory: not found key in network parameter dictionary");
+                        Debug.LogWarning("AdFactory: not found key in network parameter dictionary");
                     }
                     break;
             }

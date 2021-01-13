@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace Virterix.AdMediation
 {
     public class IFetchStrategyParams
@@ -25,6 +27,7 @@ namespace Virterix.AdMediation
         void Reset(AdMediator mediator, AdUnit unit);
         bool IsAllowAutoFillUnits();
 
-        AdUnit FetchFromTier(AdUnit[] units);
+        AdUnit Fetch(List<AdUnit[]> tiers, int maxRecursionFetch);
+
     }
 } // namespace Virterix.AdMediation

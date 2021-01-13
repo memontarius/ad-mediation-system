@@ -22,7 +22,7 @@ namespace Virterix.AdMediation
             return true;
         }
 
-        public AdUnit FetchFromTier(AdUnit[] units)
+        public AdUnit Fetch(List<AdUnit[]> tiers, int maxRecursionFetch)
         {
             return null;
         }
@@ -76,7 +76,7 @@ namespace Virterix.AdMediation
 
         }
 
-        public static void SetupParameters(ref IFetchStrategyParams strategyParams, Dictionary<string, string> networkParams)
+        public static void SetupParameters(ref IFetchStrategyParams strategyParams, Dictionary<string, object> networkParams)
         {
             RandomStrategyParams randomFetchParams = strategyParams as RandomStrategyParams;
             randomFetchParams.m_percentage = System.Convert.ToInt32(networkParams["percentage"]);

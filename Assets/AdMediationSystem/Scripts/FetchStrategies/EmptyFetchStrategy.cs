@@ -21,7 +21,7 @@ namespace Virterix.AdMediation
         {
         }
 
-        public AdUnit FetchFromTier(AdUnit[] units)
+        public AdUnit Fetch(List<AdUnit[]> tiers, int maxRecursionFetch)
         {
             return null;
         }
