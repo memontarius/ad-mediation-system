@@ -11,7 +11,6 @@ namespace Virterix.AdMediation
     /// </summary>
     public class AdMediator : MonoBehaviour
     {
-
         private const string _PREFIX_LAST_UNITID_SAVE_KEY = "adm.last.unit.";
 
         //===============================================================================
@@ -118,8 +117,8 @@ namespace Virterix.AdMediation
 
         #endregion // Properties
 
-        private AdUnit[] m_units;
-        private List<AdUnit> m_fetchUnits = new List<AdUnit>();
+        //private AdUnit[] m_units;
+        //private List<AdUnit> m_fetchUnits = new List<AdUnit>();
 
         private List<AdUnit[]> m_tiers;
         private int m_totalUnits;
@@ -129,8 +128,7 @@ namespace Virterix.AdMediation
         private bool m_isBannerTypeAdViewDisplayed = false;
         private Coroutine m_coroutineWaitNetworkPrepare;
         private Coroutine m_coroutineDeferredFetch;
-       
-
+        
         //===============================================================================
         #region MonoBehavior Methods
         //-------------------------------------------------------------------------------
@@ -165,12 +163,12 @@ namespace Virterix.AdMediation
         public void Initialize(AdUnit[] units, List<AdUnit[]> tiers)
         {
             m_tiers = tiers;
-
             for(int i = 0; i < m_tiers.Count; i++)
             {
                 m_totalUnits += m_tiers[i].Length;
             }
 
+            /*
             m_units = units;
             m_lastActiveUnitId = -1;
             int index = 0;
@@ -182,14 +180,17 @@ namespace Virterix.AdMediation
                 unit.Index = index++;
             }
             FillFetchUnits(true);
+            */
 
             if (m_isContinueAfterEndSession)
             {
                 m_lastActiveUnitId = PlayerPrefs.GetInt(LastAdUnitIdSaveKey, -1);
+
+                /*
                 if (m_lastActiveUnitId != -1 && m_lastActiveUnitId < m_units.Length)
                 {
                     m_fetchStrategy.Reset(this, m_units[m_lastActiveUnitId]);
-                }
+                }*/
             }
         }
 
@@ -305,6 +306,7 @@ namespace Virterix.AdMediation
             }
         }
 
+        /*
         public int FindIndexInFetchUnits(AdUnit unit)
         {
             int currIndex = 0;
@@ -318,6 +320,7 @@ namespace Virterix.AdMediation
             }
             return currIndex;
         }
+        */
 
         private bool ShowAnyReadyNetwork()
         {

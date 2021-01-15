@@ -17,6 +17,10 @@ namespace Virterix.AdMediation
             public int m_percentage;
         }
 
+        public int TierIndex => 0;
+
+        public int UnitIndex => 0;
+
         public bool IsAllowAutoFillUnits()
         {
             return true;
@@ -71,7 +75,7 @@ namespace Virterix.AdMediation
             return unit;
         }
 
-        public void Reset(AdMediator mediator, AdUnit unit)
+        public void Reset(AdUnit unit, int tierIndex, int unitIndex)
         {
 
         }

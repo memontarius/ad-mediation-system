@@ -7,6 +7,10 @@ namespace Virterix.AdMediation
 {
     public class EmptyFetchStrategy : IFetchStrategy
     {
+        public int TierIndex => 0;
+
+        public int UnitIndex => 0;
+
         public AdUnit Fetch(AdMediator mediator, AdUnit[] units)
         {
             return null;
@@ -17,7 +21,7 @@ namespace Virterix.AdMediation
             return false;
         }
 
-        public void Reset(AdMediator mediator, AdUnit unit)
+        public void Reset(AdUnit unit, int tierIndex, int unitIndex)
         {
         }
 

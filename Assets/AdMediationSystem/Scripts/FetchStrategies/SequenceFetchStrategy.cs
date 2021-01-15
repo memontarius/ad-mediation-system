@@ -47,6 +47,7 @@ namespace Virterix.AdMediation
             return unit;
         }
 
+        /*
         /// <summary>
         /// Reset to start state
         /// </summary>
@@ -65,6 +66,7 @@ namespace Virterix.AdMediation
             }
             m_currFetchCount = 1;
         }
+        */
 
         private bool IsSkipUnit(AdUnit unit)
         {
@@ -146,7 +148,7 @@ namespace Virterix.AdMediation
 
             if (isNeedReset)
             {
-                Reset(mediator, m_currUnit);
+                //Reset(mediator, m_currUnit);
             }
 
             string networkName = "";
@@ -281,6 +283,13 @@ namespace Virterix.AdMediation
             AdUnit fetchedUnit = InternalFetch(tiers);
 
             return fetchedUnit;
+        }
+
+        public void Reset(AdUnit unit, int tierIndex, int unitIndex)
+        {
+            m_currUnit = unit;
+            m_currTierUnitIndex = tierIndex;
+            m_currUnitIndex = unitIndex;
         }
 
         private AdUnit InternalFetch(List<AdUnit[]> tiers)
