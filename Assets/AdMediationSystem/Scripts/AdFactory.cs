@@ -53,9 +53,7 @@ namespace Virterix.AdMediation
 
             if (fetchStrategyParams != null)
             {
-                fetchStrategyParams.m_waitingResponseTime = (float)System.Convert.ToDouble(networkParams["waitingResponseTime"]);
-                fetchStrategyParams.m_adsType = adType;
-
+                fetchStrategyParams.m_waitingResponseTime = (float)System.Convert.ToDouble(networkParams["waitingResponseTime"]);  
                 if (networkParams.ContainsKey("impressionsInSession"))
                 {
                     fetchStrategyParams.m_impressionsInSession = System.Convert.ToInt32(networkParams["impressionsInSession"]);

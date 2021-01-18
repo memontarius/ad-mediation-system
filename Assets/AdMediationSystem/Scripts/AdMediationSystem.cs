@@ -138,7 +138,8 @@ namespace Virterix.AdMediation
         {
             get
             {
-                string path = String.Format("Resources/{0}/{1}/{2}", _AD_SETTINGS_PATH, AdMediationSystem.Instance.m_projectName,
+                string path = String.Format(System.Globalization.CultureInfo.InvariantCulture,
+                    "Resources/{0}/{1}/{2}", _AD_SETTINGS_PATH, AdMediationSystem.Instance.m_projectName,
                     AdMediationSystem._AD_INSTANCE_PARAMETERS_ROOT_FOLDER);
                 return path;
             }
@@ -539,10 +540,8 @@ namespace Virterix.AdMediation
             string strategyKey = "strategy";
             string networkWaitingResponseTimeKey = "networkWaitingResponseTime";
             string typeInStrategyKey = "type";
-            string networkUnitsKey = "units";
             string networkNameInUnitKey = "network";
             string adInstanceNameInUnitKey = "instance";
-            string unitEnabledKey = "enabled";
             string internalAdTypeKey = "internalAdType";
             string waitingResponseTimeKey = "waitingResponseTime";
             string pepareWhenChangeNetworkKey = "prepareWhenChangeNetwork";
@@ -551,7 +550,6 @@ namespace Virterix.AdMediation
             string networkNameKey = "name";
 
             Dictionary<AdNetworkAdapter, NetworkParams> dictNetworks = new Dictionary<AdNetworkAdapter, NetworkParams>();
-            Dictionary<AdMediator, List<AdUnit>> dictMediators = new Dictionary<AdMediator, List<AdUnit>>();
             Dictionary<AdMediator, List<AdUnit[]>> initMediators = new Dictionary<AdMediator, List<AdUnit[]>>();
 
             string defaultWaitingResponseTime = "30";
@@ -586,7 +584,7 @@ namespace Virterix.AdMediation
                     }
                 }
 
-                // Initializing networks
+                // Parse networks
                 JSONArray jsonArrNetwork = jsonSettings.GetArray(networksKey);
                 AdNetworkAdapter networkAdapter = null;
 
@@ -629,10 +627,10 @@ namespace Virterix.AdMediation
                     }
                 }
 
-                // Initialized mediators
+                // Parse mediators
                 JSONArray jsonArrMediators = jsonSettings.GetArray(mediatorsKey);
                 Dictionary<string, object> dictUnitParams = new Dictionary<string, object>();
-
+                
                 foreach (JSONValue jsonMediationParams in jsonArrMediators)
                 {
                     string adTypeName = jsonMediationParams.Obj.GetValue(adTypeKey).Str;
@@ -643,7 +641,6 @@ namespace Virterix.AdMediation
                         waitingResponseTime = System.Convert.ToInt32(jsonMediationParams.Obj.GetNumber(networkWaitingResponseTimeKey)).ToString();
                     }
                     string strategyTypeName = jsonStrategy.GetValue(typeInStrategyKey).Str;
-                    JSONArray jsonArrUnits = jsonStrategy.GetArray(networkUnitsKey);
                     AdType adType = AdTypeConvert.StringToAdType(adTypeName);
                     string mediatorPlacementName = AdMediationSystem._PLACEMENT_DEFAULT_NAME;
                     if (jsonMediationParams.Obj.ContainsKey(mediatorPlacementNameKey))
@@ -653,87 +650,16 @@ namespace Virterix.AdMediation
                     AdMediator mediator = GetOrCreateMediator(adType, mediatorPlacementName);
                     List<AdUnit> units = new List<AdUnit>();
 
+                    // Fetch Strategy
                     mediator.FetchStrategy = AdFactory.CreateFetchStrategy(strategyTypeName);
 
-                    // Pass by ad units of mediator strategy
-                    foreach (JSONValue jsonNetworkUnits in jsonArrUnits)
-                    {
-                        string networkName = jsonNetworkUnits.Obj.GetValue(networkNameInUnitKey).Str;
-                        string adInstanceName = AdInstanceData._AD_INSTANCE_DEFAULT_NAME;
-                        if (jsonNetworkUnits.Obj.ContainsKey(adInstanceNameInUnitKey))
-                        {
-                            adInstanceName = jsonNetworkUnits.Obj.GetValue(adInstanceNameInUnitKey).Str;
-                        }
-
-                        networkAdapter = GetNetwork(networkName);
-                        AdType internalAdType = adType;
-
-                        if (networkAdapter == null || !networkAdapter.enabled)
-                        {
-                            continue;
-                        }
-
-                        // Check unit enabled
-                        bool unitEnabled = true;
-                        if (jsonNetworkUnits.Obj.ContainsKey(unitEnabledKey))
-                        {
-                            unitEnabled = jsonNetworkUnits.Obj.GetBoolean(unitEnabledKey);
-                        }
-
-                        // Internal ad type
-                        string internalAdTypeName = "";
-                        if (jsonNetworkUnits.Obj.ContainsKey(internalAdTypeKey))
-                        {
-                            internalAdTypeName = jsonNetworkUnits.Obj.GetString(internalAdTypeKey);
-                            AdType convertedAdType = AdTypeConvert.StringToAdType(internalAdTypeName);
-                            internalAdType = convertedAdType != AdType.Unknown ? convertedAdType : internalAdType;
-                        }
-
-                        // If the network enabled and support this type of advertising then add it to list 
-                        if (networkAdapter != null)
-                        {
-                            // Parse ad unit parameters
-                            foreach (KeyValuePair<string, JSONValue> pairValue in jsonNetworkUnits.Obj)
-                            {
-                                dictUnitParams.Add(pairValue.Key, JsonValueToObject(pairValue.Value));
-                            }
-                            dictUnitParams["index"] = units.Count.ToString();
-                            if (!dictUnitParams.ContainsKey(waitingResponseTimeKey))
-                            {
-                                dictUnitParams.Add(waitingResponseTimeKey, waitingResponseTime);
-                            }
-
-                            // Create strategy parameters
-                            IFetchStrategyParams fetchStrategyParams = AdFactory.CreateFetchStrategyParams(strategyTypeName, internalAdType, dictUnitParams);
-                            if (fetchStrategyParams == null)
-                            {
-                                Debug.LogWarning("AdMediationSystem.SetupNetworkParameters() Not found fetch strategy parameters");
-                            }
-
-                            bool? isPepareWhenChangeNetwork = null;
-                            if (jsonNetworkUnits.Obj.ContainsKey(pepareWhenChangeNetworkKey))
-                            {
-                                isPepareWhenChangeNetwork = jsonNetworkUnits.Obj.GetBoolean(pepareWhenChangeNetworkKey);
-                            }
-
-                            // Create ad unit
-                            AdUnit unit = new AdUnit(mediatorPlacementName, adInstanceName, internalAdType, networkAdapter, fetchStrategyParams, unitEnabled, isPepareWhenChangeNetwork);
-                            units.Add(unit);
-                        }
-                        else
-                        {
-                            Debug.LogWarning("AdMediationSystem.SetupNetworkParameters() Not found network adapter: " + networkName);
-                        }
-                        dictUnitParams.Clear();
-                    }
-
-
+                    // Ad Units
                     List<AdUnit[]> tierUnits = new List<AdUnit[]>();
-
                     if (jsonStrategy.ContainsKey("tiers"))
                     {
                         JSONArray jsonArrTiers = jsonStrategy.GetArray("tiers");
                         
+
                         for (int tierIndex = 0; tierIndex < jsonArrTiers.Length; tierIndex++)
                         {
                             JSONValue jsonTier = jsonArrTiers[tierIndex];
@@ -757,13 +683,6 @@ namespace Virterix.AdMediation
                                 if (networkAdapter == null || !networkAdapter.enabled)
                                 {
                                     continue;
-                                }
-
-                                // Check unit enabled
-                                bool unitEnabled = true;
-                                if (jsonNetworkUnits.Obj.ContainsKey(unitEnabledKey))
-                                {
-                                    unitEnabled = jsonNetworkUnits.Obj.GetBoolean(unitEnabledKey);
                                 }
 
                                 // Internal ad type
@@ -803,7 +722,7 @@ namespace Virterix.AdMediation
                                     }
 
                                     // Create ad unit
-                                    AdUnit unit = new AdUnit(mediatorPlacementName, adInstanceName, internalAdType, networkAdapter, fetchStrategyParams, unitEnabled, isPepareWhenChangeNetwork);
+                                    AdUnit unit = new AdUnit(mediatorPlacementName, adInstanceName, internalAdType, networkAdapter, fetchStrategyParams, isPepareWhenChangeNetwork);
                                     arrUnits[unitIndex] = unit;
                                 }
                                 else
@@ -817,7 +736,6 @@ namespace Virterix.AdMediation
                     }
 
                     initMediators.Add(mediator, tierUnits);
-                    dictMediators.Add(mediator, units);
                 }
 
                 setupSettingsSuccess = true;
@@ -843,10 +761,10 @@ namespace Virterix.AdMediation
                 }
 
                 // Initialization mediators
-                foreach (var pair in dictMediators)
+                foreach (var pair in initMediators)
                 {
                     AdMediator mediator = pair.Key;
-                    mediator.Initialize(pair.Value.ToArray(), initMediators[mediator]);
+                    mediator.Initialize(initMediators[mediator]);
                 }
             }
             else

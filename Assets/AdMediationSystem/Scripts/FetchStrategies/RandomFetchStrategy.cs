@@ -17,33 +17,66 @@ namespace Virterix.AdMediation
             public int m_percentage;
         }
 
-        public int TierIndex => 0;
+        public int TierIndex => m_currTierIndex;
+        public int UnitIndex => m_unitIndex;
 
-        public int UnitIndex => 0;
+        private int m_tierIndex;
+        private int m_currTierIndex;
+        private int m_unitIndex;
+        private int m_maxRecursionFetch;
+        private int m_fetchCount;
+        private List<AdUnit> m_fetchedUnits = new List<AdUnit>();
 
-        public bool IsAllowAutoFillUnits()
+        public static void SetupParameters(ref IFetchStrategyParams strategyParams, Dictionary<string, object> networkParams)
         {
-            return true;
+            RandomStrategyParams randomFetchParams = strategyParams as RandomStrategyParams;
+            randomFetchParams.m_percentage = System.Convert.ToInt32(networkParams["percentage"]);
         }
 
-        public AdUnit Fetch(List<AdUnit[]> tiers, int maxRecursionFetch)
+        public void Init(List<AdUnit[]> tiers, int totalunits)
         {
-            return null;
+            m_maxRecursionFetch = tiers.Count;
         }
 
-        public AdUnit Fetch(AdMediator mediator, AdUnit[] units)
+        public void Reset(List<AdUnit[]> tiers, int tierIndex, int unitIndex)
         {
-            AdUnit unit = null;
+            if (tiers.Count > 0)
+            {
+                tierIndex++;
+                tierIndex = tierIndex >= tiers.Count ? 0 : tierIndex;
+                m_currTierIndex = tierIndex;
+                m_tierIndex = tierIndex;
+            }
+        }
 
-            int unitCount = units.Length;
+        public AdUnit Fetch(List<AdUnit[]> tiers)
+        {
+            if (tiers.Count == 0)
+            {
+#if AD_MEDIATION_DEBUG_MODE
+                Debug.LogWarning("Tiers are empty!");
+#endif
+                return null;
+            }
+
+            m_fetchCount = 0;
+            AdUnit unit = InternalFetch(tiers);
+            return unit;
+        }
+
+        private int FetchByRandom(List<AdUnit> units)
+        {
+            int unitIndex = -1;
+
+            int unitCount = units.Count;
             if (unitCount == 1)
             {
-                unit = units[0];
-                return unit;
+                unitIndex = 0;
+                return unitIndex;
             }
 
             int positionInRange = 0;
-            Range[] unitRanges = new Range[units.Length];
+            Range[] unitRanges = new Range[units.Count];
 
             for (int i = 0; i < unitCount; i++)
             {
@@ -62,28 +95,50 @@ namespace Virterix.AdMediation
                 Range unitRange = unitRanges[i];
                 if (randomNumber >= unitRange.min && randomNumber < unitRange.max)
                 {
-                    unit = units[i];
+                    unitIndex = i;
                     break;
                 }
             }
+            return unitIndex;
+        }
 
-            if (unit != null)
+        private AdUnit InternalFetch(List<AdUnit[]> tiers)
+        {
+            m_currTierIndex = m_tierIndex;
+            AdUnit[] units = tiers[m_tierIndex];
+            m_fetchCount++;
+
+            m_tierIndex++;
+            m_tierIndex = m_tierIndex >= tiers.Count ? 0 : m_tierIndex;
+
+            FindUnitsForFetch(units, ref m_fetchedUnits);
+            AdUnit unit = null;
+            if (m_fetchedUnits.Count > 0)
             {
-                unit.IncrementFetchCount();
+                m_unitIndex = FetchByRandom(m_fetchedUnits);
+                unit = units[m_unitIndex];
             }
-
+            else
+            {
+                if (m_fetchCount < m_maxRecursionFetch)
+                {
+                    unit = InternalFetch(tiers);
+                }
+            }
             return unit;
         }
 
-        public void Reset(AdUnit unit, int tierIndex, int unitIndex)
+        private void FindUnitsForFetch(AdUnit[] units, ref List<AdUnit> foundUnits)
         {
-
-        }
-
-        public static void SetupParameters(ref IFetchStrategyParams strategyParams, Dictionary<string, object> networkParams)
-        {
-            RandomStrategyParams randomFetchParams = strategyParams as RandomStrategyParams;
-            randomFetchParams.m_percentage = System.Convert.ToInt32(networkParams["percentage"]);
+            m_fetchedUnits.Clear();
+            for (int i = 0; i < units.Length; i++)
+            {
+                AdUnit unit = units[i];
+                if (!unit.IsTimeout)
+                {
+                    foundUnits.Add(unit);
+                }
+            }
         }
     }
 } // namespace Virterix.AdMediation

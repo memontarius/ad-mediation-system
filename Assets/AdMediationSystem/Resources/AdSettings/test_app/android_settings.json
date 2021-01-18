@@ -17,12 +17,6 @@
 						{ "network":"audienceNetwork", "instance":"BannerHighCpm" },
 						{ "network":"audienceNetwork", "replaced":true }
 					]
-				],
-				"units":[
-					{ "network":"admob", "impressions":5, "instance":"BannerHighCpm", "ifShowedSkipNextUnit":"admob" },
-					{ "network":"admob" },
-					{ "network":"audienceNetwork", "instance":"BannerHighCpm", "ifShowedSkipNextUnit":"audienceNetwork" },
-					{ "network":"audienceNetwork" }
 				]
 			}
         },
@@ -32,9 +26,11 @@
             "strategy":
 			{
 				"type":"sequence",
-				"units":[
-					{ "network":"admob", "instance":"Default" },
-					{ "network":"audienceNetwork", "instance":"Top" }
+				"tiers": [
+					[
+						{ "network":"admob", "instance":"Default"  },
+						{ "network":"audienceNetwork", "instance":"Top" }
+					]
 				]
 			}
         },
@@ -61,15 +57,6 @@
 						{ "network":"applovin" },
 						{ "network":"chartboost" }
 					]
-				],		
-				"units":[
-					{ "network":"admob", "instance":"InterstitialHighCpm", "ifShowedSkipNextUnit":"admob", "prepareWhenChangeNetwork":false },
-					{ "network":"admob" },
-					{ "network":"audienceNetwork", "instance":"InterstitialHighCpm", "ifShowedSkipNextUnit":"audienceNetwork" },
-					{ "network":"audienceNetwork" },
-					{ "network":"applovin" },
-					{ "network":"chartboost" },
-					{ "network":"unityads" }
 				]
 			}
         },
@@ -77,25 +64,20 @@
             "adType":"incentivized",
             "strategy":
 			{
-				"type":"sequence",
-				"units":[
-					{ "network":"admob" },
-					{ "network":"audienceNetwork" },
-					{ "network":"applovin" },
-					{ "network":"chartboost" },
-					{ "network":"unityads",
-						"replaceableNetworks":"admob,audienceNetwork,applovin,chartboost"
-					}
-				]
-			}
-        },
-		{
-            "adType":"native",
-            "strategy":
-			{
-				"type":"sequence",
-				"units":[
-					{ "network":"audienceNetwork" }
+				"type":"random",
+				"tiers": [
+					[
+						{ "network":"admob", "percentage":100 }
+					],
+					[
+						{ "network":"applovin", "percentage":100 }
+					],
+					[
+						{ "network":"unityads", "percentage":2 }
+					],
+					[
+						{ "network":"audienceNetwork", "percentage":2 }
+					]
 				]
 			}
         }

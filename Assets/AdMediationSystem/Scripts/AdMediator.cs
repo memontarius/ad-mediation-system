@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Boomlagoon.JSON;
+using System.Globalization;
 
 namespace Virterix.AdMediation
 {
@@ -41,11 +41,6 @@ namespace Virterix.AdMediation
             "Negative value is disabled. (In Seconds)")]
         public float m_deferredFetchDelay = -1;
 
-        public List<AdUnit> FetchUnits
-        {
-            get { return m_fetchUnits; }
-        }
-
         public AdUnit CurrentUnit
         {
             get { return m_currUnit; }
@@ -76,12 +71,16 @@ namespace Virterix.AdMediation
             get
             {
                 bool ready = false;
-                foreach (AdUnit unit in m_fetchUnits)
+                for (int tierIndex = 0; tierIndex < m_tiers.Count; tierIndex++)
                 {
-                    if (unit.IsAdReady)
+                    AdUnit[] units = m_tiers[tierIndex];
+                    for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
                     {
-                        ready = true;
-                        break;
+                        if (units[unitIndex].IsAdReady)
+                        {
+                            ready = true;
+                            break;
+                        }
                     }
                 }
                 return ready;
@@ -101,6 +100,25 @@ namespace Virterix.AdMediation
             }
         }
 
+        public int UnitWithoutTimeoutCount
+        {
+            get
+            {
+                int count = 0;
+                AdUnit[] units = null;
+                for (int tierIndex = 0; tierIndex < m_tiers.Count; tierIndex++)
+                {
+                    units = m_tiers[tierIndex];
+                    for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
+                    {
+                        AdUnit unit = units[unitIndex];
+                        count += unit.IsTimeout ? 0 : 1;
+                    }
+                }
+                return count;
+            }
+        }
+
         public bool IsLastNetworkSuccessfullyPrepared
         {
             get { return m_isLastNetworkSuccessfullyPrepared; }
@@ -111,24 +129,24 @@ namespace Virterix.AdMediation
         {
             get
             {
-                return string.Format("{0}{1}.{2}", _PREFIX_LAST_UNITID_SAVE_KEY, m_adType.ToString(), m_placementName).ToLower();
+                return string.Format(CultureInfo.InvariantCulture, 
+                    "{0}{1}.{2}", _PREFIX_LAST_UNITID_SAVE_KEY, m_adType.ToString(), m_placementName).ToLower();
             }
         }
 
         #endregion // Properties
 
-        //private AdUnit[] m_units;
-        //private List<AdUnit> m_fetchUnits = new List<AdUnit>();
-
         private List<AdUnit[]> m_tiers;
         private int m_totalUnits;
 
         protected AdUnit m_currUnit;
+        private int m_lastActiveTierId;
         private int m_lastActiveUnitId;
         private bool m_isBannerTypeAdViewDisplayed = false;
         private Coroutine m_coroutineWaitNetworkPrepare;
         private Coroutine m_coroutineDeferredFetch;
-        
+        private int m_adPrepareFailureCount;
+
         //===============================================================================
         #region MonoBehavior Methods
         //-------------------------------------------------------------------------------
@@ -137,18 +155,19 @@ namespace Virterix.AdMediation
         {
             if (pause)
             {
-                SaveLastActiveAdUnit();
+                if (m_isContinueAfterEndSession)
+                {
+                    SaveLastActiveAdUnit();
+                }
             }
         }
 
         private void OnApplicationQuit()
         {
-            SaveLastActiveAdUnit();
-        }
-
-        private void OnDisable()
-        {
-            StopAllCoroutines();
+            if (m_isContinueAfterEndSession)
+            {
+                SaveLastActiveAdUnit();
+            }
         }
 
         #endregion // MonoBehavior Methods
@@ -160,37 +179,19 @@ namespace Virterix.AdMediation
         /// <summary>
         /// Should be called only once when initialize
         /// </summary>
-        public void Initialize(AdUnit[] units, List<AdUnit[]> tiers)
+        public void Initialize(List<AdUnit[]> tiers)
         {
+            m_lastActiveUnitId = -1;
             m_tiers = tiers;
             for(int i = 0; i < m_tiers.Count; i++)
             {
                 m_totalUnits += m_tiers[i].Length;
             }
 
-            /*
-            m_units = units;
-            m_lastActiveUnitId = -1;
-            int index = 0;
-
-            foreach (AdUnit unit in m_units)
-            {
-                unit.OnEnable += OnUnitEnable;
-                unit.OnDisable += OnUnitDisable;
-                unit.Index = index++;
-            }
-            FillFetchUnits(true);
-            */
-
+            m_fetchStrategy.Init(tiers, m_totalUnits);
             if (m_isContinueAfterEndSession)
             {
-                m_lastActiveUnitId = PlayerPrefs.GetInt(LastAdUnitIdSaveKey, -1);
-
-                /*
-                if (m_lastActiveUnitId != -1 && m_lastActiveUnitId < m_units.Length)
-                {
-                    m_fetchStrategy.Reset(this, m_units[m_lastActiveUnitId]);
-                }*/
+                RestoreLastActiveAdUnit();
             }
         }
 
@@ -202,19 +203,13 @@ namespace Virterix.AdMediation
                 return;
             }
 
-            if (FetchUnits.Count == 0)
-            {
-                FillFetchUnits(true);
-            }
-
             if (m_coroutineDeferredFetch != null)
             {
                 StopCoroutine(m_coroutineDeferredFetch);
                 m_coroutineDeferredFetch = null;
             }
 
-            //AdUnit unit = FetchUnits.Count == 0 ? null : m_fetchStrategy.Fetch(this, FetchUnits.ToArray());
-            AdUnit unit = m_fetchStrategy.Fetch(m_tiers, m_totalUnits);
+            AdUnit unit = m_fetchStrategy.Fetch(m_tiers);
 
             if (unit != null)
             {
@@ -232,7 +227,7 @@ namespace Virterix.AdMediation
             else
             {
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("AdMediator.Fetch() Not fetched ad unit. Placement: " + m_placementName + " Unit count:" + m_fetchUnits.Count);
+                Debug.Log("AdMediator.Fetch() Not fetched ad unit. Placement: " + m_placementName);
 #endif
             }
         }
@@ -306,102 +301,45 @@ namespace Virterix.AdMediation
             }
         }
 
-        /*
-        public int FindIndexInFetchUnits(AdUnit unit)
-        {
-            int currIndex = 0;
-            for (int i = 0; i < m_fetchUnits.Count; i++)
-            {
-                if (m_fetchUnits[i] == unit)
-                {
-                    currIndex = i;
-                    break;
-                }
-            }
-            return currIndex;
-        }
-        */
-
         private bool ShowAnyReadyNetwork()
         {
-            if (m_fetchUnits.Count == 0)
+            if (m_totalUnits == 0)
             {
                 return false;
             }
 
             AdUnit readyUnit = null;
-            int currIndex = m_currUnit != null ? FindIndexInFetchUnits(m_currUnit) : 0;
+            AdUnit[] units = null;
+            int readyTierIndex = 0;
+            int readyUnitIndex = 0;
 
-            int startIndex = currIndex + 1;
-            startIndex = startIndex >= m_fetchUnits.Count ? 0 : startIndex;
-
-            for (int i = startIndex; i != currIndex;)
+            for (int tierIndex = 0; tierIndex < m_tiers.Count; tierIndex++)
             {
-                AdUnit unit = m_fetchUnits[i];
-                if (unit.IsAdReady)
+                units = m_tiers[tierIndex];
+                for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
                 {
-                    readyUnit = unit;
-                    break;
-                }
-
-                i++;
-                if (i >= m_fetchUnits.Count)
-                {
-                    i = 0;
+                    readyUnit = units[unitIndex];
+                    if (readyUnit.IsAdReady)
+                    {
+                        readyTierIndex = tierIndex;
+                        readyUnitIndex = unitIndex;
+                        break;
+                    }
+                    else
+                    {
+                        readyUnit = null;
+                    }
                 }
             }
 
             if (readyUnit != null)
             {
                 SetCurrentUnit(readyUnit);
-                m_fetchStrategy.Reset(this, readyUnit);
+                m_fetchStrategy.Reset(m_tiers, readyTierIndex, readyUnitIndex);
                 return readyUnit.ShowAd();
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Call with ignore auto fill from a fetch strategy. 
-        /// Call with check auto fill from the mediator to keep an actual data in a fetch strategy.
-        /// </summary>
-        public void FillFetchUnits(bool ignoreAutoFillFlag = false)
-        {
-            if (m_fetchUnits.Count == 0)
-            {
-                m_fetchStrategy.Reset(null, null);
-            }
-
-            if (ignoreAutoFillFlag || m_fetchStrategy.IsAllowAutoFillUnits())
-            {
-                if (m_units != null && m_fetchUnits.Count != m_units.Length)
-                {
-                    m_fetchUnits.Clear();
-                    foreach (AdUnit unit in m_units)
-                    {
-                        if (unit.IsEnabled && !unit.AdNetwork.IsTimeout(unit.AdapterAdType, unit.AdInstance))
-                        {
-                            AddUnitToFetch(unit);
-                        }
-                    }
-                }
-            }
-        }
-
-        private void AddUnitToFetch(AdUnit unit)
-        {
-            unit.IsContainedInFetch = true;
-            m_fetchUnits.Add(unit);
-        }
-
-        private void RemoveUnitFromFetch(AdUnit unit)
-        {
-            if (m_adType == AdType.Banner)
-            {
-                unit.HideBannerTypeAdWithoutNotify();
-            }
-            unit.IsContainedInFetch = false;
-            m_fetchUnits.Remove(unit);
         }
 
         private void RequestToPrepare(AdUnit unit)
@@ -443,12 +381,27 @@ namespace Virterix.AdMediation
             yield return null;
         }
 
+        private void StartDeferredFetch(float delay)
+        {
+            KillDefferedFetch();
+            m_coroutineDeferredFetch = StartCoroutine(DeferredFetch(delay));
+        }
+
+        private void KillDefferedFetch()
+        {
+            if (m_coroutineDeferredFetch != null)
+            {
+                StopCoroutine(m_coroutineDeferredFetch);
+                m_coroutineDeferredFetch = null;
+            }
+        }
+
         private IEnumerator DeferredFetch(float delay)
         {
             yield return new WaitForSecondsRealtime(delay);
             m_coroutineDeferredFetch = null;
             Fetch();
-            yield return null;
+            yield break;
         }
 
         private void CancelWaitNetworkPrepare()
@@ -518,23 +471,26 @@ namespace Virterix.AdMediation
 
         private void SaveLastActiveAdUnit()
         {
-            if (m_isContinueAfterEndSession)
+            if (m_currUnit != null && m_lastActiveUnitId >= 0)
             {
-                if (m_currUnit != null && m_lastActiveUnitId >= 0)
-                {
-                    PlayerPrefs.SetInt(LastAdUnitIdSaveKey, m_lastActiveUnitId);
-                }
+                string savedData = string.Format(CultureInfo.InvariantCulture, "{0}-{1}", m_lastActiveTierId, m_lastActiveUnitId);
+                PlayerPrefs.SetString(LastAdUnitIdSaveKey, savedData);
             }
         }
 
-        private void OnUnitEnable(AdUnit enabledUnit)
+        private void RestoreLastActiveAdUnit()
         {
-            AddUnitToFetch(enabledUnit);
-        }
-
-        private void OnUnitDisable(AdUnit disabledUnit)
-        {
-            RemoveUnitFromFetch(disabledUnit);
+            string savedData = PlayerPrefs.GetString(LastAdUnitIdSaveKey, "");
+            if (!string.IsNullOrEmpty(savedData))
+            {
+                string[] savedValues = savedData.Split('-');
+                if (savedValues.Length == 2)
+                {
+                    int tierIndex = Convert.ToInt32(savedValues[0]);
+                    int unitIndex = Convert.ToInt32(savedValues[1]);
+                    m_fetchStrategy.Reset(m_tiers, tierIndex, unitIndex);
+                }
+            }
         }
 
         private void OnCurrentNetworkEvent(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstanceData adInstance)
@@ -557,12 +513,13 @@ namespace Virterix.AdMediation
             string adInstanceName = adInstance != null ? adInstance.Name : AdInstanceData._AD_INSTANCE_DEFAULT_NAME;
             
             AdMediationSystem.NotifyAdNetworkEvent(this, network, m_adType, adEvent, adInstanceName);
-
+            
             if (adEvent == AdEvent.PrepareFailure || adEvent == AdEvent.Hide || adEvent == AdEvent.Show)
             {
                 if (m_currUnit != null)
                 {
-                    m_lastActiveUnitId = m_currUnit.Index;
+                    m_lastActiveTierId = m_fetchStrategy.TierIndex;
+                    m_lastActiveUnitId = m_fetchStrategy.UnitIndex;
                 }
             }
 
@@ -572,31 +529,25 @@ namespace Virterix.AdMediation
                     m_isLastNetworkSuccessfullyPrepared = false;
                     CancelWaitNetworkPrepare();
                     network.SaveFailedLoadingTime(m_currUnit.AdapterAdType, adInstance);
-                    RemoveUnitFromFetch(m_currUnit);
 
-                    if (m_fetchUnits.Count == 0)
+                    m_adPrepareFailureCount++;
+                    if (m_adPrepareFailureCount >= UnitWithoutTimeoutCount)
                     {
-                        FillFetchUnits();
-
-                        if (m_deferredFetchDelay >= 0.0f)
+                        m_adPrepareFailureCount = 0;
+                        if (m_deferredFetchDelay >= 0.0001f)
                         {
-                            if (m_coroutineDeferredFetch != null)
-                            {
-                                StopCoroutine(m_coroutineDeferredFetch);
-                            }
-                            m_coroutineDeferredFetch = StartCoroutine(DeferredFetch(m_deferredFetchDelay));
+                            StartDeferredFetch(m_deferredFetchDelay);
                         }
                     }
                     else
                     {
-                        Fetch();
+                        StartDeferredFetch(0.2f);
                     }
-
                     break;
                 case AdEvent.Prepared:
                     m_isLastNetworkSuccessfullyPrepared = true;
                     CancelWaitNetworkPrepare();
-                    FillFetchUnits();
+                    m_adPrepareFailureCount = 0;
 
                     break;
                 case AdEvent.Hide:

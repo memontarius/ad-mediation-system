@@ -40,7 +40,8 @@ namespace Virterix.AdMediation
             string fullPath = CreateAdInstanceDirectory(parametersFolder);
             string searchPattern = "*" + AdMediationSystem._AD_INSTANCE_PARAMETERS_FILE_EXTENSION;
             string[] files = Directory.GetFiles(fullPath, searchPattern, SearchOption.TopDirectoryOnly);
-            string path = string.Format("Assets/{0}/{1}/{2}", AdMediationSystem.AdInstanceParametersPath, parametersFolder, parametersFileName);
+            string path = string.Format(System.Globalization.CultureInfo.InvariantCulture, 
+                "Assets/{0}/{1}/{2}", AdMediationSystem.AdInstanceParametersPath, parametersFolder, parametersFileName);
             path += (files.Length == 0 ? "" : " " + (files.Length + 1)) + AdMediationSystem._AD_INSTANCE_PARAMETERS_FILE_EXTENSION;
 
             T asset = ScriptableObject.CreateInstance<T>();

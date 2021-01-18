@@ -14,13 +14,11 @@ namespace Virterix.AdMediation
         private AdType m_adapterAdType;
         private AdNetworkAdapter m_network;
         private IFetchStrategyParams m_fetchStrategyParams;
-        public Hashtable m_parameters = new Hashtable();
         private float m_startImpressionTime;
         private bool m_isShown;
 
         public AdType AdapterAdType { get { return m_adapterAdType; } }
         public AdNetworkAdapter AdNetwork { get { return m_network; } }
-        public IFetchStrategyParams FetchStrategyParams { get { return m_fetchStrategyParams; } }
         public int Index { get; set; }
         public string PlacementName
         {
@@ -39,6 +37,11 @@ namespace Virterix.AdMediation
         }
         private string m_adInstanceName;
 
+        public IFetchStrategyParams FetchStrategyParams
+        {
+            get { return m_fetchStrategyParams; }
+        }
+
         public AdInstanceData AdInstance
         {
             get
@@ -54,51 +57,20 @@ namespace Virterix.AdMediation
         AdInstanceData m_adInstance;
         bool m_isAdInstanceSetted;
 
-        public event Action<AdUnit> OnEnable = delegate { };
-        public event Action<AdUnit> OnDisable = delegate { };
-
         public bool IsAdReady
         {
             get
             {
-                return IsEnabled ? m_network.IsReady(m_adapterAdType, AdInstance) : false;
+                return IsTimeout ? false : m_network.IsReady(m_adapterAdType, AdInstance);
             }
         }
 
         public int Impressions
         {
             get { return m_impressions; }
-            set
-            {
-                m_impressions = value;
-                if (m_fetchStrategyParams.m_impressionsInSession > 0)
-                {
-                    if (m_impressions >= m_fetchStrategyParams.m_impressionsInSession)
-                    {
-                        IsEnabled = false;
-                    }
-                }
-            }
+            set { m_impressions = value; }
         }
         int m_impressions;
-
-        public bool IsEnabled
-        {
-            get { return m_enabled; }
-            set
-            {
-                m_enabled = value;
-                if (m_enabled)
-                {
-                    OnEnable(this);
-                }
-                else
-                {
-                    OnDisable(this);
-                }
-            }
-        }
-        bool m_enabled;
 
         public int FetchCount
         {
@@ -106,16 +78,12 @@ namespace Virterix.AdMediation
         }
         int m_fetchCount;
 
-        public bool IsContainedInFetch
-        {
-            get; set;
-        }
-
         public bool WasLastImpressionSuccessful
         {
-            get {
-                return true;
-                return m_wasLastImpressionSuccessful; }
+            get 
+            {
+                return m_wasLastImpressionSuccessful; 
+            }
         }
         bool m_wasLastImpressionSuccessful;
 
@@ -165,14 +133,13 @@ namespace Virterix.AdMediation
                 }
             }
         }
-
+        
         public AdUnit(string placementName, string adInstanceName, AdType adType, AdNetworkAdapter network,
-           IFetchStrategyParams strategyParams, bool enabled, bool? isPepareWhenChangeNetwork)
+           IFetchStrategyParams strategyParams, bool? isPepareWhenChangeNetwork)
         {
             m_adapterAdType = adType;
             m_network = network;
             m_fetchStrategyParams = strategyParams;
-            IsEnabled = enabled;
             m_placementName = placementName;
             m_prepareWhenChangeNetwork = isPepareWhenChangeNetwork;
             m_adInstanceName = adInstanceName;
@@ -181,11 +148,7 @@ namespace Virterix.AdMediation
         /// <returns>True when successfully shown ad</returns>
         public bool ShowAd()
         {
-            bool showed = false;
-            if (IsEnabled)
-            {
-                showed = m_network.Show(m_adapterAdType, AdInstance, PlacementName);
-            }
+            bool showed = m_network.Show(m_adapterAdType, AdInstance, PlacementName);
             Impressions = showed ? Impressions + 1 : Impressions;
             m_wasLastImpressionSuccessful = showed;
 
@@ -225,11 +188,6 @@ namespace Virterix.AdMediation
         public void ResetLastImpressionSuccessfulState()
         {
             m_wasLastImpressionSuccessful = false;
-        }
-
-        public void IncrementFetchCount()
-        {
-            m_fetchCount++;
         }
 
         private void UpdateDisplayTimeWhenAdHidden()

@@ -11,21 +11,15 @@ namespace Virterix.AdMediation
 
         public int UnitIndex => 0;
 
-        public AdUnit Fetch(AdMediator mediator, AdUnit[] units)
-        {
-            return null;
-        }
-
-        public bool IsAllowAutoFillUnits()
-        {
-            return false;
-        }
-
-        public void Reset(AdUnit unit, int tierIndex, int unitIndex)
+        public void Init(List<AdUnit[]> tiers, int totalunits)
         {
         }
 
-        public AdUnit Fetch(List<AdUnit[]> tiers, int maxRecursionFetch)
+        public void Reset(List<AdUnit[]> tiers, int tierIndex, int unitIndex)
+        {
+        }
+
+        public AdUnit Fetch(List<AdUnit[]> tiers)
         {
             return null;
         }
