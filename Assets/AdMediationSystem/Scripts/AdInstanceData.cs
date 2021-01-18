@@ -16,7 +16,6 @@ namespace Virterix.AdMediation
             m_adType = adType;
             m_adID = adID;
             Name = name;
-            m_isDefault = Name == _AD_INSTANCE_DEFAULT_NAME;
         }
 
         public string Name
@@ -28,7 +27,6 @@ namespace Virterix.AdMediation
             set
             {
                 m_name = value;
-                m_isDefault = m_name == _AD_INSTANCE_DEFAULT_NAME;
             }
         }
         string m_name;
@@ -40,15 +38,13 @@ namespace Virterix.AdMediation
 
         public bool IsDefault
         {
-            get { return m_isDefault; }
+            get { return Name.Length == 0 || Name == _AD_INSTANCE_DEFAULT_NAME; }
         }
-        bool m_isDefault = true;
-
+     
         public AdType m_adType;
         public string m_adID;
         public AdNetworkAdapter.TimeoutParams? m_timeout;
         public bool m_isBannerAdTypeVisibled;
-        //public Vector2 m_bannerCoordinates;
         public AdNetworkAdapter.AdState m_state = AdNetworkAdapter.AdState.Uncertain;
         public bool m_lastAdPrepared;
         public bool m_enabledState;
@@ -56,5 +52,7 @@ namespace Virterix.AdMediation
         public IAdInstanceParameters m_adInstanceParams;
         public float m_startImpressionTime;
         public float m_displayTime;
+        public float m_waitingResponseTime = 30f;
+        public bool m_isPepareWhenChangeNetwork;
     }
 } // namespace Virterix.AdMediation

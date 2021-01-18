@@ -46,10 +46,11 @@ namespace Virterix.AdMediation
         private bool m_surveyRejected = false;    // true if survey got rejected
         private ScreenOrientation m_currentScreenOrientation;
         private Coroutine m_procInitializePollfishWithDelay;
-        AdMediator[] m_bannerMediators;
-        bool[] m_bannerDisplayStates;
-        SurveyInfo m_lastReceivedSurveyInfo;
-        Coroutine m_procAutoPrepereSurvey;
+        private AdMediator[] m_bannerMediators;
+        private bool[] m_bannerDisplayStates;
+        private SurveyInfo m_lastReceivedSurveyInfo;
+        private Coroutine m_procAutoPrepereSurvey;
+        private AdInstanceData m_adInstance;
 
 #if _MS_POLLFISH
 
@@ -121,6 +122,9 @@ namespace Virterix.AdMediation
                 }
             }
 
+            m_adInstance = AdFactory.CreateAdInstacne(AdType.Incentivized);
+            AddAdInstance(m_adInstance);
+
             m_apiKey = apiKey;
             InitializePollfish();
             InitializeStoreBanners();
@@ -131,7 +135,7 @@ namespace Virterix.AdMediation
             ResetStatus();
 
 #if !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS)
-            SetAdState(AdType.Incentivized, null, AdState.Loading);
+            m_adInstance.m_state = AdState.Loading;
 
             Pollfish.PollfishParams pollfishParams = new Pollfish.PollfishParams();
 
@@ -172,9 +176,10 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override void Prepare(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        public override void Prepare(AdInstanceData adInstance, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
-            if (GetAdState(adType, null) != AdState.Loading)
+            AdType adType = m_adInstance.m_adType;
+            if (m_adInstance.m_state != AdState.Loading)
             {
                 switch (adType)
                 {
@@ -185,9 +190,10 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool Show(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        public override bool Show(AdInstanceData adInstance, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
-            if (IsReady(adType))
+            AdType adType = m_adInstance.m_adType;
+            if (IsReady(m_adInstance))
             {
                 switch (adType)
                 {
@@ -202,8 +208,9 @@ namespace Virterix.AdMediation
             return false;
         }
 
-        public override void Hide(AdType adType, AdInstanceData adInstance = null)
+        public override void Hide(AdInstanceData adInstance = null)
         {
+            AdType adType = m_adInstance.m_adType;
             switch (adType)
             {
                 case AdType.Incentivized:
@@ -214,8 +221,9 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool IsReady(AdType adType, AdInstanceData adInstance = null)
+        public override bool IsReady(AdInstanceData adInstance = null)
         {
+            AdType adType = m_adInstance.m_adType;
             bool isReady = false;
             switch (adType)
             {
@@ -306,12 +314,12 @@ namespace Virterix.AdMediation
             while (true)
             {
                 yield return waitInstruction;
-                AdState state = GetAdState(AdType.Incentivized, null);
-                if (!IsReady(AdType.Incentivized) && state != AdState.Loading)
+                AdState state = m_adInstance.m_state;
+                if (!IsReady(m_adInstance) && state != AdState.Loading)
                 {
                     if (m_autoPrepareIntervalInMinutes > 0)
                     {
-                        Prepare(AdType.Incentivized);
+                        Prepare(m_adInstance);
                     }
                     else
                     {
@@ -331,7 +339,7 @@ namespace Virterix.AdMediation
             m_surveyCompleted = true;
             m_surveyOnDevice = false;
             m_surveyRejected = false;
-            SetAdState(AdType.Incentivized, null, AdState.Uncertain);
+            m_adInstance.m_state = AdState.Uncertain;
 
             string[] surveyCharacteristics = surveyInfo.Split(',');
 
@@ -367,7 +375,7 @@ namespace Virterix.AdMediation
 
             if (m_isAutoFetchOnHide)
             {
-                AdState state = GetAdState(AdType.Incentivized, null);
+                AdState state = m_adInstance.m_state;
                 if (state == AdState.Uncertain || state == AdState.NotAvailable)
                 {
                     StopProcInitializePollfishWithDelay();
@@ -381,7 +389,7 @@ namespace Virterix.AdMediation
             m_surveyCompleted = false;
             m_surveyOnDevice = true;
             m_surveyRejected = false;
-            SetAdState(AdType.Incentivized, null, AdState.Received);
+            m_adInstance.m_state = AdState.Received;
 
             string[] surveyCharacteristics = surveyInfo.Split(',');
 
@@ -419,7 +427,7 @@ namespace Virterix.AdMediation
         private void surveyNotAvailable()
         {
             ResetStatus();
-            SetAdState(AdType.Incentivized, null, AdState.NotAvailable);
+            m_adInstance.m_state = AdState.NotAvailable;
 
             AddEvent(AdType.Incentivized, AdEvent.PrepareFailure);
             StartAutoPrepare();
@@ -428,7 +436,7 @@ namespace Virterix.AdMediation
         private void userNotEligible()
         {
             ResetStatus();
-            SetAdState(AdType.Incentivized, null, AdState.NotAvailable);
+            m_adInstance.m_state = AdState.NotAvailable;
 
             AddEvent(AdType.Incentivized, AdEvent.PrepareFailure);
         }
@@ -438,7 +446,7 @@ namespace Virterix.AdMediation
             m_surveyCompleted = false;
             m_surveyOnDevice = false;
             m_surveyRejected = true;
-            SetAdState(AdType.Incentivized, null, AdState.NotAvailable);
+            m_adInstance.m_state = AdState.NotAvailable;
 
             AddEvent(AdType.Incentivized, AdEvent.PrepareFailure);
         }

@@ -217,6 +217,8 @@ namespace Virterix.AdMediation
 
                 if (CurrentUnit != null)
                 {
+                    Debug.LogWarning("CurrentUnit: " + CurrentUnit.AdInstanceName + " id: " + CurrentUnit.AdInstance.m_adID);
+
                     CurrentUnit.ResetDisplayTime();
                     if ((m_adType == AdType.Banner) && m_isBannerTypeAdViewDisplayed)
                     {
@@ -345,7 +347,7 @@ namespace Virterix.AdMediation
         private void RequestToPrepare(AdUnit unit)
         {
             CancelWaitNetworkPrepare();
-            float waitingTime = unit.FetchStrategyParams.m_waitingResponseTime;
+            float waitingTime = unit.NetworkwaitingResponseTime;
             m_coroutineWaitNetworkPrepare = StartCoroutine(WaitingNetworkPrepare(unit, waitingTime));
             unit.PrepareAd();
         }
@@ -424,8 +426,7 @@ namespace Virterix.AdMediation
                     m_currUnit?.HideBannerTypeAdWithoutNotify();
                 }
 
-                if ((m_currUnit.IsPepareWhenChangeNetwork == null && m_currUnit.AdNetwork.IsPrepareWhenChangeNetwork(m_currUnit.AdapterAdType)) ||
-                    (m_currUnit.IsPepareWhenChangeNetwork != null && m_currUnit.IsPepareWhenChangeNetwork.Value))
+                if (m_currUnit.IsPepareWhenChangeNetwork)
                 {
                     m_currUnit.PrepareAd();
                 }

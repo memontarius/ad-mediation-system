@@ -9,7 +9,7 @@ namespace Virterix.AdMediation
     {
         private const string _REPLACED_KEY = "replaced";
 
-        public class SequenceStrategyParams : IFetchStrategyParams
+        public class SequenceStrategyParams : BaseFetchStrategyParams
         {
             public bool m_replaced;
         }
@@ -27,7 +27,7 @@ namespace Virterix.AdMediation
         private int m_fetchCount;
         private AdUnit m_currUnit;
 
-        public static void SetupParameters(ref IFetchStrategyParams strategyParams, Dictionary<string, object> networkParams)
+        public static void SetupParameters(ref BaseFetchStrategyParams strategyParams, Dictionary<string, object> networkParams)
         {
             SequenceStrategyParams sequenceStrategyParams = strategyParams as SequenceStrategyParams;
             if (networkParams.ContainsKey(_REPLACED_KEY))

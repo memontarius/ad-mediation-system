@@ -17,10 +17,8 @@ namespace Virterix.AdMediation
 
 #if _MS_CHARTBOOST
 
-        private new void Awake()
-        {
-            base.Awake();
-        }
+        private AdInstanceData m_interstitialInstance;
+        private AdInstanceData m_incentivizedInstance;
 
         private void OnEnable()
         {
@@ -29,6 +27,7 @@ namespace Virterix.AdMediation
 
         private new void OnDisable()
         {
+            base.OnDisable();
             UnsubscribeEvents();
         }
 
@@ -94,6 +93,9 @@ namespace Virterix.AdMediation
                 appSignature = "";
             }
 
+            m_interstitialInstance = AdFactory.CreateAdInstacne(AdType.Interstitial);
+            m_incentivizedInstance= AdFactory.CreateAdInstacne(AdType.Interstitial);
+            
             if (appId != null && appSignature != null)
             {
                 Chartboost.CreateWithAppId(appId, appSignature);
@@ -101,9 +103,9 @@ namespace Virterix.AdMediation
             Chartboost.setAutoCacheAds(autocache);
         }
 
-        public override void Prepare(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        public override void Prepare(AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
-            switch (adType)
+            switch (adInstance.m_adType)
             {
                 case AdType.Interstitial:
                     Chartboost.cacheInterstitial(CBLocation.Default);
@@ -114,11 +116,11 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool Show(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        public override bool Show(AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
-            if (IsReady(adType))
+            if (IsReady(adInstance))
             {
-                switch (adType)
+                switch (adInstance.m_adType)
                 {
                     case AdType.Interstitial:
                         Chartboost.showInterstitial(CBLocation.Default);
@@ -132,15 +134,15 @@ namespace Virterix.AdMediation
             return false;
         }
 
-        public override void Hide(AdType adType, AdInstanceData adInstance = null)
+        public override void Hide(AdInstanceData adInstance = null)
         {
 
         }
 
-        public override bool IsReady(AdType adType, AdInstanceData adInstance = null)
+        public override bool IsReady(AdInstanceData adInstance = null)
         {
             bool isReady = false;
-            switch (adType)
+            switch (adInstance.m_adType)
             {
                 case AdType.Interstitial:
                     isReady = Chartboost.hasInterstitial(CBLocation.Default);

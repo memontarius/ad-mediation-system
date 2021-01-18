@@ -129,20 +129,21 @@ namespace Virterix.AdMediation
             {
                 try
                 {
-                    m_bannerUnitId = parameters[_BANNER_ID_KEY];
-                    m_interstitialUnitId = parameters[_INTERSTITIAL_ID_KEY];
-                    m_rewardVideoUnitId = parameters[_REWARDED_ID_KEY];
+                    //m_bannerUnitId = parameters[_BANNER_ID_KEY];
+                    //m_interstitialUnitId = parameters[_INTERSTITIAL_ID_KEY];
+                    //m_rewardVideoUnitId = parameters[_REWARDED_ID_KEY];
                     appId = parameters[_APP_ID_KEY];
                 }
                 catch
                 {
-                    m_bannerUnitId = "";
-                    m_interstitialUnitId = "";
-                    m_rewardVideoUnitId = "";
+                    //m_bannerUnitId = "";
+                    //m_interstitialUnitId = "";
+                    //m_rewardVideoUnitId = "";
                     appId = "";
                 }
             }
 
+            /*
             if (IsSupported(AdType.Banner))
             {
                 m_bannerInstance = new AdMobAdInstanceData(AdType.Banner, m_bannerUnitId);
@@ -154,13 +155,18 @@ namespace Virterix.AdMediation
             {
                 m_interstitialInstance = new AdMobAdInstanceData(AdType.Interstitial, m_interstitialUnitId);
                 AddAdInstance(m_interstitialInstance);
-            }
+            }*/
+
             MobileAds.Initialize(OnInitComplete);
         }
 
         protected override void InitializeAdInstanceData(AdInstanceData adInstance, JSONValue jsonAdInstance)
         {
             base.InitializeAdInstanceData(adInstance, jsonAdInstance);
+            if (adInstance.m_adType == AdType.Incentivized && m_interstitialInstance == null)
+            {
+                m_interstitialInstance = adInstance as AdMobAdInstanceData;
+            }
         }
 
         protected override AdInstanceData CreateAdInstanceData(JSONValue jsonAdInstance)
@@ -173,11 +179,12 @@ namespace Virterix.AdMediation
         {
         }
 
-        public override void Prepare(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        public override void Prepare(AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
+            AdType adType = adInstance.m_adType;
 
-            if (GetAdState(adType, adInstance) != AdState.Loading)
+            if (adInstance.m_state != AdState.Loading)
             {
                 switch (adType)
                 {
@@ -188,16 +195,17 @@ namespace Virterix.AdMediation
                         RequestInterstitial(adMobAdInstance);
                         break;
                     case AdType.Incentivized:
-                        RequestRewardVideo(m_rewardVideoUnitId);
+                        RequestRewardVideo(m_interstitialInstance);
                         break;
                 }
             }
         }
 
-        public override bool Show(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        public override bool Show(AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
-            bool isAdAvailable = GetAdState(adType, adMobAdInstance) == AdState.Received;
+            AdType adType = adInstance.m_adType;
+            bool isAdAvailable = adInstance.m_state == AdState.Received;
 
             if (adType == AdType.Banner)
             {
@@ -232,16 +240,17 @@ namespace Virterix.AdMediation
             return isAdAvailable;
         }
 
-        public override void Hide(AdType adType, AdInstanceData adInstance = null)
+        public override void Hide(AdInstanceData adInstance = null)
         {
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
+            AdType adType = adInstance.m_adType;
 
             switch (adType)
             {
                 case AdType.Banner:
                     adMobAdInstance.m_isBannerAdTypeVisibled = false;
 
-                    if (GetAdState(adType, adInstance) == AdState.Received)
+                    if (adInstance.m_state == AdState.Received)
                     {
                         BannerView bannerView = adInstance.m_adView as BannerView;
                         bannerView.Hide();
@@ -251,15 +260,16 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override void HideBannerTypeAdWithoutNotify(AdType adType, AdInstanceData adInstance = null)
+        public override void HideBannerTypeAdWithoutNotify(AdInstanceData adInstance = null)
         {
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
             adMobAdInstance.m_isBannerAdTypeVisibled = false;
+            AdType adType = adInstance.m_adType;
 
             switch (adType)
             {
                 case AdType.Banner:
-                    if (GetAdState(adType, adInstance) == AdState.Received)
+                    if (adInstance.m_state == AdState.Received)
                     {
                         BannerView bannerView = adInstance.m_adView as BannerView;
                         bannerView.Hide();
@@ -268,14 +278,15 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool IsReady(AdType adType, AdInstanceData adInstance = null)
+        public override bool IsReady(AdInstanceData adInstance = null)
         {
 #if UNITY_EDITOR
             return false;
 #endif
-
-            bool isReady = GetAdState(adType, adInstance) == AdState.Received;
+            AdType adType = adInstance.m_adType;
+            bool isReady = adInstance.m_state == AdState.Received;
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
+
 
             switch (adType)
             {
@@ -348,9 +359,9 @@ namespace Virterix.AdMediation
             DestroyBanner(adInstance);
 
 #if AD_MEDIATION_DEBUG_MODE
-            print("AdMobAdapter.RequestBanner() " + " AdInstance: " + adInstance.Name + " ID : " + adInstance.m_adID);
+            Debug.Log("AdMobAdapter.RequestBanner() " + " AdInstance: " + adInstance.Name + " ID : " + adInstance.m_adID);
 #endif
-            SetAdState(AdType.Banner, adInstance, AdState.Loading);
+            adInstance.m_state = AdState.Loading;
 
             AdMobAdInstanceBannerParameters bannerParams = adInstance.m_adInstanceParams as AdMobAdInstanceBannerParameters;  
             AdPosition bannerPosition = adInstance.GetBannerPosition(placement);
@@ -410,7 +421,7 @@ namespace Virterix.AdMediation
                 bannerView.OnAdLeavingApplication -= adInstance.onAdLeavingApplicationHandler;
 
                 bannerView.Destroy();
-                SetAdState(AdType.Banner, adInstance, AdState.Uncertain);
+                adInstance.m_state = AdState.Uncertain;
             }
         }
 
@@ -418,7 +429,7 @@ namespace Virterix.AdMediation
         {
             DestroyInterstitial(adInstance);
 
-            SetAdState(AdType.Interstitial, adInstance, AdState.Loading);
+            adInstance.m_state = AdState.Loading;
 
             // Create an interstitial.
             InterstitialAd interstitial = new InterstitialAd(adInstance.m_adID);
@@ -472,14 +483,14 @@ namespace Virterix.AdMediation
                 interstitial.OnAdLeavingApplication -= adInstance.onAdLeavingApplicationHandler;
 
                 interstitial.Destroy();
-                SetAdState(AdType.Interstitial, adInstance, AdState.Uncertain);
+                adInstance.m_state = AdState.Uncertain;
             }
         }
 
-        private void RequestRewardVideo(string adUnitId)
+        private void RequestRewardVideo(AdMobAdInstanceData adInstance)
         {
-            SetAdState(AdType.Interstitial, null, AdState.Loading);
-            m_rewardVideo.LoadAd(CreateAdRequest(), adUnitId);
+            adInstance.m_state = AdState.Loading;
+            m_rewardVideo.LoadAd(CreateAdRequest(), adInstance.m_adID);
         }
 
         // Returns an ad request with custom ad targeting.
@@ -522,7 +533,7 @@ namespace Virterix.AdMediation
                 " isVisibled: " + adInstance.m_isBannerAdTypeVisibled);
 #endif
 
-            SetAdState(AdType.Banner, adInstance, AdState.Received);
+            adInstance.m_state = AdState.Received;
             BannerView bannerView = adInstance.m_adView as BannerView;
             if (adInstance.m_isBannerAdTypeVisibled)
             {
@@ -588,7 +599,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             print("AdMobAdapter.HandleInterstitialLoaded()");
 #endif
-            SetAdState(AdType.Interstitial, adInstance, AdState.Received);
+            adInstance.m_state = AdState.Received;
             AddEvent(AdType.Interstitial, AdEvent.Prepared, adInstance);
         }
 
@@ -642,7 +653,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("HandleRewardBasedVideoLoaded event received");
 #endif
-            SetAdState(AdType.Incentivized, null, AdState.Received);
+            m_interstitialInstance.m_state = AdState.Received;
             AddEvent(AdType.Incentivized, AdEvent.Prepared);
         }
 
@@ -651,7 +662,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("HandleRewardBasedVideoFailedToLoad event received with message: " + args.Message);
 #endif
-            SetAdState(AdType.Incentivized, null, AdState.Uncertain);
+            m_interstitialInstance.m_state = AdState.Uncertain;
             AddEvent(AdType.Incentivized, AdEvent.PrepareFailure);
         }
 
@@ -675,7 +686,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("HandleRewardBasedVideoClosed event received");
 #endif
-            SetAdState(AdType.Incentivized, null, AdState.Uncertain);
+            m_interstitialInstance.m_state = AdState.Uncertain;
             AddEvent(AdType.Incentivized, AdEvent.Hide);
         }
 

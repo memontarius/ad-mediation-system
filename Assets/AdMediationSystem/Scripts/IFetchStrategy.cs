@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace Virterix.AdMediation
 {
-    public class IFetchStrategyParams
+    public class BaseFetchStrategyParams
     {
-        public float m_waitingResponseTime;
-        public int m_impressionsInSession;
     }
 
     public interface IFetchStrategy

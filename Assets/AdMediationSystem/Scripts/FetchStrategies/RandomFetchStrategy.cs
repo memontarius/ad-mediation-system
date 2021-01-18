@@ -12,7 +12,7 @@ namespace Virterix.AdMediation
             public int max;
         }
 
-        public class RandomStrategyParams : IFetchStrategyParams
+        public class RandomStrategyParams : BaseFetchStrategyParams
         {
             public int m_percentage;
         }
@@ -27,7 +27,7 @@ namespace Virterix.AdMediation
         private int m_fetchCount;
         private List<AdUnit> m_fetchedUnits = new List<AdUnit>();
 
-        public static void SetupParameters(ref IFetchStrategyParams strategyParams, Dictionary<string, object> networkParams)
+        public static void SetupParameters(ref BaseFetchStrategyParams strategyParams, Dictionary<string, object> networkParams)
         {
             RandomStrategyParams randomFetchParams = strategyParams as RandomStrategyParams;
             randomFetchParams.m_percentage = System.Convert.ToInt32(networkParams["percentage"]);

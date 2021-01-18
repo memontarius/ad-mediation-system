@@ -49,17 +49,12 @@ namespace Virterix.AdMediation
                 {
                     sdkKey = "";
                 }
-
-                parameters.TryGetValue("interstitialId", out _interstitialAdUnitId);
-                parameters.TryGetValue("rewardVideoId", out _rewardAdUnitId);
-                parameters.TryGetValue("bannerId", out _bannerAdUnitId);
             }
 
             SubscribeEvents();
 
 #if UNITY_ANDROID || UNITY_IPHONE
             MaxSdk.SetSdkKey(sdkKey);
-            //MaxSdk.SetUnityAdListener(this.name);
             MaxSdk.InitializeSdk();
 #endif
         }
@@ -134,37 +129,34 @@ namespace Virterix.AdMediation
         public override void SetPersonalizedAds(bool isPersonalizedAds)
         {
 #if UNITY_ANDROID || UNITY_IOS
-            //AppLovin.SetHasUserConsent(isPersonalizedAds ? "true" : "false");
             MaxSdk.SetHasUserConsent(isPersonalizedAds ? true : false);
 #endif
         }
 
-        public override void Hide(AdType adType, AdInstanceData adInstance = null)
+        public override void Hide(AdInstanceData adInstance = null)
         {
+            AdType adType = adInstance.m_adType;
             switch (adType)
             {
                 case AdType.Banner:
-                    //AppLovin.HideAd();
                     break;
             }
         }
 
-        public override bool IsReady(AdType adType, AdInstanceData adInstance = null)
+        public override bool IsReady(AdInstanceData adInstance = null)
         {
             bool isReady = false;
 #if UNITY_EDITOR
             return false;
 #endif
-
+            AdType adType = adInstance.m_adType;
 #if UNITY_ANDROID || UNITY_IOS
             switch (adType)
             {
                 case AdType.Interstitial:
-                    //isReady = AppLovin.HasPreloadedInterstitial();
                     isReady = MaxSdk.IsInterstitialReady(_interstitialAdUnitId);
                     break;
                 case AdType.Incentivized:
-                    //isReady = AppLovin.IsIncentInterstitialReady();
                     isReady = MaxSdk.IsRewardedAdReady(_rewardAdUnitId);
                     break;
                 case AdType.Banner:
@@ -176,19 +168,18 @@ namespace Virterix.AdMediation
             return isReady;
         }
 
-        public override void Prepare(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        public override void Prepare(AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
+            AdType adType = adInstance.m_adType;
 #if UNITY_ANDROID || UNITY_IOS
-            if (!IsReady(adType))
+            if (!IsReady(adInstance))
             {
                 switch (adType)
                 {
                     case AdType.Interstitial:
-                        //AppLovin.PreloadInterstitial();
                         MaxSdk.LoadInterstitial(_interstitialAdUnitId);
                         break;
                     case AdType.Incentivized:
-                        //AppLovin.LoadRewardedInterstitial();
                         MaxSdk.LoadRewardedAd(_rewardAdUnitId);
                         break;
                     case AdType.Banner:
@@ -198,10 +189,11 @@ namespace Virterix.AdMediation
 #endif
         }
 
-        public override bool Show(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        public override bool Show(AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
+            AdType adType = adInstance.m_adType;
             bool success = false;
-            if (IsReady(adType))
+            if (IsReady(adInstance))
             {
                 switch (adType)
                 {
@@ -211,11 +203,9 @@ namespace Virterix.AdMediation
                         //AppLovin.ShowAd(posX, posY);
                         break;
                     case AdType.Interstitial:
-                        //AppLovin.ShowInterstitial();
                         MaxSdk.ShowInterstitial(_interstitialAdUnitId);
                         break;
                     case AdType.Incentivized:
-                        //AppLovin.ShowRewardedInterstitial();
                         MaxSdk.ShowRewardedAd(_rewardAdUnitId);
                         break;
                 }

@@ -95,15 +95,16 @@ namespace Virterix.AdMediation
             return adInstance;
         }
 
-        public override void Prepare(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        public override void Prepare(AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
-            if (!IsReady(adType, adInstance))
+            AdType adType = adInstance.m_adType;
+            if (!IsReady(adInstance))
             {
                 if (adType == AdType.Banner)
                 {
                     if (m_isBannerDisplayed)
                     {
-                        Hide(AdType.Banner, adInstance);
+                        Hide(adInstance);
                     }
                     Advertisement.Banner.Load(adInstance.m_adID);
                 }
@@ -114,9 +115,10 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool Show(AdType adType, AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        public override bool Show(AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
         {
-            if (IsReady(adType, adInstance))
+            AdType adType = adInstance.m_adType;
+            if (IsReady(adInstance))
             {
                 if (adType == AdType.Banner)
                 {
@@ -137,8 +139,9 @@ namespace Virterix.AdMediation
             return false;
         }
 
-        public override void Hide(AdType adType, AdInstanceData adInstance = null)
+        public override void Hide(AdInstanceData adInstance = null)
         {
+            AdType adType = adInstance.m_adType;
             if (adType == AdType.Banner)
             {
                 Advertisement.Banner.Hide();
@@ -146,7 +149,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool IsReady(AdType adType, AdInstanceData adInstance = null)
+        public override bool IsReady(AdInstanceData adInstance = null)
         {
             bool isReady = false;
             if (adInstance != null)
@@ -173,7 +176,7 @@ namespace Virterix.AdMediation
 
         public void OnUnityAdsReady(string adId)
         {
-            AdInstanceData adInstance = GetAdInstanceByAdId(adId, false);
+            AdInstanceData adInstance = GetAdInstanceByAdId(adId);
 
             if (adInstance != null)
             {
@@ -182,7 +185,7 @@ namespace Virterix.AdMediation
 #endif
                 if (adInstance.m_adType == AdType.Banner && adInstance.m_isBannerAdTypeVisibled)
                 {
-                    Show(AdType.Banner, adInstance);
+                    Show(adInstance);
                 }
                 AddEvent(adInstance.m_adType, AdEvent.Prepared, adInstance);
             }
@@ -195,7 +198,7 @@ namespace Virterix.AdMediation
 
         public void OnUnityAdsDidStart(string adId)
         {
-            AdInstanceData adInstance = GetAdInstanceByAdId(adId, false);
+            AdInstanceData adInstance = GetAdInstanceByAdId(adId);
 
             if (adInstance != null)
             {
@@ -205,7 +208,7 @@ namespace Virterix.AdMediation
 
         public void OnUnityAdsDidFinish(string adId, ShowResult showResult)
         {
-            AdInstanceData adInstance = GetAdInstanceByAdId(adId, false);
+            AdInstanceData adInstance = GetAdInstanceByAdId(adId);
 
             if (adInstance != null)
             {

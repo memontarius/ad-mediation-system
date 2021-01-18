@@ -10,26 +10,40 @@ namespace Virterix.AdMediation
     /// </summary>
     public class AdUnit
     {
+        private AdType m_adType;
         private string m_placementName;
-        private AdType m_adapterAdType;
         private AdNetworkAdapter m_network;
-        private IFetchStrategyParams m_fetchStrategyParams;
+        private BaseFetchStrategyParams m_fetchStrategyParams;
         private float m_startImpressionTime;
         private bool m_isShown;
 
-        public AdType AdapterAdType { get { return m_adapterAdType; } }
-        public AdNetworkAdapter AdNetwork { get { return m_network; } }
+        public AdType AdapterAdType 
+        { 
+            get { return m_adType; } 
+        }
+
+        public AdNetworkAdapter AdNetwork 
+        { 
+            get { return m_network; } 
+        }
+
         public int Index { get; set; }
+
         public string PlacementName
         {
             get { return m_placementName; }
         }
 
-        public bool? IsPepareWhenChangeNetwork
+        public float NetworkwaitingResponseTime
+        {
+            get { return AdInstance.m_waitingResponseTime; }
+        }
+  
+        public bool IsPepareWhenChangeNetwork
         {
             get { return m_prepareWhenChangeNetwork; }
         }
-        private bool? m_prepareWhenChangeNetwork;
+        private bool m_prepareWhenChangeNetwork;
 
         public string AdInstanceName
         {
@@ -37,7 +51,7 @@ namespace Virterix.AdMediation
         }
         private string m_adInstanceName;
 
-        public IFetchStrategyParams FetchStrategyParams
+        public BaseFetchStrategyParams FetchStrategyParams
         {
             get { return m_fetchStrategyParams; }
         }
@@ -61,7 +75,7 @@ namespace Virterix.AdMediation
         {
             get
             {
-                return IsTimeout ? false : m_network.IsReady(m_adapterAdType, AdInstance);
+                return IsTimeout ? false : m_network.IsReady(AdInstance);
             }
         }
 
@@ -111,7 +125,8 @@ namespace Virterix.AdMediation
         {
             get
             {
-                return AdNetwork.IsTimeout(AdapterAdType, AdInstance);
+                bool isTimeout = AdInstance.m_timeout != null ? AdInstance.m_timeout.Value.IsTimeout : false;
+                return isTimeout;
             }
         }
 
@@ -134,25 +149,25 @@ namespace Virterix.AdMediation
             }
         }
         
-        public AdUnit(string placementName, string adInstanceName, AdType adType, AdNetworkAdapter network,
-           IFetchStrategyParams strategyParams, bool? isPepareWhenChangeNetwork)
+        public AdUnit(string placementName, AdType adType, string adInstanceName, AdNetworkAdapter network,
+           BaseFetchStrategyParams strategyParams)
         {
-            m_adapterAdType = adType;
+            m_adType = adType;
             m_network = network;
             m_fetchStrategyParams = strategyParams;
             m_placementName = placementName;
-            m_prepareWhenChangeNetwork = isPepareWhenChangeNetwork;
             m_adInstanceName = adInstanceName;
+
         }
 
         /// <returns>True when successfully shown ad</returns>
         public bool ShowAd()
         {
-            bool showed = m_network.Show(m_adapterAdType, AdInstance, PlacementName);
+            bool showed = m_network.Show(AdInstance, PlacementName);
             Impressions = showed ? Impressions + 1 : Impressions;
             m_wasLastImpressionSuccessful = showed;
 
-            if (m_adapterAdType == AdType.Banner)
+            if (AdapterAdType == AdType.Banner)
             {
                 if (showed)
                 {
@@ -166,23 +181,23 @@ namespace Virterix.AdMediation
         public void HideAd()
         {
             UpdateDisplayTimeWhenAdHidden();
-            m_network.Hide(m_adapterAdType, AdInstance);
+            m_network.Hide(AdInstance);
         }
 
         public void HideBannerTypeAdWithoutNotify()
         {
             UpdateDisplayTimeWhenAdHidden();
-            m_network.HideBannerTypeAdWithoutNotify(m_adapterAdType, AdInstance);
+            m_network.HideBannerTypeAdWithoutNotify(AdInstance);
         }
 
         public void PrepareAd()
         {
-            m_network.Prepare(m_adapterAdType, AdInstance, PlacementName);
+            m_network.Prepare(AdInstance, PlacementName);
         }
 
         public void ResetAd()
         {
-            m_network.ResetAd(m_adapterAdType, AdInstance);
+            m_network.ResetAd(AdInstance);
         }
 
         public void ResetLastImpressionSuccessfulState()
@@ -192,7 +207,7 @@ namespace Virterix.AdMediation
 
         private void UpdateDisplayTimeWhenAdHidden()
         {
-            if (m_adapterAdType == AdType.Banner)
+            if (AdapterAdType == AdType.Banner)
             {
                 if (m_isShown)
                 {

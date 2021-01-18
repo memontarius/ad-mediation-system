@@ -21,9 +21,9 @@ namespace Virterix.AdMediation
             return fetchStrategy;
         }
 
-        public static IFetchStrategyParams CreateFetchStrategyParams(string strategyTypeName, AdType adType, Dictionary<string, object> networkParams)
+        public static BaseFetchStrategyParams CreateFetchStrategyParams(string strategyTypeName, Dictionary<string, object> networkParams)
         {
-            IFetchStrategyParams fetchStrategyParams = null;
+            BaseFetchStrategyParams fetchStrategyParams = null;
 
             switch (strategyTypeName)
             {
@@ -50,17 +50,22 @@ namespace Virterix.AdMediation
                     }
                     break;
             }
-
-            if (fetchStrategyParams != null)
-            {
-                fetchStrategyParams.m_waitingResponseTime = (float)System.Convert.ToDouble(networkParams["waitingResponseTime"]);  
-                if (networkParams.ContainsKey("impressionsInSession"))
-                {
-                    fetchStrategyParams.m_impressionsInSession = System.Convert.ToInt32(networkParams["impressionsInSession"]);
-                }
-            }
-
             return fetchStrategyParams;
+        }
+
+        public static AdInstanceData CreateAdInstacne(AdType adType, string instanceName = AdInstanceData._AD_INSTANCE_DEFAULT_NAME, 
+            string adId = "", float timeout = 0.0f, float waitingResponseTime = 30f)
+        {
+            AdInstanceData adInstance = new AdInstanceData(adType, adId, instanceName);
+            if (timeout > 0.0001f)
+            {
+                AdNetworkAdapter.TimeoutParams timeoutParameters = new AdNetworkAdapter.TimeoutParams();
+                timeoutParameters.m_timeout = timeout;
+                timeoutParameters.m_adType = adInstance.m_adType;
+                adInstance.m_timeout = timeoutParameters;
+            }
+            adInstance.m_waitingResponseTime = waitingResponseTime;
+            return adInstance;
         }
     }
 } // namespace Virterix.AdMediation
