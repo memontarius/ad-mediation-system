@@ -83,24 +83,32 @@ public abstract class MaxSdkBase
     {
         public string AdUnitIdentifier { get; private set; }
         public string NetworkName { get; private set; }
+        public string Placement { get; private set; }
+        public string CreativeIdentifier { get; private set; }
 
         public AdInfo(string adInfoString)
         {
             string adUnitIdentifier = "";
             string networkName = "";
-
+            string creativeIdentifier = "";
+            string placement = "";
+            
             // NOTE: Unity Editor creates empty string
             IDictionary<string, string> adInfoObject = MaxSdkUtils.PropsStringToDict(adInfoString);
             adInfoObject.TryGetValue("adUnitId", out adUnitIdentifier);
             adInfoObject.TryGetValue("networkName", out networkName);
-
-            AdUnitIdentifier = adUnitIdentifier;
+            adInfoObject.TryGetValue("creativeId", out creativeIdentifier);
+            adInfoObject.TryGetValue("placement", out placement);
+         
+            AdUnitIdentifier = adUnitIdentifier;	
             NetworkName = networkName;
+            CreativeIdentifier = creativeIdentifier;
+            Placement = placement;
         }
 
         public override string ToString()
         {
-            return "[AdInfo adUnitIdentifier: " + AdUnitIdentifier + ", networkName: " + NetworkName + "]";
+            return "[AdInfo adUnitIdentifier: " + AdUnitIdentifier + ", networkName: " + NetworkName  + ", creativeIdentifier: " + CreativeIdentifier + ", placement: " + Placement + "]";
         }
     }
 
@@ -132,6 +140,9 @@ public abstract class MaxSdkBase
     {
         var metaData = new Dictionary<string, string>();
         metaData.Add("UnityVersion", Application.unityVersion);
+
+        var graphicsMemorySize = SystemInfo.graphicsMemorySize;
+        metaData.Add("GraphicsMemorySizeMegabytes", graphicsMemorySize.ToString());
 
         return MaxSdkUtils.DictToPropsString(metaData);
     }

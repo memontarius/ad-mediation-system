@@ -6,6 +6,7 @@
 //  Copyright © 2019 AppLovin. All rights reserved.
 //
 
+using AppLovinMax.Scripts.IntegrationManager.Editor;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -14,10 +15,12 @@ using UnityEngine;
 /// A <see cref="ScriptableObject"/> representing the AppLovin Settings that can be set in the Integration Manager Window.
 ///
 /// The scriptable object asset is created with the name <c>AppLovinSettings.asset</c> and is placed under the directory <c>Assets/MaxSdk/Resources</c>.
+///
+/// NOTE: Not name spacing this class since it is reflected upon by the Google adapter and will break compatibility.
 /// </summary>
 public class AppLovinSettings : ScriptableObject
 {
-    private static readonly string SettingsFile = Path.Combine("Assets/MaxSdk/Resources", "AppLovinSettings.asset");
+    private const string SettingsExportPath = "MaxSdk/Resources/AppLovinSettings.asset";
 
     private static AppLovinSettings instance;
 
@@ -41,17 +44,18 @@ public class AppLovinSettings : ScriptableObject
         {
             if (instance == null)
             {
-                var settingsDir = Path.GetDirectoryName(SettingsFile);
+                var settingsFilePath = Path.Combine(AppLovinIntegrationManager.PluginParentDirectory, SettingsExportPath);
+                var settingsDir = Path.GetDirectoryName(settingsFilePath);
                 if (!Directory.Exists(settingsDir))
                 {
                     Directory.CreateDirectory(settingsDir);
                 }
 
-                instance = AssetDatabase.LoadAssetAtPath<AppLovinSettings>(SettingsFile);
+                instance = AssetDatabase.LoadAssetAtPath<AppLovinSettings>(settingsFilePath);
                 if (instance != null) return instance;
 
                 instance = CreateInstance<AppLovinSettings>();
-                AssetDatabase.CreateAsset(instance, SettingsFile);
+                AssetDatabase.CreateAsset(instance, settingsFilePath);
             }
 
             return instance;

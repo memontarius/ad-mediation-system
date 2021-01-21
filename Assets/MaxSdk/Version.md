@@ -1,5 +1,13 @@
 ## Versions
 
+## 3.2.0
+    * Add `AdInfo.Placement` to retrieve the placement of the loaded ad.
+    * Add `AdInfo.CreativeId` to retrieve the creative id of the loaded ad.
+    * Add ability to move the MaxSdk plugin directory within the Unity project.
+    * Add namespace to all Editor scripts.
+    * Add memory optimization.
+    * Fix first banner of the session not using background color on iOS.
+    * Fix edge case where banners are detached from the view controller (e.g. multiple windows) and not show.
 ## 3.1.18
     * Add `GetBannerLayout` and `GetMRecLayout` APIs to get the ad view absolute position on screen.
 ## 3.1.17

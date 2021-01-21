@@ -71,7 +71,7 @@ namespace Virterix.AdMediation
         // For GDPR Compliance
         private bool m_isPersonalizedAds;
 
-        public static event Action OnInitializeCompleted = delegate { };
+        public static event Action OnInitializeComplete = delegate { };
         /// <summary>
         /// Callback all events of advertising networks.
         /// 5th parameter is the ad instance name
@@ -494,7 +494,7 @@ namespace Virterix.AdMediation
         private void NotifyInitializeCompleted()
         {
             m_isInitialized = true;
-            OnInitializeCompleted();
+            OnInitializeComplete();
         }
 
         #endregion // Other internal methods
@@ -543,7 +543,8 @@ namespace Virterix.AdMediation
             string networkNameInUnitKey = "network";
             string adInstanceNameInUnitKey = "instance";
             string unitAdTypeKey = "internalAdType";
-     
+            string unitAdPrepareOnExitKey = "prepareOnExit";
+
             string networksKey = "networks";
             string networkNameKey = "name";
 
@@ -687,6 +688,12 @@ namespace Virterix.AdMediation
                                     unitAdType = convertedAdType != AdType.Unknown ? convertedAdType : unitAdType;
                                 }
 
+                                bool isPrepareOnExit = false;
+                                if (jsonNetworkUnits.Obj.ContainsKey(unitAdPrepareOnExitKey))
+                                {
+                                    isPrepareOnExit = jsonNetworkUnits.Obj.GetBoolean(unitAdPrepareOnExitKey);
+                                }
+
                                 // If the network enabled and support this type of advertising then add it to list 
                                 if (networkAdapter != null)
                                 {
@@ -703,7 +710,8 @@ namespace Virterix.AdMediation
                                     }
 
                                     // Create ad unit
-                                    AdUnit unit = new AdUnit(mediatorPlacementName, unitAdType, adInstanceName, networkAdapter, fetchStrategyParams);
+                                    AdUnit unit = new AdUnit(mediatorPlacementName, unitAdType, adInstanceName, 
+                                        networkAdapter, fetchStrategyParams, isPrepareOnExit);
                                     arrUnits[unitIndex] = unit;
                                 }
                                 else
@@ -794,7 +802,6 @@ namespace Virterix.AdMediation
 
         private bool LoadJsonSettingsFromFile(ref JSONObject resultSettings, bool ignoreLoadedSettings = false)
         {
-
             JSONObject settings = null;
             bool isLoadSuccessfully = false;
 
@@ -840,7 +847,6 @@ namespace Virterix.AdMediation
 
         private void OnRemoteSettingsReceived(AdRemoteSettingsProvider.LoadingState loadingState, JSONObject remoteJsonSettings)
         {
-
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AdMediationSystem.OnRemoteSettingsReceived() Loading remote settings done. loadingState: " + loadingState);
 #endif

@@ -11,7 +11,7 @@
 				"tiers": [
 					[
 						{ "network":"admob", "instance":"BannerHighCpm" },
-						{ "network":"admob", "replaced":false }
+						{ "network":"admob", "replaced":true, "prepareOnExit":true }
 					],
 					[
 						{ "network":"audienceNetwork", "instance":"BannerHighCpm" },
@@ -28,8 +28,8 @@
 				"type":"sequence",
 				"tiers": [
 					[
-						{ "network":"admob", "instance":"Default"  },
-						{ "network":"audienceNetwork", "instance":"Top" }
+						{ "network":"admob", "instance":"BannerTop"  },
+						{ "network":"audienceNetwork", "instance":"BannerTop" }
 					]
 				]
 			}
@@ -40,10 +40,21 @@
 			{
 				"type":"sequence",
 				"tiers": [
-					[	
+					[
 						{ "network":"admob", "instance":"InterstitialHighCpm" },
-						{ "network":"admob", "instance":"InterstitialMidCpm" },
-						{ "network":"admob" }
+						{ "network":"admob", "replaced":true  }
+					],
+					[
+						{ "network":"audienceNetwork", "instance":"InterstitialHighCpm" },
+						{ "network":"audienceNetwork", "replaced":true }
+					],
+					[
+						{ "network":"unityads", "instance":"InterstitialHighCpm" },
+						{ "network":"unityads" }
+					],
+					[
+						{ "network":"applovin" },
+						{ "network":"chartboost" }
 					]
 				]
 			}
@@ -52,19 +63,14 @@
             "adType":"incentivized",
             "strategy":
 			{
-				"type":"random",
+				"type":"sequence",
 				"tiers": [
 					[
-						{ "network":"admob", "percentage":100 }
-					],
-					[
-						{ "network":"applovin", "percentage":100 }
-					],
-					[
-						{ "network":"unityads", "percentage":2 }
-					],
-					[
-						{ "network":"audienceNetwork", "percentage":2 }
+						{ "network":"admob" },
+						{ "network":"applovin" },
+						{ "network":"unityads" },
+						{ "network":"audienceNetwork" },
+						{ "network":"chartboost" }
 					]
 				]
 			}
@@ -73,26 +79,26 @@
     "networks":[
 		{
             "name":"admob",
-			"appId":"ca-app-pub-1726624045989422~7998588197",
 			"instances":
 			[
-				{
-					"adType":"interstitial",
-					"id":"ca-app-pub-1726624045989422/3373004591",
-				},
-				{
-					"adType":"banner",
-					"id":"ca-app-pub-1726624045989422/9475321397"
-				},
 				{
 					"adType":"incentivized",
 					"id":"ca-app-pub-1726624045989422/1847734765"
 				},
 				{
+					"adType":"interstitial",
+					"id":"ca-app-pub-1726624045989422/3373004591",
+				},
+				{
+					"adType":"interstitial",
+					"name":"InterstitialHighCpm",
+					"id":"ca-app-pub-1726624045989422/1675135716",
+					"timeout":300
+				},
+				{
 					"adType":"banner",
-					"name":"Top",
-					"param":"Top",
-					"id":"ca-app-pub-1726624045989422/8427350554"
+					"id":"ca-app-pub-1726624045989422/9475321397",
+					"timeout":60
 				},
 				{
 					"adType":"banner",
@@ -102,54 +108,51 @@
 					"timeout":240
 				},
 				{
-					"adType":"interstitial",
-					"name":"InterstitialHighCpm",
-					"id":"ca-app-pub-1726624045989422/1675135716",
-					"timeout":240
-				},
-				{
-					"adType":"interstitial",
-					"name":"InterstitialMidCpm",
-					"id":"ca-app-pub-1726624045989422/1675135716",
-					"timeout":240
+					"adType":"banner",
+					"name":"BannerTop",
+					"param":"Top",
+					"id":"ca-app-pub-1726624045989422/8427350554",
+					"timeout":60
 				}
 			]
         },
 		{
             "name":"audienceNetwork",
-			"interstitialId":"932838540097052_936968189684087",
-            "bannerId":"932838540097052_936970156350557",
-			"rewardedId":"243096896537310_307099963470336",
-			"bannerRefreshTime":50,
-			"timeout-banner":90,
 			"instances":
 			[
 				{
-					"name":"Top",
-					"param":"Top",
-					"adType":"banner",
-					"id":"932838540097052_1883014478412782",
-					"refreshTime":50
+					"adType":"incentivized",
+					"id":"932838540097052_1969643389749890",
+					"timeout":60
 				},
 				{
-					"name":"BannerHighCpm",
-					"param":"Default",
-					"adType":"banner",
-					"id":"932838540097052_1545961522118081",
-					"refreshTime":50,
-					"timeout":240
+					"adType":"interstitial",
+					"id":"932838540097052_936968189684087",
+					"timeout":60
 				},
 				{
+					"adType":"interstitial",
 					"name":"InterstitialHighCpm",
-					"adType":"interstitial",
 					"id":"932838540097052_1545958872118346",
-					"timeout":240
+					"timeout":300
 				},
 				{
-					"name":"InterstitialMidCpm",
-					"adType":"interstitial",
-					"id":"932838540097052_1545958872118346",
-					"timeout":240
+					"adType":"banner",
+					"id":"932838540097052_936970156350557",
+					"timeout":60
+				},
+				{
+					"adType":"banner",
+					"name":"BannerHighCpm",
+					"id":"932838540097052_1545961522118081",
+					"timeout":300
+				},
+				{
+					"adType":"banner",
+					"name":"BannerTop",
+					"param":"Top",
+					"id":"932838540097052_1883014478412782",
+					"timeout":60
 				}
 			]
         },
@@ -166,25 +169,32 @@
 				{
 					"adType":"interstitial",
 					"id":"8246c766b2b82df1",
+					"timeout":120
 				},
 				{
 					"adType":"incentivized",
 					"id":"c249952395e24ff7",
+					"timeout":120
 				}
 			]
         },
 		{
 			"name":"unityads",
 			"appId":"2917696",
-			"interstitialId":"interstitial",
-			"rewardedId":"rewardedVideo",
-			"bannerId":"bottom_banner",
 			"instances":
 			[
 				{
-					"name":"Top",
-					"adType":"banner",
-					"id":"banner_top"
+					"adType":"interstitial",
+					"id":"interstitial"
+				},
+				{
+					"adType":"interstitial",
+					"name":"InterstitialHighCpm",
+					"id":"interstitial_highcpm"
+				},
+				{
+					"adType":"incentivized",
+					"id":"rewardedVideo"
 				}
 			]
 		},

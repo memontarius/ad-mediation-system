@@ -38,12 +38,12 @@ namespace Virterix.AdMediation
         {
             get { return AdInstance.m_waitingResponseTime; }
         }
-  
-        public bool IsPepareWhenChangeNetwork
+        
+        public bool IsPrepareOnExit
         {
-            get { return m_prepareWhenChangeNetwork; }
+            get { return m_isPrepareOnExit; }
         }
-        private bool m_prepareWhenChangeNetwork;
+        bool m_isPrepareOnExit;
 
         public string AdInstanceName
         {
@@ -68,8 +68,8 @@ namespace Virterix.AdMediation
                 return m_adInstance;
             }
         }
-        AdInstanceData m_adInstance;
-        bool m_isAdInstanceSetted;
+        private AdInstanceData m_adInstance;
+        private bool m_isAdInstanceSetted;
 
         public bool IsAdReady
         {
@@ -150,14 +150,14 @@ namespace Virterix.AdMediation
         }
         
         public AdUnit(string placementName, AdType adType, string adInstanceName, AdNetworkAdapter network,
-           BaseFetchStrategyParams strategyParams)
+           BaseFetchStrategyParams strategyParams, bool isPrepareOnExit = false)
         {
             m_adType = adType;
             m_network = network;
             m_fetchStrategyParams = strategyParams;
             m_placementName = placementName;
             m_adInstanceName = adInstanceName;
-
+            m_isPrepareOnExit = isPrepareOnExit;
         }
 
         /// <returns>True when successfully shown ad</returns>

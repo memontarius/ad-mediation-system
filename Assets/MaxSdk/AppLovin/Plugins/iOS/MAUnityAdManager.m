@@ -5,7 +5,7 @@
 
 #import "MAUnityAdManager.h"
 
-#define VERSION @"3.1.18"
+#define VERSION @"3.2.0"
 
 #define KEY_WINDOW [UIApplication sharedApplication].keyWindow
 #define DEVICE_SPECIFIC_ADVIEW_AD_FORMAT ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) ? MAAdFormat.leader : MAAdFormat.banner
@@ -375,7 +375,9 @@ static NSString *ALSerializeKeyValuePairSeparator;
     if ( !ad ) return @"";
     
     return [MAUnityAdManager propsStrFromDictionary: @{@"adUnitId" : adUnitIdentifier,
-                                                       @"networkName" : ad.networkName}];
+                                                       @"networkName" : ad.networkName,
+                                                       @"creativeId" : ad.creativeIdentifier,
+                                                       @"placement" : ad.placement}];
 }
 
 #pragma mark - Ad Callbacks
@@ -688,6 +690,9 @@ static NSString *ALSerializeKeyValuePairSeparator;
     MAAdView *view = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
     self.publisherBannerBackgroundColor = convertedColor;
     self.safeAreaBackground.backgroundColor = view.backgroundColor = convertedColor;
+    
+    // Position adView to ensure logic that depends on background color is properly run
+    [self positionAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
 }
 
 - (void)setAdViewPlacement:(nullable NSString *)placement forAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat
@@ -788,6 +793,19 @@ static NSString *ALSerializeKeyValuePairSeparator;
         
         // The adView has not yet been created. Store the ad unit ID, so that it can be displayed once the banner has been created.
         [self.adUnitIdentifiersToShowAfterCreate addObject: adUnitIdentifier];
+    }
+    else
+    {
+        // Check edge case where ad may be detatched from view controller
+        if ( !view.window.rootViewController )
+        {
+            [self log: @"%@ missing view controller - re-attaching to %@...", adFormat, [MAUnityAdManager unityViewController]];
+            
+            UIViewController *rootViewController = [MAUnityAdManager unityViewController];
+            [rootViewController.view addSubview: view];
+            
+            [self positionAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
+        }
     }
     
     self.safeAreaBackground.hidden = NO;

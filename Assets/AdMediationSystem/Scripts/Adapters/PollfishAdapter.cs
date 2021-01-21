@@ -54,9 +54,8 @@ namespace Virterix.AdMediation
 
 #if _MS_POLLFISH
 
-        private new void Awake()
+        private void Awake()
         {
-            base.Awake();
 #if !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS)
             Pollfish.SetEventObjectPollfish(this.gameObject.name);
 #endif
@@ -354,19 +353,19 @@ namespace Virterix.AdMediation
             }
 #endif
 
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedComplete);
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizedComplete, null);
         }
 
         private void surveyOpened()
         {
-            AddEvent(AdType.Incentivized, AdEvent.Show);
+            AddEvent(AdType.Incentivized, AdEvent.Show, null);
 
             HideBanners();
         }
 
         private void surveyClosed()
         {
-            AddEvent(AdType.Incentivized, AdEvent.Hide);
+            AddEvent(AdType.Incentivized, AdEvent.Hide, null);
 
             if (m_isRestoreBannersOnHideSurvey)
             {
@@ -421,7 +420,7 @@ namespace Virterix.AdMediation
                 m_lastReceivedSurveyInfo.m_surveyTypeName = "offerwall";
             }
 
-            AddEvent(AdType.Incentivized, AdEvent.Prepared);
+            AddEvent(AdType.Incentivized, AdEvent.Prepared, null);
         }
 
         private void surveyNotAvailable()
@@ -429,7 +428,7 @@ namespace Virterix.AdMediation
             ResetStatus();
             m_adInstance.m_state = AdState.NotAvailable;
 
-            AddEvent(AdType.Incentivized, AdEvent.PrepareFailure);
+            AddEvent(AdType.Incentivized, AdEvent.PrepareFailure, null);
             StartAutoPrepare();
         }
 
@@ -438,7 +437,7 @@ namespace Virterix.AdMediation
             ResetStatus();
             m_adInstance.m_state = AdState.NotAvailable;
 
-            AddEvent(AdType.Incentivized, AdEvent.PrepareFailure);
+            AddEvent(AdType.Incentivized, AdEvent.PrepareFailure, null);
         }
 
         private void userRejectedSurvey()
@@ -448,7 +447,7 @@ namespace Virterix.AdMediation
             m_surveyRejected = true;
             m_adInstance.m_state = AdState.NotAvailable;
 
-            AddEvent(AdType.Incentivized, AdEvent.PrepareFailure);
+            AddEvent(AdType.Incentivized, AdEvent.PrepareFailure, null);
         }
 
             #endregion // Pollfish callback

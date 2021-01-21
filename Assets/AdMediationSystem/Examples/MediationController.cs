@@ -23,13 +23,11 @@ public class MediationController : MonoBehaviour {
     // Use this for initialization
     void Awake() {
         m_adPersonalizedText.rectTransform.parent.GetComponent<Button>().interactable = false;
-        AdMediationSystem.OnInitializeCompleted += OnMediationSystemInitializeComplete;
+        AdMediationSystem.OnInitializeComplete += OnMediationSystemInitializeComplete;
         AdMediationSystem.OnAdNetworkEvent += OnAdNetworkEvent;
     }
 
     private void Start() {
-        //AdMediationSystem.Instance.Initialize();
-        //AdMediationSystem.Instance.SetPersonalizedAds(true);
     }
 
     private void OnMediationSystemInitializeComplete() {
@@ -40,6 +38,12 @@ public class MediationController : MonoBehaviour {
         if (m_pollfishNetwork != null) {
             m_pollfishNetwork.OnEvent += OnAdPollfishNetworkEvent;
         }
+    }
+
+    private void Initialized()
+    {
+        AdMediationSystem.Instance.Initialize();
+        AdMediationSystem.Instance.SetPersonalizedAds(true);
     }
 
     private void FetchAllAds()
@@ -133,17 +137,21 @@ public class MediationController : MonoBehaviour {
         }
     }
 
-    void OnAdPollfishNetworkEvent(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstanceData placementData) {
-        OnAdNetworkEvent(null, network, adType, adEvent, placementData == null ? AdMediationSystem._PLACEMENT_DEFAULT_NAME : placementData.Name);
+    void OnAdPollfishNetworkEvent(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstanceData adInstance) {
+        OnAdNetworkEvent(null, network, adType, adEvent, adInstance == null ? "" : adInstance.Name);
     }
 
     void OnAdNetworkEvent(AdMediator mediator, AdNetworkAdapter network, AdType adType, AdEvent adEvent, string adInstanceName) {
+        string placementName = mediator == null ? "" : mediator.m_placementName;
+
         if (network.m_networkName != "pollfish") {        
-            UpdateAdInfo(mediator, adType, mediator != null ? mediator.m_placementName : mediator.m_placementName);
+            UpdateAdInfo(mediator, adType, placementName);
         }
         
-        m_eventLogText.text = adType.ToString() + " Placement:" + mediator.m_placementName + " Instance:" + adInstanceName + " " + network.m_networkName + 
-            " " + adEvent.ToString() + "\n" + m_eventLogText.text;
+        string log = string.Format("{0} Placement: <color=blue>{1}</color> Instance: <color=blue>{2}</color> <b>{3}</b> {4} \n{5}",
+            adType.ToString(), placementName, adInstanceName, network.m_networkName, adEvent.ToString(), m_eventLogText.text);
+
+        m_eventLogText.text = log;
 
         if (adEvent == AdEvent.Show && network.m_networkName != "pollfish" &&
             (adType == AdType.Interstitial || adType == AdType.Incentivized)) {
@@ -184,10 +192,9 @@ public class MediationController : MonoBehaviour {
             isReady = mediator.IsCurrentNetworkReadyToShow;
         }
 
- 
         if (guiText != null) {
             guiText.text = "network: " + networkName + "\n" + 
-                "ready curr ads: " + isReady.ToString() + "\n" +
+                "ready: " + isReady.ToString() + "\n" +
                 "ready mediator: " + mediator?.IsReadyToShow.ToString();
         }
     }

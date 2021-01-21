@@ -262,13 +262,14 @@ public class MaxSdkUnityEditor : MaxSdkBase
     {
 #if UNITY_EDITOR
         // Only support BottomCenter and TopCenter for now
-        string bannerPrefabName = bannerPosition == BannerPosition.BottomCenter ? "BannerBottom" : "BannerTop";
-        GameObject bannerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/MaxSdk/Prefabs/" + bannerPrefabName + ".prefab");
-        GameObject stubBanner = Object.Instantiate(bannerPrefab, Vector3.zero, Quaternion.identity);
+        var bannerPrefabName = bannerPosition == BannerPosition.BottomCenter ? "BannerBottom" : "BannerTop";
+        var prefabPath = MaxSdkUtils.GetAssetPathForExportPath("MaxSdk/Prefabs/" + bannerPrefabName + ".prefab");
+        var bannerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+        var stubBanner = Object.Instantiate(bannerPrefab, Vector3.zero, Quaternion.identity);
         stubBanner.SetActive(false); // Hidden by default
         Object.DontDestroyOnLoad(stubBanner);
 
-        Text bannerText = stubBanner.GetComponentInChildren<Text>();
+        var bannerText = stubBanner.GetComponentInChildren<Text>();
         bannerText.text += ":\n" + adUnitIdentifier;
 
         StubBanners.Add(adUnitIdentifier, stubBanner);
@@ -282,8 +283,7 @@ public class MaxSdkUnityEditor : MaxSdkBase
     /// <param name="placement">Placement to set</param>
     public static void SetBannerPlacement(string adUnitIdentifier, string placement)
     {
-        MaxSdkLogger.UserDebug("Setting banner placement to '" + placement + "' for ad unit id '" + adUnitIdentifier +
-                               "'");
+        MaxSdkLogger.UserDebug("Setting banner placement to '" + placement + "' for ad unit id '" + adUnitIdentifier + "'");
     }
 
     /// <summary>
@@ -452,8 +452,7 @@ public class MaxSdkUnityEditor : MaxSdkBase
     /// <param name="placement">Placement to set</param>
     public static void SetMRecPlacement(string adUnitIdentifier, string placement)
     {
-        MaxSdkLogger.UserDebug("Setting MREC placement to '" + placement + "' for ad unit id '" + adUnitIdentifier +
-                               "'");
+        MaxSdkLogger.UserDebug("Setting MREC placement to '" + placement + "' for ad unit id '" + adUnitIdentifier + "'");
     }
 
     /// <summary>
@@ -463,8 +462,7 @@ public class MaxSdkUnityEditor : MaxSdkBase
     /// <param name="mrecPosition">A new position for the MREC</param>
     public static void UpdateMRecPosition(string adUnitIdentifier, AdViewPosition mrecPosition)
     {
-        MaxSdkLogger.UserDebug("Updating MREC position to '" + mrecPosition + "' for ad unit id '" +
-                               adUnitIdentifier + "'");
+        MaxSdkLogger.UserDebug("Updating MREC position to '" + mrecPosition + "' for ad unit id '" + adUnitIdentifier + "'");
     }
 
     /// <summary>
@@ -606,10 +604,11 @@ public class MaxSdkUnityEditor : MaxSdkBase
     private static void ShowStubInterstitial(string adUnitIdentifier)
     {
 #if UNITY_EDITOR
-        GameObject interstitialPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/MaxSdk/Prefabs/Interstitial.prefab");
-        GameObject stubInterstitial = Object.Instantiate(interstitialPrefab, Vector3.zero, Quaternion.identity);
-        Text interstitialText = GameObject.Find("MaxInterstitialTitle").GetComponent<Text>();
-        Button closeButton = GameObject.Find("MaxInterstitialCloseButton").GetComponent<Button>();
+        var prefabPath = MaxSdkUtils.GetAssetPathForExportPath("MaxSdk/Prefabs/Interstitial.prefab");
+        var interstitialPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+        var stubInterstitial = Object.Instantiate(interstitialPrefab, Vector3.zero, Quaternion.identity);
+        var interstitialText = GameObject.Find("MaxInterstitialTitle").GetComponent<Text>();
+        var closeButton = GameObject.Find("MaxInterstitialCloseButton").GetComponent<Button>();
 
         interstitialText.text += ":\n" + adUnitIdentifier;
         closeButton.onClick.AddListener(() =>
@@ -714,13 +713,14 @@ public class MaxSdkUnityEditor : MaxSdkBase
     private static void ShowStubRewardedAd(string adUnitIdentifier)
     {
 #if UNITY_EDITOR
-        GameObject rewardedPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/MaxSdk/Prefabs/Rewarded.prefab");
-        GameObject stubRewardedAd = Object.Instantiate(rewardedPrefab, Vector3.zero, Quaternion.identity);
-        bool grantedReward = false;
-        Text rewardedTitle = GameObject.Find("MaxRewardTitle").GetComponent<Text>();
-        Text rewardStatus = GameObject.Find("MaxRewardStatus").GetComponent<Text>();
-        Button closeButton = GameObject.Find("MaxRewardedCloseButton").GetComponent<Button>();
-        Button rewardButton = GameObject.Find("MaxRewardButton").GetComponent<Button>();
+        var prefabPath = MaxSdkUtils.GetAssetPathForExportPath("MaxSdk/Prefabs/Rewarded.prefab");
+        var rewardedPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+        var stubRewardedAd = Object.Instantiate(rewardedPrefab, Vector3.zero, Quaternion.identity);
+        var grantedReward = false;
+        var rewardedTitle = GameObject.Find("MaxRewardTitle").GetComponent<Text>();
+        var rewardStatus = GameObject.Find("MaxRewardStatus").GetComponent<Text>();
+        var closeButton = GameObject.Find("MaxRewardedCloseButton").GetComponent<Button>();
+        var rewardButton = GameObject.Find("MaxRewardButton").GetComponent<Button>();
 
         rewardedTitle.text += ":\n" + adUnitIdentifier;
         closeButton.onClick.AddListener(() =>
@@ -835,13 +835,14 @@ public class MaxSdkUnityEditor : MaxSdkBase
     private static void ShowStubRewardedInterstitialAd(string adUnitIdentifier)
     {
 #if UNITY_EDITOR
-        GameObject rewardedPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/MaxSdk/Prefabs/Rewarded.prefab");
-        GameObject stubRewardedAd = Object.Instantiate(rewardedPrefab, Vector3.zero, Quaternion.identity);
-        bool grantedReward = false;
-        Text rewardedTitle = GameObject.Find("MaxRewardTitle").GetComponent<Text>();
-        Text rewardStatus = GameObject.Find("MaxRewardStatus").GetComponent<Text>();
-        Button closeButton = GameObject.Find("MaxRewardedCloseButton").GetComponent<Button>();
-        Button rewardButton = GameObject.Find("MaxRewardButton").GetComponent<Button>();
+        var prefabPath = MaxSdkUtils.GetAssetPathForExportPath("MaxSdk/Prefabs/Rewarded.prefab");
+        var rewardedPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+        var stubRewardedAd = Object.Instantiate(rewardedPrefab, Vector3.zero, Quaternion.identity);
+        var grantedReward = false;
+        var rewardedTitle = GameObject.Find("MaxRewardTitle").GetComponent<Text>();
+        var rewardStatus = GameObject.Find("MaxRewardStatus").GetComponent<Text>();
+        var closeButton = GameObject.Find("MaxRewardedCloseButton").GetComponent<Button>();
+        var rewardButton = GameObject.Find("MaxRewardButton").GetComponent<Button>();
 
         rewardedTitle.text = "MAX Rewarded Interstitial Ad:\n" + adUnitIdentifier;
         closeButton.onClick.AddListener(() =>

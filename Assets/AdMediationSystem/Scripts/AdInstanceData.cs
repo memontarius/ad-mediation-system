@@ -14,7 +14,7 @@ namespace Virterix.AdMediation
         {
             m_enabledState = true;
             m_adType = adType;
-            m_adID = adID;
+            m_adId = adID;
             Name = name;
         }
 
@@ -42,7 +42,7 @@ namespace Virterix.AdMediation
         }
      
         public AdType m_adType;
-        public string m_adID;
+        public string m_adId;
         public AdNetworkAdapter.TimeoutParams? m_timeout;
         public bool m_isBannerAdTypeVisibled;
         public AdNetworkAdapter.AdState m_state = AdNetworkAdapter.AdState.Uncertain;
@@ -53,6 +53,15 @@ namespace Virterix.AdMediation
         public float m_startImpressionTime;
         public float m_displayTime;
         public float m_waitingResponseTime = 30f;
-        public bool m_isPepareWhenChangeNetwork;
+        
+        public void SaveFailedLoadingTime()
+        {
+            if (m_timeout != null)
+            {
+                AdNetworkAdapter.TimeoutParams timeoutParameters = m_timeout.Value;
+                timeoutParameters.FailedLoadingTime = Time.realtimeSinceStartup;
+                m_timeout = timeoutParameters;
+            }
+        }
     }
 } // namespace Virterix.AdMediation

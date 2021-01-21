@@ -22,6 +22,12 @@ namespace Virterix.AdMediation
         IncentivizedIncomplete
     }
 
+    public struct IncentivizedReward
+    {
+        public string label;
+        public double amount;
+    }
+
     public partial class AdNetworkAdapter : MonoBehaviour
     {
         //_______________________________________________________________________________
@@ -98,6 +104,11 @@ namespace Virterix.AdMediation
         #region Properties
         //-------------------------------------------------------------------------------
 
+        public IncentivizedReward LastReward
+        {
+            get { return m_lastReward; }
+        }
+
         public string BannerPlacement
         {
             set; get;
@@ -127,34 +138,14 @@ namespace Virterix.AdMediation
 
         #endregion Properties
 
-        private bool[] m_arrLastAdPreparedState;
-        private bool[] m_arrEnableState;
-        private AdState[] m_arrAdState;
-
         private List<EventParam> m_events = new List<EventParam>();
-        private TimeoutParams[] m_timeoutParameters;
         protected List<IAdInstanceParameters> m_adInstanceParameters = new List<IAdInstanceParameters>();
         private List<AdInstanceData> m_adInstances = new List<AdInstanceData>();
+        protected IncentivizedReward m_lastReward;
 
         //_______________________________________________________________________________
         #region MonoBehavior Methods
         //-------------------------------------------------------------------------------
-
-        protected void Awake()
-        {
-            int count = Enum.GetNames(typeof(AdType)).Length;
-            m_arrLastAdPreparedState = new bool[count];
-            m_arrAdState = new AdState[count];
-            m_arrEnableState = new bool[count];
-
-            if (this.enabled)
-            {
-                for (int i = 0; i < count; i++)
-                {
-                    m_arrEnableState[i] = true;
-                }
-            }
-        }
 
         protected void Update()
         {
@@ -252,7 +243,7 @@ namespace Virterix.AdMediation
             return adSupportParam.m_isCheckAvailabilityWhenPreparing;
         }
 
-        public void AddEvent(AdType adType, AdEvent adEvent, AdInstanceData adInstance = null)
+        public void AddEvent(AdType adType, AdEvent adEvent, AdInstanceData adInstance)
         {
             EventParam eventParam = new EventParam();
             eventParam.m_adType = adType;
@@ -261,93 +252,14 @@ namespace Virterix.AdMediation
             m_events.Add(eventParam);
         }
 
-        public void NotifyEvent(AdType adType, AdEvent adEvent, AdInstanceData adInstance = null)
+        public void NotifyEvent(AdType adType, AdEvent adEvent, AdInstanceData adInstance)
         {
             string adInstanceName = adInstance != null ? adInstance.Name : AdInstanceData._AD_INSTANCE_DEFAULT_NAME;
-
-            if (adEvent == AdEvent.PrepareFailure || adEvent == AdEvent.Prepared)
+            if (adInstance != null && (adEvent == AdEvent.PrepareFailure || adEvent == AdEvent.Prepared))
             {
-                if (adInstance != null)
-                {
-                    adInstance.m_lastAdPrepared = adEvent == AdEvent.Prepared;
-                }
-                else
-                {
-                    m_arrLastAdPreparedState[(int)adType] = adEvent == AdEvent.Prepared;
-                }
+                adInstance.m_lastAdPrepared = adEvent == AdEvent.Prepared;
             }
             OnEvent(this, adType, adEvent, adInstance);
-        }
-
-        public bool GetLastAdPreparedStatus(AdType adType, AdInstanceData adInstance = null)
-        {
-            if (adInstance == null)
-            {
-                return m_arrLastAdPreparedState[(int)adType];
-            }
-            else
-            {
-                return adInstance.m_lastAdPrepared;
-            }
-        }
-
-        TimeoutParams GetTimeoutParams(AdType adType)
-        {
-            TimeoutParams foundParams = new TimeoutParams();
-            if (m_timeoutParameters != null)
-            {
-                foreach (TimeoutParams timeoutParams in m_timeoutParameters)
-                {
-                    if (timeoutParams.m_adType == adType)
-                    {
-                        foundParams = timeoutParams;
-                        break;
-                    }
-                }
-            }
-            return foundParams;
-        }
-
-        public bool IsTimeout(AdType adType, AdInstanceData adInstance)
-        {
-            bool isTimeout = false;
-            if (adInstance != null)
-            {
-                isTimeout = adInstance.m_timeout.Value.IsTimeout;
-            }
-            else
-            {
-                if (m_timeoutParameters != null)
-                {
-                    TimeoutParams failedInfo = GetTimeoutParams(adType);
-                    isTimeout = failedInfo.IsTimeout;
-                }
-            }
-            return isTimeout;
-        }
-
-        public void SaveFailedLoadingTime(AdType adType, AdInstanceData adInstance)
-        {
-            if (adInstance != null)
-            {
-                TimeoutParams timeoutParameters = adInstance.m_timeout.Value;
-                timeoutParameters.FailedLoadingTime = Time.realtimeSinceStartup;
-                adInstance.m_timeout = timeoutParameters;
-            }
-            else
-            {
-                if (m_timeoutParameters != null)
-                {
-                    for (int i = 0; i < m_timeoutParameters.Length; i++)
-                    {
-                        if (m_timeoutParameters[i].m_adType == adType)
-                        {
-                            m_timeoutParameters[i].FailedLoadingTime = Time.realtimeSinceStartup;
-                            break;
-                        }
-                    }
-                }
-            }
         }
 
         public IAdInstanceParameters GetAdInstanceParams(AdType adType, string adInstanceName)
@@ -416,7 +328,7 @@ namespace Virterix.AdMediation
             {
                 foreach (AdInstanceData data in m_adInstances)
                 {
-                    if (data.m_adID == adId)
+                    if (data.m_adId == adId)
                     {
                         foundData = data;
                         break;
@@ -432,7 +344,7 @@ namespace Virterix.AdMediation
 
             foreach (AdInstanceData adInstance in m_adInstances)
             {
-                if (adInstance.m_adID == adId)
+                if (adInstance.m_adId == adId)
                 {
                     instanceAdType = adInstance.m_adType;
                     break;
@@ -476,7 +388,7 @@ namespace Virterix.AdMediation
             adInstance.Name = jsonAdInstance.Obj.ContainsKey("name") ? jsonAdInstance.Obj.GetString("name") : AdInstanceData._AD_INSTANCE_DEFAULT_NAME;
             string parametersName = jsonAdInstance.Obj.ContainsKey("param") ? jsonAdInstance.Obj.GetString("param") : AdInstanceParameters._AD_INSTANCE_PARAMETERS_DEFAULT_NAME;
             adInstance.m_adType = AdTypeConvert.StringToAdType(jsonAdInstance.Obj.GetString("adType"));
-            adInstance.m_adID = jsonAdInstance.Obj.GetString("id");
+            adInstance.m_adId = jsonAdInstance.Obj.GetString("id");
             adInstance.m_adInstanceParams = GetAdInstanceParams(adInstance.m_adType, parametersName);
             if (jsonAdInstance.Obj.ContainsKey("timeout"))
             {
@@ -484,12 +396,6 @@ namespace Virterix.AdMediation
                 timeoutParameters.m_timeout = (float)jsonAdInstance.Obj.GetNumber("timeout");
                 timeoutParameters.m_adType = adInstance.m_adType;
                 adInstance.m_timeout = timeoutParameters;
-            }
-
-            string pepareWhenChangeNetworkKey = "prepareWhenChangeNetwork";
-            if (jsonAdInstance.Obj.ContainsKey(pepareWhenChangeNetworkKey))
-            {
-                adInstance.m_isPepareWhenChangeNetwork = jsonAdInstance.Obj.GetBoolean(pepareWhenChangeNetworkKey);
             }
 
             string waitResponseTimeKey = "waitResponseTime";
@@ -523,40 +429,6 @@ namespace Virterix.AdMediation
         protected virtual void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             InitializeAdInstanceParameters();
-
-            // Legacy timeout
-            for (int i = 0; i < m_adSupportParams.Length; i++)
-            {
-                /*
-                if (m_adSupportParams[i].m_useTimeout)
-                {
-                    if (m_timeoutParameters == null)
-                    {
-                        m_timeoutParameters = new TimeoutParams[m_adSupportParams.Length];
-                    }
-
-                    TimeoutParams timeoutParams = new TimeoutParams();
-                    timeoutParams.m_adType = m_adSupportParams[i].m_adType;
-
-                    if (parameters != null)
-                    {
-                        string timeoutKey = "timeout-" + AdTypeConvert.AdTypeToString(timeoutParams.m_adType);
-                        string timeoutParam = "";
-
-                        if (parameters.ContainsKey(timeoutKey))
-                        {
-                            timeoutParam = parameters[timeoutKey];
-                        }
-
-                        if (timeoutParam.Length > 0)
-                        {
-                            timeoutParams.m_timeout = (float)System.Convert.ToDouble(timeoutParam);
-                        }
-                    }
-                    m_timeoutParameters[i] = timeoutParams;
-                }*/
-            }
-
             if (jsonAdInstances != null)
             {
                 foreach (JSONValue jsonAdInstance in jsonAdInstances)

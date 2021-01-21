@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AdMob_BannerTop
   m_EditorClassIdentifier: 
   m_name: Top
-  m_bannerSize: 2
+  m_bannerSize: 1
   m_bannerPositions:
   - m_placementName: Top
     m_bannerPosition: 1

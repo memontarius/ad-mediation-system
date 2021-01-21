@@ -105,24 +105,10 @@ MonoBehaviour:
   m_adSupportParams:
   - m_adType: 1
     m_isCheckAvailabilityWhenPreparing: 0
-    m_isPrepareWhenChangeNetwork: 0
-    m_useTimeout: 1
   - m_adType: 2
     m_isCheckAvailabilityWhenPreparing: 0
-    m_isPrepareWhenChangeNetwork: 1
-    m_useTimeout: 0
   - m_adType: 3
     m_isCheckAvailabilityWhenPreparing: 0
-    m_isPrepareWhenChangeNetwork: 0
-    m_useTimeout: 0
-  m_defaultAndroidParams:
-    m_bannerUnitId: 
-    m_interstitialUnitId: 
-    m_rewardVideoUnitId: 
-  m_defaultIOSParams:
-    m_bannerUnitId: 
-    m_interstitialUnitId: 
-    m_rewardVideoUnitId: 
   m_tagForChildDirectedTreatment: 0
   m_adBackgoundColor: {r: 0.54901963, g: 0.5176471, b: 0.49411765, a: 1}
   m_isAddTestDevices: 1
@@ -146,31 +132,14 @@ MonoBehaviour:
   m_adSupportParams:
   - m_adType: 1
     m_isCheckAvailabilityWhenPreparing: 0
-    m_isPrepareWhenChangeNetwork: 0
-    m_useTimeout: 1
   - m_adType: 2
     m_isCheckAvailabilityWhenPreparing: 0
-    m_isPrepareWhenChangeNetwork: 0
-    m_useTimeout: 1
   - m_adType: 3
     m_isCheckAvailabilityWhenPreparing: 1
-    m_isPrepareWhenChangeNetwork: 0
-    m_useTimeout: 0
-  m_defaultAndroidIds:
-    m_bannerId: 
-    m_interstitialId: 
-    m_rewardVideoId: 
-    m_nativeId: 
-  m_defaultIOSIds:
-    m_bannerId: 
-    m_interstitialId: 
-    m_rewardVideoId: 
-    m_nativeId: 
   m_defaultBannerRefreshTime: 60
-  m_defaultNativeRefreshTime: 60
   m_isDefaultServerValidation: 0
   m_isAddTestDevices: 1
-  m_testDeviceId: 5183b8e9-a96e-4cfc-8f79-80a13e052da7
+  m_testDeviceId: 23405595-9b6a-48b7-bc85-edf60784c60f
 --- !u!114 &114323157857097988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,13 +155,9 @@ MonoBehaviour:
   m_networkName: chartboost
   m_adSupportParams:
   - m_adType: 2
-    m_isCheckAvailabilityWhenPreparing: 0
-    m_isPrepareWhenChangeNetwork: 0
-    m_useTimeout: 0
+    m_isCheckAvailabilityWhenPreparing: 1
   - m_adType: 3
     m_isCheckAvailabilityWhenPreparing: 1
-    m_isPrepareWhenChangeNetwork: 0
-    m_useTimeout: 0
 --- !u!114 &114643556577722404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,12 +174,8 @@ MonoBehaviour:
   m_adSupportParams:
   - m_adType: 2
     m_isCheckAvailabilityWhenPreparing: 0
-    m_isPrepareWhenChangeNetwork: 0
-    m_useTimeout: 0
   - m_adType: 3
     m_isCheckAvailabilityWhenPreparing: 0
-    m_isPrepareWhenChangeNetwork: 0
-    m_useTimeout: 0
   m_bannerPlacementPosX: 0
   m_bannerPlacementPosY: 0
 --- !u!114 &114938057704232842
@@ -233,16 +194,10 @@ MonoBehaviour:
   m_adSupportParams:
   - m_adType: 2
     m_isCheckAvailabilityWhenPreparing: 1
-    m_isPrepareWhenChangeNetwork: 0
-    m_useTimeout: 0
   - m_adType: 3
     m_isCheckAvailabilityWhenPreparing: 1
-    m_isPrepareWhenChangeNetwork: 0
-    m_useTimeout: 0
   - m_adType: 1
     m_isCheckAvailabilityWhenPreparing: 1
-    m_isPrepareWhenChangeNetwork: 0
-    m_useTimeout: 1
   m_isInitializeWhenStart: 1
   m_isTestMode: 1
 --- !u!1 &503440737
@@ -292,8 +247,6 @@ MonoBehaviour:
   m_adSupportParams:
   - m_adType: 3
     m_isCheckAvailabilityWhenPreparing: 0
-    m_isPrepareWhenChangeNetwork: 0
-    m_useTimeout: 0
   m_defaultApiKey: 
   m_isDebugMode: 1
   m_pollfishPosition: 3
@@ -380,8 +333,8 @@ MonoBehaviour:
   m_adType: 1
   m_placementName: Default
   m_isAutoFetchWhenHide: 1
-  m_minDisplayTimeBannerAdType: 10
-  m_isContinueAfterEndSession: 1
+  m_minDisplayTimeBannerAdType: 15
+  m_isContinueAfterEndSession: 0
   m_deferredFetchDelay: -1
 --- !u!114 &114925332072793010
 MonoBehaviour:
@@ -398,8 +351,8 @@ MonoBehaviour:
   m_adType: 1
   m_placementName: Top
   m_isAutoFetchWhenHide: 1
-  m_minDisplayTimeBannerAdType: 10
-  m_isContinueAfterEndSession: 1
+  m_minDisplayTimeBannerAdType: 15
+  m_isContinueAfterEndSession: 0
   m_deferredFetchDelay: -1
 --- !u!1 &1492523994671012
 GameObject:

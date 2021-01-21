@@ -46,7 +46,7 @@ namespace Virterix.AdMediation
             // RewardedVideo
             Chartboost.didCacheRewardedVideo += DidCacheRewardedVideo;
             Chartboost.didFailToLoadRewardedVideo += DidFailToLoadRewardedVideo;
-            Chartboost.shouldDisplayRewardedVideo += shouldDisplayRewardedVideo;
+            Chartboost.shouldDisplayRewardedVideo += ShouldDisplayRewardedVideo;
             Chartboost.didCloseRewardedVideo += DidCloseRewardedVideo;
             Chartboost.didDismissRewardedVideo += DidDismissRewardedVideo;
             Chartboost.didCompleteRewardedVideo += DidCompleteRewardedVideo;
@@ -63,7 +63,7 @@ namespace Virterix.AdMediation
             // RewardedVideo
             Chartboost.didCacheRewardedVideo -= DidCacheRewardedVideo;
             Chartboost.didFailToLoadRewardedVideo -= DidFailToLoadRewardedVideo;
-            Chartboost.shouldDisplayRewardedVideo -= shouldDisplayRewardedVideo;
+            Chartboost.shouldDisplayRewardedVideo -= ShouldDisplayRewardedVideo;
             Chartboost.didCloseRewardedVideo -= DidCloseRewardedVideo;
             Chartboost.didDismissRewardedVideo -= DidDismissRewardedVideo;
             Chartboost.didCompleteRewardedVideo -= DidCompleteRewardedVideo;
@@ -94,8 +94,10 @@ namespace Virterix.AdMediation
             }
 
             m_interstitialInstance = AdFactory.CreateAdInstacne(AdType.Interstitial);
-            m_incentivizedInstance= AdFactory.CreateAdInstacne(AdType.Interstitial);
-            
+            AddAdInstance(m_interstitialInstance);
+            m_incentivizedInstance= AdFactory.CreateAdInstacne(AdType.Incentivized);
+            AddAdInstance(m_incentivizedInstance);
+
             if (appId != null && appSignature != null)
             {
                 Chartboost.CreateWithAppId(appId, appSignature);
@@ -136,7 +138,6 @@ namespace Virterix.AdMediation
 
         public override void Hide(AdInstanceData adInstance = null)
         {
-
         }
 
         public override bool IsReady(AdInstanceData adInstance = null)
@@ -161,10 +162,9 @@ namespace Virterix.AdMediation
         }
 
         // Interstitial
-
         private void DidCacheInterstitial(CBLocation location)
         {
-            AddEvent(AdType.Interstitial, AdEvent.Prepared);
+            AddEvent(AdType.Interstitial, AdEvent.Prepared, m_interstitialInstance);
         }
 
         private void DidFailToLoadInterstitial(CBLocation location, CBImpressionError error)
@@ -172,30 +172,30 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("ChartboostAdapter.DidFailToLoadInterstitial() error:" + error.ToString());
 #endif
-            AddEvent(AdType.Interstitial, AdEvent.PrepareFailure);
+            AddEvent(AdType.Interstitial, AdEvent.PrepareFailure, m_interstitialInstance);
         }
 
         private bool ShouldDisplayInterstitial(CBLocation location)
         {
-            AddEvent(AdType.Interstitial, AdEvent.Show);
+            AddEvent(AdType.Interstitial, AdEvent.Show, m_interstitialInstance);
             bool showInterstitial = true;
             return showInterstitial;
         }
 
         private void DidCloseInterstitial(CBLocation location)
         {
+            
         }
 
         void DidDismissInterstitial(CBLocation location)
         {
-            AddEvent(AdType.Interstitial, AdEvent.Hide);
+            AddEvent(AdType.Interstitial, AdEvent.Hide, m_interstitialInstance);
         }
 
         // Reward Video
-
         private void DidCacheRewardedVideo(CBLocation location)
         {
-            AddEvent(AdType.Incentivized, AdEvent.Prepared);
+            AddEvent(AdType.Incentivized, AdEvent.Prepared, m_incentivizedInstance);
         }
 
         private void DidFailToLoadRewardedVideo(CBLocation location, CBImpressionError error)
@@ -203,28 +203,31 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("ChartboostAdapter.DidFailToLoadRewardedVideo() error:" + error.ToString());
 #endif
-            AddEvent(AdType.Incentivized, AdEvent.PrepareFailure);
+            AddEvent(AdType.Incentivized, AdEvent.PrepareFailure, m_incentivizedInstance);
         }
 
-        private bool shouldDisplayRewardedVideo(CBLocation location)
+        private bool ShouldDisplayRewardedVideo(CBLocation location)
         {
-            AddEvent(AdType.Incentivized, AdEvent.Show);
+            AddEvent(AdType.Incentivized, AdEvent.Show, m_incentivizedInstance);
             bool showIncentivized = true;
             return showIncentivized;
         }
 
         private void DidCloseRewardedVideo(CBLocation location)
         {
+            
         }
 
         private void DidCompleteRewardedVideo(CBLocation location, int count)
         {
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedComplete);
+            m_lastReward.label = location.ToString();
+            m_lastReward.amount = count;
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizedComplete, m_incentivizedInstance);
         }
 
         private void DidDismissRewardedVideo(CBLocation location)
         {
-            AddEvent(AdType.Incentivized, AdEvent.Hide);
+            AddEvent(AdType.Incentivized, AdEvent.Hide, m_incentivizedInstance);
         }
 
 #endif // _MS_CHARTBOOST

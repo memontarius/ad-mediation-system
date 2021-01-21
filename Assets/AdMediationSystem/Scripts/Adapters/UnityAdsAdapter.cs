@@ -18,12 +18,8 @@ namespace Virterix.AdMediation
         public bool m_isInitializeWhenStart = true;
         public bool m_isTestMode;
 
-        string m_appId;
-        string m_interstitialId;
-        string m_rewardedId;
-        string m_bannerId;
-
-        bool m_isBannerDisplayed;
+        private string m_appId;
+        private bool m_isBannerDisplayed;
 
         public enum UnityAdsBannerPosition
         {
@@ -37,23 +33,16 @@ namespace Virterix.AdMediation
         }
 
 #if _MS_UNITY_ADS
-
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
-
-            m_appId = parameters["appId"];
             try
             {
-                m_interstitialId = parameters["interstitialId"];
-                m_rewardedId = parameters["rewardedId"];
-                m_bannerId = parameters["bannerId"];
+                m_appId = parameters["appId"];
             }
             catch
             {
-                m_interstitialId = "";
-                m_rewardedId = "";
-                m_bannerId = "";
+                m_appId = "";
             }
 
             if (Advertisement.isSupported && !Advertisement.isInitialized)
@@ -63,24 +52,6 @@ namespace Virterix.AdMediation
                     Advertisement.Initialize(m_appId, m_isTestMode);
                 }
                 Advertisement.AddListener(this);
-            }
-
-            if (IsSupported(AdType.Interstitial))
-            {
-                AdInstanceData adInstance = new AdInstanceData(AdType.Interstitial, m_interstitialId);
-                AddAdInstance(adInstance);
-            }
-
-            if (IsSupported(AdType.Incentivized))
-            {
-                AdInstanceData adInstance = new AdInstanceData(AdType.Incentivized, m_rewardedId);
-                AddAdInstance(adInstance);
-            }
-
-            if (IsSupported(AdType.Banner))
-            {
-                AdInstanceData adInstance = new AdInstanceData(AdType.Banner, m_bannerId);
-                AddAdInstance(adInstance);
             }
         }
 
@@ -106,11 +77,11 @@ namespace Virterix.AdMediation
                     {
                         Hide(adInstance);
                     }
-                    Advertisement.Banner.Load(adInstance.m_adID);
+                    Advertisement.Banner.Load(adInstance.m_adId);
                 }
                 else
                 {
-                    Advertisement.Load(adInstance.m_adID);
+                    Advertisement.Load(adInstance.m_adId);
                 }
             }
         }
@@ -127,12 +98,12 @@ namespace Virterix.AdMediation
                     {
                         Advertisement.Banner.SetPosition((BannerPosition)bannerParams.m_bannerPosition);
                     }
-                    Advertisement.Banner.Show(adInstance.m_adID);
+                    Advertisement.Banner.Show(adInstance.m_adId);
                     m_isBannerDisplayed = true;
                 }
                 else
                 {
-                    Advertisement.Show(adInstance.m_adID);
+                    Advertisement.Show(adInstance.m_adId);
                 }
                 return true;
             }
@@ -154,7 +125,7 @@ namespace Virterix.AdMediation
             bool isReady = false;
             if (adInstance != null)
             {
-                isReady = Advertisement.IsReady(adInstance.m_adID);
+                isReady = Advertisement.IsReady(adInstance.m_adId);
             }
             return isReady;
         }
@@ -181,7 +152,7 @@ namespace Virterix.AdMediation
             if (adInstance != null)
             {
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("UnityAdsAdapter.OnUnityAdsReady() " + adInstance.m_adID + " m_isBannerAdTypeVisibled:" + adInstance.m_isBannerAdTypeVisibled);
+                Debug.Log("UnityAdsAdapter.OnUnityAdsReady() " + adInstance.m_adId + " m_isBannerAdTypeVisibled:" + adInstance.m_isBannerAdTypeVisibled);
 #endif
                 if (adInstance.m_adType == AdType.Banner && adInstance.m_isBannerAdTypeVisibled)
                 {
@@ -199,7 +170,6 @@ namespace Virterix.AdMediation
         public void OnUnityAdsDidStart(string adId)
         {
             AdInstanceData adInstance = GetAdInstanceByAdId(adId);
-
             if (adInstance != null)
             {
                 AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
@@ -213,7 +183,7 @@ namespace Virterix.AdMediation
             if (adInstance != null)
             {
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("UnityAdsAdapter.OnUnityAdsDidFinish() " + adInstance.m_adID);
+                Debug.Log("UnityAdsAdapter.OnUnityAdsDidFinish() " + adInstance.m_adId);
 #endif
 
                 if (adInstance.m_adType == AdType.Incentivized)

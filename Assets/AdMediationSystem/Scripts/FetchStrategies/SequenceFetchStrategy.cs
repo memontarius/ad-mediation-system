@@ -182,6 +182,10 @@ namespace Virterix.AdMediation
                 for (int i = 0; i < tierUnits.Length; i++)
                 {
                     passUnit = tierUnits[i];
+                    if (passUnit == unit)
+                    {
+                        continue;
+                    } 
                     isSkip = passUnit.WasLastImpressionSuccessful;
                     if (isSkip)
                     {

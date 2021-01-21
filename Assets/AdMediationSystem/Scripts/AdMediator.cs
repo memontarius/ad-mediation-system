@@ -217,8 +217,6 @@ namespace Virterix.AdMediation
 
                 if (CurrentUnit != null)
                 {
-                    Debug.LogWarning("CurrentUnit: " + CurrentUnit.AdInstanceName + " id: " + CurrentUnit.AdInstance.m_adID);
-
                     CurrentUnit.ResetDisplayTime();
                     if ((m_adType == AdType.Banner) && m_isBannerTypeAdViewDisplayed)
                     {
@@ -426,7 +424,7 @@ namespace Virterix.AdMediation
                     m_currUnit?.HideBannerTypeAdWithoutNotify();
                 }
 
-                if (m_currUnit.IsPepareWhenChangeNetwork)
+                if (m_currUnit.IsPrepareOnExit)
                 {
                     m_currUnit.PrepareAd();
                 }
@@ -443,12 +441,6 @@ namespace Virterix.AdMediation
             {
                 ResetCurrentUnit(unit);
                 m_currUnit = unit;
-
-#if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("AdMediator.SetCurrentUnit() Type:" + m_adType + " Placement:" + m_currUnit.PlacementName +
-                    " AdInstance:" + m_currUnit.AdInstance +
-                    " Network:" + unit.AdNetwork.m_networkName + " IsReady: " + unit.IsAdReady);
-#endif
 
                 if ((m_adType == AdType.Banner) && !m_isBannerTypeAdViewDisplayed)
                 {
@@ -511,7 +503,7 @@ namespace Virterix.AdMediation
                 "; Intrnl Type:" + m_currUnit.AdapterAdType + "; Network:" + network.m_networkName + "; Event:" + adEvent);
 #endif
 
-            string adInstanceName = adInstance != null ? adInstance.Name : AdInstanceData._AD_INSTANCE_DEFAULT_NAME;
+            string adInstanceName = adInstance != null ? adInstance.Name : "";
             
             AdMediationSystem.NotifyAdNetworkEvent(this, network, m_adType, adEvent, adInstanceName);
             
@@ -529,7 +521,7 @@ namespace Virterix.AdMediation
                 case AdEvent.PrepareFailure:
                     m_isLastNetworkSuccessfullyPrepared = false;
                     CancelWaitNetworkPrepare();
-                    network.SaveFailedLoadingTime(m_currUnit.AdapterAdType, adInstance);
+                    adInstance?.SaveFailedLoadingTime();
 
                     m_adPrepareFailureCount++;
                     if (m_adPrepareFailureCount >= UnitWithoutTimeoutCount)

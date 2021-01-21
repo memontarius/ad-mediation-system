@@ -8,6 +8,7 @@
 
 #if UNITY_IOS || UNITY_IPHONE
 
+using AppLovinMax.Scripts.IntegrationManager.Editor;
 #if UNITY_2019_3_OR_NEWER
 using UnityEditor.iOS.Xcode.Extensions;
 #endif
@@ -21,7 +22,7 @@ using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
 using UnityEngine;
 
-namespace AppLovinMax
+namespace AppLovinMax.Scripts.Editor
 {
     [Serializable]
     public class SkAdNetworkData
@@ -189,7 +190,7 @@ namespace AppLovinMax
             var uriBuilder = new UriBuilder("https://dash.applovin.com/docs/v1/unity_integration_manager/sk_ad_networks_info");
 
             // Get the list of installed ad networks to be passed up
-            const string maxMediationDirectory = "Assets/MaxSdk/Mediation/";
+            var maxMediationDirectory = Path.Combine(AppLovinIntegrationManager.PluginParentDirectory, "MaxSdk/Mediation/");
             if (Directory.Exists(maxMediationDirectory))
             {
                 var mediationNetworkDirectories = Directory.GetDirectories(maxMediationDirectory);
@@ -234,7 +235,8 @@ namespace AppLovinMax
 
         private static void UpdateAppTransportSecuritySettingsIfNeeded(PlistDocument plist)
         {
-            var projectHasAtsRequiringNetworks = AtsRequiringNetworks.Any(atsRequiringNetwork => Directory.Exists(Path.Combine("Assets/MaxSdk/Mediation/", atsRequiringNetwork)));
+            var mediationDir = Path.Combine(AppLovinIntegrationManager.PluginParentDirectory, "MaxSdk/Mediation/");
+            var projectHasAtsRequiringNetworks = AtsRequiringNetworks.Any(atsRequiringNetwork => Directory.Exists(Path.Combine(mediationDir, atsRequiringNetwork)));
             if (!projectHasAtsRequiringNetworks) return;
 
             var root = plist.root.values;

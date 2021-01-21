@@ -13,9 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor.Android;
-using UnityEngine;
 
-namespace AppLovinMax
+namespace AppLovinMax.Scripts.Editor
 {
     /// <summary>
     /// A post processor used to update the Android project once it is generated.

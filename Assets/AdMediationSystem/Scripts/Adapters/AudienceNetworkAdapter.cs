@@ -38,7 +38,7 @@ namespace Virterix.AdMediation
 
         [Tooltip("In Seconds")]
         public float m_defaultBannerRefreshTime = 60f;
- 
+        
         public bool m_isDefaultServerValidation;
         public bool m_isAddTestDevices = false;
         public string m_testDeviceId;
@@ -76,67 +76,9 @@ namespace Virterix.AdMediation
             public bool m_isServerValidation; // Is S2S validation
         }
 
-        string m_bannerId;
-        string m_interstitialId;
-        string m_rewardVideoId;
-
-        // Default instances
-        AudienceNetworkAdInstanceData m_bannerAdInstance;
-        AudienceNetworkAdInstanceData m_interstitialAdInstance;
-        AudienceNetworkAdInstanceData m_rewardVideoAdInstance;
-
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
-
-            float bannerRefreshTime = m_defaultBannerRefreshTime;
-   
-            if (parameters != null)
-            {
-                if (!parameters.TryGetValue(_BANNER_ID_KEY, out m_bannerId))
-                {
-                    m_bannerId = "";
-                }
-                if (!parameters.TryGetValue(_INTERSTITIAL_ID_KEY, out m_interstitialId))
-                {
-                    m_interstitialId = "";
-                }
-                if (!parameters.TryGetValue(_REWARDED_ID_KEY, out m_rewardVideoId))
-                {
-                    m_rewardVideoId = "";
-                }
-
-                if (parameters.ContainsKey(_BANNER_REFRESH_TIME_KEY))
-                {
-                    bannerRefreshTime = Convert.ToInt32(parameters[_BANNER_REFRESH_TIME_KEY]);
-                }
-            }
-
-            if (IsSupported(AdType.Banner))
-            {
-                m_bannerAdInstance = new AudienceNetworkAdInstanceData(AdType.Banner, m_bannerId);
-                m_bannerAdInstance.m_adInstanceParams = GetAdInstanceParams(AdType.Banner, AdInstanceData._AD_INSTANCE_DEFAULT_NAME);
-
-                if (bannerRefreshTime > 0)
-                {
-                    m_bannerAdInstance.m_refreshTime = bannerRefreshTime;
-                }
-                AddAdInstance(m_bannerAdInstance);
-            }
-
-            if (IsSupported(AdType.Interstitial))
-            {
-                m_interstitialAdInstance = new AudienceNetworkAdInstanceData(AdType.Interstitial, m_interstitialId);
-                AddAdInstance(m_interstitialAdInstance);
-            }
-
-            if (IsSupported(AdType.Incentivized))
-            {
-                m_rewardVideoAdInstance = new AudienceNetworkAdInstanceData(AdType.Incentivized, m_rewardVideoId);
-                m_rewardVideoAdInstance.m_isServerValidation = m_isDefaultServerValidation;
-                AddAdInstance(m_rewardVideoAdInstance);
-            }
-
             if (m_isAddTestDevices)
             {
                 AdSettings.AddTestDevice(m_testDeviceId);
@@ -150,9 +92,12 @@ namespace Virterix.AdMediation
             AudienceNetworkAdInstanceData audienceNetworkAdInstance = adInstance as AudienceNetworkAdInstanceData;
             audienceNetworkAdInstance.m_refreshTime = m_defaultBannerRefreshTime;
 
-            if (jsonAdInstance.Obj.ContainsKey(_REFRESH_TIME_KEY))
+            if (adInstance.m_adType == AdType.Banner)
             {
-                audienceNetworkAdInstance.m_refreshTime = Convert.ToInt32(jsonAdInstance.Obj.GetNumber(_REFRESH_TIME_KEY));
+                if (jsonAdInstance.Obj.ContainsKey(_REFRESH_TIME_KEY))
+                {
+                    audienceNetworkAdInstance.m_refreshTime = Convert.ToInt32(jsonAdInstance.Obj.GetNumber(_REFRESH_TIME_KEY));
+                }
             }
         }
 
@@ -417,7 +362,7 @@ namespace Virterix.AdMediation
 
 #if UNITY_IOS || UNITY_ANDROID
             AudienceNetworkAdInstanceBannerParameters adInstanceParams = adInstance.m_adInstanceParams as AudienceNetworkAdInstanceBannerParameters;
-            AdView bannerView = new AdView(adInstance.m_adID, ConvertToAdSize(adInstanceParams.m_bannerSize));
+            AdView bannerView = new AdView(adInstance.m_adId, ConvertToAdSize(adInstanceParams.m_bannerSize));
             adInstance.m_adView = bannerView;
             bannerView.Register(this.gameObject);
 
@@ -472,7 +417,7 @@ namespace Virterix.AdMediation
 #endif
 
 #if UNITY_IOS || UNITY_ANDROID
-            InterstitialAd interstitialAd = new InterstitialAd(adInstance.m_adID);
+            InterstitialAd interstitialAd = new InterstitialAd(adInstance.m_adId);
             interstitialAd.Register(this.gameObject);
 
             interstitialAd.InterstitialAdDidLoad += delegate { InterstitialAdDidLoad(adInstance); };
@@ -534,7 +479,7 @@ namespace Virterix.AdMediation
 #endif
 
 #if UNITY_IOS || UNITY_ANDROID
-            RewardedVideoAd rewardVideo = new RewardedVideoAd(adInstance.m_adID);
+            RewardedVideoAd rewardVideo = new RewardedVideoAd(adInstance.m_adId);
             adInstance.m_adView = rewardVideo;
             rewardVideo.Register(this.gameObject);
 
