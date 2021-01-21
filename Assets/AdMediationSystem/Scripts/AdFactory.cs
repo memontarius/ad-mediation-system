@@ -54,7 +54,7 @@ namespace Virterix.AdMediation
         }
 
         public static AdInstanceData CreateAdInstacne(AdType adType, string instanceName = AdInstanceData._AD_INSTANCE_DEFAULT_NAME, 
-            string adId = "", float timeout = 0.0f, float waitingResponseTime = 30f)
+            string adId = "", float timeout = 0.0f)
         {
             AdInstanceData adInstance = new AdInstanceData(adType, adId, instanceName);
             if (timeout > 0.0001f)
@@ -64,7 +64,7 @@ namespace Virterix.AdMediation
                 timeoutParameters.m_adType = adInstance.m_adType;
                 adInstance.m_timeout = timeoutParameters;
             }
-            adInstance.m_waitingResponseTime = waitingResponseTime;
+            adInstance.m_responseWaitTime = AdMediationSystem.Instance.DefaultNetworkResponseWaitTime;
             return adInstance;
         }
     }

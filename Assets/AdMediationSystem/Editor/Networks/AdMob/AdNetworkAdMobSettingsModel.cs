@@ -3,7 +3,7 @@
 namespace Virterix.AdMediation.Editor
 {
     [Serializable]
-    public class AdNetworkAdMobSettingsModel : AdNetworkSettingsModelBase
+    public class AdNetworkAdMobSettingsModel : BaseAdNetworkSettingsModel
     {
         
     }

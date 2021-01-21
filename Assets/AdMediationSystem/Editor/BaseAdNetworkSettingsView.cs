@@ -11,10 +11,8 @@ using UnityEditor.AnimatedValues;
 
 namespace Virterix.AdMediation.Editor
 {
-    public abstract class AdNetworkSettingsViewBase
+    public abstract class BaseAdNetworkSettingsView
     {
-        private const string SETTINGS_PATH = "Assets/AdMediationSystem/Editor/Resources/";
-
         public string Name
         {
             get; private set;
@@ -35,18 +33,18 @@ namespace Virterix.AdMediation.Editor
             get;
         }
 
-        private string SettingsFilePath
+        protected string SettingsFilePath
         {
             get
             {
-                return String.Format("{0}{1}", SETTINGS_PATH, SettingsFileName);
+                return String.Format("{0}{1}/{2}", AdMediationSettingsWindow.SETTINGS_PATH, AdMediationSettingsWindow.ProjectName, SettingsFileName);
             }
         }
 
         private AnimBool _showExtraFields;
         private UnityAction _repaint;
 
-        public AdNetworkSettingsViewBase(string name, UnityAction action)
+        public BaseAdNetworkSettingsView(string name, UnityAction action)
         {
             Name = name;
             _showExtraFields = new AnimBool(true);
@@ -64,25 +62,6 @@ namespace Virterix.AdMediation.Editor
             }
             EditorGUILayout.EndFadeGroup();
             EditorGUILayout.EndFoldoutHeaderGroup();
-        }
-
-        protected T CreateSettings<T>() where T : AdNetworkSettingsModelBase
-        {
-            T settings = ScriptableObject.CreateInstance<T>();
-            AssetDatabase.CreateAsset(settings, SettingsFilePath);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-            return settings;
-        }
-
-        protected T GetOrCreateSettings<T>() where T : AdNetworkSettingsModelBase
-        {
-            T settings = AssetDatabase.LoadAssetAtPath(SettingsFilePath, typeof(T)) as T; ;
-            if (settings == null)
-            {
-                settings = CreateSettings<T>();
-            }
-            return settings;
         }
 
         protected virtual void DrawSettings()

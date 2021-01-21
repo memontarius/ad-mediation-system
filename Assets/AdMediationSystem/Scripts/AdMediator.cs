@@ -143,9 +143,10 @@ namespace Virterix.AdMediation
         private int m_lastActiveTierId;
         private int m_lastActiveUnitId;
         private bool m_isBannerTypeAdViewDisplayed = false;
-        private Coroutine m_coroutineWaitNetworkPrepare;
+        private Coroutine m_coroutineWaitNetworkPreparation;
         private Coroutine m_coroutineDeferredFetch;
-        private int m_adPrepareFailureCount;
+        private int m_adPreparationFailureCount;
+        private int m_nonTimeoutUnitCountAtFirstFailedPreparation;
 
         //===============================================================================
         #region MonoBehavior Methods
@@ -224,12 +225,13 @@ namespace Virterix.AdMediation
                     }
                 }
             }
-            else
-            {
+
 #if AD_MEDIATION_DEBUG_MODE
+            if (unit == null)
+            {
                 Debug.Log("AdMediator.Fetch() Not fetched ad unit. Placement: " + m_placementName);
-#endif
             }
+#endif
         }
 
         public virtual void Show()
@@ -338,19 +340,18 @@ namespace Virterix.AdMediation
                 m_fetchStrategy.Reset(m_tiers, readyTierIndex, readyUnitIndex);
                 return readyUnit.ShowAd();
             }
-
             return false;
         }
 
         private void RequestToPrepare(AdUnit unit)
         {
-            CancelWaitNetworkPrepare();
-            float waitingTime = unit.NetworkwaitingResponseTime;
-            m_coroutineWaitNetworkPrepare = StartCoroutine(WaitingNetworkPrepare(unit, waitingTime));
+            CancelWaitNetworkPreparing();
+            float waitingTime = unit.NetworkResponseWaitTime;
+            m_coroutineWaitNetworkPreparation = StartCoroutine(WaitingNetworkPreparation(unit, waitingTime));
             unit.PrepareAd();
         }
 
-        private IEnumerator WaitingNetworkPrepare(AdUnit unit, float waitingTime)
+        private IEnumerator WaitingNetworkPreparation(AdUnit unit, float waitingTime)
         {
             float passedTime = 0.0f;
             float passedTimeForCheckAvailability = 0.0f;
@@ -366,14 +367,14 @@ namespace Virterix.AdMediation
 
                 if (passedTime > waitingTime)
                 {
-                    unit.AdNetwork.NotifyEvent(unit.AdapterAdType, AdEvent.PrepareFailure, unit.AdInstance);
+                    unit.AdNetwork.NotifyEvent(unit.AdapterAdType, AdEvent.FailedPreparation, unit.AdInstance);
                     break;
                 }
                 else if (isCheckAvailabilityWhenPreparing && passedTimeForCheckAvailability > 2.0f)
                 {
                     if (unit.IsAdReady)
                     {
-                        unit.AdNetwork.NotifyEvent(unit.AdapterAdType, AdEvent.Prepared, unit.AdInstance);
+                        unit.AdNetwork.NotifyEvent(unit.AdapterAdType, AdEvent.Prepare, unit.AdInstance);
                         break;
                     }
                 }
@@ -404,12 +405,12 @@ namespace Virterix.AdMediation
             yield break;
         }
 
-        private void CancelWaitNetworkPrepare()
+        private void CancelWaitNetworkPreparing()
         {
-            if (m_coroutineWaitNetworkPrepare != null)
+            if (m_coroutineWaitNetworkPreparation != null)
             {
-                StopCoroutine(m_coroutineWaitNetworkPrepare);
-                m_coroutineWaitNetworkPrepare = null;
+                StopCoroutine(m_coroutineWaitNetworkPreparation);
+                m_coroutineWaitNetworkPreparation = null;
             }
         }
 
@@ -450,11 +451,11 @@ namespace Virterix.AdMediation
                 m_currUnit.AdNetwork.OnEvent += OnCurrentNetworkEvent;
             }
 
-            m_currUnit.AdNetwork.NotifyEvent(m_currUnit.AdapterAdType, AdEvent.Selected, m_currUnit.AdInstance);
+            m_currUnit.AdNetwork.NotifyEvent(m_currUnit.AdapterAdType, AdEvent.Select, m_currUnit.AdInstance);
 
             if (m_currUnit.IsAdReady)
             {
-                m_currUnit.AdNetwork.NotifyEvent(m_currUnit.AdapterAdType, AdEvent.Prepared, m_currUnit.AdInstance);
+                m_currUnit.AdNetwork.NotifyEvent(m_currUnit.AdapterAdType, AdEvent.Prepare, m_currUnit.AdInstance);
             }
             else
             {
@@ -507,7 +508,7 @@ namespace Virterix.AdMediation
             
             AdMediationSystem.NotifyAdNetworkEvent(this, network, m_adType, adEvent, adInstanceName);
             
-            if (adEvent == AdEvent.PrepareFailure || adEvent == AdEvent.Hide || adEvent == AdEvent.Show)
+            if (adEvent == AdEvent.FailedPreparation || adEvent == AdEvent.Hide || adEvent == AdEvent.Show)
             {
                 if (m_currUnit != null)
                 {
@@ -518,15 +519,19 @@ namespace Virterix.AdMediation
 
             switch (adEvent)
             {
-                case AdEvent.PrepareFailure:
+                case AdEvent.FailedPreparation:
                     m_isLastNetworkSuccessfullyPrepared = false;
-                    CancelWaitNetworkPrepare();
+                    CancelWaitNetworkPreparing();
                     adInstance?.SaveFailedLoadingTime();
-
-                    m_adPrepareFailureCount++;
-                    if (m_adPrepareFailureCount >= UnitWithoutTimeoutCount)
+                    if (m_adPreparationFailureCount == 0)
                     {
-                        m_adPrepareFailureCount = 0;
+                        m_nonTimeoutUnitCountAtFirstFailedPreparation = UnitWithoutTimeoutCount;
+                    }
+                    
+                    m_adPreparationFailureCount++;
+                    if (m_adPreparationFailureCount > m_nonTimeoutUnitCountAtFirstFailedPreparation)
+                    {
+                        m_adPreparationFailureCount = 0;
                         if (m_deferredFetchDelay >= 0.0001f)
                         {
                             StartDeferredFetch(m_deferredFetchDelay);
@@ -537,11 +542,10 @@ namespace Virterix.AdMediation
                         StartDeferredFetch(0.2f);
                     }
                     break;
-                case AdEvent.Prepared:
+                case AdEvent.Prepare:
                     m_isLastNetworkSuccessfullyPrepared = true;
-                    CancelWaitNetworkPrepare();
-                    m_adPrepareFailureCount = 0;
-
+                    CancelWaitNetworkPreparing();
+                    m_adPreparationFailureCount = 0;
                     break;
                 case AdEvent.Hide:
                     AdUnit currAdUnit = m_currUnit;

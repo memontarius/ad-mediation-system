@@ -158,7 +158,7 @@ namespace Virterix.AdMediation
                 {
                     Show(adInstance);
                 }
-                AddEvent(adInstance.m_adType, AdEvent.Prepared, adInstance);
+                AddEvent(adInstance.m_adType, AdEvent.Prepare, adInstance);
             }
         }
 

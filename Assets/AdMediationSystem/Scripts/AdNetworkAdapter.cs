@@ -12,12 +12,12 @@ namespace Virterix.AdMediation
     public enum AdEvent
     {
         None = 0,
-        Selected,
-        Prepared,
+        Select,
+        Prepare,
         Show,
         Click,
         Hide,
-        PrepareFailure,
+        FailedPreparation,
         IncentivizedComplete,
         IncentivizedIncomplete
     }
@@ -255,9 +255,9 @@ namespace Virterix.AdMediation
         public void NotifyEvent(AdType adType, AdEvent adEvent, AdInstanceData adInstance)
         {
             string adInstanceName = adInstance != null ? adInstance.Name : AdInstanceData._AD_INSTANCE_DEFAULT_NAME;
-            if (adInstance != null && (adEvent == AdEvent.PrepareFailure || adEvent == AdEvent.Prepared))
+            if (adInstance != null && (adEvent == AdEvent.FailedPreparation || adEvent == AdEvent.Prepare))
             {
-                adInstance.m_lastAdPrepared = adEvent == AdEvent.Prepared;
+                adInstance.m_lastAdPrepared = adEvent == AdEvent.Prepare;
             }
             OnEvent(this, adType, adEvent, adInstance);
         }
@@ -398,33 +398,25 @@ namespace Virterix.AdMediation
                 adInstance.m_timeout = timeoutParameters;
             }
 
-            string waitResponseTimeKey = "waitResponseTime";
-            if (jsonAdInstance.Obj.ContainsKey(waitResponseTimeKey))
+            string responseWaitTimeKey = "responseWaitTime";
+            if (jsonAdInstance.Obj.ContainsKey(responseWaitTimeKey))
             {
-                adInstance.m_waitingResponseTime = (float)jsonAdInstance.Obj.GetNumber(waitResponseTimeKey);
+                adInstance.m_responseWaitTime = (float)jsonAdInstance.Obj.GetNumber(responseWaitTimeKey);
+            }
+            else
+            {
+                adInstance.m_responseWaitTime = AdMediationSystem.Instance.DefaultNetworkResponseWaitTime;
             }
 
-            //InitializeAdInstanceTimeout(adInstance);
             m_adInstances.Add(adInstance);
         }
 
-        /// <summary>
-        /// old iplementation timeout
-        /// </summary>
-        /// <param name="adInstance"></param>
-        /*
-        private void InitializeAdInstanceTimeout(AdInstanceData adInstance)
+        public static string GetAdInstanceFailedLoadingTimeSaveKey(AdNetworkAdapter network, AdInstanceData adInstance)
         {
-            if (adInstance.m_timeout == null)
-            {
-                TimeoutParams timeoutParameters = new TimeoutParams();
-                TimeoutParams commonTimeout = GetTimeoutParams(adInstance.m_adType);
-                timeoutParameters.m_timeout = commonTimeout.m_timeout;
-                timeoutParameters.m_adType = adInstance.m_adType;
-                adInstance.m_timeout = timeoutParameters;
-            }
+            string saveKey = String.Format("adm.timeout.date.{0}.{1}.{2}", network.m_networkName, adInstance.m_adType.ToString(), adInstance.Name);
+            saveKey = saveKey.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+            return saveKey;
         }
-        */
 
         protected virtual void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {

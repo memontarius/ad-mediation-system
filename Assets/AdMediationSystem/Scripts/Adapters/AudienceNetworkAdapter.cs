@@ -554,7 +554,7 @@ namespace Virterix.AdMediation
                 bool success = bannerView.Show(bannerPosition.x, bannerPosition.y);
             }
 
-            AddEvent(AdType.Banner, AdEvent.Prepared, adInstance);
+            AddEvent(AdType.Banner, AdEvent.Prepare, adInstance);
         }
 
         void BannerAdViewDidFailWithError(AudienceNetworkAdInstanceData adInstance, string error)
@@ -564,7 +564,7 @@ namespace Virterix.AdMediation
 #endif
 
             DestroyBanner(adInstance);
-            AddEvent(AdType.Banner, AdEvent.PrepareFailure, adInstance);
+            AddEvent(AdType.Banner, AdEvent.FailedPreparation, adInstance);
         }
 
         void BannerAdViewWillLogImpression(AudienceNetworkAdInstanceData adInstance)
@@ -593,7 +593,7 @@ namespace Virterix.AdMediation
             Debug.Log("AudienceNetworkAdapter.InterstitialAdDidLoad()");
 #endif
             adInstance.m_state = AdState.Received;
-            AddEvent(AdType.Interstitial, AdEvent.Prepared, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Prepare, adInstance);
         }
 
         void InterstitialAdDidFailWithError(AudienceNetworkAdInstanceData adInstance, string error)
@@ -602,7 +602,7 @@ namespace Virterix.AdMediation
             Debug.Log("AudienceNetworkAdapter.InterstitialAdDidFailWithError() error: " + error);
 #endif
             DestroyInterstitial(adInstance);
-            AddEvent(AdType.Interstitial, AdEvent.PrepareFailure, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.FailedPreparation, adInstance);
         }
 
         void InterstitialAdDidClose(AudienceNetworkAdInstanceData adInstance)
@@ -633,7 +633,7 @@ namespace Virterix.AdMediation
             Debug.Log("AudienceNetworkAdapter.RewardedVideoAdDidLoad()");
 #endif
             adInstance.m_state = AdState.Received;
-            AddEvent(AdType.Incentivized, AdEvent.Prepared, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Prepare, adInstance);
         }
 
         void RewardedVideoAdDidFailWithError(AudienceNetworkAdInstanceData adInstance, string error)
@@ -642,7 +642,7 @@ namespace Virterix.AdMediation
             Debug.Log("AudienceNetworkAdapter.RewardedVideoAdDidFailWithError() error: " + error);
 #endif
             DestroyRewardVideo(adInstance);
-            AddEvent(AdType.Incentivized, AdEvent.PrepareFailure, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.FailedPreparation, adInstance);
         }
 
         void RewardedVideoAdDidClick(AudienceNetworkAdInstanceData adInstance)

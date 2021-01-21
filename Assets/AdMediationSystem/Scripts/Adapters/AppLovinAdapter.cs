@@ -216,7 +216,7 @@ namespace Virterix.AdMediation
         {
             // Interstitial ad is ready to be shown. MaxSdk.IsInterstitialReady(adUnitId) will now return 'true'
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
-            AddEvent(AdType.Interstitial, AdEvent.Prepared, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Prepare, adInstance);
         }
 
         private void OnInterstitialFailedEvent(string adUnitId, int errorCode)
@@ -227,7 +227,7 @@ namespace Virterix.AdMediation
             // Interstitial ad failed to load 
             // We recommend retrying with exponentially higher delays up to a maximum delay (in this case 64 seconds)
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
-            AddEvent(AdType.Interstitial, AdEvent.PrepareFailure, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.FailedPreparation, adInstance);
         }
 
         private void OnInterstitialDisplayedEvent(string adUnitId)
@@ -263,7 +263,7 @@ namespace Virterix.AdMediation
         {
             // Rewarded ad is ready to be shown. MaxSdk.IsRewardedAdReady(adUnitId) will now return 'true'
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
-            AddEvent(AdType.Incentivized, AdEvent.Prepared, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Prepare, adInstance);
         }
 
         private void OnRewardedAdFailedEvent(string adUnitId, int errorCode)
@@ -274,7 +274,7 @@ namespace Virterix.AdMediation
             // Rewarded ad failed to load 
             // We recommend retrying with exponentially higher delays up to a maximum delay (in this case 64 seconds)
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
-            AddEvent(AdType.Incentivized, AdEvent.PrepareFailure, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.FailedPreparation, adInstance);
         }
 
         private void OnRewardedAdFailedToDisplayEvent(string adUnitId, int errorCode)

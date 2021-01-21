@@ -1,7 +1,7 @@
 {
 	"projectName":"Test App",
 	"platform":"android",
-	"networkWaitResponseTime":30,
+	"networkResponseWaitTime":30,
 	"mediators":[
 		{
             "adType":"banner",
@@ -28,7 +28,7 @@
 				"type":"sequence",
 				"tiers": [
 					[
-						{ "network":"admob", "instance":"BannerTop"  },
+						{ "network":"admob", "instance":"BannerTop" },
 						{ "network":"audienceNetwork", "instance":"BannerTop" }
 					]
 				]
@@ -50,7 +50,7 @@
 					],
 					[
 						{ "network":"unityads", "instance":"InterstitialHighCpm" },
-						{ "network":"unityads" }
+						{ "network":"unityads", "replaced":true }
 					],
 					[
 						{ "network":"applovin" },

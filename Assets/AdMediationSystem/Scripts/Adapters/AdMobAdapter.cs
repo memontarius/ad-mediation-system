@@ -503,13 +503,12 @@ namespace Virterix.AdMediation
                 bannerView.Hide();
 #endif
                 bannerView.Show();
-                //bannerView.SetPosition(adInstance.CurrAdPosition);
             }
             else
             {
                 bannerView.Hide();
             }
-            AddEvent(AdType.Banner, AdEvent.Prepared, adInstance);
+            AddEvent(AdType.Banner, AdEvent.Prepare, adInstance);
         }
 
         public void HandleAdFailedToLoad(AdMobAdInstanceData adInstance, object sender, AdFailedToLoadEventArgs args)
@@ -519,7 +518,7 @@ namespace Virterix.AdMediation
                 " message: " + args.Message);
 #endif
             DestroyBanner(adInstance);
-            AddEvent(AdType.Banner, AdEvent.PrepareFailure, adInstance);
+            AddEvent(AdType.Banner, AdEvent.FailedPreparation, adInstance);
         }
 
         public void HandleAdOpened(AdMobAdInstanceData adInstance, object sender, EventArgs args)
@@ -535,7 +534,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             print("AdMobAdapter.HandleAdClosing() " + " adInstance: " + adInstance.Name);
 #endif
-            //AddEvent(AdType.Banner, AdEvent.Hide, adInstance);
+            AddEvent(AdType.Banner, AdEvent.Hide, adInstance);
         }
 
         public void HandleAdClosed(AdMobAdInstanceData adInstance, object sender, EventArgs args)
@@ -563,7 +562,7 @@ namespace Virterix.AdMediation
             print("AdMobAdapter.HandleInterstitialLoaded()");
 #endif
             adInstance.m_state = AdState.Received;
-            AddEvent(AdType.Interstitial, AdEvent.Prepared, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Prepare, adInstance);
         }
 
         public void HandleInterstitialFailedToLoad(AdMobAdInstanceData adInstance, object sender, AdFailedToLoadEventArgs args)
@@ -572,7 +571,7 @@ namespace Virterix.AdMediation
             print("AdMobAdapter.HandleInterstitialFailedToLoad() message: " + args.Message);
 #endif
             DestroyInterstitial(adInstance);
-            AddEvent(AdType.Interstitial, AdEvent.PrepareFailure, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.FailedPreparation, adInstance);
         }
 
         public void HandleInterstitialOpened(AdMobAdInstanceData adInstance, object sender, EventArgs args)
@@ -617,7 +616,7 @@ namespace Virterix.AdMediation
             MonoBehaviour.print("HandleRewardBasedVideoLoaded event received");
 #endif
             m_rewardInstance.m_state = AdState.Received;
-            AddEvent(AdType.Incentivized, AdEvent.Prepared, m_rewardInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Prepare, m_rewardInstance);
         }
 
         public void HandleRewardBasedVideoFailedToLoad(object sender, AdFailedToLoadEventArgs args)
@@ -626,7 +625,7 @@ namespace Virterix.AdMediation
             MonoBehaviour.print("HandleRewardBasedVideoFailedToLoad event received with message: " + args.Message);
 #endif
             m_rewardInstance.m_state = AdState.Uncertain;
-            AddEvent(AdType.Incentivized, AdEvent.PrepareFailure, m_rewardInstance);
+            AddEvent(AdType.Incentivized, AdEvent.FailedPreparation, m_rewardInstance);
         }
 
         public void HandleRewardBasedVideoOpened(object sender, EventArgs args)

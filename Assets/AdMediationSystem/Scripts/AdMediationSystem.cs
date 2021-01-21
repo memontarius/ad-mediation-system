@@ -145,6 +145,12 @@ namespace Virterix.AdMediation
             }
         }
 
+        public float DefaultNetworkResponseWaitTime
+        {
+            get;
+            private set;
+        } = 30f;
+
         private string SettingsFileName
         {
             get { return PlatfomName + "_settings"; }
@@ -538,7 +544,7 @@ namespace Virterix.AdMediation
             string mediatorPlacementNameKey = "placement";
             string networkAdInstancesNameKey = "instances";
             string strategyKey = "strategy";
-            string networkWaitResponseTimeKey = "networkWaitResponseTime";
+            string networkResponseWaitTimeKey = "networkResponseWaitTime";
             string typeInStrategyKey = "type";
             string networkNameInUnitKey = "network";
             string adInstanceNameInUnitKey = "instance";
@@ -551,10 +557,9 @@ namespace Virterix.AdMediation
             Dictionary<AdNetworkAdapter, NetworkParams> dictNetworks = new Dictionary<AdNetworkAdapter, NetworkParams>();
             Dictionary<AdMediator, List<AdUnit[]>> initMediators = new Dictionary<AdMediator, List<AdUnit[]>>();
 
-            float defaultWaitingResponseTime = 30f;
-            if (jsonSettings.ContainsKey(networkWaitResponseTimeKey))
+            if (jsonSettings.ContainsKey(networkResponseWaitTimeKey))
             {
-                defaultWaitingResponseTime = (float)jsonSettings.GetNumber(networkWaitResponseTimeKey);
+                DefaultNetworkResponseWaitTime = (float)jsonSettings.GetNumber(networkResponseWaitTimeKey);
             }
 
             try

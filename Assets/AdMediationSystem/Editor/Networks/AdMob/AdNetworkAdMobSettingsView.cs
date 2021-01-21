@@ -8,7 +8,7 @@ using UnityEditorInternal;
 
 namespace Virterix.AdMediation.Editor
 {
-    public class AdNetworkAdMobSettingsView : AdNetworkSettingsViewBase
+    public class AdNetworkAdMobSettingsView : BaseAdNetworkSettingsView
     {
         private const string SETTINGS_FILE_NAME = "AdNetworkAdMobSettings.asset";
 
@@ -40,7 +40,7 @@ namespace Virterix.AdMediation.Editor
 
         public AdNetworkAdMobSettingsView(string name, UnityAction action) : base(name, action)
         {
-            _settings = GetOrCreateSettings<AdNetworkAdMobSettingsModel>();
+            _settings = AdMediationSettingsWindow.GetOrCreateSettings<AdNetworkAdMobSettingsModel>(SettingsFilePath);
             _settingsProp = new SerializedObject(_settings);
             
             _bannerUnits = _settingsProp.FindProperty("_bannerUnits");

@@ -398,7 +398,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Fetch Banner 2
+  m_Text: Fetch Top Banner
 --- !u!222 &108967861
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1099,7 +1099,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Show Banner 2
+  m_Text: Show Top  Banner
 --- !u!222 &593936601
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1121,7 +1121,7 @@ GameObject:
   - component: {fileID: 602570143}
   - component: {fileID: 602570142}
   m_Layer: 5
-  m_Name: ButtonHideBanner2
+  m_Name: ButtonHideTopBanner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1837,7 +1837,7 @@ GameObject:
   - component: {fileID: 1048683200}
   - component: {fileID: 1048683199}
   m_Layer: 5
-  m_Name: ButtonShowBanner2
+  m_Name: ButtonShowTopBanner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2857,7 +2857,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Hide Banner 2
+  m_Text: Hide Top Banner
 --- !u!222 &1617626509
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3720,7 +3720,7 @@ GameObject:
   - component: {fileID: 1988639871}
   - component: {fileID: 1988639870}
   m_Layer: 5
-  m_Name: ButtonFetchBanner2
+  m_Name: ButtonFetchTopBanner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

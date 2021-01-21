@@ -16,7 +16,6 @@ namespace Virterix.AdMediation
     {
         public static AdType StringToAdType(string adTypeName)
         {
-
             AdType adType = AdType.Unknown;
             switch (adTypeName)
             {

@@ -164,7 +164,7 @@ namespace Virterix.AdMediation
         // Interstitial
         private void DidCacheInterstitial(CBLocation location)
         {
-            AddEvent(AdType.Interstitial, AdEvent.Prepared, m_interstitialInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Prepare, m_interstitialInstance);
         }
 
         private void DidFailToLoadInterstitial(CBLocation location, CBImpressionError error)
@@ -172,7 +172,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("ChartboostAdapter.DidFailToLoadInterstitial() error:" + error.ToString());
 #endif
-            AddEvent(AdType.Interstitial, AdEvent.PrepareFailure, m_interstitialInstance);
+            AddEvent(AdType.Interstitial, AdEvent.FailedPreparation, m_interstitialInstance);
         }
 
         private bool ShouldDisplayInterstitial(CBLocation location)
@@ -195,7 +195,7 @@ namespace Virterix.AdMediation
         // Reward Video
         private void DidCacheRewardedVideo(CBLocation location)
         {
-            AddEvent(AdType.Incentivized, AdEvent.Prepared, m_incentivizedInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Prepare, m_incentivizedInstance);
         }
 
         private void DidFailToLoadRewardedVideo(CBLocation location, CBImpressionError error)
@@ -203,7 +203,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("ChartboostAdapter.DidFailToLoadRewardedVideo() error:" + error.ToString());
 #endif
-            AddEvent(AdType.Incentivized, AdEvent.PrepareFailure, m_incentivizedInstance);
+            AddEvent(AdType.Incentivized, AdEvent.FailedPreparation, m_incentivizedInstance);
         }
 
         private bool ShouldDisplayRewardedVideo(CBLocation location)

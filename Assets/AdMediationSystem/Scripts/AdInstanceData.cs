@@ -40,7 +40,7 @@ namespace Virterix.AdMediation
         {
             get { return Name.Length == 0 || Name == _AD_INSTANCE_DEFAULT_NAME; }
         }
-     
+        
         public AdType m_adType;
         public string m_adId;
         public AdNetworkAdapter.TimeoutParams? m_timeout;
@@ -52,8 +52,9 @@ namespace Virterix.AdMediation
         public IAdInstanceParameters m_adInstanceParams;
         public float m_startImpressionTime;
         public float m_displayTime;
-        public float m_waitingResponseTime = 30f;
-        
+        public float m_responseWaitTime = 30f;
+        public string m_failedLoadingTimeSaveKey;
+
         public void SaveFailedLoadingTime()
         {
             if (m_timeout != null)

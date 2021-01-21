@@ -420,7 +420,7 @@ namespace Virterix.AdMediation
                 m_lastReceivedSurveyInfo.m_surveyTypeName = "offerwall";
             }
 
-            AddEvent(AdType.Incentivized, AdEvent.Prepared, null);
+            AddEvent(AdType.Incentivized, AdEvent.Prepare, null);
         }
 
         private void surveyNotAvailable()
@@ -428,7 +428,7 @@ namespace Virterix.AdMediation
             ResetStatus();
             m_adInstance.m_state = AdState.NotAvailable;
 
-            AddEvent(AdType.Incentivized, AdEvent.PrepareFailure, null);
+            AddEvent(AdType.Incentivized, AdEvent.FailedPreparation, null);
             StartAutoPrepare();
         }
 
@@ -437,7 +437,7 @@ namespace Virterix.AdMediation
             ResetStatus();
             m_adInstance.m_state = AdState.NotAvailable;
 
-            AddEvent(AdType.Incentivized, AdEvent.PrepareFailure, null);
+            AddEvent(AdType.Incentivized, AdEvent.FailedPreparation, null);
         }
 
         private void userRejectedSurvey()
@@ -447,7 +447,7 @@ namespace Virterix.AdMediation
             m_surveyRejected = true;
             m_adInstance.m_state = AdState.NotAvailable;
 
-            AddEvent(AdType.Incentivized, AdEvent.PrepareFailure, null);
+            AddEvent(AdType.Incentivized, AdEvent.FailedPreparation, null);
         }
 
             #endregion // Pollfish callback

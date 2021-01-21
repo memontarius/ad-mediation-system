@@ -11,7 +11,7 @@ namespace Virterix.AdMediation.Editor
         public string _iosId;
     }
 
-    public class AdNetworkSettingsModelBase : ScriptableObject
+    public class BaseAdNetworkSettingsModel : ScriptableObject
     {
         public List<AdUnit> _bannerUnits = new List<AdUnit>();
         public List<AdUnit> _interstitialUnits = new List<AdUnit>();
