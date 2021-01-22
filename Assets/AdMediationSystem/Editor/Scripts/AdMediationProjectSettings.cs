@@ -6,6 +6,7 @@ namespace Virterix.AdMediation.Editor
 {
     public class AdMediationProjectSettings : ScriptableObject
     {
-        public string _projectName;
+        public bool _isInitializeOnStart = true;
+        public bool _isPersonalizeAdsOnInit = true;
     }
 } // Virterix.AdMediation.Editor

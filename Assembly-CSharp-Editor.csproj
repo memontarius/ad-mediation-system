@@ -64,12 +64,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\AdMediationSystem\Editor\AdMediationProjectSettings.cs" />
-    <Compile Include="Assets\AdMediationSystem\Editor\AdMediationSettingsWindow.cs" />
-    <Compile Include="Assets\AdMediationSystem\Editor\BaseAdNetworkSettingsModel.cs" />
-    <Compile Include="Assets\AdMediationSystem\Editor\BaseAdNetworkSettingsView.cs" />
-    <Compile Include="Assets\AdMediationSystem\Editor\Networks\AdMob\AdNetworkAdMobSettingsModel.cs" />
-    <Compile Include="Assets\AdMediationSystem\Editor\Networks\AdMob\AdNetworkAdMobSettingsView.cs" />
+    <Compile Include="Assets\AdMediationSystem\Editor\Scripts\AdMediationProjectSettings.cs" />
+    <Compile Include="Assets\AdMediationSystem\Editor\Scripts\AdMediationSettingsWindow.cs" />
+    <Compile Include="Assets\AdMediationSystem\Editor\Scripts\BaseAdNetworkSettingsModel.cs" />
+    <Compile Include="Assets\AdMediationSystem\Editor\Scripts\BaseAdNetworkSettingsView.cs" />
+    <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AdMob\AdNetworkAdMobSettingsModel.cs" />
+    <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AdMob\AdNetworkAdMobSettingsView.cs" />
+    <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Utils.cs" />
     <Compile Include="Assets\Chartboost\Editor\CBCleanup.cs" />
     <Compile Include="Assets\Chartboost\Editor\CBManifestEditor.cs" />
     <Compile Include="Assets\Chartboost\Editor\CBPostProcess.cs" />
