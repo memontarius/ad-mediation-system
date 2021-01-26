@@ -12,5 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 020f93c8651de7646badc5e14f92513d, type: 3}
   m_Name: AdMediationProjectSettings
   m_EditorClassIdentifier: 
-  _isInitializeOnStart: 1
-  _isPersonalizeAdsOnInit: 1
+  _initializeOnStart: 1
+  _personalizeAdsOnInit: 1
+  _bannerMediators:
+  - _name: 
+    _fetchStrategyType: 0
+    _tiers: []
+  _interstitialMediators:
+  - _name: 
+    _fetchStrategyType: 0
+    _tiers: []
+  _incentivizedMediators:
+  - _name: 
+    _fetchStrategyType: 0
+    _tiers: []
+  - _name: 
+    _fetchStrategyType: 0
+    _tiers: []
+  - _name: 
+    _fetchStrategyType: 0
+    _tiers: []
+  - _name: 
+    _fetchStrategyType: 0
+    _tiers: []

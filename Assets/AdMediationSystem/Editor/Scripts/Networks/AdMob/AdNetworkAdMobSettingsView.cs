@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -11,56 +12,63 @@ namespace Virterix.AdMediation.Editor
     {
         private const string SETTINGS_FILE_NAME = "AdNetworkAdMobSettings.asset";
 
-        private SerializedProperty _androidAppIdProp;
-        private SerializedProperty _androidRewardUnitProp;
+        private SerializedProperty _androidAppIdProp;   
         private SerializedProperty _iosAppIdProp;
-        private SerializedProperty _iosRewardVideoUnitProp;
+
+        public override bool IsBannerListSupported => true;
+        public override bool IsInterstitialListSupported => true;
+        public override bool IsIncentivizedListSupported => true;
 
         protected override string SettingsFileName
         {
             get { return SETTINGS_FILE_NAME; }
         }
 
+        protected override string[] BannerTypes 
+        {
+            get; set;
+        }
+        
         public AdNetworkAdMobSettingsView(AdMediationSettingsWindow settingsWindow, string name, UnityAction action) : 
             base(settingsWindow, name, action)
         {
             // Android
             _androidAppIdProp = _serializedSettings.FindProperty("_androidAppId");
-            _androidRewardUnitProp = _serializedSettings.FindProperty("_androidRewardVideoUnitId");
             // iOS
             _iosAppIdProp = _serializedSettings.FindProperty("_iosAppId");
-            _iosRewardVideoUnitProp = _serializedSettings.FindProperty("_iosRewardVideoUnitId");
+            BannerTypes = Enum.GetNames(typeof(AdMobAdapter.AdMobBannerSize));
         }
 
-        protected override BaseAdNetworkSettingsModel CreateSettingsModel()
+        protected override BaseAdNetworkSettings CreateSettingsModel()
         {
-            return Utils.GetOrCreateSettings<AdNetworkAdMobSettingsModel>(SettingsFilePath);
+            var settings = Utils.GetOrCreateSettings<AdNetworkAdMobSettings>(SettingsFilePath);
+            return settings;
+        }
+
+        protected override void SetupReorderableList(ReorderableList list, AdType adType)
+        {
+            if (adType == AdType.Incentivized)
+            {
+                list.onCanRemoveCallback = (ReorderableList l) =>
+                {
+                    return true;
+                };
+                list.onCanAddCallback = (ReorderableList l) =>
+                {
+                    return list.count < 1;
+                };           
+            }
         }
 
         protected override void DrawSettings()
         {
+            //GUILayout.BeginVertical("box");
+            //GUILayout.Label("Android", EditorStyles.boldLabel);
+            //EditorGUI.indentLevel++;         
             GUILayout.BeginVertical("box");
-            GUILayout.Label("Android", EditorStyles.boldLabel);
-            EditorGUI.indentLevel++;
-
-            _androidAppIdProp.stringValue = EditorGUILayout.TextField("App Id", _androidAppIdProp.stringValue);
-            _androidRewardUnitProp.stringValue = EditorGUILayout.TextField("Reward Unit Id", _androidRewardUnitProp.stringValue);
+            _androidAppIdProp.stringValue = EditorGUILayout.TextField("Android App Id", _androidAppIdProp.stringValue);
+            _iosAppIdProp.stringValue = EditorGUILayout.TextField("iOS App Id", _iosAppIdProp.stringValue); 
             _serializedSettings.ApplyModifiedProperties();
-
-            EditorGUI.indentLevel--;
-
-            GUILayout.EndVertical();
-
-            GUILayout.BeginVertical("box");
-            GUILayout.Label("iOS", EditorStyles.boldLabel);
-            
-            EditorGUI.indentLevel++;
-
-            _iosAppIdProp.stringValue = EditorGUILayout.TextField("App Id", _iosAppIdProp.stringValue);
-            _iosRewardVideoUnitProp.stringValue = EditorGUILayout.TextField("Reward Unit Id", _iosRewardVideoUnitProp.stringValue);
-            _serializedSettings.ApplyModifiedProperties();
-
-            EditorGUI.indentLevel--;
             GUILayout.EndVertical();
         }
     }

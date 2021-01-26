@@ -7,13 +7,6 @@ using UnityEditor.AnimatedValues;
 
 namespace Virterix.AdMediation.Editor
 {
-    public enum AdType
-    {
-        Banner,
-        Interstitial,
-        Incentivized
-    }
-
     public class AdMediationSettingsWindow : EditorWindow
     {
         public const string SETTINGS_PATH = "Assets/AdMediationSystem/Editor/Resources/";
@@ -25,12 +18,15 @@ namespace Virterix.AdMediation.Editor
         private Vector2 _scrollPositioin;
         private int _selectedTab;
         private List<BaseAdNetworkSettingsView> _networks = new List<BaseAdNetworkSettingsView>();
-     
-        private AnimBool _showExtraFields;
+            
         private string _projectName;
         private string _createdProjectName;
         private AdMediationProjectSettings _projectSettings;
-        private SerializedObject _projectSettingsProp;
+        private SerializedObject _serializedProjectSettings;
+
+        private List<AdMediatorView> _bannerMediators = new List<AdMediatorView>();
+        private List<AdMediatorView> _interstitialMediators = new List<AdMediatorView>();
+        private List<AdMediatorView> _incentivizedMediators = new List<AdMediatorView>();
 
         public string CurrProjectName
         {
@@ -52,23 +48,19 @@ namespace Virterix.AdMediation.Editor
             get { return string.Format("{0}{1}", SETTINGS_PATH, SETTINGS_DIRECTORY_NAME); }
         }
 
-
-
         private void OnEnable()
         {
-            _showExtraFields = new AnimBool(true);
-            _showExtraFields.valueChanged.AddListener(Repaint);
             _projectName = EditorPrefs.GetString(ProjectNameSaveKey, "");
             if (!string.IsNullOrEmpty(_projectName))
             {
                 Init(CurrProjectName);
                 InitNetworksSettings();
+                InitMediators();
             }
         }
 
         private void OnDisable()
         {
-            Save();
         }
 
         private void OnGUI()
@@ -77,12 +69,19 @@ namespace Virterix.AdMediation.Editor
             DrawTabs();
             switch (_selectedTab)
             {
-                case 0:
+                case 0: // Settings
                     DrawProjectName();
                     DrawProjectSettings();
                     DrawAdNetworks();
                     break;
-                case 1:
+                case 1: // Banner mediators
+                    DrawMediators(_bannerMediators, "_bannerMediators");
+                    break;
+                case 2: // Interstitial mediators
+                    DrawMediators(_interstitialMediators, "_interstitialMediators");
+                    break;
+                case 3: // Incentivized mediators
+                    DrawMediators(_incentivizedMediators, "_incentivizedMediators");
                     break;
             }
             DrawBuild();
@@ -120,7 +119,7 @@ namespace Virterix.AdMediation.Editor
                 Directory.CreateDirectory(projectPath);
             }
             _projectSettings = Utils.GetOrCreateSettings<AdMediationProjectSettings>(GetProjectSettingsPath(projectName));
-            _projectSettingsProp = new SerializedObject(_projectSettings);
+            _serializedProjectSettings = new SerializedObject(_projectSettings);
             InitProjectNames();
         }
 
@@ -146,8 +145,57 @@ namespace Virterix.AdMediation.Editor
             _networks.Add(network);
         }
 
-        private void Save()
+        private void InitMediators()
         {
+            CreateAdMediatorViews(ref _bannerMediators, "_bannerMediators");
+        }
+
+        private void CreateAdMediatorViews(ref List<AdMediatorView> mediatorList, string propertyName)
+        {
+            SerializedProperty mediatorsProp = _serializedProjectSettings.FindProperty(propertyName);
+            for(int i = 0; i < mediatorsProp.arraySize; i++)
+            {
+                SerializedProperty _tierListProp = mediatorsProp.GetArrayElementAtIndex(i).FindPropertyRelative("_tiers");
+                AdMediatorView mediatorView = new AdMediatorView(i, _serializedProjectSettings, _tierListProp, Repaint);
+                mediatorList.Add(mediatorView);
+            }
+        }
+
+        private void DrawMediators(List<AdMediatorView> mediatorList, string propertyName)
+        {
+            _serializedProjectSettings.Update();
+            for (int i = 0; i < mediatorList.Count; i++)
+            {
+                var mediator = mediatorList[i];
+                bool isDeletionPerform = mediator.DrawView();
+                if (isDeletionPerform)
+                {
+                    var mediatorsProp = _serializedProjectSettings.FindProperty(propertyName);
+                    mediatorsProp.DeleteArrayElementAtIndex(i);
+                    mediatorList.RemoveAt(i);
+                    i--;
+
+                    for (int remainingIndex = i + 1; remainingIndex < mediatorList.Count && mediatorList.Count > 0; remainingIndex++)
+                    {
+                        SerializedProperty _tierListProp = mediatorsProp.GetArrayElementAtIndex(remainingIndex).FindPropertyRelative("_tiers");
+                        mediatorList[remainingIndex].SetTierListProperty(remainingIndex, _tierListProp);
+                    }
+                }
+            }
+
+            EditorGUILayout.Space();
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Add Mediator", GUILayout.Height(30)))
+            {
+                var mediatorsProp = _serializedProjectSettings.FindProperty(propertyName);
+                int insertIndex = mediatorsProp.arraySize;
+                mediatorsProp.InsertArrayElementAtIndex(insertIndex);
+                SerializedProperty _tierListProp = mediatorsProp.GetArrayElementAtIndex(insertIndex).FindPropertyRelative("_tiers");
+                AdMediatorView mediatorView = new AdMediatorView(mediatorList.Count, _serializedProjectSettings, _tierListProp, Repaint);
+                mediatorList.Add(mediatorView);
+            }
+            GUILayout.EndHorizontal();
+            _serializedProjectSettings.ApplyModifiedProperties();
         }
 
         private void DrawTabs()
@@ -199,27 +247,33 @@ namespace Virterix.AdMediation.Editor
         private void DrawProjectSettings()
         {
             GUILayout.Label("Settings", EditorStyles.boldLabel);
-            Utils.DrawPropertyField(_projectSettingsProp, "_isInitializeOnStart", GUILayout.ExpandWidth(true));
-            Utils.DrawPropertyField(_projectSettingsProp, "_isPersonalizeAdsOnInit");
+            GUILayout.BeginVertical("box");
+            Utils.DrawPropertyField(_serializedProjectSettings, "_initializeOnStart", GUILayout.ExpandWidth(true));
+            Utils.DrawPropertyField(_serializedProjectSettings, "_personalizeAdsOnInit");
+            GUILayout.EndVertical();
         }
 
         private void DrawAdNetworks()
         {
             EditorGUILayout.Space();
-            GUILayout.Label("Networks", EditorStyles.boldLabel);
+            GUILayout.Label("Networks", EditorStyles.boldLabel);          
             foreach (BaseAdNetworkSettingsView network in _networks)
             {
+                GUILayout.BeginVertical("helpbox");
                 network.DrawUI();
+                GUILayout.EndVertical();
             }
         }
 
         private void DrawBuild()
         {
             EditorGUILayout.Space();
+            Utils.DrawGuiLine(2);
             if (GUILayout.Button("BUILD", GUILayout.Height(40)))
             {
                 
             }
         }
+
     }
 } // namespace Virterix.AdMediation.Editor
