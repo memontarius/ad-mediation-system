@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
+using System.Linq;
 
 namespace Virterix.AdMediation.Editor
 {
@@ -18,7 +19,8 @@ namespace Virterix.AdMediation.Editor
         private Vector2 _scrollPositioin;
         private int _selectedTab;
         private List<BaseAdNetworkSettingsView> _networks = new List<BaseAdNetworkSettingsView>();
-            
+        private List<string> _activeNetworks = new List<string>();
+
         private string _projectName;
         private string _createdProjectName;
         private AdMediationProjectSettings _projectSettings;
@@ -27,6 +29,34 @@ namespace Virterix.AdMediation.Editor
         private List<AdMediatorView> _bannerMediators = new List<AdMediatorView>();
         private List<AdMediatorView> _interstitialMediators = new List<AdMediatorView>();
         private List<AdMediatorView> _incentivizedMediators = new List<AdMediatorView>();
+
+        private SerializedProperty _isAndroidProp;
+        private SerializedProperty _isIOSProp;
+
+        public bool IsAndroid 
+        {
+            get { return _isAndroidProp.boolValue; }
+            private set
+            {
+                _isAndroidProp.boolValue = value;
+            }
+        }
+        public bool IsIOS
+        {
+            get { return _isIOSProp.boolValue; }
+            private set
+            {
+                _isIOSProp.boolValue = value;
+            }
+        }
+
+        public string[] ActiveNetworks
+        {
+            get
+            {
+                return _activeNetworks.ToArray();
+            }
+        }
 
         public string CurrProjectName
         {
@@ -120,6 +150,8 @@ namespace Virterix.AdMediation.Editor
             }
             _projectSettings = Utils.GetOrCreateSettings<AdMediationProjectSettings>(GetProjectSettingsPath(projectName));
             _serializedProjectSettings = new SerializedObject(_projectSettings);
+            _isAndroidProp = _serializedProjectSettings.FindProperty("_isAndroid");
+            _isIOSProp = _serializedProjectSettings.FindProperty("_isIOS");
             InitProjectNames();
         }
 
@@ -143,6 +175,24 @@ namespace Virterix.AdMediation.Editor
             _networks.Clear();
             BaseAdNetworkSettingsView network = new AdNetworkAdMobSettingsView(this, "AdMob", Repaint);
             _networks.Add(network);
+
+            UpdateActiveNetworks();
+        }
+
+        private void UpdateActiveNetworks()
+        {
+            _activeNetworks.Clear();
+            foreach (var network in _networks)
+            {
+                if (network.Enabled)
+                {
+                    _activeNetworks.Add(network.Name);
+                }
+                else
+                {
+                    _activeNetworks.Remove(network.Name);
+                }
+            }
         }
 
         private void InitMediators()
@@ -155,8 +205,8 @@ namespace Virterix.AdMediation.Editor
             SerializedProperty mediatorsProp = _serializedProjectSettings.FindProperty(propertyName);
             for(int i = 0; i < mediatorsProp.arraySize; i++)
             {
-                SerializedProperty _tierListProp = mediatorsProp.GetArrayElementAtIndex(i).FindPropertyRelative("_tiers");
-                AdMediatorView mediatorView = new AdMediatorView(i, _serializedProjectSettings, _tierListProp, Repaint);
+                //SerializedProperty _tierListProp = mediatorsProp.GetArrayElementAtIndex(i).FindPropertyRelative("_tiers");
+                AdMediatorView mediatorView = new AdMediatorView(this, i, _serializedProjectSettings, mediatorsProp.GetArrayElementAtIndex(i), Repaint);
                 mediatorList.Add(mediatorView);
             }
         }
@@ -177,8 +227,8 @@ namespace Virterix.AdMediation.Editor
 
                     for (int remainingIndex = i + 1; remainingIndex < mediatorList.Count && mediatorList.Count > 0; remainingIndex++)
                     {
-                        SerializedProperty _tierListProp = mediatorsProp.GetArrayElementAtIndex(remainingIndex).FindPropertyRelative("_tiers");
-                        mediatorList[remainingIndex].SetTierListProperty(remainingIndex, _tierListProp);
+                        SerializedProperty _mediatorProp = mediatorsProp.GetArrayElementAtIndex(remainingIndex);
+                        mediatorList[remainingIndex].SetProperty(remainingIndex, _mediatorProp);
                     }
                 }
             }
@@ -190,8 +240,8 @@ namespace Virterix.AdMediation.Editor
                 var mediatorsProp = _serializedProjectSettings.FindProperty(propertyName);
                 int insertIndex = mediatorsProp.arraySize;
                 mediatorsProp.InsertArrayElementAtIndex(insertIndex);
-                SerializedProperty _tierListProp = mediatorsProp.GetArrayElementAtIndex(insertIndex).FindPropertyRelative("_tiers");
-                AdMediatorView mediatorView = new AdMediatorView(mediatorList.Count, _serializedProjectSettings, _tierListProp, Repaint);
+                SerializedProperty _mediatorProp = mediatorsProp.GetArrayElementAtIndex(insertIndex);
+                AdMediatorView mediatorView = new AdMediatorView(this, mediatorList.Count, _serializedProjectSettings, _mediatorProp, Repaint);
                 mediatorList.Add(mediatorView);
             }
             GUILayout.EndHorizontal();
@@ -247,6 +297,30 @@ namespace Virterix.AdMediation.Editor
         private void DrawProjectSettings()
         {
             GUILayout.Label("Settings", EditorStyles.boldLabel);
+
+            _serializedProjectSettings.Update();
+            GUILayout.BeginHorizontal("box");
+            IsAndroid = GUILayout.Toggle(IsAndroid, " Android");
+            if (!IsAndroid && !IsIOS)
+            {
+                IsIOS = true;
+            }
+            GUILayout.Space(20);
+            IsIOS = GUILayout.Toggle(IsIOS, " iOS");
+            if (!IsAndroid && !IsIOS)
+            {
+                IsAndroid = true;
+            }
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            if (_serializedProjectSettings.ApplyModifiedProperties())
+            {
+                foreach(var network in _networks)
+                {
+                    network.UpdateElementHeight();
+                }
+            }
+
             GUILayout.BeginVertical("box");
             Utils.DrawPropertyField(_serializedProjectSettings, "_initializeOnStart", GUILayout.ExpandWidth(true));
             Utils.DrawPropertyField(_serializedProjectSettings, "_personalizeAdsOnInit");
@@ -260,7 +334,11 @@ namespace Virterix.AdMediation.Editor
             foreach (BaseAdNetworkSettingsView network in _networks)
             {
                 GUILayout.BeginVertical("helpbox");
-                network.DrawUI();
+                bool activationChanged = network.DrawUI();
+                if (activationChanged)
+                {
+                    UpdateActiveNetworks();
+                }
                 GUILayout.EndVertical();
             }
         }

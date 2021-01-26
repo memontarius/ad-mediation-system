@@ -15,6 +15,42 @@ MonoBehaviour:
   _initializeOnStart: 1
   _personalizeAdsOnInit: 1
   _bannerMediators:
+  - _name: Top
+    _fetchStrategyType: 1
+    _tiers:
+    - _units:
+      - _networkName: 
+        _selectedNetwork: 0
+        _instanceName: 
+        _selectedInstance: 0
+      - _networkName: 
+        _selectedNetwork: 0
+        _instanceName: 
+        _selectedInstance: 0
+      - _networkName: 
+        _selectedNetwork: 0
+        _instanceName: 
+        _selectedInstance: 0
+      - _networkName: 
+        _selectedNetwork: 0
+        _instanceName: 
+        _selectedInstance: 0
+    - _units:
+      - _networkName: 
+        _selectedNetwork: 0
+        _instanceName: 
+        _selectedInstance: 0
+    - _units:
+      - _networkName: 
+        _selectedNetwork: 0
+        _instanceName: 
+        _selectedInstance: 0
+  - _name: 
+    _fetchStrategyType: 0
+    _tiers: []
+  - _name: 
+    _fetchStrategyType: 0
+    _tiers: []
   - _name: 
     _fetchStrategyType: 0
     _tiers: []
@@ -22,6 +58,20 @@ MonoBehaviour:
   - _name: 
     _fetchStrategyType: 0
     _tiers: []
+  - _name: 
+    _fetchStrategyType: 0
+    _tiers: []
+  - _name: 
+    _fetchStrategyType: 0
+    _tiers: []
+  - _name: 
+    _fetchStrategyType: 0
+    _tiers:
+    - _units:
+      - _networkName: 
+        _selectedNetwork: 0
+        _instanceName: 
+        _selectedInstance: 0
   _incentivizedMediators:
   - _name: 
     _fetchStrategyType: 0
@@ -35,3 +85,11 @@ MonoBehaviour:
   - _name: 
     _fetchStrategyType: 0
     _tiers: []
+  - _name: 
+    _fetchStrategyType: 0
+    _tiers: []
+  - _name: 
+    _fetchStrategyType: 0
+    _tiers: []
+  _isIOS: 1
+  _isAndroid: 1

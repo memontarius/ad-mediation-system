@@ -61,13 +61,16 @@ namespace Virterix.AdMediation.Editor
         }
 
         protected override void DrawSettings()
-        {
-            //GUILayout.BeginVertical("box");
-            //GUILayout.Label("Android", EditorStyles.boldLabel);
-            //EditorGUI.indentLevel++;         
+        {  
             GUILayout.BeginVertical("box");
-            _androidAppIdProp.stringValue = EditorGUILayout.TextField("Android App Id", _androidAppIdProp.stringValue);
-            _iosAppIdProp.stringValue = EditorGUILayout.TextField("iOS App Id", _iosAppIdProp.stringValue); 
+            if (_settingsWindow.IsAndroid)
+            {
+                _androidAppIdProp.stringValue = EditorGUILayout.TextField("Android App Id", _androidAppIdProp.stringValue);
+            }
+            if (_settingsWindow.IsIOS)
+            {
+                _iosAppIdProp.stringValue = EditorGUILayout.TextField("iOS App Id", _iosAppIdProp.stringValue);
+            }
             _serializedSettings.ApplyModifiedProperties();
             GUILayout.EndVertical();
         }

@@ -100,29 +100,32 @@ namespace Virterix.AdMediation.Editor
             if (IsBannerListSupported)
             {
                 _bannerAdInstancesProp = _serializedSettings.FindProperty("_bannerAdInstances");
-                _banners = CreateList(_serializedSettings, _bannerAdInstancesProp, "Banners", 88, true);
+                _banners = CreateList(_serializedSettings, _bannerAdInstancesProp, "Banners", AdType.Banner);
                 SetupReorderableList(_banners, AdType.Banner);
             }
             if (IsInterstitialListSupported)
             {
-                _interstitialAdInstancesProp = _serializedSettings.FindProperty("_interstitialAdInstances");
-                _interstitials = CreateList(_serializedSettings, _interstitialAdInstancesProp, "Interstitials", 68, false);
+                _interstitialAdInstancesProp = _serializedSettings.FindProperty("_interstitialAdInstances"); 
+                _interstitials = CreateList(_serializedSettings, _interstitialAdInstancesProp, "Interstitials", AdType.Interstitial);
                 SetupReorderableList(_interstitials, AdType.Interstitial);
             }
             if (IsIncentivizedListSupported)
             {
                 _rewardAdInstancesProp = _serializedSettings.FindProperty("_rewardAdInstances");
-                _rewardAdUnits = CreateList(_serializedSettings, _rewardAdInstancesProp, "Reward Units", 68, false);
+                _rewardAdUnits = CreateList(_serializedSettings, _rewardAdInstancesProp, "Reward Units", AdType.Incentivized);
                 SetupReorderableList(_rewardAdUnits, AdType.Incentivized);
             }
 
+            UpdateElementHeight();
             _enabledProp = _serializedSettings.FindProperty("_enabled");
             Enabled = _enabledProp.boolValue;
         }
 
-        public void DrawUI()
+        public bool DrawUI()
         {
             bool previousCollapsed = Collapsed;
+            bool activationChanged = false;
+
             Collapsed = EditorGUILayout.BeginFoldoutHeaderGroup(Collapsed, Name);
             if (Collapsed != previousCollapsed)
             {
@@ -133,17 +136,64 @@ namespace Virterix.AdMediation.Editor
             if (EditorGUILayout.BeginFadeGroup(_showSettings.faded))
             {
                 Enabled = EditorGUILayout.BeginToggleGroup("Enable", Enabled);
-                _enabledProp.boolValue = Enabled;
-                //GUILayout.BeginVertical("helpbox");
-
+                if (_enabledProp.boolValue != Enabled)
+                {
+                    activationChanged = true;
+                }
+                _enabledProp.boolValue = Enabled;        
                 DrawSettings();
                 DrawAdInstanceLists();
-
-                //GUILayout.EndVertical();
                 EditorGUILayout.EndToggleGroup();
             }
             EditorGUILayout.EndFadeGroup();
             EditorGUILayout.EndFoldoutHeaderGroup();
+
+            return activationChanged;
+        }
+
+        public void UpdateElementHeight()
+        {
+            if (_banners != null)
+            {
+                _banners.elementHeight = CalculateElementHeight(AdType.Banner);
+            }
+            if (_interstitials != null)
+            {
+                _interstitials.elementHeight = CalculateElementHeight(AdType.Interstitial);
+            }
+            if (_rewardAdUnits != null)
+            {
+                _rewardAdUnits.elementHeight = CalculateElementHeight(AdType.Incentivized);
+            }
+        }
+
+        private float CalculateElementHeight(AdType adType)
+        {
+            float resultHeight = 0;
+
+            float commonElementHeight = 28;
+            float bannerElementHeight = 48;
+            if (_settingsWindow.IsAndroid && _settingsWindow.IsIOS)
+            {
+                bannerElementHeight = 88;
+                commonElementHeight = 68;
+            }
+            else if (_settingsWindow.IsAndroid || _settingsWindow.IsIOS)
+            {
+                bannerElementHeight = 68f;
+                commonElementHeight = 48;
+            }
+
+            if (adType == AdType.Banner) 
+            {
+                resultHeight = bannerElementHeight;
+            }
+            else
+            {
+                resultHeight = commonElementHeight;
+            }
+
+            return resultHeight;
         }
 
         protected virtual BaseAdNetworkSettings CreateSettingsModel()
@@ -170,12 +220,11 @@ namespace Virterix.AdMediation.Editor
             }
         }
 
-        protected ReorderableList CreateList(SerializedObject serializedObj, SerializedProperty serializedProp, 
-            string title, float elementHeight, bool isBanner)
+        protected ReorderableList CreateList(SerializedObject serializedObj, SerializedProperty serializedProp, string title, AdType adType)
         {
             ReorderableList list = new ReorderableList(serializedObj, serializedProp, false, true, true, true);
             list.headerHeight = 22;
-            list.elementHeight = list.count == 0 ? 22 : elementHeight;
+            list.elementHeight = list.count == 0 ? 22 : CalculateElementHeight(adType);
 
             list.drawHeaderCallback = rect =>
             {
@@ -204,23 +253,29 @@ namespace Virterix.AdMediation.Editor
                 );
 
                 width = Mathf.Clamp(elementWidth - 80, 315, 2800);
-                rect.y += 20;
-                EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), "Android Id");
-                EditorGUI.PropertyField(
-                    new Rect(rect.x + 80, rect.y, width, EditorGUIUtility.singleLineHeight),
-                    element.FindPropertyRelative("_androidId"),
-                    GUIContent.none
-                );
+                if (_settingsWindow.IsAndroid)
+                {
+                    rect.y += 20;
+                    EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), "Android Id");
+                    EditorGUI.PropertyField(
+                        new Rect(rect.x + 80, rect.y, width, EditorGUIUtility.singleLineHeight),
+                        element.FindPropertyRelative("_androidId"),
+                        GUIContent.none
+                    );
+                }
 
-                rect.y += 20;
-                EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), "iOS Id");
-                EditorGUI.PropertyField(
-                    new Rect(rect.x + 80, rect.y, width, EditorGUIUtility.singleLineHeight),
-                    element.FindPropertyRelative("_iosId"),
-                    GUIContent.none
-                );
+                if (_settingsWindow.IsIOS)
+                {
+                    rect.y += 20;
+                    EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), "iOS Id");
+                    EditorGUI.PropertyField(
+                        new Rect(rect.x + 80, rect.y, width, EditorGUIUtility.singleLineHeight),
+                        element.FindPropertyRelative("_iosId"),
+                        GUIContent.none
+                    );
+                }
 
-                if (isBanner && BannerTypes != null)
+                if (adType == AdType.Banner && BannerTypes != null)
                 {
                     rect.y += 20;
                     EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), "Type");
@@ -232,7 +287,7 @@ namespace Virterix.AdMediation.Editor
             list.onAddCallback = (ReorderableList l) =>
             {
                 ReorderableList.defaultBehaviours.DoAddButton(list);
-                list.elementHeight = list.count == 0 ? 22 : elementHeight;
+                list.elementHeight = list.count == 0 ? 22 : CalculateElementHeight(adType);
                 var property = list.serializedProperty.GetArrayElementAtIndex(list.index);
                 property.FindPropertyRelative("_timeout").floatValue = 90;
                 if (list.index == 0)
@@ -247,7 +302,7 @@ namespace Virterix.AdMediation.Editor
             list.onRemoveCallback = (ReorderableList l) =>
             {
                 ReorderableList.defaultBehaviours.DoRemoveButton(list);
-                list.elementHeight = list.count == 0 ? 22 : elementHeight;
+                list.elementHeight = list.count == 0 ? 22 : CalculateElementHeight(adType);
             };
 
             _adInstancesProperties.Add(serializedObj);

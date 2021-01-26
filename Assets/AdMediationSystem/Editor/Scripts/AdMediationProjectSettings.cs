@@ -14,7 +14,9 @@ namespace Virterix.AdMediation.Editor
     public class AdUnit
     {
         public string _networkName;
+        public int _selectedNetwork;
         public string _instanceName;
+        public int _selectedInstance;
     }
 
     [System.Serializable]
@@ -39,7 +41,7 @@ namespace Virterix.AdMediation.Editor
     public struct AdUnitMediator
     {
         public string _name;
-        public int _fetchStrategyType;
+        public FetchStrategyType _fetchStrategyType;
         public List<AdTier> _tiers;
     }
 
@@ -50,5 +52,7 @@ namespace Virterix.AdMediation.Editor
         public List<AdUnitMediator> _bannerMediators;
         public List<AdUnitMediator> _interstitialMediators;
         public List<AdUnitMediator> _incentivizedMediators;
+        public bool _isIOS;
+        public bool _isAndroid;
     }
 } // Virterix.AdMediation.Editor
