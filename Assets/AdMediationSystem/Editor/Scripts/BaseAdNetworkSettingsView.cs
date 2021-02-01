@@ -12,25 +12,35 @@ namespace Virterix.AdMediation.Editor
 {
     public abstract class BaseAdNetworkSettingsView
     {
-        public string Name
+        public struct InstanceElementHeight
         {
-            get; private set;
+            public float height;
+            public float androidHeight;
+            public float iosHeight;
         }
 
-        public bool Enabled
+        public class AdInstanceBlockData
         {
-            get; set;
+            public string _blockName;
+            public AdType _adType;
+            public ReorderableList _instances;
+            public SerializedProperty _instanceProperty;
+            public bool _isCollapsed;
+            public AnimBool _foldAnimation;
+            public InstanceElementHeight _elementHeight;
         }
 
-        public bool Collapsed
-        {
-            get; set;
-        }
+        public string Name { get; private set; }
 
-        protected abstract string SettingsFileName
-        {
-            get;
-        }
+        public string Identifier { get; private set; }
+
+        public bool Enabled { get; set; }
+
+        public bool Collapsed { get; set; }
+
+        protected abstract string SettingsFileName { get; }
+
+        protected virtual string[] BannerTypes { get; set; }
 
         protected string SettingsFilePath
         {
@@ -42,78 +52,62 @@ namespace Virterix.AdMediation.Editor
 
         private string CollapsedSaveKey
         {
-            get { return string.Format("{0}{1}.collapsed", AdMediationSettingsWindow.PREFIX_SAVEKEY, Name); }
-        }
-
-        protected virtual string[] BannerTypes
-        {
-            get; set;
+            get
+            {
+                return string.Format("{0}{1}.collapsed", AdMediationSettingsWindow.PREFIX_SAVEKEY, Name);
+            }
         }
 
         protected AdMediationSettingsWindow _settingsWindow;
-
         protected SerializedObject _serializedSettings;
         protected BaseAdNetworkSettings _settings;
 
         private AnimBool _showSettings;
-        private UnityAction _repaint;
         private SerializedProperty _enabledProp;
+        private List<AdInstanceBlockData> _instanceBlocks = new List<AdInstanceBlockData>();
 
-        private List<ReorderableList> _adInstancesLists;
-        private List<SerializedObject> _adInstancesProperties;
-
-        private ReorderableList _banners;
-        private SerializedProperty _bannerAdInstancesProp;
-        private ReorderableList _interstitials;
-        private SerializedProperty _interstitialAdInstancesProp;
-        private ReorderableList _rewardAdUnits;
-        private SerializedProperty _rewardAdInstancesProp;
-
-        public virtual bool IsBannerListSupported
+        private GUIStyle InstanceFoldoutButtonStyle
         {
-            get { return false; }
+            get
+            {
+                if (_instanceFoldoutButtonStyle == null)
+                {
+                    _instanceFoldoutButtonStyle = new GUIStyle(GUI.skin.GetStyle("button"));
+                    _instanceFoldoutButtonStyle.alignment = TextAnchor.MiddleLeft;
+                    _instanceFoldoutButtonStyle.margin = new RectOffset(1, 1, 0, 1);
+                    _instanceFoldoutButtonStyle.padding = new RectOffset(6, 6, 3, 3);
+                }
+                return _instanceFoldoutButtonStyle;
+            }
         }
+        private GUIStyle _instanceFoldoutButtonStyle;
 
-        public virtual bool IsInterstitialListSupported
-        {
-            get { return false; }
-        }
-
-        public virtual bool IsIncentivizedListSupported
-        {
-            get { return false; }
-        }
-
-        public BaseAdNetworkSettingsView(AdMediationSettingsWindow settingsWindow, string name, UnityAction repaint)
+        public BaseAdNetworkSettingsView(AdMediationSettingsWindow settingsWindow, string name, string identifier)
         {
             _settingsWindow = settingsWindow;
             Name = name;
+            Identifier = identifier;
             _showSettings = new AnimBool(true);
-            _showSettings.valueChanged.AddListener(repaint);
-            Collapsed = EditorPrefs.GetBool(CollapsedSaveKey, false);
-            _adInstancesLists = new List<ReorderableList>();
-            _adInstancesProperties = new List<SerializedObject>();
+            _showSettings.valueChanged.AddListener(settingsWindow.Repaint);
 
+            Collapsed = EditorPrefs.GetBool(CollapsedSaveKey, false);
             _settings = CreateSettingsModel();
             _serializedSettings = new SerializedObject(_settings);
 
-            if (IsBannerListSupported)
+            if (IsAdSupported(AdType.Banner))
             {
-                _bannerAdInstancesProp = _serializedSettings.FindProperty("_bannerAdInstances");
-                _banners = CreateList(_serializedSettings, _bannerAdInstancesProp, "Banners", AdType.Banner);
-                SetupReorderableList(_banners, AdType.Banner);
+                InstanceElementHeight elementHeight = CreateInstanceElementHeight(AdType.Banner);
+                CreateAdInstanceBlock("Banners", "_bannerAdInstances", AdType.Banner, elementHeight);
             }
-            if (IsInterstitialListSupported)
+            if (IsAdSupported(AdType.Interstitial))
             {
-                _interstitialAdInstancesProp = _serializedSettings.FindProperty("_interstitialAdInstances"); 
-                _interstitials = CreateList(_serializedSettings, _interstitialAdInstancesProp, "Interstitials", AdType.Interstitial);
-                SetupReorderableList(_interstitials, AdType.Interstitial);
+                InstanceElementHeight elementHeight = CreateInstanceElementHeight(AdType.Interstitial);
+                CreateAdInstanceBlock("Interstitials", "_interstitialAdInstances", AdType.Interstitial, elementHeight);
             }
-            if (IsIncentivizedListSupported)
+            if (IsAdSupported(AdType.Incentivized))
             {
-                _rewardAdInstancesProp = _serializedSettings.FindProperty("_rewardAdInstances");
-                _rewardAdUnits = CreateList(_serializedSettings, _rewardAdInstancesProp, "Reward Units", AdType.Incentivized);
-                SetupReorderableList(_rewardAdUnits, AdType.Incentivized);
+                InstanceElementHeight elementHeight = CreateInstanceElementHeight(AdType.Incentivized);
+                CreateAdInstanceBlock("Reward Units", "_rewardAdInstances", AdType.Incentivized, elementHeight);
             }
 
             UpdateElementHeight();
@@ -135,14 +129,16 @@ namespace Virterix.AdMediation.Editor
             _showSettings.target = Collapsed;
             if (EditorGUILayout.BeginFadeGroup(_showSettings.faded))
             {
+                _serializedSettings.Update();
                 Enabled = EditorGUILayout.BeginToggleGroup("Enable", Enabled);
                 if (_enabledProp.boolValue != Enabled)
                 {
                     activationChanged = true;
                 }
-                _enabledProp.boolValue = Enabled;        
+                _enabledProp.boolValue = Enabled;
                 DrawSettings();
                 DrawAdInstanceLists();
+                _serializedSettings.ApplyModifiedProperties();
                 EditorGUILayout.EndToggleGroup();
             }
             EditorGUILayout.EndFadeGroup();
@@ -153,52 +149,82 @@ namespace Virterix.AdMediation.Editor
 
         public void UpdateElementHeight()
         {
-            if (_banners != null)
+            foreach (var instanceBlock in _instanceBlocks)
             {
-                _banners.elementHeight = CalculateElementHeight(AdType.Banner);
-            }
-            if (_interstitials != null)
-            {
-                _interstitials.elementHeight = CalculateElementHeight(AdType.Interstitial);
-            }
-            if (_rewardAdUnits != null)
-            {
-                _rewardAdUnits.elementHeight = CalculateElementHeight(AdType.Incentivized);
+                instanceBlock._instances.elementHeight = CalculateElementHeight(instanceBlock);
             }
         }
 
-        private float CalculateElementHeight(AdType adType)
+        public string[] GetAdInstances(AdType adType)
         {
-            float resultHeight = 0;
-
-            float commonElementHeight = 28;
-            float bannerElementHeight = 48;
-            if (_settingsWindow.IsAndroid && _settingsWindow.IsIOS)
+            string[] instances = null;
+            switch (adType)
             {
-                bannerElementHeight = 88;
-                commonElementHeight = 68;
+                case AdType.Banner:
+                    instances = new string[_settings._bannerAdInstances.Count];
+                    for (int i = 0; i < instances.Length; i++)
+                    {
+                        instances[i] = _settings._bannerAdInstances[i]._name;
+                    }
+                    break;
+                case AdType.Interstitial:
+                    instances = new string[_settings._interstitialAdInstances.Count];
+                    for (int i = 0; i < instances.Length; i++)
+                    {
+                        instances[i] = _settings._interstitialAdInstances[i]._name;
+                    }
+                    break;
+                case AdType.Incentivized:
+                    instances = new string[_settings._rewardAdInstances.Count];
+                    for (int i = 0; i < instances.Length; i++)
+                    {
+                        instances[i] = _settings._rewardAdInstances[i]._name;
+                    }
+                    break;
             }
-            else if (_settingsWindow.IsAndroid || _settingsWindow.IsIOS)
-            {
-                bannerElementHeight = 68f;
-                commonElementHeight = 48;
-            }
-
-            if (adType == AdType.Banner) 
-            {
-                resultHeight = bannerElementHeight;
-            }
-            else
-            {
-                resultHeight = commonElementHeight;
-            }
-
-            return resultHeight;
+            return instances;
         }
 
-        protected virtual BaseAdNetworkSettings CreateSettingsModel()
+        public virtual bool IsAdSupported(AdType adType)
         {
-            return null;
+            return false;
+        }
+
+        private string GetInstanceBlockCollapsedKey(string network, AdType adType)
+        {
+            string saveKey = string.Format("{0}{1}{2}", AdMediationSettingsWindow.PREFIX_SAVEKEY, network, adType.ToString());
+            return saveKey;
+        }
+
+        protected float CalculateElementHeight(AdInstanceBlockData blockData)
+        {
+            float solvedHeight = 22;
+            if (blockData._instances != null && blockData._instances.count > 0) {
+                if (_settingsWindow.IsAndroid && _settingsWindow.IsIOS)
+                {
+                    solvedHeight = blockData._elementHeight.height;
+                }
+                else if (_settingsWindow.IsAndroid)
+                {
+                    solvedHeight = blockData._elementHeight.androidHeight;
+                }
+                else if (_settingsWindow.IsIOS)
+                {
+                    solvedHeight = blockData._elementHeight.iosHeight;
+                }
+            }
+            return solvedHeight;
+        }
+
+        protected abstract BaseAdNetworkSettings CreateSettingsModel();
+
+        protected virtual InstanceElementHeight CreateInstanceElementHeight(AdType adType)
+        {
+            InstanceElementHeight elementHeight = new InstanceElementHeight();
+            elementHeight.height = 88;
+            elementHeight.androidHeight = 68;
+            elementHeight.iosHeight = 68;
+            return elementHeight;
         }
 
         protected virtual void SetupReorderableList(ReorderableList list, AdType adType)
@@ -211,31 +237,64 @@ namespace Virterix.AdMediation.Editor
 
         private void DrawAdInstanceLists()
         {
-            for(int i = 0; i < _adInstancesLists.Count; i++)
+            for (int i = 0; i < _instanceBlocks.Count; i++)
             {
-                EditorGUILayout.Space();
-                _adInstancesProperties[i].Update();
-                _adInstancesLists[i].DoLayoutList();
-                _serializedSettings.ApplyModifiedProperties();
+                AdInstanceBlockData blockData = _instanceBlocks[i];
+                EditorGUILayout.Space(2);
+                AnimBool foldAnimation = blockData._foldAnimation;
+
+                char collapsedSymbol = blockData._isCollapsed ? '\u25B7' : '\u25BD';
+                string buttonTitle = string.Format("{0}  {1}", collapsedSymbol, blockData._blockName);
+
+                if (GUILayout.Button(buttonTitle, InstanceFoldoutButtonStyle))
+                {
+                    blockData._isCollapsed = !blockData._isCollapsed;
+                    EditorPrefs.SetBool(GetInstanceBlockCollapsedKey(Name, blockData._adType), blockData._isCollapsed);
+                }
+
+                foldAnimation.target = !blockData._isCollapsed;
+                if (EditorGUILayout.BeginFadeGroup(foldAnimation.faded))
+                {
+                    blockData._instances.DoLayoutList();
+                }
+                EditorGUILayout.EndFadeGroup();
             }
         }
 
-        protected ReorderableList CreateList(SerializedObject serializedObj, SerializedProperty serializedProp, string title, AdType adType)
+        private void CreateAdInstanceBlock(string title, string propertyName, AdType adType, InstanceElementHeight elementHeight)
         {
-            ReorderableList list = new ReorderableList(serializedObj, serializedProp, false, true, true, true);
-            list.headerHeight = 22;
-            list.elementHeight = list.count == 0 ? 22 : CalculateElementHeight(adType);
+            AdInstanceBlockData instanceBlock = new AdInstanceBlockData();
+            instanceBlock._adType = adType;
+            instanceBlock._blockName = title;
+            instanceBlock._instanceProperty = _serializedSettings.FindProperty(propertyName);
+            instanceBlock._isCollapsed = EditorPrefs.GetBool(GetInstanceBlockCollapsedKey(Name, adType), true);
+            instanceBlock._foldAnimation = new AnimBool();
+            instanceBlock._foldAnimation.valueChanged.AddListener(_settingsWindow.Repaint);
+            instanceBlock._elementHeight = elementHeight;
+            instanceBlock._instances = CreateList(_serializedSettings, instanceBlock);
+            SetupReorderableList(instanceBlock._instances, adType);
+            _instanceBlocks.Add(instanceBlock);
+        }
+
+        protected ReorderableList CreateList(SerializedObject serializedObj, AdInstanceBlockData instanceBlock)
+        {
+            ReorderableList list = new ReorderableList(serializedObj, instanceBlock._instanceProperty, false, true, true, true);
+            list.headerHeight = 1;
 
             list.drawHeaderCallback = rect =>
             {
-                EditorGUI.LabelField(rect, title);
+            };
+            list.drawNoneElementCallback = (Rect rect) =>
+            {
+                list.elementHeight = CalculateElementHeight(instanceBlock);
+                EditorGUI.LabelField(rect, "List is Empty");
             };
             list.drawElementCallback = (rect, index, active, focused) =>
             {
                 SerializedProperty element = list.serializedProperty.GetArrayElementAtIndex(index);
                 float elementWidth = rect.width;
                 float width = Mathf.Clamp(elementWidth - 215, 180, 2800);
-                
+
                 rect.y += 5;
                 EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), "Name");
                 EditorGUI.PropertyField(
@@ -275,19 +334,19 @@ namespace Virterix.AdMediation.Editor
                     );
                 }
 
-                if (adType == AdType.Banner && BannerTypes != null)
+                if (instanceBlock._adType == AdType.Banner && BannerTypes != null)
                 {
                     rect.y += 20;
                     EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), "Type");
                     SerializedProperty bannerTypeProp = element.FindPropertyRelative("_bannerType");
-                    bannerTypeProp.intValue = EditorGUI.Popup(new Rect(rect.x + 80, rect.y, width, EditorGUIUtility.singleLineHeight), 
+                    bannerTypeProp.intValue = EditorGUI.Popup(new Rect(rect.x + 80, rect.y, width, EditorGUIUtility.singleLineHeight),
                         bannerTypeProp.intValue, BannerTypes);
                 }
             };
             list.onAddCallback = (ReorderableList l) =>
             {
                 ReorderableList.defaultBehaviours.DoAddButton(list);
-                list.elementHeight = list.count == 0 ? 22 : CalculateElementHeight(adType);
+                list.elementHeight = CalculateElementHeight(instanceBlock);
                 var property = list.serializedProperty.GetArrayElementAtIndex(list.index);
                 property.FindPropertyRelative("_timeout").floatValue = 90;
                 if (list.index == 0)
@@ -302,11 +361,9 @@ namespace Virterix.AdMediation.Editor
             list.onRemoveCallback = (ReorderableList l) =>
             {
                 ReorderableList.defaultBehaviours.DoRemoveButton(list);
-                list.elementHeight = list.count == 0 ? 22 : CalculateElementHeight(adType);
+                list.elementHeight = CalculateElementHeight(instanceBlock);
             };
 
-            _adInstancesProperties.Add(serializedObj);
-            _adInstancesLists.Add(list);
             return list;
         }
     }

@@ -15,10 +15,6 @@ namespace Virterix.AdMediation.Editor
         private SerializedProperty _androidAppIdProp;   
         private SerializedProperty _iosAppIdProp;
 
-        public override bool IsBannerListSupported => true;
-        public override bool IsInterstitialListSupported => true;
-        public override bool IsIncentivizedListSupported => true;
-
         protected override string SettingsFileName
         {
             get { return SETTINGS_FILE_NAME; }
@@ -29,14 +25,32 @@ namespace Virterix.AdMediation.Editor
             get; set;
         }
         
-        public AdNetworkAdMobSettingsView(AdMediationSettingsWindow settingsWindow, string name, UnityAction action) : 
-            base(settingsWindow, name, action)
+        public AdNetworkAdMobSettingsView(AdMediationSettingsWindow settingsWindow, string name, string identifier) : 
+            base(settingsWindow, name, identifier)
         {
             // Android
             _androidAppIdProp = _serializedSettings.FindProperty("_androidAppId");
             // iOS
             _iosAppIdProp = _serializedSettings.FindProperty("_iosAppId");
             BannerTypes = Enum.GetNames(typeof(AdMobAdapter.AdMobBannerSize));
+        }
+
+        public override bool IsAdSupported(AdType adType)
+        {
+            bool isSupported = false;
+            switch(adType)
+            {
+                case AdType.Banner:
+                    isSupported = true;
+                    break;
+                case AdType.Interstitial:
+                    isSupported = true;
+                    break;
+                case AdType.Incentivized:
+                    isSupported = true;
+                    break;
+            }
+            return isSupported;
         }
 
         protected override BaseAdNetworkSettings CreateSettingsModel()
@@ -71,7 +85,6 @@ namespace Virterix.AdMediation.Editor
             {
                 _iosAppIdProp.stringValue = EditorGUILayout.TextField("iOS App Id", _iosAppIdProp.stringValue);
             }
-            _serializedSettings.ApplyModifiedProperties();
             GUILayout.EndVertical();
         }
     }

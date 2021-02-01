@@ -226,3 +226,12 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.purchasing from version 2.1.1 to 2.2.1
+
+=== Fri Jan 29 11:22:43 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.ext.nunit from version 1.0.5 to 1.0.6
+  com.unity.test-framework from version 1.1.19 to 1.1.20

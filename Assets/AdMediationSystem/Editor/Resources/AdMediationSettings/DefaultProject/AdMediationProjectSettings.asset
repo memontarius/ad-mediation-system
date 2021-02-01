@@ -15,81 +15,45 @@ MonoBehaviour:
   _initializeOnStart: 1
   _personalizeAdsOnInit: 1
   _bannerMediators:
-  - _name: Top
+  - _name: 
     _fetchStrategyType: 1
     _tiers:
     - _units:
-      - _networkName: 
-        _selectedNetwork: 0
-        _instanceName: 
-        _selectedInstance: 0
-      - _networkName: 
-        _selectedNetwork: 0
-        _instanceName: 
-        _selectedInstance: 0
-      - _networkName: 
-        _selectedNetwork: 0
-        _instanceName: 
-        _selectedInstance: 0
-      - _networkName: 
-        _selectedNetwork: 0
-        _instanceName: 
-        _selectedInstance: 0
-    - _units:
-      - _networkName: 
-        _selectedNetwork: 0
-        _instanceName: 
-        _selectedInstance: 0
-    - _units:
-      - _networkName: 
-        _selectedNetwork: 0
-        _instanceName: 
-        _selectedInstance: 0
-  - _name: 
-    _fetchStrategyType: 0
-    _tiers: []
-  - _name: 
-    _fetchStrategyType: 0
-    _tiers: []
-  - _name: 
-    _fetchStrategyType: 0
-    _tiers: []
+      - _networkName: Unity Ads
+        _networkIndex: 1
+        _instanceIndex: 0
+        _replaced: 0
+        _percentage: 0
+      - _networkName: Unity Ads
+        _networkIndex: 1
+        _instanceIndex: 0
+        _replaced: 0
+        _percentage: 100
+      - _networkName: Unity Ads
+        _networkIndex: 1
+        _instanceIndex: 0
+        _replaced: 0
+        _percentage: 0
+    - _units: []
   _interstitialMediators:
-  - _name: 
-    _fetchStrategyType: 0
-    _tiers: []
-  - _name: 
-    _fetchStrategyType: 0
-    _tiers: []
-  - _name: 
-    _fetchStrategyType: 0
-    _tiers: []
   - _name: 
     _fetchStrategyType: 0
     _tiers:
     - _units:
-      - _networkName: 
-        _selectedNetwork: 0
-        _instanceName: 
-        _selectedInstance: 0
+      - _networkName: Unity Ads
+        _networkIndex: 0
+        _instanceIndex: 0
+        _replaced: 0
+        _percentage: 0
   _incentivizedMediators:
   - _name: 
     _fetchStrategyType: 0
-    _tiers: []
-  - _name: 
-    _fetchStrategyType: 0
-    _tiers: []
-  - _name: 
-    _fetchStrategyType: 0
-    _tiers: []
-  - _name: 
-    _fetchStrategyType: 0
-    _tiers: []
-  - _name: 
-    _fetchStrategyType: 0
-    _tiers: []
-  - _name: 
-    _fetchStrategyType: 0
-    _tiers: []
+    _tiers:
+    - _units:
+      - _networkName: Unity Ads
+        _networkIndex: 0
+        _instanceIndex: 0
+        _replaced: 0
+        _percentage: 0
   _isIOS: 1
   _isAndroid: 1

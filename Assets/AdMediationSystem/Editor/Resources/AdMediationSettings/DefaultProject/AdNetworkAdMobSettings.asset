@@ -12,29 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5739e204cb971d74ca5162a068c45516, type: 3}
   m_Name: AdNetworkAdMobSettings
   m_EditorClassIdentifier: 
+  _enabled: 1
   _bannerAdInstances:
   - _name: Default
     _androidId: 
     _iosId: 
     _timeout: 90
-    _bannerType: 1
-  - _name: 
+    _bannerType: 0
+  - _name: DefaultHightCPM
     _androidId: 
     _iosId: 
     _timeout: 90
     _bannerType: 0
-  - _name: 
-    _androidId: 
-    _iosId: 
-    _timeout: 90
-    _bannerType: 2
   _interstitialAdInstances:
   - _name: Default
-    _androidId: 
-    _iosId: 
-    _timeout: 90
-    _bannerType: 0
-  - _name: 
     _androidId: 
     _iosId: 
     _timeout: 90
@@ -45,6 +36,5 @@ MonoBehaviour:
     _iosId: 
     _timeout: 90
     _bannerType: 0
-  _enabled: 0
   _androidAppId: 
   _iosAppId: 

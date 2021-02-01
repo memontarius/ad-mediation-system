@@ -14,21 +14,10 @@ namespace Virterix.AdMediation.Editor
     public class AdUnit
     {
         public string _networkName;
-        public int _selectedNetwork;
-        public string _instanceName;
-        public int _selectedInstance;
-    }
-
-    [System.Serializable]
-    public class AdSequencedUnit : AdUnit
-    {
+        public int _networkIndex;
+        public int _instanceIndex;
         public bool _replaced;
-    }
-
-    [System.Serializable]
-    public class AdRandomUnit : AdUnit
-    {
-        public float _percentage;
+        public int _percentage = 100;
     }
 
     [System.Serializable]
@@ -52,7 +41,7 @@ namespace Virterix.AdMediation.Editor
         public List<AdUnitMediator> _bannerMediators;
         public List<AdUnitMediator> _interstitialMediators;
         public List<AdUnitMediator> _incentivizedMediators;
-        public bool _isIOS;
-        public bool _isAndroid;
+        public bool _isIOS = true;
+        public bool _isAndroid = true;
     }
 } // Virterix.AdMediation.Editor

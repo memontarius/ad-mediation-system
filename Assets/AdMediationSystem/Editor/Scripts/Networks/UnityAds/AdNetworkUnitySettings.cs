@@ -3,7 +3,7 @@
 namespace Virterix.AdMediation.Editor
 {
     [Serializable]
-    public class AdNetworkAdMobSettings : BaseAdNetworkSettings
+    public class AdNetworkUnitySettings : BaseAdNetworkSettings
     {
         public string _androidAppId;
         public string _iosAppId;
