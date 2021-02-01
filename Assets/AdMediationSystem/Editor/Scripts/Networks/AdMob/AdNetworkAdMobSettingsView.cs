@@ -12,9 +12,6 @@ namespace Virterix.AdMediation.Editor
     {
         private const string SETTINGS_FILE_NAME = "AdNetworkAdMobSettings.asset";
 
-        private SerializedProperty _androidAppIdProp;   
-        private SerializedProperty _iosAppIdProp;
-
         protected override string SettingsFileName
         {
             get { return SETTINGS_FILE_NAME; }
@@ -24,14 +21,12 @@ namespace Virterix.AdMediation.Editor
         {
             get; set;
         }
-        
+
+        protected override bool IsAppIdSupported => true;
+
         public AdNetworkAdMobSettingsView(AdMediationSettingsWindow settingsWindow, string name, string identifier) : 
             base(settingsWindow, name, identifier)
         {
-            // Android
-            _androidAppIdProp = _serializedSettings.FindProperty("_androidAppId");
-            // iOS
-            _iosAppIdProp = _serializedSettings.FindProperty("_iosAppId");
             BannerTypes = Enum.GetNames(typeof(AdMobAdapter.AdMobBannerSize));
         }
 
@@ -76,16 +71,6 @@ namespace Virterix.AdMediation.Editor
 
         protected override void DrawSettings()
         {  
-            GUILayout.BeginVertical("box");
-            if (_settingsWindow.IsAndroid)
-            {
-                _androidAppIdProp.stringValue = EditorGUILayout.TextField("Android App Id", _androidAppIdProp.stringValue);
-            }
-            if (_settingsWindow.IsIOS)
-            {
-                _iosAppIdProp.stringValue = EditorGUILayout.TextField("iOS App Id", _iosAppIdProp.stringValue);
-            }
-            GUILayout.EndVertical();
         }
     }
 

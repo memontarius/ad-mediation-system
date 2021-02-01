@@ -13,8 +13,14 @@ MonoBehaviour:
   m_Name: AdNetworkUnitySettings
   m_EditorClassIdentifier: 
   _enabled: 1
-  _bannerAdInstances: []
-  _interstitialAdInstances: []
-  _rewardAdInstances: []
   _androidAppId: 
   _iosAppId: 
+  _responseWaitTime: 5
+  _bannerAdInstances: []
+  _interstitialAdInstances:
+  - _name: Default
+    _androidId: 
+    _iosId: 
+    _timeout: 90
+    _bannerType: 0
+  _rewardAdInstances: []

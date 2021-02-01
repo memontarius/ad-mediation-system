@@ -23,7 +23,31 @@ namespace Virterix.AdMediation.Editor
         private SerializedProperty _mediatorNameProp;
         private SerializedProperty _fetchStrategyProp;
 
+        public AdType AdType
+        {
+            get { return _adType; }
+        }
+
+        public FetchStrategyType StrategyType
+        {
+            get
+            {
+                FetchStrategyType type = (FetchStrategyType)_fetchStrategyProp.intValue;
+                return type;
+            }
+        }
+
+        public SerializedProperty TierListProp
+        {
+            get { return _tierListProp; }
+        }
+
         private string[] MediationStratageTypes
+        {
+            get; set;
+        }
+
+        private string[] BannerPositionTypes
         {
             get; set;
         }
@@ -34,11 +58,13 @@ namespace Virterix.AdMediation.Editor
             _settingsWindow = settingsWindow;
             _adType = adType;
             SetProperty(mediatorId, mediatorProp);
+            mediatorProp.FindPropertyRelative("_adType").intValue = (int)adType;
             _showMediator = new AnimBool(true);
             _showMediator.valueChanged.AddListener(repaint);
             _tierReorderableList = new ReorderableList(serializedSettings, _tierListProp);
             _tierReorderableList.headerHeight = 1;
             MediationStratageTypes = Enum.GetNames(typeof(FetchStrategyType));
+            BannerPositionTypes = Enum.GetNames(typeof(BannerPosition));
 
             _tierReorderableList.onAddCallback = (ReorderableList list) =>
             {
@@ -50,6 +76,8 @@ namespace Virterix.AdMediation.Editor
             _tierReorderableList.drawHeaderCallback = rect =>
             {
             };
+
+            float unitElementHegiht = 22;
 
             _tierReorderableList.drawElementCallback = (elementRect, elementIndex, elementActive, elementFocused) =>
             {
@@ -65,6 +93,7 @@ namespace Virterix.AdMediation.Editor
                 else
                 {
                     unitReorderableList = new ReorderableList(element.serializedObject, unitsProp);
+                    unitReorderableList.elementHeight = unitElementHegiht;
                     _unitListDict[listKey] = unitReorderableList;
 
                     unitReorderableList.onAddCallback = (ReorderableList list) =>
@@ -98,10 +127,12 @@ namespace Virterix.AdMediation.Editor
                     {
                         SerializedProperty unitElement = unitReorderableList.serializedProperty.GetArrayElementAtIndex(unitIndex);
                         float elementWidth = unitRect.width * 0.5f;
-                        float width = Mathf.Clamp(elementWidth - 60, 115, 180);
+                        float width = Mathf.Clamp(elementWidth - 160, 130, 180);
 
-                        unitRect.y += 1f;
-                        unitRect.width = width;
+                        Rect popupRect = unitRect;
+                        popupRect.y += 1f;
+                        popupRect.width = width - 10;
+                        popupRect.height = 20;
 
                         string[] activeNetworks = _settingsWindow.ActiveNetworks;
 
@@ -109,7 +140,7 @@ namespace Virterix.AdMediation.Editor
                         var networkIndexProp = unitElement.FindPropertyRelative("_networkIndex");
                         string currNetworkName = "";
 
-                        networkIndexProp.intValue = EditorGUI.Popup(unitRect, networkIndexProp.intValue, activeNetworks);
+                        networkIndexProp.intValue = EditorGUI.Popup(popupRect, networkIndexProp.intValue, activeNetworks);
                         if (networkIndexProp.intValue < activeNetworks.Length)
                         {
                             currNetworkName = activeNetworks[networkIndexProp.intValue];
@@ -123,31 +154,38 @@ namespace Virterix.AdMediation.Editor
                             adInstances = _settingsWindow.GetAdInstancesFromStorage(networkView.Name, _adType);
                         }
 
-                        unitRect.x += width;
+                        popupRect.x += popupRect.width + 2;
+                        popupRect.width = width + 10;
                         var instanceIndexProp = unitElement.FindPropertyRelative("_instanceIndex");
-                        instanceIndexProp.intValue = EditorGUI.Popup(unitRect, instanceIndexProp.intValue, adInstances);
+                        instanceIndexProp.intValue = EditorGUI.Popup(popupRect, instanceIndexProp.intValue, adInstances);
+
+                        Rect paramsRect = popupRect;
+                        paramsRect.x += paramsRect.width + 5;
+                        paramsRect.width = 110;
+                        
+                        var prepareOnExitProp = unitElement.FindPropertyRelative("_prepareOnExit");
+                        prepareOnExitProp.boolValue = EditorGUI.ToggleLeft(paramsRect, "Prepare On Exit", prepareOnExitProp.boolValue);
 
                         FetchStrategyType strategyType = (FetchStrategyType)_fetchStrategyProp.intValue;
                         switch (strategyType)
                         {
                             case FetchStrategyType.Sequence:
-                                unitRect.x += width + 5;
-                                unitRect.y -= 2;
+                                paramsRect.x += paramsRect.width + 5;
                                 var replacedProp = unitElement.FindPropertyRelative("_replaced");
-                                replacedProp.boolValue = EditorGUI.ToggleLeft(unitRect, "Replaced", replacedProp.boolValue);
+                                replacedProp.boolValue = EditorGUI.ToggleLeft(paramsRect, "Replaced", replacedProp.boolValue);
                                 break;
                             case FetchStrategyType.Random:
-                                unitRect.x += width + 5;
-                                unitRect.width = Mathf.Clamp(elementWidth * 0.7f - 50, 115, 200f);
-                                unitRect.height = 18;
+                                paramsRect.x += paramsRect.width + 5;
+                                paramsRect.width = Mathf.Clamp(elementWidth * 0.7f - 60, 50, 200f);
+                                paramsRect.height = 18;
                                 var percentageProp = unitElement.FindPropertyRelative("_percentage");
                                 int percentageMinValue = 0;
                                 int percentageMaxValue = 100;
                                 float previousLabelWidth = EditorGUIUtility.labelWidth;
-                                EditorGUIUtility.labelWidth = unitRect.width - 55f;
+                                EditorGUIUtility.labelWidth = paramsRect.width - 40f;
 
                                 int previousValue = percentageProp.intValue;
-                                percentageProp.intValue = EditorGUI.IntSlider(unitRect, "", percentageProp.intValue, percentageMinValue, percentageMaxValue);
+                                percentageProp.intValue = EditorGUI.IntSlider(paramsRect, "", percentageProp.intValue, percentageMinValue, percentageMaxValue);
                                 if (previousValue != percentageProp.intValue)
                                 {
                                     int changedValue = percentageProp.intValue - previousValue;
@@ -157,7 +195,6 @@ namespace Virterix.AdMediation.Editor
                                 EditorGUIUtility.labelWidth = previousLabelWidth;
                                 break;
                         }
-
                     };
                     unitReorderableList.drawHeaderCallback = (rect) =>
                     {
@@ -173,7 +210,7 @@ namespace Virterix.AdMediation.Editor
             {
                 var element = _tierListProp.GetArrayElementAtIndex(index);
                 var unitsProp = element.FindPropertyRelative("_units");
-                return Mathf.Clamp((unitsProp.arraySize - 1) * 21 + 75, 75, Mathf.Infinity);
+                return Mathf.Clamp((unitsProp.arraySize - 1) * unitElementHegiht + 100, 100, Mathf.Infinity);
             };
         }
 
@@ -330,12 +367,19 @@ namespace Virterix.AdMediation.Editor
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.BeginHorizontal();
-
-                EditorGUILayout.LabelField("Mediation strategy", GUILayout.Width(150));
+                EditorGUILayout.LabelField("Mediation Strategy", GUILayout.Width(150));
                 _fetchStrategyProp.intValue = EditorGUILayout.Popup(_fetchStrategyProp.intValue, MediationStratageTypes, GUILayout.Width(180));
-
                 EditorGUILayout.EndHorizontal();
 
+                if (_adType == AdType.Banner)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.LabelField("Banner Position", GUILayout.Width(150));
+                    var bannerPositionProp = _mediatorProp.FindPropertyRelative("_bannerPosition");
+                    bannerPositionProp.intValue = EditorGUILayout.Popup(bannerPositionProp.intValue, BannerPositionTypes, GUILayout.Width(180));
+                    EditorGUILayout.EndHorizontal();
+                }
+     
                 EditorGUILayout.Space(4);
                 _tierReorderableList.DoLayoutList();
             }

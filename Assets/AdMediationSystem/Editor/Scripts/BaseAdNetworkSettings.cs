@@ -16,6 +16,9 @@ namespace Virterix.AdMediation.Editor
     public class BaseAdNetworkSettings : ScriptableObject
     {
         public bool _enabled;
+        public string _androidAppId;
+        public string _iosAppId;
+        public int _responseWaitTime;
         public List<AdInstance> _bannerAdInstances = new List<AdInstance>();
         public List<AdInstance> _interstitialAdInstances = new List<AdInstance>();
         public List<AdInstance> _rewardAdInstances = new List<AdInstance>();

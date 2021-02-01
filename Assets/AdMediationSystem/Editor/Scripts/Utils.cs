@@ -30,6 +30,11 @@ namespace Virterix.AdMediation.Editor
         public static void DrawPropertyField(SerializedObject serializedObject, string fieldName, GUILayoutOption options = null)
         {
             SerializedProperty property = serializedObject.FindProperty(fieldName);
+            DrawPropertyField(serializedObject, property, options);
+        }
+
+        public static void DrawPropertyField(SerializedObject serializedObject, SerializedProperty property, GUILayoutOption options = null)
+        {
             if (options == null)
             {
                 EditorGUILayout.PropertyField(property, true);
@@ -37,10 +42,10 @@ namespace Virterix.AdMediation.Editor
             else
             {
                 EditorGUILayout.PropertyField(property, true, options);
-            } 
+            }
             serializedObject.ApplyModifiedProperties();
         }
-        
+
         public static void DrawGuiLine(int height = 1)
         {
             Rect rect = EditorGUILayout.GetControlRect(false, height);

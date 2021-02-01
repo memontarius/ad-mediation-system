@@ -5,6 +5,7 @@ using System.IO;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using System.Linq;
+using Boomlagoon.JSON;
 
 namespace Virterix.AdMediation.Editor
 {
@@ -126,8 +127,13 @@ namespace Virterix.AdMediation.Editor
         private void OnGUI()
         {
             _scrollPositioin = EditorGUILayout.BeginScrollView(_scrollPositioin, false, false);
+
             DrawTabs();
-         
+
+            EditorGUILayout.BeginHorizontal(GUILayout.Width(580), GUILayout.Height(0));
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+            
             switch (SelectedTab)
             {
                 case 0: // Settings
@@ -148,7 +154,7 @@ namespace Virterix.AdMediation.Editor
                     DrawMediators(_incentivizedMediators, "_incentivizedMediators");
                     break;
             }
-            DrawBuild();
+            DrawBuild();           
             EditorGUILayout.EndScrollView();
         }
 
@@ -484,10 +490,47 @@ namespace Virterix.AdMediation.Editor
             //Utils.DrawGuiLine(2);
             if (GUILayout.Button("BUILD", GUILayout.Height(40)))
             {
-                
+                BuildJsonSettings();
             }
         }
 
+        private void BuildJsonSettings()
+        {
+            string path = GetAdProjectSettingsPath();
 
+            List<AdMediatorView> allMediators = new List<AdMediatorView>();
+            allMediators.AddRange(_bannerMediators);
+            allMediators.AddRange(_interstitialMediators);
+            allMediators.AddRange(_incentivizedMediators);
+
+            string json = AdMediationSettingsGenerator.Generate(CurrProjectName, allMediators);
+
+            if (IsAndroid)
+            {
+                string androidAdSettingsPath = string.Format("{0}/{1}", path, "android_settings.json");
+                File.WriteAllText(androidAdSettingsPath, json);
+            }
+            if (IsIOS)
+            {           
+                string iosAdSettingsPath = string.Format("{0}/{1}", path, "ios_settings.json");
+                File.WriteAllText(iosAdSettingsPath, json);
+            }
+            AssetDatabase.Refresh();
+        }
+
+        private string GetAdProjectSettingsPath()
+        {
+            string resourcePath = Application.dataPath + "/Resources";
+            string adSettingsPath = string.Format("{0}/{1}", resourcePath, SETTINGS_DIRECTORY_NAME);
+            if (!Directory.Exists(resourcePath))
+            {
+                Directory.CreateDirectory(resourcePath);
+            }
+            if (!Directory.Exists(adSettingsPath))
+            {
+                Directory.CreateDirectory(adSettingsPath);
+            }
+            return adSettingsPath;
+        }
     }
 } // namespace Virterix.AdMediation.Editor

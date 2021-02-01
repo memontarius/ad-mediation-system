@@ -11,7 +11,7 @@ namespace Virterix.AdMediation
 {
     public class AdMediationSystem : Singleton<AdMediationSystem>
     {
-        public const string _AD_SETTINGS_PATH = "AdSettings";
+        public const string _AD_SETTINGS_PATH = "AdMediationSettings";
         public const string _PLACEMENT_DEFAULT_NAME = "Default";
 
         public const string _AD_INSTANCE_PARAMETERS_ROOT_FOLDER = "AdInstanceParameters";

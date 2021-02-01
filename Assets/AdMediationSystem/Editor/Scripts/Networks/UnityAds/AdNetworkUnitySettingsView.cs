@@ -12,8 +12,7 @@ namespace Virterix.AdMediation.Editor
     {
         private const string SETTINGS_FILE_NAME = "AdNetworkUnitySettings.asset";
 
-        private SerializedProperty _androidAppIdProp;
-        private SerializedProperty _iosAppIdProp;
+        protected override bool IsAppIdSupported => true;
 
         protected override string SettingsFileName
         {
@@ -23,10 +22,6 @@ namespace Virterix.AdMediation.Editor
         public AdNetworkUnitySettingsView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
             base(settingsWindow, name, identifier)
         {
-            // Android
-            _androidAppIdProp = _serializedSettings.FindProperty("_androidAppId");
-            // iOS
-            _iosAppIdProp = _serializedSettings.FindProperty("_iosAppId");
         }
 
         protected override BaseAdNetworkSettings CreateSettingsModel()
@@ -43,16 +38,6 @@ namespace Virterix.AdMediation.Editor
 
         protected override void DrawSettings()
         {
-            GUILayout.BeginVertical("box");
-            if (_settingsWindow.IsAndroid)
-            {
-                _androidAppIdProp.stringValue = EditorGUILayout.TextField("Android App Id", _androidAppIdProp.stringValue);
-            }
-            if (_settingsWindow.IsIOS)
-            {
-                _iosAppIdProp.stringValue = EditorGUILayout.TextField("iOS App Id", _iosAppIdProp.stringValue);
-            }
-            GUILayout.EndVertical();
         }
     }
 } // namespace Virterix.AdMediation.Editor

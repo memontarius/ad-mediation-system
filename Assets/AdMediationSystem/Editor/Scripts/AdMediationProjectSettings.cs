@@ -10,6 +10,13 @@ namespace Virterix.AdMediation.Editor
         Random
     }
 
+    public enum BannerPosition
+    {
+        Top,
+        Bottom
+    }
+
+
     [System.Serializable]
     public class AdUnit
     {
@@ -17,6 +24,7 @@ namespace Virterix.AdMediation.Editor
         public int _networkIndex;
         public int _instanceIndex;
         public bool _replaced;
+        public bool _prepareOnExit;
         public int _percentage = 100;
     }
 
@@ -29,8 +37,10 @@ namespace Virterix.AdMediation.Editor
     [System.Serializable]
     public struct AdUnitMediator
     {
+        public AdType _adType;
         public string _name;
         public FetchStrategyType _fetchStrategyType;
+        public BannerPosition _bannerPosition;
         public List<AdTier> _tiers;
     }
 

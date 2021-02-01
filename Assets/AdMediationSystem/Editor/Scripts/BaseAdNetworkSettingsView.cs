@@ -42,6 +42,8 @@ namespace Virterix.AdMediation.Editor
 
         protected virtual string[] BannerTypes { get; set; }
 
+        protected virtual bool IsAppIdSupported { get; set; }
+
         protected string SettingsFilePath
         {
             get
@@ -61,6 +63,10 @@ namespace Virterix.AdMediation.Editor
         protected AdMediationSettingsWindow _settingsWindow;
         protected SerializedObject _serializedSettings;
         protected BaseAdNetworkSettings _settings;
+
+        private SerializedProperty _androidAppIdProp;
+        private SerializedProperty _iosAppIdProp;
+        private SerializedProperty _responseWaitTimeProp;
 
         private AnimBool _showSettings;
         private SerializedProperty _enabledProp;
@@ -91,8 +97,9 @@ namespace Virterix.AdMediation.Editor
             _showSettings.valueChanged.AddListener(settingsWindow.Repaint);
 
             Collapsed = EditorPrefs.GetBool(CollapsedSaveKey, false);
-            _settings = CreateSettingsModel();
-            _serializedSettings = new SerializedObject(_settings);
+            _settings = GetSettings();
+
+            _responseWaitTimeProp = _serializedSettings.FindProperty("_responseWaitTime");
 
             if (IsAdSupported(AdType.Banner))
             {
@@ -108,6 +115,14 @@ namespace Virterix.AdMediation.Editor
             {
                 InstanceElementHeight elementHeight = CreateInstanceElementHeight(AdType.Incentivized);
                 CreateAdInstanceBlock("Reward Units", "_rewardAdInstances", AdType.Incentivized, elementHeight);
+            }
+
+            if (IsAppIdSupported)
+            {
+                // Android
+                _androidAppIdProp = _serializedSettings.FindProperty("_androidAppId");
+                // iOS
+                _iosAppIdProp = _serializedSettings.FindProperty("_iosAppId");
             }
 
             UpdateElementHeight();
@@ -136,6 +151,7 @@ namespace Virterix.AdMediation.Editor
                     activationChanged = true;
                 }
                 _enabledProp.boolValue = Enabled;
+                DrawCommonSettigns();
                 DrawSettings();
                 DrawAdInstanceLists();
                 _serializedSettings.ApplyModifiedProperties();
@@ -218,12 +234,40 @@ namespace Virterix.AdMediation.Editor
 
         protected abstract BaseAdNetworkSettings CreateSettingsModel();
 
+        private BaseAdNetworkSettings GetSettings()
+        {
+            string filePath = string.Format("{0}", SettingsFilePath);
+            bool isFileDidNotExist = !System.IO.File.Exists(filePath);
+            
+            var settings = CreateSettingsModel();
+            _serializedSettings = new SerializedObject(settings);
+
+            if (isFileDidNotExist)
+            {
+                var responseWaitTimeProp = _serializedSettings.FindProperty("_responseWaitTime");
+                responseWaitTimeProp.intValue = 30;
+                _serializedSettings.ApplyModifiedProperties();
+            }
+            return settings;
+        }
+
         protected virtual InstanceElementHeight CreateInstanceElementHeight(AdType adType)
         {
             InstanceElementHeight elementHeight = new InstanceElementHeight();
-            elementHeight.height = 88;
-            elementHeight.androidHeight = 68;
-            elementHeight.iosHeight = 68;
+            switch(adType)
+            {
+                case AdType.Banner:
+                    elementHeight.height = 88;
+                    elementHeight.androidHeight = 68;
+                    elementHeight.iosHeight = 68;
+                    break;
+                case AdType.Interstitial:
+                case AdType.Incentivized:
+                    elementHeight.height = 68;
+                    elementHeight.androidHeight = 48;
+                    elementHeight.iosHeight = 48;
+                    break;
+            }
             return elementHeight;
         }
 
@@ -235,6 +279,26 @@ namespace Virterix.AdMediation.Editor
         {
         }
 
+        private void DrawCommonSettigns()
+        {
+            if (IsAppIdSupported)
+            {
+                GUILayout.BeginVertical("box");
+                if (_settingsWindow.IsAndroid)
+                {
+                    _androidAppIdProp.stringValue = EditorGUILayout.TextField("Android App Id", _androidAppIdProp.stringValue);
+                }
+                if (_settingsWindow.IsIOS)
+                {
+                    _iosAppIdProp.stringValue = EditorGUILayout.TextField("iOS App Id", _iosAppIdProp.stringValue);
+                }
+                GUILayout.EndVertical();
+            }
+            GUILayout.BeginVertical("box");
+            Utils.DrawPropertyField(_serializedSettings, _responseWaitTimeProp, GUILayout.ExpandWidth(true));
+            GUILayout.EndVertical();
+        }
+
         private void DrawAdInstanceLists()
         {
             for (int i = 0; i < _instanceBlocks.Count; i++)
@@ -243,7 +307,9 @@ namespace Virterix.AdMediation.Editor
                 EditorGUILayout.Space(2);
                 AnimBool foldAnimation = blockData._foldAnimation;
 
-                char collapsedSymbol = blockData._isCollapsed ? '\u25B7' : '\u25BD';
+                //char collapsedSymbol = blockData._isCollapsed ? '\u25B7' : '\u25BD';
+                char collapsedSymbol = blockData._isCollapsed ? '\u21A6' : '\u21A7';
+                
                 string buttonTitle = string.Format("{0}  {1}", collapsedSymbol, blockData._blockName);
 
                 if (GUILayout.Button(buttonTitle, InstanceFoldoutButtonStyle))

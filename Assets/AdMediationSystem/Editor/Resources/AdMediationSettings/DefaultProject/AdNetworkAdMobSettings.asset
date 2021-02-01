@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: AdNetworkAdMobSettings
   m_EditorClassIdentifier: 
   _enabled: 1
+  _androidAppId: 
+  _iosAppId: 
+  _responseWaitTime: 5
   _bannerAdInstances:
   - _name: Default
     _androidId: 
@@ -36,5 +39,3 @@ MonoBehaviour:
     _iosId: 
     _timeout: 90
     _bannerType: 0
-  _androidAppId: 
-  _iosAppId: 
