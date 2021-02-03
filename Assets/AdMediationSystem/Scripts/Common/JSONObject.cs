@@ -184,7 +184,7 @@ namespace Boomlagoon.JSON {
 					return Boolean ? "true" : "false";
 
 				case JSONValueType.Number:
-					return Number.ToString();
+					return Number.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
 				case JSONValueType.String:
 					return "\"" + Str + "\"";

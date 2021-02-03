@@ -133,6 +133,8 @@ namespace Virterix.AdMediation.Editor
 
                         var networkNameProp = unitElement.FindPropertyRelative("_networkName");
                         var networkIndexProp = unitElement.FindPropertyRelative("_networkIndex");
+                        var networkIdentifierProp = unitElement.FindPropertyRelative("_networkIdentifier");
+
                         string currNetworkName = "";
 
                         networkIndexProp.intValue = EditorGUI.Popup(popupRect, networkIndexProp.intValue, activeNetworks);
@@ -140,19 +142,25 @@ namespace Virterix.AdMediation.Editor
                         {
                             currNetworkName = activeNetworks[networkIndexProp.intValue];
                             networkNameProp.stringValue = currNetworkName;
+                            networkIdentifierProp.stringValue = _settingsWindow.GetNetworkIndentifier(networkIndexProp.intValue);
                         }
 
-                        string[] adInstances = { };
+                        string[] adInstanceNames = { };
                         if (!string.IsNullOrEmpty(currNetworkName))
                         {
                             var networkView = _settingsWindow.GetNetworkView(currNetworkName);
-                            adInstances = _settingsWindow.GetAdInstancesFromStorage(networkView.Name, _adType);
+                            adInstanceNames = _settingsWindow.GetAdInstancesFromStorage(networkView.Name, _adType);
                         }
 
                         popupRect.x += popupRect.width + 2;
                         popupRect.width = width;
                         var instanceIndexProp = unitElement.FindPropertyRelative("_instanceIndex");
-                        instanceIndexProp.intValue = EditorGUI.Popup(popupRect, instanceIndexProp.intValue, adInstances);
+                        var instanceNameProp = unitElement.FindPropertyRelative("_instanceName");
+                        instanceIndexProp.intValue = EditorGUI.Popup(popupRect, instanceIndexProp.intValue, adInstanceNames);
+                        if (instanceIndexProp.intValue < adInstanceNames.Length)
+                        {
+                            instanceNameProp.stringValue = adInstanceNames[instanceIndexProp.intValue];
+                        }
 
                         Rect paramsRect = popupRect;
                         paramsRect.x += paramsRect.width + 5;
@@ -308,6 +316,7 @@ namespace Virterix.AdMediation.Editor
                     var unit = units.GetArrayElementAtIndex(unitIndex);
                     var networkNameProp = unit.FindPropertyRelative("_networkName");
                     var networkIndexProp = unit.FindPropertyRelative("_networkIndex");
+                    var networkIdentifierProp = unit.FindPropertyRelative("_networkIdentifier");
 
                     string[] activeNetworks = _settingsWindow.ActiveNetworks;
                     int solvedNetworkIndex = ResolveSelectedNetworkIndex(networkIndexProp.intValue, networkNameProp.stringValue, activeNetworks);
@@ -315,6 +324,7 @@ namespace Virterix.AdMediation.Editor
                     {
                         networkIndexProp.intValue = solvedNetworkIndex;
                         networkNameProp.stringValue = activeNetworks[solvedNetworkIndex];
+                        networkIdentifierProp.stringValue = _settingsWindow.GetNetworkIndentifier(solvedNetworkIndex);
                     }
                 }
             }

@@ -35,7 +35,7 @@ namespace Virterix.AdMediation
         }
 
 #if UNITY_EDITOR
-        public static void CreateParameters<T>(string parametersFolder, string parametersFileName) where T : AdInstanceParameters
+        public static T CreateParameters<T>(string parametersFolder, string parametersFileName) where T : AdInstanceParameters
         {
             string fullPath = CreateAdInstanceDirectory(parametersFolder);
             string searchPattern = "*" + AdMediationSystem._AD_INSTANCE_PARAMETERS_FILE_EXTENSION;
@@ -51,6 +51,7 @@ namespace Virterix.AdMediation
             Selection.activeObject = asset;
 
             AssetDatabase.Refresh();
+            return asset;
         }
 
         public static string CreateAdInstanceDirectory(string specificPath)

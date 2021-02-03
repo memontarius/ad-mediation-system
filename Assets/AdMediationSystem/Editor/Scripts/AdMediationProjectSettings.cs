@@ -22,7 +22,9 @@ namespace Virterix.AdMediation.Editor
     {
         public string _networkName;
         public int _networkIndex;
+        public string _networkIdentifier;
         public int _instanceIndex;
+        public string _instanceName;
         public bool _replaced;
         public bool _prepareOnExit;
         public int _percentage = 100;

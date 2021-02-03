@@ -12,69 +12,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 020f93c8651de7646badc5e14f92513d, type: 3}
   m_Name: AdMediationProjectSettings
   m_EditorClassIdentifier: 
-  _initializeOnStart: 0
-  _personalizeAdsOnInit: 0
+  _initializeOnStart: 1
+  _personalizeAdsOnInit: 1
   _bannerMediators:
-  - _adType: 0
-    _name: Default
-    _fetchStrategyType: 1
-    _bannerPosition: 0
-    _tiers:
-    - _units:
-      - _networkName: AdMob
-        _networkIndex: 0
-        _instanceIndex: 0
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 26
-      - _networkName: AdMob
-        _networkIndex: 0
-        _instanceIndex: 0
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 23
-      - _networkName: AdMob
-        _networkIndex: 0
-        _instanceIndex: 0
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 13
-      - _networkName: AdMob
-        _networkIndex: 0
-        _instanceIndex: 0
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 38
   - _adType: 1
     _name: Top
     _fetchStrategyType: 1
     _bannerPosition: 1
-    _tiers: []
-  _interstitialMediators:
-  - _adType: 0
-    _name: 
-    _fetchStrategyType: 1
-    _bannerPosition: 0
     _tiers:
     - _units:
-      - _networkName: Unity Ads
-        _networkIndex: 1
-        _instanceIndex: 0
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 1
+        _instanceName: DefaultHighCPM
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 100
-  _incentivizedMediators:
-  - _adType: 0
-    _name: 
-    _fetchStrategyType: 0
-    _bannerPosition: 0
-    _tiers:
-    - _units:
-      - _networkName: Unity Ads
-        _networkIndex: 1
+        _percentage: 30
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
         _instanceIndex: 0
+        _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 0
+        _percentage: 70
+  _interstitialMediators: []
+  _incentivizedMediators: []
   _isIOS: 1
   _isAndroid: 1

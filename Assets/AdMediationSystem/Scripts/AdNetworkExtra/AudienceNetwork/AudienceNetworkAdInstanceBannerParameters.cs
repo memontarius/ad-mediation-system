@@ -30,9 +30,16 @@ namespace Virterix.AdMediation
 
 #if UNITY_EDITOR
         [MenuItem("Tools/Ad Mediation/Audience Network/Create Banner Parameters")]
-        public static void CreateParameters()
+        public static AdInstanceParameters CreateParameters()
         {
-            AdInstanceParameters.CreateParameters<AudienceNetworkAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME);
+            AdInstanceParameters parameters = AdInstanceParameters.CreateParameters<AudienceNetworkAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME);
+            return parameters;
+        }
+
+        public static AdInstanceParameters CreateParameters(string postfixName)
+        {
+            AdInstanceParameters parameters = AdInstanceParameters.CreateParameters<AudienceNetworkAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME + postfixName);
+            return parameters;
         }
 #endif
     }

@@ -103,6 +103,7 @@ namespace Virterix.AdMediation.Editor
 
             Collapsed = EditorPrefs.GetBool(CollapsedSaveKey, false);
             _settings = GetSettings();
+            _settings._networkIdentifier = identifier;
 
             _responseWaitTimeProp = _serializedSettings.FindProperty("_responseWaitTime");
 
@@ -312,8 +313,8 @@ namespace Virterix.AdMediation.Editor
                 EditorGUILayout.Space(2);
                 AnimBool foldAnimation = blockData._foldAnimation;
 
-                char collapsedSymbol = blockData._isCollapsed ? '\u25B7' : '\u25BD';
-                //char collapsedSymbol = blockData._isCollapsed ? '\u21A6' : '\u21A7';
+                //char collapsedSymbol = blockData._isCollapsed ? '\u25B7' : '\u25BD';
+                char collapsedSymbol = blockData._isCollapsed ? '\u21A6' : '\u21A7';
                 
                 string buttonTitle = string.Format("{0}  {1}", collapsedSymbol, blockData._blockName);
 

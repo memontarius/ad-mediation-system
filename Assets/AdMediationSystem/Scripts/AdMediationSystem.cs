@@ -9,6 +9,12 @@ using Virterix.Common;
 
 namespace Virterix.AdMediation
 {
+    public enum AppPlatform
+    {
+        Android,
+        iOS
+    }
+
     public class AdMediationSystem : Singleton<AdMediationSystem>
     {
         public const string _AD_SETTINGS_FOLDER = "AdMediationSettings";
@@ -16,12 +22,6 @@ namespace Virterix.AdMediation
 
         public const string _AD_INSTANCE_PARAMETERS_ROOT_FOLDER = "AdInstanceParameters";
         public const string _AD_INSTANCE_PARAMETERS_FILE_EXTENSION = ".asset";
-
-        public enum AppPlatform
-        {
-            Android,
-            iOS
-        }
 
         public enum AdSettingsCompareMode
         {

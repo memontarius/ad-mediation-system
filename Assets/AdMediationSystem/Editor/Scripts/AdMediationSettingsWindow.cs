@@ -195,6 +195,12 @@ namespace Virterix.AdMediation.Editor
             return foundView;
         }
 
+        public string GetNetworkIndentifier(int index)
+        {
+            string identifier = _networks[index].Identifier;
+            return identifier;
+        }
+
         public void GetActiveNetworks(AdType adType, ref List<string> networks)
         {
             networks.Clear();
@@ -509,22 +515,16 @@ namespace Virterix.AdMediation.Editor
             string androidAdSettingsPath = string.Format("{0}/{1}", path, "android_settings.json");
             string iosAdSettingsPath = string.Format("{0}/{1}", path, "ios_settings.json");
 
-            List<AdMediatorView> allMediators = new List<AdMediatorView>();
-            allMediators.AddRange(_bannerMediators);
-            allMediators.AddRange(_interstitialMediators);
-            allMediators.AddRange(_incentivizedMediators);
-
             BaseAdNetworkSettings[] networksSettings = new BaseAdNetworkSettings[_networks.Count];
             for(int i = 0; i < networksSettings.Length; i++)
             {
                 networksSettings[i] = _networks[i].Settings;
             }
 
-            string json = AdMediationSettingsGenerator.Generate(CurrProjectName, _projectSettings, networksSettings);
             if (IsAndroid)
             {
-                
-                File.WriteAllText(androidAdSettingsPath, json);
+                string androidJsonSettings = AdMediationSettingsGenerator.Generate(CurrProjectName, AppPlatform.Android, _projectSettings, networksSettings);
+                File.WriteAllText(androidAdSettingsPath, androidJsonSettings);
             }
             else
             {
@@ -535,8 +535,9 @@ namespace Virterix.AdMediation.Editor
             }
 
             if (IsIOS)
-            {           
-                File.WriteAllText(iosAdSettingsPath, json);
+            {
+                string iosJsonSettings = AdMediationSettingsGenerator.Generate(CurrProjectName, AppPlatform.iOS, _projectSettings, networksSettings);
+                File.WriteAllText(iosAdSettingsPath, iosJsonSettings);
             }
             else
             {
