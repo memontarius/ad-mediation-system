@@ -1,1 +1,0 @@
-{"projectName":"DefaultProject","networkResponseWaitTime":30,"mediators":[{"adType":"banner","strategy":{"type":"sequence"}},{"adType":"banner","strategy":{"type":"random"}},{"adType":"interstitial","strategy":{"type":"random"}},{"adType":"incentivized","strategy":{"type":"sequence"}}]}

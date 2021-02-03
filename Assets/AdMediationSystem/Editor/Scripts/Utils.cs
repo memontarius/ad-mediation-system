@@ -10,7 +10,7 @@ namespace Virterix.AdMediation.Editor
     {
         public static T GetOrCreateSettings<T>(string assetPath) where T : ScriptableObject
         {
-            T settings = AssetDatabase.LoadAssetAtPath(assetPath, typeof(T)) as T; ;
+            T settings = AssetDatabase.LoadAssetAtPath(assetPath, typeof(T)) as T;
             if (settings == null)
             {
                 settings = CreateSettings<T>(assetPath);

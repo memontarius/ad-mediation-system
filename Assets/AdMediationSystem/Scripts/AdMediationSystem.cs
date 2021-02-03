@@ -11,7 +11,7 @@ namespace Virterix.AdMediation
 {
     public class AdMediationSystem : Singleton<AdMediationSystem>
     {
-        public const string _AD_SETTINGS_PATH = "AdMediationSettings";
+        public const string _AD_SETTINGS_FOLDER = "AdMediationSettings";
         public const string _PLACEMENT_DEFAULT_NAME = "Default";
 
         public const string _AD_INSTANCE_PARAMETERS_ROOT_FOLDER = "AdInstanceParameters";
@@ -64,10 +64,8 @@ namespace Virterix.AdMediation
         public AdRemoteSettingsProvider m_remoteSettingsProvider;
         public AppPlatform m_defaultPlatformName;
         public string m_hashCryptKey;
-        [SerializeField]
-        private bool m_isInitializeOnStart = true;
-        [SerializeField]
-        private bool m_isPersonalizeAdsOnInit = true;
+        public bool m_isInitializeOnStart = true;
+        public bool m_isPersonalizeAdsOnInit = true;
         // For GDPR Compliance
         private bool m_isPersonalizedAds;
 
@@ -139,7 +137,7 @@ namespace Virterix.AdMediation
             get
             {
                 string path = String.Format(System.Globalization.CultureInfo.InvariantCulture,
-                    "Resources/{0}/{1}/{2}", _AD_SETTINGS_PATH, AdMediationSystem.Instance.m_projectName,
+                    "Resources/{0}/{1}/{2}", _AD_SETTINGS_FOLDER, AdMediationSystem.Instance.m_projectName,
                     AdMediationSystem._AD_INSTANCE_PARAMETERS_ROOT_FOLDER);
                 return path;
             }
@@ -160,7 +158,7 @@ namespace Virterix.AdMediation
         {
             get
             {
-                string settingsFilePath = _AD_SETTINGS_PATH + "/" + m_projectName + "/" + SettingsFileName;
+                string settingsFilePath = _AD_SETTINGS_FOLDER + "/" + m_projectName + "/" + SettingsFileName;
                 return settingsFilePath;
             }
         }

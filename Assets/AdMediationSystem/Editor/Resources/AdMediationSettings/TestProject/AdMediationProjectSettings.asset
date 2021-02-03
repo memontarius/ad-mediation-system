@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7591ebecf893f2b43a95231d3e9dc92c, type: 3}
-  m_Name: AdNetworkUnitySettings
+  m_Script: {fileID: 11500000, guid: 020f93c8651de7646badc5e14f92513d, type: 3}
+  m_Name: AdMediationProjectSettings
   m_EditorClassIdentifier: 
-  _enabled: 1
-  _androidAppId: 
-  _iosAppId: 
-  _responseWaitTime: 5
-  _bannerAdInstances: []
-  _interstitialAdInstances: []
-  _rewardAdInstances: []
+  _initializeOnStart: 1
+  _personalizeAdsOnInit: 1
+  _bannerMediators: []
+  _interstitialMediators: []
+  _incentivizedMediators: []
+  _isIOS: 1
+  _isAndroid: 1

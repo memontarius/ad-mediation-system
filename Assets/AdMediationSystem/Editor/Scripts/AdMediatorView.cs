@@ -37,11 +37,6 @@ namespace Virterix.AdMediation.Editor
             }
         }
 
-        public SerializedProperty TierListProp
-        {
-            get { return _tierListProp; }
-        }
-
         private string[] MediationStratageTypes
         {
             get; set;
@@ -127,11 +122,11 @@ namespace Virterix.AdMediation.Editor
                     {
                         SerializedProperty unitElement = unitReorderableList.serializedProperty.GetArrayElementAtIndex(unitIndex);
                         float elementWidth = unitRect.width * 0.5f;
-                        float width = Mathf.Clamp(elementWidth - 160, 130, 180);
+                        float width = Mathf.Clamp(elementWidth - 120, 130, 180);
 
                         Rect popupRect = unitRect;
                         popupRect.y += 1f;
-                        popupRect.width = width - 10;
+                        popupRect.width = width;
                         popupRect.height = 20;
 
                         string[] activeNetworks = _settingsWindow.ActiveNetworks;
@@ -155,7 +150,7 @@ namespace Virterix.AdMediation.Editor
                         }
 
                         popupRect.x += popupRect.width + 2;
-                        popupRect.width = width + 10;
+                        popupRect.width = width;
                         var instanceIndexProp = unitElement.FindPropertyRelative("_instanceIndex");
                         instanceIndexProp.intValue = EditorGUI.Popup(popupRect, instanceIndexProp.intValue, adInstances);
 
@@ -176,13 +171,13 @@ namespace Virterix.AdMediation.Editor
                                 break;
                             case FetchStrategyType.Random:
                                 paramsRect.x += paramsRect.width + 5;
-                                paramsRect.width = Mathf.Clamp(elementWidth * 0.7f - 60, 50, 200f);
+                                paramsRect.width = Mathf.Clamp(unitRect.width - 480, 120, 200f);
                                 paramsRect.height = 18;
                                 var percentageProp = unitElement.FindPropertyRelative("_percentage");
                                 int percentageMinValue = 0;
                                 int percentageMaxValue = 100;
                                 float previousLabelWidth = EditorGUIUtility.labelWidth;
-                                EditorGUIUtility.labelWidth = paramsRect.width - 40f;
+                                EditorGUIUtility.labelWidth = paramsRect.width - 50f;
 
                                 int previousValue = percentageProp.intValue;
                                 percentageProp.intValue = EditorGUI.IntSlider(paramsRect, "", percentageProp.intValue, percentageMinValue, percentageMaxValue);
@@ -210,7 +205,7 @@ namespace Virterix.AdMediation.Editor
             {
                 var element = _tierListProp.GetArrayElementAtIndex(index);
                 var unitsProp = element.FindPropertyRelative("_units");
-                return Mathf.Clamp((unitsProp.arraySize - 1) * unitElementHegiht + 100, 100, Mathf.Infinity);
+                return Mathf.Clamp((unitsProp.arraySize - 1) * unitElementHegiht + 75, 75, Mathf.Infinity);
             };
         }
 

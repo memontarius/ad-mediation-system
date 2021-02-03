@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7591ebecf893f2b43a95231d3e9dc92c, type: 3}
-  m_Name: AdNetworkUnitySettings
+  m_Script: {fileID: 11500000, guid: 5739e204cb971d74ca5162a068c45516, type: 3}
+  m_Name: AdNetworkAdMobSettings
   m_EditorClassIdentifier: 
-  _enabled: 1
+  _enabled: 0
   _androidAppId: 
   _iosAppId: 
-  _responseWaitTime: 5
+  _responseWaitTime: 30
   _bannerAdInstances: []
   _interstitialAdInstances: []
   _rewardAdInstances: []

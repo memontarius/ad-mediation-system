@@ -83,8 +83,15 @@ namespace Virterix.AdMediation.Editor
             get { return _projectName; }
             private set
             {
+                bool isChanged = value != _projectName;
                 _projectName = value;
                 EditorPrefs.SetString(ProjectNameSaveKey, _projectName);
+                if (isChanged)
+                {
+                    Init(_projectName);
+                    InitNetworksSettings();
+                    InitMediators();
+                }
             }
         }
 
@@ -98,7 +105,7 @@ namespace Virterix.AdMediation.Editor
             get { return string.Format("{0}{1}", PREFIX_SAVEKEY, PROJECT_NAME_SAVEKEY);  }
         }
 
-        public string CommonAdSettingsFolderPath
+        public static string CommonAdSettingsFolderPath
         {
             get { return string.Format("{0}{1}", SETTINGS_PATH, SETTINGS_DIRECTORY_NAME); }
         }
@@ -121,8 +128,6 @@ namespace Virterix.AdMediation.Editor
         private void OnDisable()
         {
         }
-
-        int slider;
 
         private void OnGUI()
         {
@@ -166,12 +171,12 @@ namespace Virterix.AdMediation.Editor
             editorWindow.Show();
         }
 
-        public string GetProjectSettingsPath(string projectName)
+        public static string GetProjectSettingsPath(string projectName)
         {
             return string.Format("{0}/{1}", GetProjectFolderPath(projectName), PROJECT_SETTINGS_FILENAME);
         }
 
-        public string GetProjectFolderPath(string projectName)
+        public static string GetProjectFolderPath(string projectName)
         {
             return string.Format("{0}/{1}", CommonAdSettingsFolderPath, projectName);
         }
@@ -272,6 +277,9 @@ namespace Virterix.AdMediation.Editor
 
         private void InitMediators()
         {
+            _bannerMediators.Clear();
+            _interstitialMediators.Clear();
+            _incentivizedMediators.Clear();
             CreateAdMediatorViews(ref _bannerMediators, "_bannerMediators", AdType.Banner);
             CreateAdMediatorViews(ref _interstitialMediators, "_interstitialMediators", AdType.Interstitial);
             CreateAdMediatorViews(ref _incentivizedMediators, "_incentivizedMediators", AdType.Incentivized);
@@ -340,7 +348,7 @@ namespace Virterix.AdMediation.Editor
         private void CreateAdMediatorViews(ref List<AdMediatorView> mediatorList, string propertyName, AdType adType)
         {
             SerializedProperty mediatorsProp = _serializedProjectSettings.FindProperty(propertyName);
-            for(int i = 0; i < mediatorsProp.arraySize; i++)
+            for (int i = 0; i < mediatorsProp.arraySize; i++)
             {
                 AdMediatorView mediatorView = new AdMediatorView(this, i, _serializedProjectSettings, 
                     mediatorsProp.GetArrayElementAtIndex(i), Repaint, adType);
@@ -412,8 +420,9 @@ namespace Virterix.AdMediation.Editor
                 if (EditorGUI.EndChangeCheck())
                 {
                     CurrProjectName = _projectNames[_selectedProject];
-                    Init(CurrProjectName);
-                    InitNetworksSettings();
+                    //Init(CurrProjectName);
+                    //InitNetworksSettings();
+                    //InitMediators();
                 }
             }
 
@@ -427,8 +436,9 @@ namespace Virterix.AdMediation.Editor
                 if (!string.IsNullOrEmpty(_createdProjectName))
                 {
                     CurrProjectName = _createdProjectName;
-                    Init(CurrProjectName);
-                    InitNetworksSettings();
+                    //Init(CurrProjectName);
+                    //InitNetworksSettings();
+                    //InitMediators();
                 }
             }
             GUILayout.EndHorizontal();
@@ -487,7 +497,6 @@ namespace Virterix.AdMediation.Editor
         private void DrawBuild()
         {
             EditorGUILayout.Space();
-            //Utils.DrawGuiLine(2);
             if (GUILayout.Button("BUILD", GUILayout.Height(40)))
             {
                 BuildJsonSettings();
@@ -496,41 +505,47 @@ namespace Virterix.AdMediation.Editor
 
         private void BuildJsonSettings()
         {
-            string path = GetAdProjectSettingsPath();
+            string path = AdMediationSettingsGenerator.GetAdProjectSettingsPath(CurrProjectName);
+            string androidAdSettingsPath = string.Format("{0}/{1}", path, "android_settings.json");
+            string iosAdSettingsPath = string.Format("{0}/{1}", path, "ios_settings.json");
 
             List<AdMediatorView> allMediators = new List<AdMediatorView>();
             allMediators.AddRange(_bannerMediators);
             allMediators.AddRange(_interstitialMediators);
             allMediators.AddRange(_incentivizedMediators);
 
-            string json = AdMediationSettingsGenerator.Generate(CurrProjectName, allMediators);
+            BaseAdNetworkSettings[] networksSettings = new BaseAdNetworkSettings[_networks.Count];
+            for(int i = 0; i < networksSettings.Length; i++)
+            {
+                networksSettings[i] = _networks[i].Settings;
+            }
 
+            string json = AdMediationSettingsGenerator.Generate(CurrProjectName, _projectSettings, networksSettings);
             if (IsAndroid)
             {
-                string androidAdSettingsPath = string.Format("{0}/{1}", path, "android_settings.json");
+                
                 File.WriteAllText(androidAdSettingsPath, json);
             }
+            else
+            {
+                if (File.Exists(androidAdSettingsPath))
+                {
+                    File.Delete(androidAdSettingsPath);
+                }
+            }
+
             if (IsIOS)
             {           
-                string iosAdSettingsPath = string.Format("{0}/{1}", path, "ios_settings.json");
                 File.WriteAllText(iosAdSettingsPath, json);
             }
+            else
+            {
+                if (File.Exists(iosAdSettingsPath))
+                {
+                    File.Delete(iosAdSettingsPath);
+                }
+            }
             AssetDatabase.Refresh();
-        }
-
-        private string GetAdProjectSettingsPath()
-        {
-            string resourcePath = Application.dataPath + "/Resources";
-            string adSettingsPath = string.Format("{0}/{1}", resourcePath, SETTINGS_DIRECTORY_NAME);
-            if (!Directory.Exists(resourcePath))
-            {
-                Directory.CreateDirectory(resourcePath);
-            }
-            if (!Directory.Exists(adSettingsPath))
-            {
-                Directory.CreateDirectory(adSettingsPath);
-            }
-            return adSettingsPath;
         }
     }
 } // namespace Virterix.AdMediation.Editor

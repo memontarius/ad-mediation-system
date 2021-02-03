@@ -121,7 +121,7 @@ namespace Virterix.AdMediation
                 string path = "";
                 if (AdInstanceParametersFolder.Length > 0)
                 {
-                    path = String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}/{1}/{2}/{3}/", AdMediationSystem._AD_SETTINGS_PATH,
+                    path = String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}/{1}/{2}/{3}/", AdMediationSystem._AD_SETTINGS_FOLDER,
                         AdMediationSystem.Instance.m_projectName, AdMediationSystem._AD_INSTANCE_PARAMETERS_ROOT_FOLDER, AdInstanceParametersFolder);
                 }
                 return path;

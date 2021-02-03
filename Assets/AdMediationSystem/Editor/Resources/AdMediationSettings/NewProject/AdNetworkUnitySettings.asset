@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7591ebecf893f2b43a95231d3e9dc92c, type: 3}
   m_Name: AdNetworkUnitySettings
   m_EditorClassIdentifier: 
-  _enabled: 1
+  _enabled: 0
   _androidAppId: 
   _iosAppId: 
-  _responseWaitTime: 5
+  _responseWaitTime: 30
   _bannerAdInstances: []
   _interstitialAdInstances: []
   _rewardAdInstances: []

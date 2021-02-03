@@ -38,6 +38,11 @@ namespace Virterix.AdMediation.Editor
 
         public bool Collapsed { get; set; }
 
+        public BaseAdNetworkSettings Settings
+        {
+            get { return _settings; }
+        }
+
         protected abstract string SettingsFileName { get; }
 
         protected virtual string[] BannerTypes { get; set; }
@@ -48,7 +53,7 @@ namespace Virterix.AdMediation.Editor
         {
             get
             {
-                return String.Format("{0}/{1}", _settingsWindow.GetProjectFolderPath(_settingsWindow.CurrProjectName), SettingsFileName);
+                return String.Format("{0}/{1}", AdMediationSettingsWindow.GetProjectFolderPath(_settingsWindow.CurrProjectName), SettingsFileName);
             }
         }
 
@@ -307,8 +312,8 @@ namespace Virterix.AdMediation.Editor
                 EditorGUILayout.Space(2);
                 AnimBool foldAnimation = blockData._foldAnimation;
 
-                //char collapsedSymbol = blockData._isCollapsed ? '\u25B7' : '\u25BD';
-                char collapsedSymbol = blockData._isCollapsed ? '\u21A6' : '\u21A7';
+                char collapsedSymbol = blockData._isCollapsed ? '\u25B7' : '\u25BD';
+                //char collapsedSymbol = blockData._isCollapsed ? '\u21A6' : '\u21A7';
                 
                 string buttonTitle = string.Format("{0}  {1}", collapsedSymbol, blockData._blockName);
 
