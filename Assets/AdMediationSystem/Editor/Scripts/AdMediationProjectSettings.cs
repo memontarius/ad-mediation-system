@@ -41,6 +41,10 @@ namespace Virterix.AdMediation.Editor
     {
         public AdType _adType;
         public string _name;
+        public bool _isContinueAfterEndSession;
+        public bool _isAutoFetchOnHide;
+        public int _bannerMinDisplayTime;
+        public int _deferredFetchDelay;
         public FetchStrategyType _fetchStrategyType;
         public BannerPosition _bannerPosition;
         public List<AdTier> _tiers;

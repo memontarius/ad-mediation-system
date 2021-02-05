@@ -30,12 +30,6 @@ namespace Virterix.AdMediation.Editor
             return settings;
         }
 
-        public override bool IsAdSupported(AdType adType)
-        {
-            bool isSupported = adType == AdType.Interstitial || adType == AdType.Incentivized;
-            return isSupported;
-        }
-
         protected override void DrawSettings()
         {
         }

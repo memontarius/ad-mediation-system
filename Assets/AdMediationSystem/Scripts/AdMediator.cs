@@ -33,11 +33,11 @@ namespace Virterix.AdMediation
         public AdType m_adType;
         public string m_placementName = AdMediationSystem._PLACEMENT_DEFAULT_NAME;
         public bool m_isAutoFetchWhenHide;
-        [Tooltip("If banner type ad is displayed longer than set value when ad hide, then performs Fetch. (In Seconds)")]
+        [Tooltip("If a banner type ad is displayed longer than set value, when ad hide then performs the fetch. (In Seconds)")]
         public float m_minDisplayTimeBannerAdType = 0f;
         [Tooltip("Is continue show ad after restart the app from the interrupt place.")]
         public bool m_isContinueAfterEndSession;
-        [Tooltip("When all networks don't fill ad, then Fetch will be performed automatically after the delay. " +
+        [Tooltip("When all networks don't fill ad then the fetch will be performed automatically after the delay. " +
             "Negative value is disabled. (In Seconds)")]
         public float m_deferredFetchDelay = -1;
 

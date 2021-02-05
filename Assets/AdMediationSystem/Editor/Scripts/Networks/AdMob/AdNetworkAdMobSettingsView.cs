@@ -30,24 +30,6 @@ namespace Virterix.AdMediation.Editor
             BannerTypes = Enum.GetNames(typeof(AdMobAdapter.AdMobBannerSize));
         }
 
-        public override bool IsAdSupported(AdType adType)
-        {
-            bool isSupported = false;
-            switch(adType)
-            {
-                case AdType.Banner:
-                    isSupported = true;
-                    break;
-                case AdType.Interstitial:
-                    isSupported = true;
-                    break;
-                case AdType.Incentivized:
-                    isSupported = true;
-                    break;
-            }
-            return isSupported;
-        }
-
         protected override BaseAdNetworkSettings CreateSettingsModel()
         {
             var settings = Utils.GetOrCreateSettings<AdNetworkAdMobSettings>(SettingsFilePath);

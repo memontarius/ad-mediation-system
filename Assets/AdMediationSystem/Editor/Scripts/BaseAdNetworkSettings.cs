@@ -41,6 +41,11 @@ namespace Virterix.AdMediation.Editor
             get;
         } = true;
 
+        public virtual System.Type NetworkAdapterType
+        {
+            get;
+        }
+
         public virtual Dictionary<string, object> GetSpecificNetworkParameters()
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -51,6 +56,16 @@ namespace Virterix.AdMediation.Editor
         {
             return null;
         }
+
+        public virtual void SetupNetworkAdapter(Component networkAdapter)
+        {
+        }
+
+        public virtual bool IsAdSupported(AdType adType)
+        {
+            return false;
+        }
+
 
         public AdInstanceGenerateDataContainer[] GetAllAdInstanceDataHolders()
         {

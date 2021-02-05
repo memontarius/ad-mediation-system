@@ -16,7 +16,11 @@ MonoBehaviour:
   _personalizeAdsOnInit: 1
   _bannerMediators:
   - _adType: 1
-    _name: Top
+    _name: Bottom
+    _isContinueAfterEndSession: 1
+    _isAutoFetchOnHide: 1
+    _bannerMinDisplayTime: 30
+    _deferredFetchDelay: 90
     _fetchStrategyType: 0
     _bannerPosition: 1
     _tiers:
@@ -25,34 +29,45 @@ MonoBehaviour:
         _networkIndex: 0
         _networkIdentifier: admob
         _instanceIndex: 1
-        _instanceName: Bottom
+        _instanceName: DefaultHighCPM
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 41
+        _percentage: 0
       - _networkName: AdMob
         _networkIndex: 0
         _networkIdentifier: admob
         _instanceIndex: 0
-        _instanceName: Top
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 1
+        _percentage: 0
+  - _adType: 1
+    _name: Top
+    _isContinueAfterEndSession: 1
+    _isAutoFetchOnHide: 1
+    _bannerMinDisplayTime: 30
+    _deferredFetchDelay: 90
+    _fetchStrategyType: 0
+    _bannerPosition: 0
+    _tiers:
+    - _units:
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 0
+        _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 59
-  _interstitialMediators:
-  - _adType: 2
-    _name: 
-    _fetchStrategyType: 0
-    _bannerPosition: 0
-    _tiers: []
-  - _adType: 2
-    _name: 
-    _fetchStrategyType: 0
-    _bannerPosition: 0
-    _tiers: []
-  _incentivizedMediators:
-  - _adType: 3
-    _name: 
-    _fetchStrategyType: 0
-    _bannerPosition: 0
-    _tiers: []
+        _percentage: 0
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 1
+        _instanceName: DefaultHighCPM
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+  _interstitialMediators: []
+  _incentivizedMediators: []
   _isIOS: 1
   _isAndroid: 1

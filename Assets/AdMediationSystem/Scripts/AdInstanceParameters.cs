@@ -46,9 +46,8 @@ namespace Virterix.AdMediation
             T asset = ScriptableObject.CreateInstance<T>();
             AssetDatabase.CreateAsset(asset, path);
             AssetDatabase.SaveAssets();
-            EditorUtility.FocusProjectWindow();
-            Selection.activeObject = asset;
-
+            //EditorUtility.FocusProjectWindow();
+            //Selection.activeObject = asset;
             AssetDatabase.Refresh();
             return asset;
         }

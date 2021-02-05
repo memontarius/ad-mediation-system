@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 using Boomlagoon.JSON;
 
 namespace Virterix.AdMediation.Editor
 {
-    public class AdMediationSettingsGenerator
+    public class AdMediationSettingsBuilder
     {
         public const string PREFAB_NAME = "AdMediationSystem.prefab";
 
@@ -47,9 +48,38 @@ namespace Virterix.AdMediation.Editor
             }
         }
 
+        private static BannerPositionContainer[] FindBannerPositions(AdInstanceGenerateDataContainer adInstanceContainer, AdUnitMediator[] mediators)
+        {
+            List<BannerPositionContainer> positions = new List<BannerPositionContainer>();
+            foreach (var mediator in mediators)
+            {
+                bool isJumpNextMediator = false;
+                foreach (var tier in mediator._tiers)
+                {
+                    foreach (var unit in tier._units)
+                    {
+                        if (unit._instanceName == adInstanceContainer._adInstance._name)
+                        {
+                            BannerPositionContainer position = new BannerPositionContainer();
+                            position.m_placementName = mediator._name;
+                            position.m_bannerPosition = mediator._bannerPosition;
+                            positions.Add(position);
+                            isJumpNextMediator = true;
+                            break;
+                        }
+                    }
+                    if (isJumpNextMediator)
+                    {
+                        break;
+                    }
+                }
+            }
+            return positions.ToArray();
+        }
+
         #endregion // Helpers
 
-        public static string GenerateJson(string projectName, AppPlatform platform, AdMediationProjectSettings projectSettings, 
+        public static string BuildJson(string projectName, AppPlatform platform, AdMediationProjectSettings projectSettings, 
             BaseAdNetworkSettings[] networkSettings, AdUnitMediator[] mediators)
         {
             // Json Settings
@@ -62,25 +92,19 @@ namespace Virterix.AdMediation.Editor
             return json.ToString();
         }
 
-        public static void GenerateSystemPrefab(string projectName, AdMediationProjectSettings projectSettings, AdUnitMediator[] mediators)
+        public static GameObject BuildSystemPrefab(string projectName, AdMediationProjectSettings projectSettings, 
+            BaseAdNetworkSettings[] networksSettings, AdUnitMediator[] mediators)
         {
             // System Prefab
-            GameObject systemObject = CreateSystemObject(projectName, projectSettings, mediators);
-            SavePrefab(systemObject);
+            GameObject systemObject = CreateSystemObject(projectName, projectSettings, networksSettings, mediators);
+            GameObject prefab = SavePrefab(systemObject);
             GameObject.DestroyImmediate(systemObject);
+            return prefab;
         }
 
-        public static void GenerateBannerAdInstanceParameters(string projectName, BaseAdNetworkSettings[] networkSettings, AdUnitMediator[] mediators)
+        public static void BuildBannerAdInstanceParameters(string projectName, BaseAdNetworkSettings[] networkSettings, AdUnitMediator[] mediators)
         {
             string parametersPath = AdMediationSystem.GetAdInstanceParametersPath(projectName);
-            /*
-            string fullParameterPath = Application.dataPath + parametersPath;
-            if (System.IO.Directory.Exists(fullParameterPath))
-            {
-                System.IO.Directory.Delete(fullParameterPath);
-                AssetDatabase.Refresh();
-            }
-            */
             foreach (var network in networkSettings)
             {
                 AdInstanceGenerateDataContainer[] adInstanceDataHolders = network.GetAllAdInstanceDataHolders();
@@ -90,7 +114,8 @@ namespace Virterix.AdMediation.Editor
                     {
                         string name = adInstanceDataHolder._adInstance._name;
                         int bannerType = adInstanceDataHolder._adInstance._bannerType;
-                        network.CreateBannerAdInstanceParameters(projectName, name, bannerType, new BannerPositionContainer[0]);
+                        var bannerPositions = FindBannerPositions(adInstanceDataHolder, mediators);
+                        network.CreateBannerAdInstanceParameters(projectName, name, bannerType, bannerPositions);
                     }
                 }
             }
@@ -253,7 +278,7 @@ namespace Virterix.AdMediation.Editor
         //-------------------------------------------------------------
         #region System Prefab
 
-        private static GameObject CreateSystemObject(string projectName, AdMediationProjectSettings settings, AdUnitMediator[] mediators)
+        private static GameObject CreateSystemObject(string projectName, AdMediationProjectSettings settings, BaseAdNetworkSettings[] networksSettings, AdUnitMediator[] mediators)
         {
             GameObject mediationSystemObject = new GameObject(PREFAB_NAME);
             AdMediationSystem adSystem = mediationSystemObject.AddComponent<AdMediationSystem>();
@@ -264,6 +289,7 @@ namespace Virterix.AdMediation.Editor
 
             GameObject networkAdapterHolder = new GameObject("NetworkAdapters");
             networkAdapterHolder.transform.SetParent(mediationSystemObject.transform);
+            FillNetworkHolder(networkAdapterHolder, networksSettings);
 
             GameObject mediatorHolder = new GameObject("Mediators");
             mediatorHolder.transform.SetParent(mediationSystemObject.transform);
@@ -278,11 +304,40 @@ namespace Virterix.AdMediation.Editor
             return mediationSystemObject;
         }
 
-        private static void SavePrefab(GameObject mediationSystemObject)
+        private static void FillNetworkHolder(GameObject networkHolder, BaseAdNetworkSettings[] networksSettings)
+        {
+            AdType[] adTypeArray = System.Enum.GetValues(typeof(AdType)) as AdType[];
+            List<AdType> adTypes = adTypeArray.ToList();
+            adTypes.Remove(AdType.Unknown);
+
+            foreach (var network in networksSettings)
+            {
+                if (network._enabled)
+                {
+                    AdNetworkAdapter adapter = networkHolder.AddComponent(network.NetworkAdapterType) as AdNetworkAdapter;
+                    List<AdNetworkAdapter.AdParam> adSupportedParams = new List<AdNetworkAdapter.AdParam>();
+                    for (int i = 0; i < adTypes.Count; i++)
+                    {
+                        if (network.IsAdSupported(adTypes[i]))
+                        {
+                            var supportedParam = new AdNetworkAdapter.AdParam();
+                            supportedParam.m_adType = adTypes[i];
+                            supportedParam.m_isCheckAvailabilityWhenPreparing = false;
+                            adSupportedParams.Add(supportedParam);
+                        }
+                    }
+                    adapter.m_adSupportParams = adSupportedParams.ToArray();
+                    network.SetupNetworkAdapter(adapter);
+                }
+            }
+        }
+
+        private static GameObject SavePrefab(GameObject mediationSystemObject)
         {
             string settingsPath = GetAdProjectSettingsPath(mediationSystemObject.GetComponent<AdMediationSystem>().m_projectName, true);
-            PrefabUtility.SaveAsPrefabAsset(mediationSystemObject, settingsPath + "/" + PREFAB_NAME);
+            GameObject prefab = PrefabUtility.SaveAsPrefabAsset(mediationSystemObject, settingsPath + "/" + PREFAB_NAME);
             AssetDatabase.Refresh();
+            return prefab;
         }
 
         #endregion // System Prefab

@@ -7,6 +7,20 @@ namespace Virterix.AdMediation.Editor
     [Serializable]
     public class AdNetworkAdMobSettings : BaseAdNetworkSettings
     {
+        public override Type NetworkAdapterType => typeof(AdMobAdapter);
+
+        public override bool IsAdSupported(AdType adType)
+        {
+            return true;
+        }
+
+        public override void SetupNetworkAdapter(Component networkAdapter)
+        {
+            var adapter = networkAdapter as AdMobAdapter;
+
+
+        }
+
         public override AdInstanceParameters CreateBannerAdInstanceParameters(string projectNme, string name, int bannerType, BannerPositionContainer[] bannerPositions)
         {
             AdMobAdInstanceBannerParameters parameters = AdMobAdInstanceBannerParameters.CreateParameters(projectNme, name);

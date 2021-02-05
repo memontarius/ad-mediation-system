@@ -107,17 +107,17 @@ namespace Virterix.AdMediation.Editor
 
             _responseWaitTimeProp = _serializedSettings.FindProperty("_responseWaitTime");
 
-            if (IsAdSupported(AdType.Banner))
+            if (_settings.IsAdSupported(AdType.Banner))
             {
                 InstanceElementHeight elementHeight = CreateInstanceElementHeight(AdType.Banner);
                 CreateAdInstanceBlock("Banners", "_bannerAdInstances", AdType.Banner, elementHeight);
             }
-            if (IsAdSupported(AdType.Interstitial))
+            if (_settings.IsAdSupported(AdType.Interstitial))
             {
                 InstanceElementHeight elementHeight = CreateInstanceElementHeight(AdType.Interstitial);
                 CreateAdInstanceBlock("Interstitials", "_interstitialAdInstances", AdType.Interstitial, elementHeight);
             }
-            if (IsAdSupported(AdType.Incentivized))
+            if (_settings.IsAdSupported(AdType.Incentivized))
             {
                 InstanceElementHeight elementHeight = CreateInstanceElementHeight(AdType.Incentivized);
                 CreateAdInstanceBlock("Reward Units", "_rewardAdInstances", AdType.Incentivized, elementHeight);
@@ -205,11 +205,6 @@ namespace Virterix.AdMediation.Editor
                     break;
             }
             return instances;
-        }
-
-        public virtual bool IsAdSupported(AdType adType)
-        {
-            return false;
         }
 
         private string GetInstanceBlockCollapsedKey(string network, AdType adType)

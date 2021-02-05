@@ -22,6 +22,11 @@ namespace Virterix.AdMediation.Editor
 
         private SerializedProperty _mediatorNameProp;
         private SerializedProperty _fetchStrategyProp;
+        private SerializedProperty _continueAfterEndSessionProp;
+        private SerializedProperty _bannerPositionProp;
+        private SerializedProperty _bannerMinDisplayTimeProp;
+        private SerializedProperty _deferredFetchDelayProp;
+        private SerializedProperty _autoFetchOnHideProp;
         private List<string> _activeNetworks = new List<string>();
 
         public AdType AdType
@@ -340,27 +345,41 @@ namespace Virterix.AdMediation.Editor
             _index = mediatorId;
             _mediatorProp = mediatorProp;
             _tierListProp = _mediatorProp.FindPropertyRelative("_tiers");
-            _tierListProp.arraySize = 0;
             _mediatorNameProp = _mediatorProp.FindPropertyRelative("_name");
-            _mediatorNameProp.stringValue = "";
             _fetchStrategyProp = _mediatorProp.FindPropertyRelative("_fetchStrategyType");
-
+            _continueAfterEndSessionProp = _mediatorProp.FindPropertyRelative("_isContinueAfterEndSession");
+            _autoFetchOnHideProp = _mediatorProp.FindPropertyRelative("_isAutoFetchOnHide");
+            _bannerPositionProp = _mediatorProp.FindPropertyRelative("_bannerPosition");
+            _bannerMinDisplayTimeProp = _mediatorProp.FindPropertyRelative("_bannerMinDisplayTime");
+            _deferredFetchDelayProp = _mediatorProp.FindPropertyRelative("_deferredFetchDelay");
             if (_tierReorderableList != null)
             {
                 _tierReorderableList.serializedProperty = _tierListProp;
             }
         }
 
+        public void SetupDefaultParameters()
+        {
+            _mediatorNameProp.stringValue = _index == 0 ? "Default" : "";
+            _fetchStrategyProp.intValue = 0;
+            _continueAfterEndSessionProp.boolValue = true;
+            _autoFetchOnHideProp.boolValue = true;
+            _bannerPositionProp.intValue = 0;
+            _bannerMinDisplayTimeProp.intValue = 30;
+            _deferredFetchDelayProp.intValue = 90;
+            _tierListProp.arraySize = 0;
+        }
+
         private bool Collapsed { get; set; }
 
-        public bool DrawView()
+        public void DrawView(out bool wasDeletionPerform)
         {
             EditorGUILayout.BeginVertical("helpbox");
             string mediatorNamePostfix = _mediatorNameProp.stringValue == "" ? (_index + 1).ToString() : _mediatorNameProp.stringValue;
             string mediatorName = string.Format("Mediator {0}", mediatorNamePostfix);
             Collapsed = EditorGUILayout.BeginFoldoutHeaderGroup(Collapsed, mediatorName);
             _showMediator.target = Collapsed;
-            bool isDelitionPerform = false;
+            wasDeletionPerform = false;
 
             if (EditorGUILayout.BeginFadeGroup(_showMediator.faded))
             {
@@ -371,7 +390,7 @@ namespace Virterix.AdMediation.Editor
                 _mediatorNameProp.stringValue = EditorGUILayout.TextField(_mediatorNameProp.stringValue, GUILayout.Width(180));
 
                 GUILayout.FlexibleSpace();
-                isDelitionPerform = GUILayout.Button("Delete");
+                wasDeletionPerform = GUILayout.Button("Delete");
 
                 EditorGUILayout.EndHorizontal();
 
@@ -380,22 +399,41 @@ namespace Virterix.AdMediation.Editor
                 _fetchStrategyProp.intValue = EditorGUILayout.Popup(_fetchStrategyProp.intValue, MediationStratageTypes, GUILayout.Width(180));
                 EditorGUILayout.EndHorizontal();
 
+                EditorGUILayout.BeginHorizontal();
+
+                _continueAfterEndSessionProp.boolValue = EditorGUILayout.ToggleLeft("Continue After End Session", 
+                    _continueAfterEndSessionProp.boolValue, GUILayout.Width(170));
+                EditorGUILayout.Space(10, false);
+                _autoFetchOnHideProp.boolValue = EditorGUILayout.ToggleLeft("Auto Fetch On Hide", _autoFetchOnHideProp.boolValue, GUILayout.Width(130));
+
+                EditorGUILayout.EndHorizontal();
+
                 if (_adType == AdType.Banner)
                 {
+                    EditorGUILayout.Space(2);
                     EditorGUILayout.BeginHorizontal();
+
                     EditorGUILayout.LabelField("Banner Position", GUILayout.Width(150));
-                    var bannerPositionProp = _mediatorProp.FindPropertyRelative("_bannerPosition");
-                    bannerPositionProp.intValue = EditorGUILayout.Popup(bannerPositionProp.intValue, BannerPositionTypes, GUILayout.Width(180));
+                    _bannerPositionProp.intValue = EditorGUILayout.Popup(_bannerPositionProp.intValue, BannerPositionTypes, GUILayout.Width(180));
+                    EditorGUILayout.Space(10, false);
+                    EditorGUILayout.PropertyField(_bannerMinDisplayTimeProp, GUILayout.Width(210));
+
                     EditorGUILayout.EndHorizontal();
                 }
-     
-                EditorGUILayout.Space(4);
+                else if (_adType == AdType.Incentivized)
+                {
+                    EditorGUILayout.Space(2);
+                    EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.PropertyField(_deferredFetchDelayProp, GUILayout.Width(332));
+                    EditorGUILayout.EndHorizontal();
+                }
+
+                EditorGUILayout.Space(10, false);
                 _tierReorderableList.DoLayoutList();
             }
             EditorGUILayout.EndFadeGroup();
             EditorGUILayout.EndFoldoutHeaderGroup();
             EditorGUILayout.EndVertical();
-            return isDelitionPerform;
         }
 
     }
