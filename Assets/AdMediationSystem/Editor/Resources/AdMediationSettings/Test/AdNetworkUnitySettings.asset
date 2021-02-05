@@ -9,9 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e13d8dc32e2c0941a669685f602cf0a, type: 3}
-  m_Name: AdMob_AdInstanceBannerParametersDefault
+  m_Script: {fileID: 11500000, guid: 7591ebecf893f2b43a95231d3e9dc92c, type: 3}
+  m_Name: AdNetworkUnitySettings
   m_EditorClassIdentifier: 
-  m_name: Default
-  m_bannerSize: 0
-  m_bannerPositions: []
+  _enabled: 1
+  _networkIdentifier: unityads
+  _androidAppId: 
+  _iosAppId: 
+  _responseWaitTime: 30
+  _bannerAdInstances: []
+  _interstitialAdInstances: []
+  _rewardAdInstances: []

@@ -15,7 +15,7 @@ namespace Virterix.AdMediation
         }
 
         public const string _AD_INSTANCE_PARAMETERS_FOLDER = "AudienceNetwork";
-        public const string _PARAMETERS_FILE_NAME = "AN_AdInstanceBannerParameters";
+        public const string _PARAMETERS_FILE_NAME = "AN_AdInstanceBanner";
 
         public AudienceNetworkAdapter.AudienceNetworkBannerSize m_bannerSize;
         public BannerPosition[] m_bannerPositions;
@@ -32,13 +32,14 @@ namespace Virterix.AdMediation
         [MenuItem("Tools/Ad Mediation/Audience Network/Create Banner Parameters")]
         public static AdInstanceParameters CreateParameters()
         {
-            AdInstanceParameters parameters = AdInstanceParameters.CreateParameters<AudienceNetworkAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME);
+            var parameters = CreateParameters<AudienceNetworkAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME);
             return parameters;
         }
 
-        public static AdInstanceParameters CreateParameters(string postfixName)
+        public static AdInstanceParameters CreateParameters(string projectName, string postfixName)
         {
-            AdInstanceParameters parameters = AdInstanceParameters.CreateParameters<AudienceNetworkAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME + postfixName);
+            var parameters = CreateParameters<AudienceNetworkAdInstanceBannerParameters>(projectName, _AD_INSTANCE_PARAMETERS_FOLDER,
+                _PARAMETERS_FILE_NAME + postfixName);
             return parameters;
         }
 #endif

@@ -22,6 +22,7 @@ namespace Virterix.AdMediation.Editor
 
         private SerializedProperty _mediatorNameProp;
         private SerializedProperty _fetchStrategyProp;
+        private List<string> _activeNetworks = new List<string>();
 
         public AdType AdType
         {
@@ -129,7 +130,8 @@ namespace Virterix.AdMediation.Editor
                         popupRect.width = width;
                         popupRect.height = 20;
 
-                        string[] activeNetworks = _settingsWindow.ActiveNetworks;
+                        _settingsWindow.GetActiveNetworks(_adType, ref _activeNetworks);
+                        string[] activeNetworks = _activeNetworks.ToArray();
 
                         var networkNameProp = unitElement.FindPropertyRelative("_networkName");
                         var networkIndexProp = unitElement.FindPropertyRelative("_networkIndex");
@@ -318,7 +320,9 @@ namespace Virterix.AdMediation.Editor
                     var networkIndexProp = unit.FindPropertyRelative("_networkIndex");
                     var networkIdentifierProp = unit.FindPropertyRelative("_networkIdentifier");
 
-                    string[] activeNetworks = _settingsWindow.ActiveNetworks;
+                    _settingsWindow.GetActiveNetworks(_adType, ref _activeNetworks);
+                    string[] activeNetworks = _activeNetworks.ToArray();
+
                     int solvedNetworkIndex = ResolveSelectedNetworkIndex(networkIndexProp.intValue, networkNameProp.stringValue, activeNetworks);
                     if (solvedNetworkIndex != networkIndexProp.intValue)
                     {

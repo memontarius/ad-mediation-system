@@ -15,7 +15,7 @@ namespace Virterix.AdMediation
         }
 
         public const string _AD_INSTANCE_PARAMETERS_FOLDER = "AdMob";
-        public const string _PARAMETERS_FILE_NAME = "AdMob_AdInstanceBannerParameters";
+        public const string _PARAMETERS_FILE_NAME = "AdMob_AdInstanceBanner";
 
         public AdMobAdapter.AdMobBannerSize m_bannerSize;
         public BannerPosition[] m_bannerPositions;
@@ -32,13 +32,14 @@ namespace Virterix.AdMediation
         [MenuItem("Tools/Ad Mediation/AdMob/Create Banner Parameters")]
         public static AdInstanceParameters CreateParameters()
         {
-            AdInstanceParameters parameters = AdInstanceParameters.CreateParameters<AdMobAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME);
+            var parameters = CreateParameters<AdMobAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME);
             return parameters;
         }
 
-        public static AdMobAdInstanceBannerParameters CreateParameters(string postfixName)
+        public static AdMobAdInstanceBannerParameters CreateParameters(string projectName, string postfixName)
         {
-            var parameters = AdInstanceParameters.CreateParameters<AdMobAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME + postfixName);
+            var parameters = CreateParameters<AdMobAdInstanceBannerParameters>(projectName, _AD_INSTANCE_PARAMETERS_FOLDER,
+                _PARAMETERS_FILE_NAME + postfixName);
             return parameters;
         }
 #endif

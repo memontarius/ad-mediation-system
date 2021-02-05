@@ -22,11 +22,11 @@ MonoBehaviour:
     _androidId: 
     _iosId: 
     _timeout: 90
-    _bannerType: 2
-  - _name: DefaultHighCPM
+    _bannerType: 0
+  - _name: GH
     _androidId: 
     _iosId: 
     _timeout: 90
-    _bannerType: 3
+    _bannerType: 0
   _interstitialAdInstances: []
   _rewardAdInstances: []

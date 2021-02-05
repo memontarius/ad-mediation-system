@@ -8,7 +8,7 @@ namespace Virterix.AdMediation
     public class UnityAdInstanceBannerParameters : AdInstanceParameters
     {
         public const string _AD_INSTANCE_PARAMETERS_FOLDER = "UnityAds";
-        public const string _PARAMETERS_FILE_NAME = "UnityAds_AdInstanceBannerParameters";
+        public const string _PARAMETERS_FILE_NAME = "UnityAds_AdInstanceBanner";
 
         public UnityAdsAdapter.UnityAdsBannerPosition m_bannerPosition;
 
@@ -24,13 +24,14 @@ namespace Virterix.AdMediation
         [MenuItem("Tools/Ad Mediation/UnityAds/Create Banner Parameters")]
         public static AdInstanceParameters CreateParameters()
         {
-            AdInstanceParameters parameters = AdInstanceParameters.CreateParameters<UnityAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME);
+            var parameters = CreateParameters<UnityAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME);
             return parameters;
         }
 
-        public static AdInstanceParameters CreateParameters(string postfixName)
+        public static AdInstanceParameters CreateParameters(string projectName, string postfixName)
         {
-            AdInstanceParameters parameters = AdInstanceParameters.CreateParameters<UnityAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME + postfixName);
+            var parameters = CreateParameters<UnityAdInstanceBannerParameters>(projectName, _AD_INSTANCE_PARAMETERS_FOLDER, 
+                _PARAMETERS_FILE_NAME + postfixName);
             return parameters;
         }
 #endif

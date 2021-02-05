@@ -14,13 +14,15 @@ namespace Virterix.AdMediation.Editor
         //-------------------------------------------------------------
         #region Helpers
 
-        public static string GetAdProjectSettingsPath(string projectName)
+        public static string GetAdProjectSettingsPath(string projectName, bool includeAssets)
         {
             string resourceFolder = "Resources";
             string resourcePath = "Assets/" + resourceFolder;
             string settingDirectoryPath = string.Format("{0}/{1}", resourcePath, AdMediationSystem._AD_SETTINGS_FOLDER);
             string projectSettingsPath = string.Format("{0}/{1}", settingDirectoryPath, projectName);
-        
+            string resultPath = string.Format("{0}/{1}/{2}", includeAssets ? resourcePath : resourceFolder,
+                AdMediationSystem._AD_SETTINGS_FOLDER, projectName);
+
             if (!AssetDatabase.IsValidFolder(resourcePath))
             {
                 AssetDatabase.CreateFolder("Assets", resourceFolder);
@@ -34,10 +36,10 @@ namespace Virterix.AdMediation.Editor
                 AssetDatabase.CreateFolder(settingDirectoryPath, projectName);
                 AssetDatabase.Refresh();
             }
-            return projectSettingsPath;
+            return resultPath;
         }
 
-        private static void FillMediators(ref List<AdUnitMediator> mediators, List<AdUnitMediator> specificMediators)
+        public static void FillMediators(ref List<AdUnitMediator> mediators, List<AdUnitMediator> specificMediators)
         {
             if (specificMediators.Count > 0)
             {
@@ -47,13 +49,9 @@ namespace Virterix.AdMediation.Editor
 
         #endregion // Helpers
 
-        public static string Generate(string projectName, AppPlatform platform, AdMediationProjectSettings projectSettings, BaseAdNetworkSettings[] networkSettings)
+        public static string GenerateJson(string projectName, AppPlatform platform, AdMediationProjectSettings projectSettings, 
+            BaseAdNetworkSettings[] networkSettings, AdUnitMediator[] mediators)
         {
-            List<AdUnitMediator> mediators = new List<AdUnitMediator>();
-            FillMediators(ref mediators, projectSettings._bannerMediators);
-            FillMediators(ref mediators, projectSettings._interstitialMediators);
-            FillMediators(ref mediators, projectSettings._incentivizedMediators);
-
             // Json Settings
             JSONObject json = new JSONObject();
             json.Add("projectName", projectName);
@@ -61,20 +59,47 @@ namespace Virterix.AdMediation.Editor
             json.Add("mediators", CreateMediators(projectName, projectSettings, mediators));
             json.Add("networks", CreateNetworks(networkSettings, platform));
 
-            CreateBannerAdInstanceParameters(networkSettings, projectSettings._bannerMediators.ToArray());
+            return json.ToString();
+        }
 
+        public static void GenerateSystemPrefab(string projectName, AdMediationProjectSettings projectSettings, AdUnitMediator[] mediators)
+        {
             // System Prefab
             GameObject systemObject = CreateSystemObject(projectName, projectSettings, mediators);
             SavePrefab(systemObject);
             GameObject.DestroyImmediate(systemObject);
+        }
 
-            return json.ToString();
+        public static void GenerateBannerAdInstanceParameters(string projectName, BaseAdNetworkSettings[] networkSettings, AdUnitMediator[] mediators)
+        {
+            string parametersPath = AdMediationSystem.GetAdInstanceParametersPath(projectName);
+            /*
+            string fullParameterPath = Application.dataPath + parametersPath;
+            if (System.IO.Directory.Exists(fullParameterPath))
+            {
+                System.IO.Directory.Delete(fullParameterPath);
+                AssetDatabase.Refresh();
+            }
+            */
+            foreach (var network in networkSettings)
+            {
+                AdInstanceGenerateDataContainer[] adInstanceDataHolders = network.GetAllAdInstanceDataHolders();
+                foreach (var adInstanceDataHolder in adInstanceDataHolders)
+                {
+                    if (adInstanceDataHolder._adType == AdType.Banner)
+                    {
+                        string name = adInstanceDataHolder._adInstance._name;
+                        int bannerType = adInstanceDataHolder._adInstance._bannerType;
+                        network.CreateBannerAdInstanceParameters(projectName, name, bannerType, new BannerPositionContainer[0]);
+                    }
+                }
+            }
         }
 
         //-------------------------------------------------------------
         #region Json Settings
 
-        private static JSONArray CreateMediators(string projectName, AdMediationProjectSettings settings, List<AdUnitMediator> mediators)
+        private static JSONArray CreateMediators(string projectName, AdMediationProjectSettings settings, AdUnitMediator[] mediators)
         {
             JSONArray jsonMediators = new JSONArray();
             foreach (AdUnitMediator mediator in mediators)
@@ -223,33 +248,12 @@ namespace Virterix.AdMediation.Editor
             return jsonInstances;
         }
 
-        public static void CreateBannerAdInstanceParameters(BaseAdNetworkSettings[] networkSettings, AdUnitMediator[] mediators)
-        {
-            foreach(var network in networkSettings)
-            {
-                AdInstanceGenerateDataContainer[] adInstanceDataHolders = network.GetAllAdInstanceDataHolders();
-
-                foreach (var adInstanceDataHolder in adInstanceDataHolders)
-                {
-                    if (adInstanceDataHolder._adType == AdType.Banner)
-                    {
-                        string name = adInstanceDataHolder._adInstance._name;
-                        int bannerType = adInstanceDataHolder._adInstance._bannerType;
-
-                        Debug.Log("Create " + name);
-
-                        network.CreateBannerAdInstanceParameters(name, bannerType, new BannerPositionContainer[0]);
-                    }
-                }
-            }
-        }
-
         #endregion // Json Settings
 
         //-------------------------------------------------------------
         #region System Prefab
 
-        private static GameObject CreateSystemObject(string projectName, AdMediationProjectSettings settings, List<AdUnitMediator> mediators)
+        private static GameObject CreateSystemObject(string projectName, AdMediationProjectSettings settings, AdUnitMediator[] mediators)
         {
             GameObject mediationSystemObject = new GameObject(PREFAB_NAME);
             AdMediationSystem adSystem = mediationSystemObject.AddComponent<AdMediationSystem>();
@@ -276,7 +280,7 @@ namespace Virterix.AdMediation.Editor
 
         private static void SavePrefab(GameObject mediationSystemObject)
         {
-            string settingsPath = GetAdProjectSettingsPath(mediationSystemObject.GetComponent<AdMediationSystem>().m_projectName);
+            string settingsPath = GetAdProjectSettingsPath(mediationSystemObject.GetComponent<AdMediationSystem>().m_projectName, true);
             PrefabUtility.SaveAsPrefabAsset(mediationSystemObject, settingsPath + "/" + PREFAB_NAME);
             AssetDatabase.Refresh();
         }

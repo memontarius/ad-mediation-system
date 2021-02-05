@@ -47,7 +47,7 @@ namespace Virterix.AdMediation.Editor
             return parameters;
         }
 
-        public virtual AdInstanceParameters CreateBannerAdInstanceParameters(string name, int bannerType, BannerPositionContainer[] bannerPositions)
+        public virtual AdInstanceParameters CreateBannerAdInstanceParameters(string projectNme, string name, int bannerType, BannerPositionContainer[] bannerPositions)
         {
             return null;
         }

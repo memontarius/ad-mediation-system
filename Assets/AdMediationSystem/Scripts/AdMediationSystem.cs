@@ -136,9 +136,7 @@ namespace Virterix.AdMediation
         {
             get
             {
-                string path = String.Format(System.Globalization.CultureInfo.InvariantCulture,
-                    "Resources/{0}/{1}/{2}", _AD_SETTINGS_FOLDER, AdMediationSystem.Instance.m_projectName,
-                    AdMediationSystem._AD_INSTANCE_PARAMETERS_ROOT_FOLDER);
+                string path = GetAdInstanceParametersPath(AdMediationSystem.Instance.m_projectName);
                 return path;
             }
         }
@@ -298,6 +296,14 @@ namespace Virterix.AdMediation
         //===============================================================================
         #region Core methods
         //-------------------------------------------------------------------------------
+
+        public static string GetAdInstanceParametersPath(string projectPath)
+        {
+            string path = String.Format(System.Globalization.CultureInfo.InvariantCulture,
+                    "Resources/{0}/{1}/{2}", _AD_SETTINGS_FOLDER, projectPath,
+                    AdMediationSystem._AD_INSTANCE_PARAMETERS_ROOT_FOLDER);
+            return path;
+        }
 
         public AdNetworkAdapter GetNetwork(string networkName)
         {
