@@ -16,18 +16,8 @@ MonoBehaviour:
   _networkIdentifier: applovin
   _androidAppId: 
   _iosAppId: 
-  _responseWaitTime: 30
+  _responseWaitTime: 0
   _bannerAdInstances: []
-  _interstitialAdInstances:
-  - _name: Default
-    _androidId: 
-    _iosId: 
-    _timeout: 90
-    _bannerType: 0
-  _rewardAdInstances:
-  - _name: Default
-    _androidId: 
-    _iosId: 
-    _timeout: 90
-    _bannerType: 0
+  _interstitialAdInstances: []
+  _rewardAdInstances: []
   _sdkKey: 

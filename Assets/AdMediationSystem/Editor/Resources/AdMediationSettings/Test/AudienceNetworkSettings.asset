@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53fad2eb94f9f834496f439fcaf26267, type: 3}
   m_Name: AudienceNetworkSettings
   m_EditorClassIdentifier: 
-  _enabled: 0
+  _enabled: 1
   _networkIdentifier: audiencenetwork
   _androidAppId: 
   _iosAppId: 
-  _responseWaitTime: 30
+  _responseWaitTime: 0
   _bannerAdInstances: []
   _interstitialAdInstances: []
   _rewardAdInstances: []

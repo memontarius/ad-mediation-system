@@ -1,18 +1,20 @@
-﻿
-#define _MS_UNITY_ADS
+//#define _AMS_UNITY_ADS
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Boomlagoon.JSON;
 
-#if _MS_UNITY_ADS
+#if _AMS_UNITY_ADS
 using UnityEngine.Advertisements;
 #endif
 
 namespace Virterix.AdMediation
 {
-    public class UnityAdsAdapter : AdNetworkAdapter, IUnityAdsListener
+    public class UnityAdsAdapter : AdNetworkAdapter
+#if _AMS_UNITY_ADS
+    ,IUnityAdsListener
+#endif
     {
 
         public bool m_isInitializeWhenStart = true;
@@ -32,7 +34,7 @@ namespace Virterix.AdMediation
             CENTER
         }
 
-#if _MS_UNITY_ADS
+#if _AMS_UNITY_ADS
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
@@ -142,7 +144,7 @@ namespace Virterix.AdMediation
         }
 
         //===============================================================================
-        #region Callback Event Methods
+#region Callback Event Methods
         //-------------------------------------------------------------------------------
 
         public void OnUnityAdsReady(string adId)
@@ -203,8 +205,8 @@ namespace Virterix.AdMediation
             }
         }
 
-        #endregion // Callback Event Methods
+#endregion // Callback Event Methods
 
-#endif // _MS_UNITY_ADS
+#endif // _AMS_UNITY_ADS
     }
 } // namespace Virterix.AdMediation

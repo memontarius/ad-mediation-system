@@ -1,5 +1,4 @@
-﻿
-//#define _MS_VUNGLE
+﻿//#define _AMS_VUNGLE
 
 using UnityEngine;
 using System.Collections;
@@ -10,7 +9,7 @@ namespace Virterix.AdMediation
     public class VungleAdapter : AdNetworkAdapter
     {
 
-#if _MS_VUNGLE
+#if _AMS_VUNGLE
 
         string m_appId;
         string m_interstitialPlacementId;
@@ -142,6 +141,6 @@ namespace Virterix.AdMediation
             Debug.Log("VungleAdapter.OnLogEvent ~ " + message);
         }
 
-#endif // _MS_VUNGLE
+#endif // _AMS_VUNGLE
     }
 } // namespace Virterix.AdMediation

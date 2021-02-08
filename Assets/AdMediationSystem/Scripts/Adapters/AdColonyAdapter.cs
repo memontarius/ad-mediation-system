@@ -1,11 +1,10 @@
-﻿
-//#define _MS_ADCOLONY
+﻿//#define _AMS_ADCOLONY
 
 using UnityEngine;
 using System.Collections.Generic;
 using Boomlagoon.JSON;
 
-#if _MS_ADCOLONY
+#if _AMS_ADCOLONY
 using AdColony;
 #endif
 
@@ -38,7 +37,7 @@ namespace Virterix.AdMediation
         public bool m_useRewardVideoPrePopup;
         public bool m_useRewardVideoPostPopup;
 
-#if _MS_ADCOLONY
+#if _AMS_ADCOLONY
 
         string m_interstitialZoneId;
         string m_rewardZoneId;
@@ -388,7 +387,7 @@ namespace Virterix.AdMediation
         #endregion // Callback Event Methods
         //-------------------------------------------------------------------------------
 
-#endif // _MS_ADCOLONY
+#endif // _AMS_ADCOLONY
 
     }
 } // namespace Virterix.AdMediation

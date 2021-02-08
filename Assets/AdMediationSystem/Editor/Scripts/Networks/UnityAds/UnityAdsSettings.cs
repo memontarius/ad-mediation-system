@@ -5,6 +5,8 @@ namespace Virterix.AdMediation.Editor
     public class UnityAdsSettings : BaseAdNetworkSettings
     {
         public override Type NetworkAdapterType => typeof(UnityAdsAdapter);
+        protected override string AdapterScriptName => "UnityAdsAdapter";
+        protected override string AdapterDefinePeprocessorKey => "_AMS_UNITY_ADS";
 
         public override bool IsAdSupported(AdType adType)
         {

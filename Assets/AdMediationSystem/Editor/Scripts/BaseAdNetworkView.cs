@@ -107,21 +107,9 @@ namespace Virterix.AdMediation.Editor
 
             _responseWaitTimeProp = _serializedSettings.FindProperty("_responseWaitTime");
 
-            if (_settings.IsAdSupported(AdType.Banner))
-            {
-                InstanceElementHeight elementHeight = CreateInstanceElementHeight(AdType.Banner);
-                CreateAdInstanceBlock("Banners", "_bannerAdInstances", AdType.Banner, elementHeight);
-            }
-            if (_settings.IsAdSupported(AdType.Interstitial))
-            {
-                InstanceElementHeight elementHeight = CreateInstanceElementHeight(AdType.Interstitial);
-                CreateAdInstanceBlock("Interstitials", "_interstitialAdInstances", AdType.Interstitial, elementHeight);
-            }
-            if (_settings.IsAdSupported(AdType.Incentivized))
-            {
-                InstanceElementHeight elementHeight = CreateInstanceElementHeight(AdType.Incentivized);
-                CreateAdInstanceBlock("Reward Units", "_rewardAdInstances", AdType.Incentivized, elementHeight);
-            }
+            InitAdInstanceBlock(AdType.Banner, "Banners", "_bannerAdInstances");
+            InitAdInstanceBlock(AdType.Interstitial, "Interstitials", "_interstitialAdInstances");
+            InitAdInstanceBlock(AdType.Incentivized, "Reward Units", "_rewardAdInstances");
 
             // Android
             _androidAppIdProp = _serializedSettings.FindProperty("_androidAppId");
@@ -131,6 +119,15 @@ namespace Virterix.AdMediation.Editor
             UpdateElementHeight();
             _enabledProp = _serializedSettings.FindProperty("_enabled");
             Enabled = _enabledProp.boolValue;
+        }
+
+        private void InitAdInstanceBlock(AdType adType, string title, string propertyName)
+        {
+            if (_settings.IsAdSupported(adType) && _settings.IsAdInstanceSupported(adType))
+            {
+                InstanceElementHeight elementHeight = CreateInstanceElementHeight(adType);
+                CreateAdInstanceBlock(title, propertyName, adType, elementHeight);
+            }
         }
 
         public bool DrawUI()

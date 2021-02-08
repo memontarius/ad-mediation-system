@@ -9,16 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3aa395e8a3417949bb2f456cb45fec4, type: 3}
-  m_Name: ChartboostSettings
+  m_Script: {fileID: 11500000, guid: 53fad2eb94f9f834496f439fcaf26267, type: 3}
+  m_Name: AudienceNetworkSettings
   m_EditorClassIdentifier: 
   _enabled: 1
-  _networkIdentifier: chartboost
+  _networkIdentifier: audiencenetwork
   _androidAppId: 
   _iosAppId: 
-  _responseWaitTime: 30
+  _responseWaitTime: 0
   _bannerAdInstances: []
   _interstitialAdInstances: []
   _rewardAdInstances: []
-  _androidAppSignature: 
-  _iosAppSignature: 

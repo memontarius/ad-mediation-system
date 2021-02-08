@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45039d89696f84f44a6fb73830ab8b71, type: 3}
   m_Name: ApplovinSettings
   m_EditorClassIdentifier: 
-  _enabled: 1
-  _networkIdentifier: applovin
+  _enabled: 0
+  _networkIdentifier: 
   _androidAppId: 
   _iosAppId: 
-  _responseWaitTime: 30
+  _responseWaitTime: 0
   _bannerAdInstances: []
   _interstitialAdInstances: []
   _rewardAdInstances: []

@@ -1,5 +1,4 @@
-﻿
-#define _MS_APPLOVIN
+#define _AMS_APPLOVIN
 
 using System;
 using System.Collections;
@@ -24,7 +23,7 @@ namespace Virterix.AdMediation
         public AppLovinBannerPosition m_bannerPlacementPosX;
         public AppLovinBannerPosition m_bannerPlacementPosY;
 
-#if _MS_APPLOVIN
+#if _AMS_APPLOVIN
         private bool m_isBannerLoaded;
 
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonPlacements)
@@ -312,7 +311,7 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Incentivized, AdEvent.IncentivizedComplete, adInstance);
         }
 
-#endif // _MS_APPLOVIN
+#endif // _AMS_APPLOVIN
 
     }
 } // namespace Virterix.AdMediation

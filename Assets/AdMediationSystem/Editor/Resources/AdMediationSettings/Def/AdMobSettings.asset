@@ -9,24 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53fad2eb94f9f834496f439fcaf26267, type: 3}
-  m_Name: AudienceNetworkSettings
+  m_Script: {fileID: 11500000, guid: dd99f66217cd15b41a8fbdc77ce5c39d, type: 3}
+  m_Name: AdMobSettings
   m_EditorClassIdentifier: 
   _enabled: 1
-  _networkIdentifier: audiencenetwork
+  _networkIdentifier: admob
   _androidAppId: 
   _iosAppId: 
   _responseWaitTime: 0
-  _bannerAdInstances:
-  - _name: Default
-    _androidId: 
-    _iosId: 
-    _timeout: 90
-    _bannerType: 2
-  _interstitialAdInstances:
-  - _name: Default
-    _androidId: 
-    _iosId: 
-    _timeout: 90
-    _bannerType: 0
+  _bannerAdInstances: []
+  _interstitialAdInstances: []
   _rewardAdInstances: []

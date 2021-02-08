@@ -1,5 +1,4 @@
-﻿
-#define _MS_AUDIENCE_NETWORK
+#define _AMS_AUDIENCE_NETWORK
 
 using UnityEngine;
 using System;
@@ -8,7 +7,7 @@ using System.Collections.Generic;
 using Boomlagoon.JSON;
 using System.Linq;
 
-#if _MS_AUDIENCE_NETWORK
+#if _AMS_AUDIENCE_NETWORK
 using AudienceNetwork;
 #endif
 
@@ -51,7 +50,7 @@ namespace Virterix.AdMediation
             }
         }
 
-#if _MS_AUDIENCE_NETWORK
+#if _AMS_AUDIENCE_NETWORK
         class AudienceNetworkAdInstanceData : AdInstanceData
         {
             public AudienceNetworkAdInstanceData() : base()
@@ -690,7 +689,7 @@ namespace Virterix.AdMediation
 
         #endregion // Reward Video callback handlers
 
-#endif // _MS_AUDIENCE_NETWORK
+#endif // _AMS_AUDIENCE_NETWORK
 
     }
 

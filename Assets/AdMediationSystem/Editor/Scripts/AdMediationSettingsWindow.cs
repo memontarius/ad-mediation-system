@@ -37,9 +37,24 @@ namespace Virterix.AdMediation.Editor
         }
         private int _selectedTab;
 
+        private BaseAdNetworkSettings[] NetworkSettings
+        {
+            get
+            {
+                BaseAdNetworkSettings[] networksSettings = new BaseAdNetworkSettings[_networks.Count];
+                for (int i = 0; i < networksSettings.Length; i++)
+                {
+                    networksSettings[i] = _networks[i].Settings;
+                }
+                return networksSettings;
+            }
+        }
+
         private Vector2 _scrollPositioin;
         private List<BaseAdNetworkView> _networks = new List<BaseAdNetworkView>();
         private List<string> _activeNetworks = new List<string>();
+        private bool[] _networkEnabledStates;
+        private bool _wasFirstSetup;
 
         private int _selectedProject;
         private string[] _projectNames;
@@ -85,7 +100,7 @@ namespace Virterix.AdMediation.Editor
             {
                 bool isChanged = value != _projectName;
                 _projectName = value;
-                EditorPrefs.SetString(ProjectNameSaveKey, _projectName);
+                //EditorPrefs.SetString(ProjectNameSaveKey, _projectName);
                 if (isChanged)
                 {
                     Init(_projectName);
@@ -121,6 +136,7 @@ namespace Virterix.AdMediation.Editor
             }
             else
             {
+                _wasFirstSetup = true;
                 InitProjectNames();
             }
         }
@@ -278,6 +294,21 @@ namespace Virterix.AdMediation.Editor
             AddNetwork(new UnityAdsView(this, "Unity Ads", "unityads"));
             AddNetwork(new ApplovinView(this, "Applovin", "applovin"));
             AddNetwork(new ChartboostView(this, "Chartboost", "chartboost"));
+
+            if (_networkEnabledStates == null)
+            {
+                _networkEnabledStates = new bool[_networks.Count];
+                for(int i = 0; i < _networkEnabledStates.Length; i++)
+                {
+                    _networkEnabledStates[i] = _wasFirstSetup ? false : false;
+                }
+            }
+
+            AdMediationSettingsBuilder.SetupNetworkScripts(NetworkSettings, _wasFirstSetup, _networkEnabledStates);
+            for (int i = 0; i < _networks.Count; i++)
+            {
+                _networkEnabledStates[i] = _networks[i].Settings._enabled;
+            }
 
             UpdateActiveNetworks();
         }
@@ -490,12 +521,16 @@ namespace Virterix.AdMediation.Editor
         {
             EditorGUILayout.Space();
             GUILayout.Label("Networks", EditorStyles.boldLabel);          
-            foreach (BaseAdNetworkView network in _networks)
+            for (int i = 0; i < _networks.Count; i++)
             {
+                BaseAdNetworkView network = _networks[i];
                 GUILayout.BeginVertical("helpbox");
                 bool activationChanged = network.DrawUI();
                 if (activationChanged)
                 {
+                    _networkEnabledStates[i] = network.Settings._enabled;
+                    network.Settings.SetupNetworkAdapterScript();
+                    //AssetDatabase.Refresh();
                     UpdateActiveNetworks();
                 }
                 GUILayout.EndVertical();
@@ -523,23 +558,17 @@ namespace Virterix.AdMediation.Editor
 
             string androidAdSettingsPath = string.Format("{0}/{1}", path, "android_settings.json");
             string iosAdSettingsPath = string.Format("{0}/{1}", path, "ios_settings.json");
-
-            BaseAdNetworkSettings[] networksSettings = new BaseAdNetworkSettings[_networks.Count];
-            for(int i = 0; i < networksSettings.Length; i++)
-            {
-                networksSettings[i] = _networks[i].Settings;
-            }
+            BaseAdNetworkSettings[] networksSettings = NetworkSettings;
 
             List<AdUnitMediator> mediators = new List<AdUnitMediator>();
             AdMediationSettingsBuilder.FillMediators(ref mediators, _projectSettings._bannerMediators);
             AdMediationSettingsBuilder.FillMediators(ref mediators, _projectSettings._interstitialMediators);
             AdMediationSettingsBuilder.FillMediators(ref mediators, _projectSettings._incentivizedMediators);
 
-            AdMediationSettingsBuilder.SetupNetworkScripts(networksSettings);
             AdMediationSettingsBuilder.BuildBannerAdInstanceParameters(CurrProjectName, networksSettings, _projectSettings._bannerMediators.ToArray());
             var prefab = AdMediationSettingsBuilder.BuildSystemPrefab(CurrProjectName, _projectSettings, networksSettings, mediators.ToArray());
-            EditorUtility.FocusProjectWindow();
-            Selection.activeObject = prefab;
+            //EditorUtility.FocusProjectWindow();
+            //Selection.activeObject = prefab;
 
             if (IsAndroid)
             {

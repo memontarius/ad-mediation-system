@@ -121,12 +121,17 @@ namespace Virterix.AdMediation.Editor
             }
         }
 
-        public static void SetupNetworkScripts(BaseAdNetworkSettings[] networkSettings)
+        public static void SetupNetworkScripts(BaseAdNetworkSettings[] networkSettings, bool forceSetup, bool[] networkPreviousEnabledStates = null)
         {
-            foreach(var network in networkSettings)
+            for (int i = 0; i < networkSettings.Length && i < networkPreviousEnabledStates.Length; i++)
             {
-                network.SetupNetworkAdapterScript();
+                var network = networkSettings[i];
+                if (forceSetup || network._enabled != networkPreviousEnabledStates[i])
+                {
+                    network.SetupNetworkAdapterScript();
+                }             
             }
+            //AssetDatabase.Refresh();
         }
 
         //-------------------------------------------------------------
@@ -232,7 +237,7 @@ namespace Virterix.AdMediation.Editor
                         }
                     }
 
-                    if (settings.IsAdInstanceSupported)
+                    if (!settings.IsTotallyAdInstanceUnsupported)
                     {
                         jsonNetwork.Add("instances", CreateAdnstances(settings, platform));
                     }

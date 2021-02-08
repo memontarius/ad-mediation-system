@@ -1,5 +1,4 @@
-﻿
-#define _MS_POLLFISH
+﻿#define _AMS_POLLFISH
 
 using UnityEngine;
 using System.Collections;
@@ -52,7 +51,7 @@ namespace Virterix.AdMediation
         private Coroutine m_procAutoPrepereSurvey;
         private AdInstanceData m_adInstance;
 
-#if _MS_POLLFISH
+#if _AMS_POLLFISH
 
         private void Awake()
         {
@@ -450,10 +449,10 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Incentivized, AdEvent.FailedPreparation, null);
         }
 
-            #endregion // Pollfish callback
+        #endregion // Pollfish callback
 
-#endif // _MS_POLLFISH
+#endif // _AMS_POLLFISH
 
-        }
-    } // namespace Virterix.AdMediation
+    }
+} // namespace Virterix.AdMediation
 

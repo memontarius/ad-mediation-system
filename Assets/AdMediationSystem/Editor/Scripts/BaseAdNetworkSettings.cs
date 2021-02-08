@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using System.Text;
 
 namespace Virterix.AdMediation.Editor
 {
@@ -36,15 +38,31 @@ namespace Virterix.AdMediation.Editor
         public List<AdInstance> _interstitialAdInstances = new List<AdInstance>();
         public List<AdInstance> _rewardAdInstances = new List<AdInstance>();
 
-        public virtual bool IsAdInstanceSupported
-        {
-            get;
-        } = true;
-
         public virtual System.Type NetworkAdapterType
         {
             get;
         }
+
+        public bool IsTotallyAdInstanceUnsupported
+        {
+            get
+            {
+                bool isTotallyUnsupported = true;
+                AdType[] adTypes = System.Enum.GetValues(typeof(AdType)) as AdType[];
+                foreach(var adType in adTypes)
+                {
+                    if (adType != AdType.Unknown && IsAdInstanceSupported(adType))
+                    {
+                        isTotallyUnsupported = false;
+                        break;
+                    }
+                }
+                return isTotallyUnsupported;
+            }
+        }
+
+        protected virtual string AdapterScriptName { get; }
+        protected virtual string AdapterDefinePeprocessorKey { get; }
 
         public virtual Dictionary<string, object> GetSpecificNetworkParameters()
         {
@@ -61,14 +79,42 @@ namespace Virterix.AdMediation.Editor
         {
         }
 
-        public virtual void SetupNetworkAdapterScript()
+        public void SetupNetworkAdapterScript()
         {
+            Debug.Log("SetupNetworkAdapterScript() " + _networkIdentifier);
+
+            string adapterPath = string.Format("{0}/{1}/{2}.cs", Application.dataPath, "AdMediationSystem/Scripts/Adapters", AdapterScriptName);
+
+            string content = File.ReadAllText(adapterPath);
+            if (content.Length > 0)
+            {
+                string define = "#define " + AdapterDefinePeprocessorKey;
+                string undefine = "//#define " + AdapterDefinePeprocessorKey;
+
+                if (_enabled)
+                {
+                    content = content.Replace(undefine, define);
+                }
+                else
+                {
+                    if (!content.Contains(undefine))
+                    {
+                        content = content.Replace(define, undefine);
+                    }
+                }
+                File.WriteAllText(adapterPath, content);
+            }
         }
 
         public virtual bool IsAdSupported(AdType adType)
         {
             return false;
         }
+
+        public virtual bool IsAdInstanceSupported(AdType adType)
+        {
+            return true;
+        } 
 
         public virtual bool IsCheckAvailabilityWhenPreparing(AdType adType)
         {

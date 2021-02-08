@@ -1,12 +1,11 @@
-﻿
-#define _MS_CHARTBOOST
+//#define _AMS_CHARTBOOST
 
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Boomlagoon.JSON;
 
-#if _MS_CHARTBOOST
+#if _AMS_CHARTBOOST
 using ChartboostSDK;
 #endif
 
@@ -15,7 +14,7 @@ namespace Virterix.AdMediation
     public class ChartboostAdapter : AdNetworkAdapter
     {
 
-#if _MS_CHARTBOOST
+#if _AMS_CHARTBOOST
 
         private AdInstanceData m_interstitialInstance;
         private AdInstanceData m_incentivizedInstance;
@@ -230,6 +229,6 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Incentivized, AdEvent.Hide, m_incentivizedInstance);
         }
 
-#endif // _MS_CHARTBOOST
+#endif // _AMS_CHARTBOOST
     }
 } // namespace Virterix.AdMediation

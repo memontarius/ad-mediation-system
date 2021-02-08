@@ -1,4 +1,4 @@
-#define _MS_ADMOB
+#define _AMS_ADMOB
 
 using UnityEngine;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Boomlagoon.JSON;
 using System.Linq;
 
-#if _MS_ADMOB
+#if _AMS_ADMOB
 using GoogleMobileAds;
 using GoogleMobileAds.Api;
 #endif
@@ -52,8 +52,8 @@ namespace Virterix.AdMediation
                 return AdMobAdInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER;
             }
         }
-        
-#if _MS_ADMOB
+
+#if _AMS_ADMOB
         public class AdMobAdInstanceData : AdInstanceData
         {
             public AdMobAdInstanceData() : base()
@@ -670,6 +670,6 @@ namespace Virterix.AdMediation
 
         #endregion // Reward Video callback handlers
 
-#endif // _MS_ADMOB
+#endif // _AMS_ADMOB
     }
 } // namespace Virterix.AdMediation

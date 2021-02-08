@@ -1,8 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace Virterix.AdMediation.Editor
 {
@@ -10,6 +7,9 @@ namespace Virterix.AdMediation.Editor
     public class AdMobSettings : BaseAdNetworkSettings
     {
         public override Type NetworkAdapterType => typeof(AdMobAdapter);
+
+        protected override string AdapterScriptName => "AdMobAdapter";
+        protected override string AdapterDefinePeprocessorKey => "_AMS_ADMOB";
 
         public override bool IsAdSupported(AdType adType)
         {
@@ -24,33 +24,6 @@ namespace Virterix.AdMediation.Editor
         public override void SetupNetworkAdapter(Component networkAdapter)
         {
             var adapter = networkAdapter as AdMobAdapter;
-        }
-
-        public override void SetupNetworkAdapterScript()
-        {
-            string adapterPath = string.Format("{0}/{1}", Application.dataPath, "AdMediationSystem/Scripts/Adapters/AdMobAdapter.cs");
-
-            Debug.Log(adapterPath);
-
-            string content = File.ReadAllText(adapterPath);
-            if (content.Length > 0)
-            {
-                string define = "#define _MS_ADMOB";
-                string undefine = "//#define _MS_ADMOB";
-
-                if (_enabled)
-                {
-                    content = content.Replace(undefine, define);
-                }
-                else
-                {
-                    if (!content.Contains(undefine))
-                    {
-                        content = content.Replace(define, undefine);
-                    }
-                }
-                File.WriteAllText(adapterPath, content);
-            }
         }
 
         public override AdInstanceParameters CreateBannerAdInstanceParameters(string projectNme, string name, int bannerType, BannerPositionContainer[] bannerPositions)

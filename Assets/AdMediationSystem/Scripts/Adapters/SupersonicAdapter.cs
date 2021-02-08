@@ -1,5 +1,4 @@
-﻿
-//#define _MS_IRONSOURCE
+﻿//#define _AMS_IRONSOURCE
 
 using UnityEngine;
 using System.Collections;
@@ -13,7 +12,7 @@ namespace Virterix.AdMediation
         public string m_defaultIOSAppKey = "";
         public bool m_isValidateIntegrationCall = false;
 
-#if _MS_IRONSOURCE
+#if _AMS_IRONSOURCE
 
         void SubscribeEvents()
         {
@@ -292,7 +291,7 @@ namespace Virterix.AdMediation
 
         }
 
-#endif // _MS_IRONSOURCE
+#endif // _AMS_IRONSOURCE
 
     }
 } // namespace Virterix.AdMediation
