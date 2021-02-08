@@ -19,10 +19,10 @@ namespace Virterix.AdMediation.Editor
         {
             string resourceFolder = "Resources";
             string resourcePath = "Assets/" + resourceFolder;
-            string settingDirectoryPath = string.Format("{0}/{1}", resourcePath, AdMediationSystem._AD_SETTINGS_FOLDER);
+            string settingDirectoryPath = string.Format("{0}/{1}", resourcePath, AdMediationSystem.AD_SETTINGS_FOLDER);
             string projectSettingsPath = string.Format("{0}/{1}", settingDirectoryPath, projectName);
             string resultPath = string.Format("{0}/{1}/{2}", includeAssets ? resourcePath : resourceFolder,
-                AdMediationSystem._AD_SETTINGS_FOLDER, projectName);
+                AdMediationSystem.AD_SETTINGS_FOLDER, projectName);
 
             if (!AssetDatabase.IsValidFolder(resourcePath))
             {
@@ -30,7 +30,7 @@ namespace Virterix.AdMediation.Editor
             }
             if (!AssetDatabase.IsValidFolder(settingDirectoryPath))
             {
-                AssetDatabase.CreateFolder(resourcePath, AdMediationSystem._AD_SETTINGS_FOLDER);
+                AssetDatabase.CreateFolder(resourcePath, AdMediationSystem.AD_SETTINGS_FOLDER);
             }
             if (!AssetDatabase.IsValidFolder(projectSettingsPath))
             {
@@ -86,7 +86,7 @@ namespace Virterix.AdMediation.Editor
             JSONObject json = new JSONObject();
             json.Add("projectName", projectName);
             json.Add("networkResponseWaitTime", 30);
-            json.Add("mediators", CreateMediators(projectName, projectSettings, mediators));
+            json.Add("mediators", CreateMediators(projectName, projectSettings, mediators, networkSettings));
             json.Add("networks", CreateNetworks(networkSettings, platform));
 
             return json.ToString();
@@ -115,16 +115,25 @@ namespace Virterix.AdMediation.Editor
                         string name = adInstanceDataHolder._adInstance._name;
                         int bannerType = adInstanceDataHolder._adInstance._bannerType;
                         var bannerPositions = FindBannerPositions(adInstanceDataHolder, mediators);
-                        network.CreateBannerAdInstanceParameters(projectName, name, bannerType, bannerPositions);
+                        var adInstanceParameters = network.CreateBannerAdInstanceParameters(projectName, name, bannerType, bannerPositions);
                     }
                 }
+            }
+        }
+
+        public static void SetupNetworkScripts(BaseAdNetworkSettings[] networkSettings)
+        {
+            foreach(var network in networkSettings)
+            {
+                network.SetupNetworkAdapterScript();
             }
         }
 
         //-------------------------------------------------------------
         #region Json Settings
 
-        private static JSONArray CreateMediators(string projectName, AdMediationProjectSettings settings, AdUnitMediator[] mediators)
+        private static JSONArray CreateMediators(string projectName, AdMediationProjectSettings settings, 
+            AdUnitMediator[] mediators, BaseAdNetworkSettings[] networkSettings)
         {
             JSONArray jsonMediators = new JSONArray();
             foreach (AdUnitMediator mediator in mediators)
@@ -176,9 +185,9 @@ namespace Virterix.AdMediation.Editor
             if (adUnit._prepareOnExit)
             {
                 jsonUnit.Add("prepareOnExit", adUnit._prepareOnExit);
-            }
-
-            switch(mediator._fetchStrategyType)
+            }         
+            
+            switch (mediator._fetchStrategyType)
             {
                 case FetchStrategyType.Sequence:
                     if (adUnit._replaced)
@@ -251,6 +260,10 @@ namespace Virterix.AdMediation.Editor
                 {
                     jsonAdInstance.Add("param", adInstanceHolder._adInstance._name);
                 }
+                if (networkSettings._responseWaitTime != AdMediationSystem.DEFAULT_NETWORK_RESPONSE_WAIT_TIME)
+                {
+                    jsonAdInstance.Add("responseWaitTime", networkSettings._responseWaitTime);
+                }
 
                 string adUnitId = "";
                 switch(platform)
@@ -293,13 +306,18 @@ namespace Virterix.AdMediation.Editor
 
             GameObject mediatorHolder = new GameObject("Mediators");
             mediatorHolder.transform.SetParent(mediationSystemObject.transform);
-
+            
             GameObject bannerMediatorHolder = new GameObject("Banner");
             bannerMediatorHolder.transform.SetParent(mediatorHolder.transform);
+            FillMediatorHolder(bannerMediatorHolder, settings._bannerMediators);
+
             GameObject interstitialMediatorHolder = new GameObject("Interstitial");
             interstitialMediatorHolder.transform.SetParent(mediatorHolder.transform);
+            FillMediatorHolder(interstitialMediatorHolder, settings._interstitialMediators);
+
             GameObject incentivizedMediatorHolder = new GameObject("Incentivized");
             incentivizedMediatorHolder.transform.SetParent(mediatorHolder.transform);
+            FillMediatorHolder(incentivizedMediatorHolder, settings._incentivizedMediators);
 
             return mediationSystemObject;
         }
@@ -322,13 +340,28 @@ namespace Virterix.AdMediation.Editor
                         {
                             var supportedParam = new AdNetworkAdapter.AdParam();
                             supportedParam.m_adType = adTypes[i];
-                            supportedParam.m_isCheckAvailabilityWhenPreparing = false;
+                            supportedParam.m_isCheckAvailabilityWhenPreparing = network.IsCheckAvailabilityWhenPreparing(supportedParam.m_adType);
                             adSupportedParams.Add(supportedParam);
                         }
                     }
+                    adapter.m_networkName = network._networkIdentifier;
                     adapter.m_adSupportParams = adSupportedParams.ToArray();
                     network.SetupNetworkAdapter(adapter);
                 }
+            }
+        }
+
+        private static void FillMediatorHolder(GameObject mediatorHolder, List<AdUnitMediator> mediators)
+        {
+            foreach (var model in mediators)
+            {
+                AdMediator mediator = mediatorHolder.AddComponent<AdMediator>();
+                mediator.m_adType = model._adType;
+                mediator.m_placementName = model._name;
+                mediator.m_isAutoFetchWhenHide = model._isAutoFetchOnHide;
+                mediator.m_isContinueAfterEndSession = model._isContinueAfterEndSession;
+                mediator.m_minDisplayTimeBannerAdType = model._adType == AdType.Banner ? model._bannerMinDisplayTime : 0;
+                mediator.m_deferredFetchDelay = model._adType == AdType.Incentivized ? model._deferredFetchDelay : -1;
             }
         }
 

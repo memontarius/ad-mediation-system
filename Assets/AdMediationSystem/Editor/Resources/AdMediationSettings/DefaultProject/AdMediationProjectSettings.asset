@@ -16,7 +16,7 @@ MonoBehaviour:
   _personalizeAdsOnInit: 1
   _bannerMediators:
   - _adType: 1
-    _name: Bottom
+    _name: Default
     _isContinueAfterEndSession: 1
     _isAutoFetchOnHide: 1
     _bannerMinDisplayTime: 30
@@ -28,21 +28,39 @@ MonoBehaviour:
       - _networkName: AdMob
         _networkIndex: 0
         _networkIdentifier: admob
-        _instanceIndex: 1
-        _instanceName: DefaultHighCPM
+        _instanceIndex: 0
+        _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 0
+        _percentage: 87
       - _networkName: AdMob
         _networkIndex: 0
         _networkIdentifier: admob
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0
-        _prepareOnExit: 1
+        _prepareOnExit: 0
+        _percentage: 13
+      - _networkName: Audience Network
+        _networkIndex: 1
+        _networkIdentifier: audiencenetwork
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
         _percentage: 0
   - _adType: 1
-    _name: Top
+    _name: 
+    _isContinueAfterEndSession: 1
+    _isAutoFetchOnHide: 1
+    _bannerMinDisplayTime: 30
+    _deferredFetchDelay: 90
+    _fetchStrategyType: 0
+    _bannerPosition: 0
+    _tiers: []
+  _interstitialMediators:
+  - _adType: 2
+    _name: Default
     _isContinueAfterEndSession: 1
     _isAutoFetchOnHide: 1
     _bannerMinDisplayTime: 30
@@ -51,23 +69,32 @@ MonoBehaviour:
     _bannerPosition: 0
     _tiers:
     - _units:
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
+      - _networkName: Chartboost
+        _networkIndex: 4
+        _networkIdentifier: chartboost
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 0
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 1
-        _instanceName: DefaultHighCPM
+      - _networkName: Unity Ads
+        _networkIndex: 2
+        _networkIdentifier: unityads
+        _instanceIndex: 0
+        _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 0
-  _interstitialMediators: []
-  _incentivizedMediators: []
+  _incentivizedMediators:
+  - _adType: 3
+    _name: Default
+    _isContinueAfterEndSession: 1
+    _isAutoFetchOnHide: 1
+    _bannerMinDisplayTime: 30
+    _deferredFetchDelay: 90
+    _fetchStrategyType: 1
+    _bannerPosition: 0
+    _tiers:
+    - _units: []
   _isIOS: 1
   _isAndroid: 1

@@ -29,7 +29,7 @@ namespace Virterix.AdMediation
         }
 
 #if UNITY_EDITOR
-        [MenuItem("Tools/Ad Mediation/AdMob/Create Banner Parameters")]
+        //[MenuItem("Tools/Ad Mediation/AdMob/Create Banner Parameters")]
         public static AdInstanceParameters CreateParameters()
         {
             var parameters = CreateParameters<AdMobAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME);

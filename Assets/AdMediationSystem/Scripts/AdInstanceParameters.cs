@@ -36,12 +36,12 @@ namespace Virterix.AdMediation
         public static T CreateParameters<T>(string projectName, string parameterFolder, string parameterFileName) where T : AdInstanceParameters
         {
             string fullPath = CreateAdInstanceDirectory(projectName, parameterFolder);
-            string searchPattern = "*" + AdMediationSystem._AD_INSTANCE_PARAMETERS_FILE_EXTENSION;
+            string searchPattern = "*" + AdMediationSystem.AD_INSTANCE_PARAMETERS_FILE_EXTENSION;
             string[] files = Directory.GetFiles(fullPath, searchPattern, SearchOption.TopDirectoryOnly);
             string path = string.Format(System.Globalization.CultureInfo.InvariantCulture, 
                 "Assets/{0}/{1}/{2}", AdMediationSystem.GetAdInstanceParametersPath(projectName), parameterFolder, parameterFileName);
             //path += (files.Length == 0 ? "" : " " + (files.Length + 1)) + AdMediationSystem._AD_INSTANCE_PARAMETERS_FILE_EXTENSION;
-            path += AdMediationSystem._AD_INSTANCE_PARAMETERS_FILE_EXTENSION;
+            path += AdMediationSystem.AD_INSTANCE_PARAMETERS_FILE_EXTENSION;
 
             T asset = ScriptableObject.CreateInstance<T>();
             AssetDatabase.CreateAsset(asset, path);

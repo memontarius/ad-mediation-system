@@ -61,11 +61,19 @@ namespace Virterix.AdMediation.Editor
         {
         }
 
+        public virtual void SetupNetworkAdapterScript()
+        {
+        }
+
         public virtual bool IsAdSupported(AdType adType)
         {
             return false;
         }
 
+        public virtual bool IsCheckAvailabilityWhenPreparing(AdType adType)
+        {
+            return false;
+        }
 
         public AdInstanceGenerateDataContainer[] GetAllAdInstanceDataHolders()
         {

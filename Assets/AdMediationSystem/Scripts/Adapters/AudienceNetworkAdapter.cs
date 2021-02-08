@@ -107,7 +107,7 @@ namespace Virterix.AdMediation
             return adInstance;
         }
 
-        public override void Prepare(AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        public override void Prepare(AdInstanceData adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AudienceNetworkAdInstanceData audienceNetworkAdInstance = adInstance as AudienceNetworkAdInstanceData;
             AdType adType = adInstance.m_adType;
@@ -129,7 +129,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool Show(AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        public override bool Show(AdInstanceData adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AudienceNetworkAdInstanceData audienceNetworkAdInstance = adInstance == null ? null : adInstance as AudienceNetworkAdInstanceData;
             AdType adType = adInstance.m_adType;

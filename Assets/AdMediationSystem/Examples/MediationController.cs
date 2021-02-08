@@ -56,15 +56,15 @@ public class MediationController : MonoBehaviour {
 
     public void FetchInterstitial() {
         AdMediationSystem.Fetch(AdType.Interstitial);
-        UpdateAdInfo(null, AdType.Interstitial, AdMediationSystem._PLACEMENT_DEFAULT_NAME);
+        UpdateAdInfo(null, AdType.Interstitial, AdMediationSystem.PLACEMENT_DEFAULT_NAME);
     }
 
     public void FetchRewardVideo() {
         AdMediationSystem.Fetch(AdType.Incentivized);
-        UpdateAdInfo(null, AdType.Incentivized, AdMediationSystem._PLACEMENT_DEFAULT_NAME);
+        UpdateAdInfo(null, AdType.Incentivized, AdMediationSystem.PLACEMENT_DEFAULT_NAME);
     }
 
-    public void FetchBanner(string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME) {
+    public void FetchBanner(string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME) {
         AdMediationSystem.Fetch(AdType.Banner, placement);
         UpdateAdInfo(null, AdType.Banner, placement);
     }
@@ -77,11 +77,11 @@ public class MediationController : MonoBehaviour {
         AdMediationSystem.Show(AdType.Incentivized);
     }
 
-    public void ShowBanner(string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME) {
+    public void ShowBanner(string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME) {
         AdMediationSystem.Show(AdType.Banner, placement);
     }
 
-    public void HideBanner(string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME) {
+    public void HideBanner(string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME) {
         AdMediationSystem.Hide(AdType.Banner, placement);
     }
 
@@ -175,7 +175,7 @@ public class MediationController : MonoBehaviour {
                 guiText = m_rewardVideoInfoText;
                 break;
             case AdType.Banner:
-                if (placement == AdMediationSystem._PLACEMENT_DEFAULT_NAME) {
+                if (placement == AdMediationSystem.PLACEMENT_DEFAULT_NAME) {
                     guiText = m_bannerInfoText;
                 }
                 else if (placement == "Top") {

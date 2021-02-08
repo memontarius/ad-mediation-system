@@ -14,66 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _initializeOnStart: 1
   _personalizeAdsOnInit: 1
-  _bannerMediators:
-  - _adType: 1
-    _name: 
-    _fetchStrategyType: 1
-    _bannerPosition: 0
-    _tiers:
-    - _units:
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 100
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 0
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 0
-    - _units:
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 0
-    - _units:
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 0
-  - _adType: 1
-    _name: 
-    _fetchStrategyType: 1
-    _bannerPosition: 0
-    _tiers: []
+  _bannerMediators: []
   _interstitialMediators: []
-  _incentivizedMediators:
-  - _adType: 3
-    _name: 
-    _fetchStrategyType: 0
-    _bannerPosition: 0
-    _tiers: []
+  _incentivizedMediators: []
   _isIOS: 1
   _isAndroid: 1

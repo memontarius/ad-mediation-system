@@ -181,6 +181,7 @@ namespace Virterix.AdMediation.Editor
                         {
                             case FetchStrategyType.Sequence:
                                 paramsRect.x += paramsRect.width + 5;
+                                paramsRect.width = 75;
                                 var replacedProp = unitElement.FindPropertyRelative("_replaced");
                                 replacedProp.boolValue = EditorGUI.ToggleLeft(paramsRect, "Replaced", replacedProp.boolValue);
                                 break;

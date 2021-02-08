@@ -1,4 +1,3 @@
-﻿
 #define _MS_ADMOB
 
 using UnityEngine;
@@ -144,7 +143,7 @@ namespace Virterix.AdMediation
         {
         }
 
-        public override void Prepare(AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        public override void Prepare(AdInstanceData adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
             AdType adType = adInstance.m_adType;
@@ -166,7 +165,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool Show(AdInstanceData adInstance = null, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        public override bool Show(AdInstanceData adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
             AdType adType = adInstance.m_adType;
@@ -318,7 +317,7 @@ namespace Virterix.AdMediation
             return admobAdPosition;
         }
 
-        private void RequestBanner(AdMobAdInstanceData adInstance, string placement = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        private void RequestBanner(AdMobAdInstanceData adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             DestroyBanner(adInstance);
 

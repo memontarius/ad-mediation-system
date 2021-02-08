@@ -38,7 +38,7 @@ namespace Virterix.AdMediation.Editor
         private int _selectedTab;
 
         private Vector2 _scrollPositioin;
-        private List<BaseAdNetworkSettingsView> _networks = new List<BaseAdNetworkSettingsView>();
+        private List<BaseAdNetworkView> _networks = new List<BaseAdNetworkView>();
         private List<string> _activeNetworks = new List<string>();
 
         private int _selectedProject;
@@ -181,9 +181,9 @@ namespace Virterix.AdMediation.Editor
             return string.Format("{0}/{1}", CommonAdSettingsFolderPath, projectName);
         }
 
-        public BaseAdNetworkSettingsView GetNetworkView(string networkName)
+        public BaseAdNetworkView GetNetworkView(string networkName)
         {
-            BaseAdNetworkSettingsView foundView = null;
+            BaseAdNetworkView foundView = null;
             foreach (var view in _networks)
             {
                 if (view.Name == networkName)
@@ -272,13 +272,19 @@ namespace Virterix.AdMediation.Editor
         private void InitNetworksSettings()
         {
             _networks.Clear();
-            BaseAdNetworkSettingsView network = new AdNetworkAdMobSettingsView(this, "AdMob", "admob");
-            _networks.Add(network);
 
-            network = new AdNetworkUnitySettingsView(this, "Unity Ads", "unityads");
-            _networks.Add(network);
-            
+            AddNetwork(new AdMobView(this, "AdMob", "admob"));
+            AddNetwork(new AudienceNetworkView(this, "Audience Network", "audiencenetwork"));
+            AddNetwork(new UnityAdsView(this, "Unity Ads", "unityads"));
+            AddNetwork(new ApplovinView(this, "Applovin", "applovin"));
+            AddNetwork(new ChartboostView(this, "Chartboost", "chartboost"));
+
             UpdateActiveNetworks();
+        }
+
+        private void AddNetwork(BaseAdNetworkView networkView)
+        {
+            _networks.Add(networkView);
         }
 
         private void InitMediators()
@@ -484,7 +490,7 @@ namespace Virterix.AdMediation.Editor
         {
             EditorGUILayout.Space();
             GUILayout.Label("Networks", EditorStyles.boldLabel);          
-            foreach (BaseAdNetworkSettingsView network in _networks)
+            foreach (BaseAdNetworkView network in _networks)
             {
                 GUILayout.BeginVertical("helpbox");
                 bool activationChanged = network.DrawUI();
@@ -529,6 +535,7 @@ namespace Virterix.AdMediation.Editor
             AdMediationSettingsBuilder.FillMediators(ref mediators, _projectSettings._interstitialMediators);
             AdMediationSettingsBuilder.FillMediators(ref mediators, _projectSettings._incentivizedMediators);
 
+            AdMediationSettingsBuilder.SetupNetworkScripts(networksSettings);
             AdMediationSettingsBuilder.BuildBannerAdInstanceParameters(CurrProjectName, networksSettings, _projectSettings._bannerMediators.ToArray());
             var prefab = AdMediationSettingsBuilder.BuildSystemPrefab(CurrProjectName, _projectSettings, networksSettings, mediators.ToArray());
             EditorUtility.FocusProjectWindow();

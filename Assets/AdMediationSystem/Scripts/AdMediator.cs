@@ -31,7 +31,7 @@ namespace Virterix.AdMediation
         IFetchStrategy m_fetchStrategy;
 
         public AdType m_adType;
-        public string m_placementName = AdMediationSystem._PLACEMENT_DEFAULT_NAME;
+        public string m_placementName = AdMediationSystem.PLACEMENT_DEFAULT_NAME;
         public bool m_isAutoFetchWhenHide;
         [Tooltip("If a banner type ad is displayed longer than set value, when ad hide then performs the fetch. (In Seconds)")]
         public float m_minDisplayTimeBannerAdType = 0f;

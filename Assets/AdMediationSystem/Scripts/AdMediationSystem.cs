@@ -17,11 +17,13 @@ namespace Virterix.AdMediation
 
     public class AdMediationSystem : Singleton<AdMediationSystem>
     {
-        public const string _AD_SETTINGS_FOLDER = "AdMediationSettings";
-        public const string _PLACEMENT_DEFAULT_NAME = "Default";
+        public const string AD_SETTINGS_FOLDER = "AdMediationSettings";
+        public const string PLACEMENT_DEFAULT_NAME = "Default";
 
-        public const string _AD_INSTANCE_PARAMETERS_ROOT_FOLDER = "AdInstanceParameters";
-        public const string _AD_INSTANCE_PARAMETERS_FILE_EXTENSION = ".asset";
+        public const string AD_INSTANCE_PARAMETERS_ROOT_FOLDER = "AdInstanceParameters";
+        public const string AD_INSTANCE_PARAMETERS_FILE_EXTENSION = ".asset";
+
+        public const int DEFAULT_NETWORK_RESPONSE_WAIT_TIME = 30;
 
         public enum AdSettingsCompareMode
         {
@@ -47,9 +49,9 @@ namespace Virterix.AdMediation
         #region Configuration variables
         //-------------------------------------------------------------------------------
 
-        private const string _HASH_SAVE_KEY = "adm.settings.hash";
-        private const string _PERSONALIZED_ADS_SAVE_KEY = "adm.ads.personalized";
-        private const string _SETTINGS_VERSION_PARAM_KEY = "adm.settings.version";
+        private const string HASH_SAVE_KEY = "adm.settings.hash";
+        private const string PERSONALIZED_ADS_SAVE_KEY = "adm.ads.personalized";
+        private const string SETTINGS_VERSION_PARAM_KEY = "adm.settings.version";
 
         #endregion // Configuration variables
 
@@ -145,7 +147,7 @@ namespace Virterix.AdMediation
         {
             get;
             private set;
-        } = 30f;
+        } = AdMediationSystem.DEFAULT_NETWORK_RESPONSE_WAIT_TIME;
 
         private string SettingsFileName
         {
@@ -156,7 +158,7 @@ namespace Virterix.AdMediation
         {
             get
             {
-                string settingsFilePath = _AD_SETTINGS_FOLDER + "/" + m_projectName + "/" + SettingsFileName;
+                string settingsFilePath = AD_SETTINGS_FOLDER + "/" + m_projectName + "/" + SettingsFileName;
                 return settingsFilePath;
             }
         }
@@ -179,9 +181,9 @@ namespace Virterix.AdMediation
                 int settingsVersion = -1;
                 if (m_currSettings != null)
                 {
-                    if (m_currSettings.ContainsKey(_SETTINGS_VERSION_PARAM_KEY))
+                    if (m_currSettings.ContainsKey(SETTINGS_VERSION_PARAM_KEY))
                     {
-                        settingsVersion = Convert.ToInt32(m_currSettings.GetValue(_SETTINGS_VERSION_PARAM_KEY).Number);
+                        settingsVersion = Convert.ToInt32(m_currSettings.GetValue(SETTINGS_VERSION_PARAM_KEY).Number);
                     }
                 }
                 return settingsVersion;
@@ -197,7 +199,7 @@ namespace Virterix.AdMediation
 
         private void Awake()
         {
-            m_isPersonalizedAds = PlayerPrefs.GetInt(_PERSONALIZED_ADS_SAVE_KEY, 1) == 1 ? true : false;
+            m_isPersonalizedAds = PlayerPrefs.GetInt(PERSONALIZED_ADS_SAVE_KEY, 1) == 1 ? true : false;
             if (m_remoteSettingsProvider != null)
             {
                 m_remoteSettingsProvider.OnSettingsReceived += OnRemoteSettingsReceived;
@@ -300,8 +302,8 @@ namespace Virterix.AdMediation
         public static string GetAdInstanceParametersPath(string projectPath)
         {
             string path = String.Format(System.Globalization.CultureInfo.InvariantCulture,
-                    "Resources/{0}/{1}/{2}", _AD_SETTINGS_FOLDER, projectPath,
-                    AdMediationSystem._AD_INSTANCE_PARAMETERS_ROOT_FOLDER);
+                    "Resources/{0}/{1}/{2}", AD_SETTINGS_FOLDER, projectPath,
+                    AdMediationSystem.AD_INSTANCE_PARAMETERS_ROOT_FOLDER);
             return path;
         }
 
@@ -322,7 +324,7 @@ namespace Virterix.AdMediation
             return foundNetwork;
         }
 
-        public AdMediator GetMediator(AdType adType, string placementName = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        public AdMediator GetMediator(AdType adType, string placementName = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdMediator foundMediator = null;
             foreach (AdMediator mediator in m_mediators)
@@ -349,7 +351,7 @@ namespace Virterix.AdMediation
             return mediators.ToArray();
         }
 
-        public static void Fetch(AdType adType, string placementName = AdMediationSystem._PLACEMENT_DEFAULT_NAME, Hashtable parameters = null)
+        public static void Fetch(AdType adType, string placementName = AdMediationSystem.PLACEMENT_DEFAULT_NAME, Hashtable parameters = null)
         {
             AdMediator mediator = Instance.GetMediator(adType, placementName);
             if (mediator != null)
@@ -362,7 +364,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public static void Show(AdType adType, string placementName = AdMediationSystem._PLACEMENT_DEFAULT_NAME, Hashtable parameters = null)
+        public static void Show(AdType adType, string placementName = AdMediationSystem.PLACEMENT_DEFAULT_NAME, Hashtable parameters = null)
         {
             AdMediator mediator = Instance.GetMediator(adType, placementName);
             if (mediator != null)
@@ -375,7 +377,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public static void Hide(AdType adType, string placementName = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        public static void Hide(AdType adType, string placementName = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdMediator mediator = Instance.GetMediator(adType, placementName);
             if (mediator != null)
@@ -401,7 +403,7 @@ namespace Virterix.AdMediation
         public void SetPersonalizedAds(bool isPersonalizedAds, bool isAnalyticsControl = true)
         {
             m_isPersonalizedAds = isPersonalizedAds;
-            PlayerPrefs.SetInt(_PERSONALIZED_ADS_SAVE_KEY, isPersonalizedAds ? 1 : 0);
+            PlayerPrefs.SetInt(PERSONALIZED_ADS_SAVE_KEY, isPersonalizedAds ? 1 : 0);
 
             if (m_networkAdapters != null)
             {
@@ -427,18 +429,18 @@ namespace Virterix.AdMediation
         {
             string hash = AdUtils.GetHash(settings);
             string encodedHash = CryptString.Encode(hash, m_hashCryptKey);
-            PlayerPrefs.SetString(_HASH_SAVE_KEY, encodedHash);
+            PlayerPrefs.SetString(HASH_SAVE_KEY, encodedHash);
         }
 
         private void SaveSettingsHash(string settingsHash)
         {
             string encodedHash = CryptString.Encode(settingsHash, m_hashCryptKey);
-            PlayerPrefs.SetString(_HASH_SAVE_KEY, encodedHash);
+            PlayerPrefs.SetString(HASH_SAVE_KEY, encodedHash);
         }
 
         private bool IsSettingsHashValid(string settings)
         {
-            string encodedHash = PlayerPrefs.GetString(_HASH_SAVE_KEY, "");
+            string encodedHash = PlayerPrefs.GetString(HASH_SAVE_KEY, "");
             string savedHash = CryptString.Decode(encodedHash, m_hashCryptKey);
             string currHash = AdUtils.GetHash(settings);
             bool isValid = currHash == savedHash;
@@ -478,7 +480,7 @@ namespace Virterix.AdMediation
             return valueStr;
         }
 
-        private AdMediator GetOrCreateMediator(AdType adType, string placementName = AdMediationSystem._PLACEMENT_DEFAULT_NAME)
+        private AdMediator GetOrCreateMediator(AdType adType, string placementName = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdMediator foundMediator = null;
             foreach (AdMediator mediator in m_mediators)
@@ -645,7 +647,7 @@ namespace Virterix.AdMediation
                     JSONObject jsonStrategy = jsonMediationParams.Obj.GetValue(strategyKey).Obj;
                     string strategyTypeName = jsonStrategy.GetValue(typeInStrategyKey).Str;
                     AdType adType = AdTypeConvert.StringToAdType(adTypeName);
-                    string mediatorPlacementName = AdMediationSystem._PLACEMENT_DEFAULT_NAME;
+                    string mediatorPlacementName = AdMediationSystem.PLACEMENT_DEFAULT_NAME;
                     if (jsonMediationParams.Obj.ContainsKey(mediatorPlacementNameKey))
                     {
                         mediatorPlacementName = jsonMediationParams.Obj.GetValue(mediatorPlacementNameKey).Str;
@@ -882,9 +884,9 @@ namespace Virterix.AdMediation
                             isModifiedRemoteSettings = localHash != remoteHash;
                             break;
                         case AdSettingsCompareMode.Version:
-                            if (remoteJsonSettings.ContainsKey(_SETTINGS_VERSION_PARAM_KEY))
+                            if (remoteJsonSettings.ContainsKey(SETTINGS_VERSION_PARAM_KEY))
                             {
-                                remoteVersion = Convert.ToInt32(remoteJsonSettings.GetValue(_SETTINGS_VERSION_PARAM_KEY).Number);
+                                remoteVersion = Convert.ToInt32(remoteJsonSettings.GetValue(SETTINGS_VERSION_PARAM_KEY).Number);
                             }
                             isModifiedRemoteSettings = remoteVersion > localVersion;
                             break;
