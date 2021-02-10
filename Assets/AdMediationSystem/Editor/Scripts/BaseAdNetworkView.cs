@@ -105,19 +105,18 @@ namespace Virterix.AdMediation.Editor
             _settings = GetSettings();
             _settings._networkIdentifier = identifier;
 
-            _responseWaitTimeProp = _serializedSettings.FindProperty("_responseWaitTime");
-
             InitAdInstanceBlock(AdType.Banner, "Banners", "_bannerAdInstances");
             InitAdInstanceBlock(AdType.Interstitial, "Interstitials", "_interstitialAdInstances");
             InitAdInstanceBlock(AdType.Incentivized, "Reward Units", "_rewardAdInstances");
 
+            _enabledProp = _serializedSettings.FindProperty("_enabled");
+            _responseWaitTimeProp = _serializedSettings.FindProperty("_responseWaitTime");
             // Android
             _androidAppIdProp = _serializedSettings.FindProperty("_androidAppId");
             // iOS
             _iosAppIdProp = _serializedSettings.FindProperty("_iosAppId");
 
             UpdateElementHeight();
-            _enabledProp = _serializedSettings.FindProperty("_enabled");
             Enabled = _enabledProp.boolValue;
         }
 
@@ -144,7 +143,6 @@ namespace Virterix.AdMediation.Editor
             _showSettings.target = Collapsed;
             if (EditorGUILayout.BeginFadeGroup(_showSettings.faded))
             {
-                _serializedSettings.Update();
                 Enabled = EditorGUILayout.BeginToggleGroup("Enable", Enabled);
                 if (_enabledProp.boolValue != Enabled)
                 {
@@ -156,6 +154,7 @@ namespace Virterix.AdMediation.Editor
                 DrawSpecificSettings();
                 DrawAdInstanceLists();
                 _serializedSettings.ApplyModifiedProperties();
+                _serializedSettings.Update();
                 EditorGUILayout.EndToggleGroup();
             }
             EditorGUILayout.EndFadeGroup();
@@ -239,10 +238,9 @@ namespace Virterix.AdMediation.Editor
             _serializedSettings = new SerializedObject(settings);
 
             if (isFileDidNotExist)
-            {
+            {                
                 var responseWaitTimeProp = _serializedSettings.FindProperty("_responseWaitTime");
                 responseWaitTimeProp.intValue = 30;
-                _serializedSettings.ApplyModifiedProperties();
             }
             return settings;
         }

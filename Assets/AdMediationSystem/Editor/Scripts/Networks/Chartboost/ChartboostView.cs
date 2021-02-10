@@ -10,7 +10,7 @@ namespace Virterix.AdMediation.Editor
 
         protected override bool IsAppIdSupported => true;
 
-        protected override string SettingsFileName => "ChartboostSettings.asset";
+        protected override string SettingsFileName => "AdmChartboostSettings.asset";
 
         public ChartboostView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
             base(settingsWindow, name, identifier)
@@ -23,7 +23,7 @@ namespace Virterix.AdMediation.Editor
         
         protected override BaseAdNetworkSettings CreateSettingsModel()
         {
-            var settings = Utils.GetOrCreateSettings<ChartboostSettings>(SettingsFilePath);
+            var settings = Utils.GetOrCreateSettings<AdmChartboostSettings>(SettingsFilePath);
             return settings;
         }
 

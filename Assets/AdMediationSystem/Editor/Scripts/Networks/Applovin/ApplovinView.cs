@@ -9,7 +9,7 @@ namespace Virterix.AdMediation.Editor
 
         protected override bool IsAppIdSupported => false;
 
-        protected override string SettingsFileName => "ApplovinSettings.asset";
+        protected override string SettingsFileName => "AdmApplovinSettings.asset";
 
         public ApplovinView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
             base(settingsWindow, name, identifier)
@@ -19,7 +19,7 @@ namespace Virterix.AdMediation.Editor
 
         protected override BaseAdNetworkSettings CreateSettingsModel()
         {
-            var settings = Utils.GetOrCreateSettings<ApplovinSettings>(SettingsFilePath);
+            var settings = Utils.GetOrCreateSettings<AdmApplovinSettings>(SettingsFilePath);
             return settings;
         }
 

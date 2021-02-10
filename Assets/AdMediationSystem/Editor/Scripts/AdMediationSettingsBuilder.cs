@@ -131,7 +131,7 @@ namespace Virterix.AdMediation.Editor
                     network.SetupNetworkAdapterScript();
                 }             
             }
-            //AssetDatabase.Refresh();
+            AssetDatabase.Refresh();
         }
 
         //-------------------------------------------------------------

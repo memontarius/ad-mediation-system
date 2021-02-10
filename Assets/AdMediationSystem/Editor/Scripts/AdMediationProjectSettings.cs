@@ -54,9 +54,9 @@ namespace Virterix.AdMediation.Editor
     {
         public bool _initializeOnStart = true;
         public bool _personalizeAdsOnInit = true;       
-        public List<AdUnitMediator> _bannerMediators;
-        public List<AdUnitMediator> _interstitialMediators;
-        public List<AdUnitMediator> _incentivizedMediators;
+        public List<AdUnitMediator> _bannerMediators = new List<AdUnitMediator>();
+        public List<AdUnitMediator> _interstitialMediators = new List<AdUnitMediator>();
+        public List<AdUnitMediator> _incentivizedMediators = new List<AdUnitMediator>();
         public bool _isIOS = true;
         public bool _isAndroid = true;
     }

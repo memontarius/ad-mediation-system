@@ -12,7 +12,7 @@ namespace Virterix.AdMediation.Editor
     public class AdMediationSettingsWindow : EditorWindow
     {
         public const string SETTINGS_PATH = "Assets/AdMediationSystem/Editor/Resources/";
-        public const string SETTINGS_DIRECTORY_NAME = "AdMediationSettings";
+        public const string SETTINGS_DIRECTORY_NAME = "AdmSettings";
         public const string PROJECT_SETTINGS_FILENAME = "AdMediationProjectSettings.asset";
         public const string PREFIX_SAVEKEY = "adm.";
         public const string PROJECT_NAME_SAVEKEY = "project_name";
@@ -27,7 +27,7 @@ namespace Virterix.AdMediation.Editor
                 if (_selectedTab != previousTab)
                 {
                     AdType adType = ConvertTabIndexToAdType(_selectedTab);
-                    if (adType != AdType.Unknown)
+                    if (adType != AdType.Unknown && !string.IsNullOrEmpty(CurrProjectName))
                     {
                         UpdateAdInstanceStorage(adType);
                         FixUnitSelectionInMediators(adType);
@@ -100,12 +100,10 @@ namespace Virterix.AdMediation.Editor
             {
                 bool isChanged = value != _projectName;
                 _projectName = value;
-                //EditorPrefs.SetString(ProjectNameSaveKey, _projectName);
+                EditorPrefs.SetString(ProjectNameSaveKey, _projectName);
                 if (isChanged)
                 {
                     Init(_projectName);
-                    InitNetworksSettings();
-                    InitMediators();
                 }
             }
         }
@@ -127,22 +125,19 @@ namespace Virterix.AdMediation.Editor
 
         private void OnEnable()
         {
-            _projectName = EditorPrefs.GetString(ProjectNameSaveKey, "");
-            if (!string.IsNullOrEmpty(_projectName))
-            {
-                Init(CurrProjectName);
-                InitNetworksSettings();
-                InitMediators();
-            }
-            else
-            {
-                _wasFirstSetup = true;
-                InitProjectNames();
-            }
+            string projectName = EditorPrefs.GetString(ProjectNameSaveKey, "");
+            Init(projectName);
         }
 
         private void OnDisable()
         {
+            if (_networkEnabledStates != null)
+            {
+                for (int i = 0; i < _networkEnabledStates.Length; i++)
+                {
+                    EditorPrefs.SetBool(GetNetworkEnabledStateSaveKey(_networks[i]), _networkEnabledStates[i]);
+                }
+            }
         }
 
         private void OnGUI()
@@ -248,7 +243,69 @@ namespace Virterix.AdMediation.Editor
             }
         }
 
+        private void DuplicateSettings(string currProjectSettings, string targetProjectSettings)
+        {
+            DeleteSettings(targetProjectSettings);
+            string targetProjectPath = GetProjectFolderPath(targetProjectSettings);
+
+            AssetDatabase.Refresh();
+            AssetDatabase.CreateFolder(CommonAdSettingsFolderPath, targetProjectSettings);
+            AssetDatabase.Refresh();
+
+            string[] assets = AssetDatabase.FindAssets("t:ScriptableObject", new[] { GetProjectFolderPath(currProjectSettings) });
+            foreach(var asset in assets)
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(asset);
+                string[] splittedPath = assetPath.Split('/');
+                string assetName = splittedPath[splittedPath.Length - 1];
+                AssetDatabase.CopyAsset(assetPath, string.Format("{0}/{1}", targetProjectPath, assetName));
+            }
+            AssetDatabase.Refresh();
+        }
+
+        private void DeleteSettings(string projectName, bool isChangeOtherSettings = false)
+        {
+            string targetProjectPath = GetProjectFolderPath(projectName);
+            if (AssetDatabase.IsValidFolder(targetProjectPath))
+            {
+                string deletedDirectoryPath = string.Format("{0}{1}{2}/{3}", Application.dataPath,
+                    SETTINGS_PATH.Replace("Assets", ""), SETTINGS_DIRECTORY_NAME, projectName);
+                Directory.Delete(deletedDirectoryPath, true); 
+            }
+
+            string projectBuildPath = AdMediationSettingsBuilder.GetAdProjectSettingsPath(projectName, true);
+            if (AssetDatabase.IsValidFolder(projectBuildPath))
+            {
+                string deletedDirectoryPath = string.Format("{0}/{1}", Application.dataPath,
+                    AdMediationSettingsBuilder.GetAdProjectSettingsPath(projectName, false));
+                Directory.Delete(deletedDirectoryPath, true);
+            }
+
+            AssetDatabase.Refresh();
+
+            if (isChangeOtherSettings && CurrProjectName == projectName)
+            {
+                CurrProjectName = _projectNames.FirstOrDefault(name => name != projectName);
+            }
+        }
+
         private void Init(string projectName)
+        {
+            _projectName = projectName;
+            if (!string.IsNullOrEmpty(_projectName))
+            {
+                InitSettings(CurrProjectName);
+                InitNetworksSettings();
+                InitMediators();
+            }
+            else
+            {
+                _wasFirstSetup = true;
+                InitProjectNames();
+            }
+        }
+
+        private void InitSettings(string projectName)
         {
             string projectPath = GetProjectFolderPath(projectName);           
             if (!Directory.Exists(CommonAdSettingsFolderPath))
@@ -258,9 +315,11 @@ namespace Virterix.AdMediation.Editor
             if (!Directory.Exists(projectPath))
             {
                 Directory.CreateDirectory(projectPath);
+                _wasFirstSetup = true;
             }
             _projectSettings = Utils.GetOrCreateSettings<AdMediationProjectSettings>(GetProjectSettingsPath(projectName));
             _serializedProjectSettings = new SerializedObject(_projectSettings);
+
             _isAndroidProp = _serializedProjectSettings.FindProperty("_isAndroid");
             _isIOSProp = _serializedProjectSettings.FindProperty("_isIOS");
             InitProjectNames();
@@ -300,17 +359,20 @@ namespace Virterix.AdMediation.Editor
                 _networkEnabledStates = new bool[_networks.Count];
                 for(int i = 0; i < _networkEnabledStates.Length; i++)
                 {
-                    _networkEnabledStates[i] = _wasFirstSetup ? false : false;
+                    _networkEnabledStates[i] = _wasFirstSetup ? false : EditorPrefs.GetBool(GetNetworkEnabledStateSaveKey(_networks[i]));
                 }
             }
-
             AdMediationSettingsBuilder.SetupNetworkScripts(NetworkSettings, _wasFirstSetup, _networkEnabledStates);
             for (int i = 0; i < _networks.Count; i++)
             {
                 _networkEnabledStates[i] = _networks[i].Settings._enabled;
             }
-
             UpdateActiveNetworks();
+        }
+
+        private string GetNetworkEnabledStateSaveKey(BaseAdNetworkView networkView)
+        {
+            return string.Format("{0}{1}_enabled", AdMediationSettingsWindow.PREFIX_SAVEKEY, networkView.Identifier);
         }
 
         private void AddNetwork(BaseAdNetworkView networkView)
@@ -407,7 +469,6 @@ namespace Virterix.AdMediation.Editor
                 return;
             }
 
-            _serializedProjectSettings.Update();
             for (int i = 0; i < mediatorList.Count; i++)
             {
                 var mediator = mediatorList[i];
@@ -443,6 +504,7 @@ namespace Virterix.AdMediation.Editor
             }
             GUILayout.EndHorizontal();
             _serializedProjectSettings.ApplyModifiedProperties();
+            _serializedProjectSettings.Update();
         }
 
         private void DrawTabs()
@@ -459,10 +521,19 @@ namespace Virterix.AdMediation.Editor
             if (_projectNames != null && _projectNames.Length > 0)
             {
                 EditorGUI.BeginChangeCheck();
-                GUILayout.BeginVertical("box");
-                _selectedProject = EditorGUILayout.Popup("Select Project", _selectedProject, _projectNames);
-                GUILayout.EndVertical();
-                if (EditorGUI.EndChangeCheck())
+                GUILayout.BeginHorizontal("box");
+                _selectedProject = EditorGUILayout.Popup("Select Project", _selectedProject, _projectNames);         
+                if (GUILayout.Button("Delete", GUILayout.Height(18), GUILayout.Width(54)))
+                {
+                    bool isConfirmDeletion = EditorUtility.DisplayDialog("Deletion Project Settings",
+                   "Are you sure you want to delete \"" + CurrProjectName + "\" settings?", "Delete", "No");
+                    if (isConfirmDeletion)
+                    {
+                        DeleteSettings(CurrProjectName, true);
+                    }
+                }
+                GUILayout.EndHorizontal();
+                if (EditorGUI.EndChangeCheck() && _selectedProject < _projectNames.Length)
                 {
                     CurrProjectName = _projectNames[_selectedProject];
                 }
@@ -480,6 +551,15 @@ namespace Virterix.AdMediation.Editor
                     CurrProjectName = _createdProjectName;
                 }
             }
+            if (GUILayout.Button("Duplicate Settings", GUILayout.Height(25)))
+            {
+                if (!string.IsNullOrEmpty(CurrProjectName) && !string.IsNullOrEmpty(_createdProjectName) &&
+                    CurrProjectName != _createdProjectName)
+                {
+                    DuplicateSettings(CurrProjectName, _createdProjectName);
+                    CurrProjectName = _createdProjectName;
+                }
+            }
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
@@ -488,7 +568,6 @@ namespace Virterix.AdMediation.Editor
         {
             GUILayout.Label("Settings", EditorStyles.boldLabel);
 
-            _serializedProjectSettings.Update();
             GUILayout.BeginHorizontal("box");
             IsAndroid = GUILayout.Toggle(IsAndroid, " Android");
             if (!IsAndroid && !IsIOS)
@@ -505,7 +584,8 @@ namespace Virterix.AdMediation.Editor
             GUILayout.EndHorizontal();
             if (_serializedProjectSettings.ApplyModifiedProperties())
             {
-                foreach(var network in _networks)
+                _serializedProjectSettings.Update();
+                foreach (var network in _networks)
                 {
                     network.UpdateElementHeight();
                 }
@@ -530,7 +610,7 @@ namespace Virterix.AdMediation.Editor
                 {
                     _networkEnabledStates[i] = network.Settings._enabled;
                     network.Settings.SetupNetworkAdapterScript();
-                    //AssetDatabase.Refresh();
+                    AssetDatabase.Refresh(ImportAssetOptions.Default);
                     UpdateActiveNetworks();
                 }
                 GUILayout.EndVertical();
@@ -542,7 +622,10 @@ namespace Virterix.AdMediation.Editor
             EditorGUILayout.Space();
             if (GUILayout.Button("BUILD", GUILayout.Height(40)))
             {
-                BuildSettings();
+                if (!string.IsNullOrEmpty(CurrProjectName))
+                {
+                    BuildSettings();
+                }
             }
         }
 

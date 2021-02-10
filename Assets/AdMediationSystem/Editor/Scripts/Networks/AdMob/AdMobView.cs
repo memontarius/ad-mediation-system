@@ -5,7 +5,7 @@ namespace Virterix.AdMediation.Editor
 {
     public class AdMobView : BaseAdNetworkView
     {
-        protected override string SettingsFileName => "AdMobSettings.asset";
+        protected override string SettingsFileName => "AdmAdMobSettings.asset";
 
         protected override string[] BannerTypes 
         {
@@ -22,7 +22,7 @@ namespace Virterix.AdMediation.Editor
 
         protected override BaseAdNetworkSettings CreateSettingsModel()
         {
-            var settings = Utils.GetOrCreateSettings<AdMobSettings>(SettingsFilePath);
+            var settings = Utils.GetOrCreateSettings<AdmAdMobSettings>(SettingsFilePath);
             return settings;
         }
 

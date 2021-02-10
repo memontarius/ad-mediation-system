@@ -1,4 +1,4 @@
-#define _AMS_APPLOVIN
+//#define _AMS_APPLOVIN
 
 using System;
 using System.Collections;
@@ -22,6 +22,11 @@ namespace Virterix.AdMediation
 
         public AppLovinBannerPosition m_bannerPlacementPosX;
         public AppLovinBannerPosition m_bannerPlacementPosY;
+
+        public static void SetupBuildSettings()
+        {
+
+        }
 
 #if _AMS_APPLOVIN
         private bool m_isBannerLoaded;

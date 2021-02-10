@@ -81,8 +81,6 @@ namespace Virterix.AdMediation.Editor
 
         public void SetupNetworkAdapterScript()
         {
-            Debug.Log("SetupNetworkAdapterScript() " + _networkIdentifier);
-
             string adapterPath = string.Format("{0}/{1}/{2}.cs", Application.dataPath, "AdMediationSystem/Scripts/Adapters", AdapterScriptName);
 
             string content = File.ReadAllText(adapterPath);

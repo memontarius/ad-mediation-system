@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using Boomlagoon.JSON;
 using System.Linq;
+#if UNITY_EDITOR
+using System.Reflection;
+#endif
 
 #if _AMS_ADMOB
 using GoogleMobileAds;
@@ -51,6 +54,18 @@ namespace Virterix.AdMediation
             {
                 return AdMobAdInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER;
             }
+        }
+
+        public static void SetupBuildSettings()
+        {
+#if UNITY_EDITOR && _AMS_ADMOB
+            string path = "Assets/GoogleMobileAds/Resources/GoogleMobileAdsSettings.asset";
+            ScriptableObject adMobSettings = UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
+
+            Type settingsType = adMobSettings.GetType();
+            PropertyInfo prop = settingsType.GetProperty("AdMobAndroidAppId");
+            //prop.SetValue(adMobSettings, "11111111111");
+#endif
         }
 
 #if _AMS_ADMOB
