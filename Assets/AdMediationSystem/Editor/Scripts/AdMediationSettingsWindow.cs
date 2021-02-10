@@ -230,6 +230,7 @@ namespace Virterix.AdMediation.Editor
             string[] instances = null;
             if (!_adInstanceStorage.TryGetValue(key, out instances))
             {
+                Debug.LogWarning("Not found active network: " + network);
             }
             return instances;
         }
@@ -351,7 +352,7 @@ namespace Virterix.AdMediation.Editor
             AddNetwork(new AdMobView(this, "AdMob", "admob"));
             AddNetwork(new AudienceNetworkView(this, "Audience Network", "audiencenetwork"));
             AddNetwork(new UnityAdsView(this, "Unity Ads", "unityads"));
-            AddNetwork(new ApplovinView(this, "Applovin", "applovin"));
+            AddNetwork(new ApplovinView(this, "AppLovin", "applovin"));
             AddNetwork(new ChartboostView(this, "Chartboost", "chartboost"));
 
             if (_networkEnabledStates == null)

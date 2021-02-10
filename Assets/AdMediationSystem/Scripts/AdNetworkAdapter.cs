@@ -387,7 +387,7 @@ namespace Virterix.AdMediation
         {
             adInstance.Name = jsonAdInstance.Obj.ContainsKey("name") ? jsonAdInstance.Obj.GetString("name") : AdInstanceData._AD_INSTANCE_DEFAULT_NAME;
             string parametersName = jsonAdInstance.Obj.ContainsKey("param") ? jsonAdInstance.Obj.GetString("param") : AdInstanceParameters._AD_INSTANCE_PARAMETERS_DEFAULT_NAME;
-            adInstance.m_adType = AdTypeConvert.StringToAdType(jsonAdInstance.Obj.GetString("adType"));
+            adInstance.m_adType = AdUtils.StringToAdType(jsonAdInstance.Obj.GetString("adType"));
             adInstance.m_adId = jsonAdInstance.Obj.GetString("id");
             adInstance.m_adInstanceParams = GetAdInstanceParams(adInstance.m_adType, parametersName);
             if (jsonAdInstance.Obj.ContainsKey("timeout"))

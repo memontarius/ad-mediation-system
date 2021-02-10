@@ -22,6 +22,7 @@ public class MediationController : MonoBehaviour {
 
     // Use this for initialization
     void Awake() {
+        AdMediationSystem.Load("DefaultSettings");
         m_adPersonalizedText.rectTransform.parent.GetComponent<Button>().interactable = false;
         AdMediationSystem.OnInitializeComplete += OnMediationSystemInitializeComplete;
         AdMediationSystem.OnAdNetworkEvent += OnAdNetworkEvent;
@@ -40,7 +41,7 @@ public class MediationController : MonoBehaviour {
         }
     }
 
-    private void Initialized()
+    private void Initialize()
     {
         AdMediationSystem.Instance.Initialize();
         AdMediationSystem.Instance.SetPersonalizedAds(true);

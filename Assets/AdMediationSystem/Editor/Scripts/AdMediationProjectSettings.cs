@@ -10,13 +10,6 @@ namespace Virterix.AdMediation.Editor
         Random
     }
 
-    public enum BannerPosition
-    {
-        Top,
-        Bottom
-    }
-
-
     [System.Serializable]
     public class AdUnit
     {

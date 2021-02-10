@@ -1,10 +1,9 @@
-//#define _AMS_CHARTBOOST
+#define _AMS_CHARTBOOST
 
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Boomlagoon.JSON;
-
 #if _AMS_CHARTBOOST
 using ChartboostSDK;
 #endif
@@ -13,6 +12,30 @@ namespace Virterix.AdMediation
 {
     public class ChartboostAdapter : AdNetworkAdapter
     {
+        public static void SetupNetworkSettings(string androidAppId, string androidAppSignatre, string iOSAppId, string iOSAppSignatre)
+        {
+#if UNITY_EDITOR && _AMS_CHARTBOOST
+            CBSettings networkSettings = null;
+            string[] assets = UnityEditor.AssetDatabase.FindAssets("t:CBSettings");
+            if (assets.Length > 0)
+            {
+                string path = UnityEditor.AssetDatabase.GUIDToAssetPath(assets[0]);
+                networkSettings = UnityEditor.AssetDatabase.LoadAssetAtPath<CBSettings>(path);
+            }
+
+            if (networkSettings != null)
+            {
+                networkSettings.androidAppId = androidAppId;
+                networkSettings.androidAppSecret = androidAppSignatre;
+                networkSettings.iOSAppId = iOSAppId;
+                networkSettings.iOSAppSecret = iOSAppSignatre;
+            }
+            else
+            {
+                Debug.LogWarning("Chartboost Settings not found!");
+            }
+#endif
+        }
 
 #if _AMS_CHARTBOOST
 

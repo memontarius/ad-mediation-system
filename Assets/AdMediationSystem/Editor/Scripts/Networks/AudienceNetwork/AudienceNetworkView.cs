@@ -16,7 +16,7 @@ namespace Virterix.AdMediation.Editor
 
         protected override BaseAdNetworkSettings CreateSettingsModel()
         {
-            var settings = Utils.GetOrCreateSettings<AdmAudienceNetworkSettings>(SettingsFilePath);
+            var settings = Utils.GetOrCreateSettings<AudienceNetworkSettings>(SettingsFilePath);
             return settings;
         }
     }

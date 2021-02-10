@@ -10,8 +10,6 @@ namespace Virterix.AdMediation.Editor
 {
     public class AdMediationSettingsBuilder
     {
-        public const string PREFAB_NAME = "AdMediationSystem.prefab";
-
         //-------------------------------------------------------------
         #region Helpers
 
@@ -107,15 +105,18 @@ namespace Virterix.AdMediation.Editor
             string parametersPath = AdMediationSystem.GetAdInstanceParametersPath(projectName);
             foreach (var network in networkSettings)
             {
-                AdInstanceGenerateDataContainer[] adInstanceDataHolders = network.GetAllAdInstanceDataHolders();
-                foreach (var adInstanceDataHolder in adInstanceDataHolders)
+                if (network._enabled)
                 {
-                    if (adInstanceDataHolder._adType == AdType.Banner)
+                    AdInstanceGenerateDataContainer[] adInstanceDataHolders = network.GetAllAdInstanceDataHolders();
+                    foreach (var adInstanceDataHolder in adInstanceDataHolders)
                     {
-                        string name = adInstanceDataHolder._adInstance._name;
-                        int bannerType = adInstanceDataHolder._adInstance._bannerType;
-                        var bannerPositions = FindBannerPositions(adInstanceDataHolder, mediators);
-                        var adInstanceParameters = network.CreateBannerAdInstanceParameters(projectName, name, bannerType, bannerPositions);
+                        if (adInstanceDataHolder._adType == AdType.Banner)
+                        {
+                            string instanceName = adInstanceDataHolder._adInstance._name;
+                            int bannerType = adInstanceDataHolder._adInstance._bannerType;
+                            var bannerPositions = FindBannerPositions(adInstanceDataHolder, mediators);
+                            var adInstanceParameters = network.CreateBannerAdInstanceParameters(projectName, instanceName, bannerType, bannerPositions);
+                        }
                     }
                 }
             }
@@ -144,11 +145,8 @@ namespace Virterix.AdMediation.Editor
             foreach (AdUnitMediator mediator in mediators)
             {
                 JSONObject jsonMediator = new JSONObject();
-                jsonMediator.Add("adType", AdTypeConvert.AdTypeToString(mediator._adType));
-                if (mediator._adType == AdType.Banner)
-                {
-                    jsonMediator.Add("placement", mediator._bannerPosition.ToString());
-                }
+                jsonMediator.Add("adType", AdUtils.AdTypeToString(mediator._adType));
+                jsonMediator.Add("placement", mediator._name);
                 jsonMediator.Add("strategy", CreateStrategy(mediator));
                 jsonMediators.Add(jsonMediator);
             }
@@ -256,7 +254,7 @@ namespace Virterix.AdMediation.Editor
             foreach(var adInstanceHolder in allAdInstanceDataHolders)
             {
                 JSONObject jsonAdInstance = new JSONObject();
-                jsonAdInstance.Add("adType", AdTypeConvert.AdTypeToString(adInstanceHolder._adType));
+                jsonAdInstance.Add("adType", AdUtils.AdTypeToString(adInstanceHolder._adType));
                 if (adInstanceHolder._adInstance._name != AdInstanceData._AD_INSTANCE_DEFAULT_NAME)
                 {
                     jsonAdInstance.Add("name", adInstanceHolder._adInstance._name);
@@ -298,7 +296,7 @@ namespace Virterix.AdMediation.Editor
 
         private static GameObject CreateSystemObject(string projectName, AdMediationProjectSettings settings, BaseAdNetworkSettings[] networksSettings, AdUnitMediator[] mediators)
         {
-            GameObject mediationSystemObject = new GameObject(PREFAB_NAME);
+            GameObject mediationSystemObject = new GameObject(AdMediationSystem.PREFAB_NAME + ".prefab");
             AdMediationSystem adSystem = mediationSystemObject.AddComponent<AdMediationSystem>();
             adSystem.m_projectName = projectName;
             adSystem.m_isLoadOnlyDefaultSettings = true;
@@ -373,7 +371,7 @@ namespace Virterix.AdMediation.Editor
         private static GameObject SavePrefab(GameObject mediationSystemObject)
         {
             string settingsPath = GetAdProjectSettingsPath(mediationSystemObject.GetComponent<AdMediationSystem>().m_projectName, true);
-            GameObject prefab = PrefabUtility.SaveAsPrefabAsset(mediationSystemObject, settingsPath + "/" + PREFAB_NAME);
+            GameObject prefab = PrefabUtility.SaveAsPrefabAsset(mediationSystemObject, settingsPath + "/" + AdMediationSystem.PREFAB_NAME + ".prefab");
             AssetDatabase.Refresh();
             return prefab;
         }

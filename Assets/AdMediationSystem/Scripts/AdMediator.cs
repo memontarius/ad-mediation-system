@@ -76,6 +76,8 @@ namespace Virterix.AdMediation
                     AdUnit[] units = m_tiers[tierIndex];
                     for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
                     {
+                        Debug.Log(units[unitIndex]);
+
                         if (units[unitIndex].IsAdReady)
                         {
                             ready = true;
@@ -188,7 +190,7 @@ namespace Virterix.AdMediation
             {
                 m_totalUnits += m_tiers[i].Length;
             }
-
+            
             m_fetchStrategy.Init(tiers, m_totalUnits);
             if (m_isContinueAfterEndSession)
             {

@@ -5,6 +5,12 @@ using System.Text;
 
 namespace Virterix.AdMediation.Editor
 {
+    public enum BannerPosition
+    {
+        Top,
+        Bottom
+    }
+
     public struct BannerPositionContainer
     {
         public string m_placementName;
@@ -70,7 +76,7 @@ namespace Virterix.AdMediation.Editor
             return parameters;
         }
 
-        public virtual AdInstanceParameters CreateBannerAdInstanceParameters(string projectNme, string name, int bannerType, BannerPositionContainer[] bannerPositions)
+        public virtual AdInstanceParameters CreateBannerAdInstanceParameters(string projectName, string name, int bannerType, BannerPositionContainer[] bannerPositions)
         {
             return null;
         }

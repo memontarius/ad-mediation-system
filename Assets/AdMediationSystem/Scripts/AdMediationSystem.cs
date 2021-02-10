@@ -15,9 +15,10 @@ namespace Virterix.AdMediation
         iOS
     }
 
-    public class AdMediationSystem : Singleton<AdMediationSystem>
+    public class AdMediationSystem : MonoBehaviour
     {
         public const string AD_SETTINGS_FOLDER = "AdmSettings";
+        public const string PREFAB_NAME = "AdMediationSystem";
         public const string PLACEMENT_DEFAULT_NAME = "Default";
 
         public const string AD_INSTANCE_PARAMETERS_ROOT_FOLDER = "AdInstanceParameters";
@@ -82,6 +83,30 @@ namespace Virterix.AdMediation
         private AdNetworkAdapter[] m_networkAdapters;
         private List<AdMediator> m_mediators = new List<AdMediator>();
         private JSONObject m_currSettings;
+
+        protected static AdMediationSystem m_instance;
+        private static bool m_wasTryingLoadPrefab;
+
+        public static AdMediationSystem Instance
+        {
+            get
+            {
+                if (m_instance == null)
+                {
+                    m_instance = (AdMediationSystem)FindObjectOfType(typeof(AdMediationSystem));
+                    if (m_instance == null && !m_wasTryingLoadPrefab)
+                    {
+                        m_wasTryingLoadPrefab = true;
+                        m_instance = Load();
+                    }
+                    if (m_instance == null)
+                    {
+                        Debug.LogWarning("An instance of AdMediationSystem is needed in the scene, but there is none.");
+                    }
+                }
+                return m_instance;
+            }
+        }
 
         /// <summary>
         /// Use a personal data of user. For GDPR Compliance
@@ -214,7 +239,6 @@ namespace Virterix.AdMediation
                 Initialize();
             }
         }
-
         #endregion MonoBehaviour methods
 
         //===============================================================================
@@ -515,6 +539,34 @@ namespace Virterix.AdMediation
         #region Initialize
         //-------------------------------------------------------------------------------
 
+        public static AdMediationSystem Load(string projectName = "")
+        {
+            GameObject prefab = null;
+
+            if (projectName.Length > 0)
+            {
+                string prefabPath = string.Format("{0}/{1}/{2}", AD_SETTINGS_FOLDER, projectName, PREFAB_NAME);
+                prefab = Resources.Load<GameObject>(prefabPath);
+            }
+            else
+            {
+                AdMediationSystem[] preafbs = Resources.LoadAll<AdMediationSystem>(AD_SETTINGS_FOLDER);
+                if (preafbs.Length > 0)
+                {
+                    prefab = preafbs[0].gameObject;
+                }
+            }
+
+            AdMediationSystem mediationSystem = null;
+            if (prefab != null)
+            {
+                mediationSystem = Instantiate(prefab).GetComponent<AdMediationSystem>();
+                mediationSystem.name = PREFAB_NAME;
+            }
+
+            return mediationSystem;
+        }
+
         public void Initialize()
         {
             m_networkAdapters = GetComponentsInChildren<AdNetworkAdapter>(true);
@@ -646,7 +698,7 @@ namespace Virterix.AdMediation
                     string adTypeName = jsonMediationParams.Obj.GetValue(adTypeKey).Str;
                     JSONObject jsonStrategy = jsonMediationParams.Obj.GetValue(strategyKey).Obj;
                     string strategyTypeName = jsonStrategy.GetValue(typeInStrategyKey).Str;
-                    AdType adType = AdTypeConvert.StringToAdType(adTypeName);
+                    AdType adType = AdUtils.StringToAdType(adTypeName);
                     string mediatorPlacementName = AdMediationSystem.PLACEMENT_DEFAULT_NAME;
                     if (jsonMediationParams.Obj.ContainsKey(mediatorPlacementNameKey))
                     {
@@ -663,7 +715,6 @@ namespace Virterix.AdMediation
                     if (jsonStrategy.ContainsKey("tiers"))
                     {
                         JSONArray jsonArrTiers = jsonStrategy.GetArray("tiers");
-                        
 
                         for (int tierIndex = 0; tierIndex < jsonArrTiers.Length; tierIndex++)
                         {
@@ -685,6 +736,9 @@ namespace Virterix.AdMediation
                                 networkAdapter = GetNetwork(networkName);
                                 AdType unitAdType = adType;
 
+                                Debug.Log("networkAdapter is null: " + (networkAdapter == null));
+                                Debug.Log("networkAdapter is enabled: " + networkAdapter.enabled);
+
                                 if (networkAdapter == null || !networkAdapter.enabled)
                                 {
                                     continue;
@@ -695,7 +749,7 @@ namespace Virterix.AdMediation
                                 if (jsonNetworkUnits.Obj.ContainsKey(unitAdTypeKey))
                                 {
                                     internalAdTypeName = jsonNetworkUnits.Obj.GetString(unitAdTypeKey);
-                                    AdType convertedAdType = AdTypeConvert.StringToAdType(internalAdTypeName);
+                                    AdType convertedAdType = AdUtils.StringToAdType(internalAdTypeName);
                                     unitAdType = convertedAdType != AdType.Unknown ? convertedAdType : unitAdType;
                                 }
 
@@ -723,13 +777,13 @@ namespace Virterix.AdMediation
                                     // Create ad unit
                                     AdUnit unit = new AdUnit(mediatorPlacementName, unitAdType, adInstanceName, 
                                         networkAdapter, fetchStrategyParams, isPrepareOnExit);
+
                                     arrUnits[unitIndex] = unit;
                                 }
                                 else
                                 {
                                     Debug.LogWarning("AdMediationSystem.SetupNetworkParameters() Not found network adapter: " + networkName);
                                 }
-
                                 dictUnitParams.Clear();
                             }
                         }

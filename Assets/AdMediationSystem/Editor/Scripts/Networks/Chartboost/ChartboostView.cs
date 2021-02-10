@@ -23,8 +23,13 @@ namespace Virterix.AdMediation.Editor
         
         protected override BaseAdNetworkSettings CreateSettingsModel()
         {
-            var settings = Utils.GetOrCreateSettings<AdmChartboostSettings>(SettingsFilePath);
+            var settings = Utils.GetOrCreateSettings<ChartboostSettings>(SettingsFilePath);
             return settings;
+        }
+
+        public override string[] GetAdInstances(AdType adType)
+        {
+            return new string[] { AdInstanceData._AD_INSTANCE_DEFAULT_NAME };
         }
 
         protected override void DrawSpecificSettings()

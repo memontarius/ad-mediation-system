@@ -1,4 +1,4 @@
-//#define _AMS_APPLOVIN
+#define _AMS_APPLOVIN
 
 using System;
 using System.Collections;
@@ -23,9 +23,26 @@ namespace Virterix.AdMediation
         public AppLovinBannerPosition m_bannerPlacementPosX;
         public AppLovinBannerPosition m_bannerPlacementPosY;
 
-        public static void SetupBuildSettings()
+        public static void SetupNetworkSettings(string sdkKey)
         {
+#if UNITY_EDITOR && _AMS_APPLOVIN
+            AppLovinSettings networkSettings = null;
+            string[] assets = UnityEditor.AssetDatabase.FindAssets("t:AppLovinSettings");
+            if (assets.Length > 0)
+            {
+                string path = UnityEditor.AssetDatabase.GUIDToAssetPath(assets[0]);
+                networkSettings = UnityEditor.AssetDatabase.LoadAssetAtPath<AppLovinSettings>(path);
+            }
 
+            if (networkSettings != null)
+            {
+                networkSettings.SdkKey = sdkKey;
+            }
+            else
+            {
+                Debug.LogWarning("AppLovin Settings not found!");
+            }
+#endif
         }
 
 #if _AMS_APPLOVIN

@@ -1,4 +1,4 @@
-//#define _AMS_AUDIENCE_NETWORK
+#define _AMS_AUDIENCE_NETWORK
 
 using UnityEngine;
 using System;

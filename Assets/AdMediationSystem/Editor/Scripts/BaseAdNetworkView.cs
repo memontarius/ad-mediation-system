@@ -171,7 +171,7 @@ namespace Virterix.AdMediation.Editor
             }
         }
 
-        public string[] GetAdInstances(AdType adType)
+        public virtual string[] GetAdInstances(AdType adType)
         {
             string[] instances = null;
             switch (adType)

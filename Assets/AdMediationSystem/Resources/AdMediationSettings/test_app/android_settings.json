@@ -5,6 +5,7 @@
 	"mediators":[
 		{
             "adType":"banner",
+			"placement":"Default",
             "strategy":
 			{
 				"type":"sequence",

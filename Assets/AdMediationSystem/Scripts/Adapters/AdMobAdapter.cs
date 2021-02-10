@@ -8,7 +8,6 @@ using System.Linq;
 #if UNITY_EDITOR
 using System.Reflection;
 #endif
-
 #if _AMS_ADMOB
 using GoogleMobileAds;
 using GoogleMobileAds.Api;
@@ -56,15 +55,28 @@ namespace Virterix.AdMediation
             }
         }
 
-        public static void SetupBuildSettings()
+        public static void SetupNetworkSettings(string iOSAppId, string androidAppId)
         {
 #if UNITY_EDITOR && _AMS_ADMOB
             string path = "Assets/GoogleMobileAds/Resources/GoogleMobileAdsSettings.asset";
-            ScriptableObject adMobSettings = UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
+            ScriptableObject networkSettings = UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
 
-            Type settingsType = adMobSettings.GetType();
-            PropertyInfo prop = settingsType.GetProperty("AdMobAndroidAppId");
-            //prop.SetValue(adMobSettings, "11111111111");
+            if (networkSettings != null)
+            {
+                Type settingsType = networkSettings.GetType();
+                PropertyInfo prop = settingsType.GetProperty("AdMobAndroidAppId");
+                prop.SetValue(networkSettings, androidAppId);
+
+                prop = settingsType.GetProperty("AdMobIOSAppId");
+                prop.SetValue(networkSettings, iOSAppId);
+
+                prop = settingsType.GetProperty("DelayAppMeasurementInit");
+                prop.SetValue(networkSettings, true);
+            }
+            else
+            {
+                Debug.LogWarning("AdMob Settings not found!");
+            }
 #endif
         }
 
