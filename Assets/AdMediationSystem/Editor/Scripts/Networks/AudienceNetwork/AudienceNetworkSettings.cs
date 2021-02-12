@@ -5,6 +5,8 @@ namespace Virterix.AdMediation.Editor
 {
     public class AudienceNetworkSettings : BaseAdNetworkSettings
     {
+        public override bool IsAppIdSupported => false;
+
         public override Type NetworkAdapterType => typeof(AudienceNetworkAdapter);
 
         protected override string AdapterScriptName => "AudienceNetworkAdapter";

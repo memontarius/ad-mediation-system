@@ -12,8 +12,6 @@ namespace Virterix.AdMediation.Editor
             get; set;
         }
 
-        protected override bool IsAppIdSupported => true;
-
         public AdMobView(AdMediationSettingsWindow settingsWindow, string name, string identifier) : 
             base(settingsWindow, name, identifier)
         {

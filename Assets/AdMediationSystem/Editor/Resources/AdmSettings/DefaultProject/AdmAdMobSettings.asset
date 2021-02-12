@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd99f66217cd15b41a8fbdc77ce5c39d, type: 3}
+  m_Name: AdmAdMobSettings
+  m_EditorClassIdentifier: 
+  _enabled: 1
+  _networkIdentifier: admob
+  _androidAppId: ca-app-pub-1726624045989422~7998588197
+  _iosAppId: ca-app-pub-1726624045989422~1952054590
+  _responseWaitTime: 30
+  _bannerAdInstances:
+  - _name: Default
+    _androidId: ca-app-pub-1726624045989422/9475321397
+    _iosId: ca-app-pub-1726624045989422/3428787792
+    _timeout: 90
+    _bannerType: 0
+  - _name: Top
+    _androidId: ca-app-pub-1726624045989422/3140260626
+    _iosId: ca-app-pub-1726624045989422/6620972801
+    _timeout: 90
+    _bannerType: 0
+  _interstitialAdInstances:
+  - _name: Default
+    _androidId: ca-app-pub-1726624045989422/3373004591
+    _iosId: ca-app-pub-1726624045989422/8206719796
+    _timeout: 90
+    _bannerType: 0
+  - _name: DefaultHighCPM
+    _androidId: ca-app-pub-1726624045989422/1675135716
+    _iosId: ca-app-pub-1726624045989422/6126148782
+    _timeout: 90
+    _bannerType: 0
+  _rewardAdInstances:
+  - _name: Default
+    _androidId: ca-app-pub-1726624045989422/1847734765
+    _iosId: ca-app-pub-1726624045989422/2765846565
+    _timeout: 90
+    _bannerType: 0

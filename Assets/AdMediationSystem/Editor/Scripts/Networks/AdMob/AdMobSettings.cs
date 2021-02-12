@@ -24,7 +24,7 @@ namespace Virterix.AdMediation.Editor
         public override void SetupNetworkAdapter(Component networkAdapter)
         {
             var adapter = networkAdapter as AdMobAdapter;
-            AdMobAdapter.SetupNetworkSettings(_iosAppId, _androidAppId);
+            AdMobAdapter.SetupNetworkNativeSettings(_iosAppId, _androidAppId);
         }
 
         public override AdInstanceParameters CreateBannerAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)

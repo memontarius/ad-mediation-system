@@ -64,7 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\AdMediationSystem\Examples\MediationController.cs" />
+    <Compile Include="Assets\AdMediationSystem\Examples\AdMediationController.cs" />
     <Compile Include="Assets\AdMediationSystem\Scripts\AdFactory.cs" />
     <Compile Include="Assets\AdMediationSystem\Scripts\AdInstanceData.cs" />
     <Compile Include="Assets\AdMediationSystem\Scripts\AdInstanceParameters.cs" />

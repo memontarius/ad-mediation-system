@@ -69,8 +69,10 @@ namespace Virterix.AdMediation.Editor
 
         protected virtual string AdapterScriptName { get; }
         protected virtual string AdapterDefinePeprocessorKey { get; }
+        public virtual string JsonAppIdKey { get { return "appId"; } }
+        public virtual bool IsAppIdSupported { get; } = true;
 
-        public virtual Dictionary<string, object> GetSpecificNetworkParameters()
+        public virtual Dictionary<string, object> GetSpecificNetworkParameters(AppPlatform platform)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             return parameters;

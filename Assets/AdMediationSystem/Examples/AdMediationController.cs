@@ -6,8 +6,8 @@ using UnityEngine.UI;
 using Virterix.AdMediation;
 using Virterix.Common;
 
-public class MediationController : MonoBehaviour {
-
+public class AdMediationController : BaseAdController
+{
     public Text m_interstitialInfoText;
     public Text m_rewardVideoInfoText;
     public Text m_nativeInfoText;
@@ -22,10 +22,9 @@ public class MediationController : MonoBehaviour {
 
     // Use this for initialization
     void Awake() {
-        AdMediationSystem.Load("DefaultSettings");
+        AdMediationSystem.Load("DefaultProject");
         m_adPersonalizedText.rectTransform.parent.GetComponent<Button>().interactable = false;
         AdMediationSystem.OnInitializeComplete += OnMediationSystemInitializeComplete;
-        AdMediationSystem.OnAdNetworkEvent += OnAdNetworkEvent;
     }
 
     private void Start() {
@@ -139,23 +138,26 @@ public class MediationController : MonoBehaviour {
     }
 
     void OnAdPollfishNetworkEvent(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstanceData adInstance) {
-        OnAdNetworkEvent(null, network, adType, adEvent, adInstance == null ? "" : adInstance.Name);
+        HandleNetworkEvent(null, network, adType, adEvent, adInstance == null ? "" : adInstance.Name);
     }
 
-    void OnAdNetworkEvent(AdMediator mediator, AdNetworkAdapter network, AdType adType, AdEvent adEvent, string adInstanceName) {
+    protected override void HandleNetworkEvent(AdMediator mediator, AdNetworkAdapter network, AdType adType, AdEvent adEvent, string adInstanceName)
+    {
         string placementName = mediator == null ? "" : mediator.m_placementName;
 
-        if (network.m_networkName != "pollfish") {        
+        if (network.m_networkName != "pollfish")
+        {
             UpdateAdInfo(mediator, adType, placementName);
         }
-        
+
         string log = string.Format("{0} Placement: <color=blue>{1}</color> Instance: <color=blue>{2}</color> <b>{3}</b> {4} \n{5}",
             adType.ToString(), placementName, adInstanceName, network.m_networkName, adEvent.ToString(), m_eventLogText.text);
 
         m_eventLogText.text = log;
 
         if (adEvent == AdEvent.Show && network.m_networkName != "pollfish" &&
-            (adType == AdType.Interstitial || adType == AdType.Incentivized)) {
+            (adType == AdType.Interstitial || adType == AdType.Incentivized))
+        {
             m_adInterstitialCount++;
         }
         m_adInterstitialCountText.text = m_adInterstitialCount.ToString();

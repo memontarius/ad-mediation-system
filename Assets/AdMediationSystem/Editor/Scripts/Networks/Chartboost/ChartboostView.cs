@@ -8,9 +8,9 @@ namespace Virterix.AdMediation.Editor
         private SerializedProperty _androidAppSignatureProp;
         private SerializedProperty _iosAppSignatureProp;
 
-        protected override bool IsAppIdSupported => true;
-
         protected override string SettingsFileName => "AdmChartboostSettings.asset";
+
+        protected override bool IsSeparatedPlatformSettings => true;
 
         public ChartboostView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
             base(settingsWindow, name, identifier)
@@ -32,18 +32,17 @@ namespace Virterix.AdMediation.Editor
             return new string[] { AdInstanceData._AD_INSTANCE_DEFAULT_NAME };
         }
 
-        protected override void DrawSpecificSettings()
+        protected override void DrawSpecificPlatformSettings(AppPlatform platform)
         {
-            GUILayout.BeginVertical("box");
-            if (_settingsWindow.IsAndroid)
+            switch(platform)
             {
-                _androidAppSignatureProp.stringValue = EditorGUILayout.TextField("Android App Signature", _androidAppSignatureProp.stringValue);
+                case AppPlatform.Android:
+                    _androidAppSignatureProp.stringValue = EditorGUILayout.TextField("Android App Signature", _androidAppSignatureProp.stringValue);
+                    break;
+                case AppPlatform.iOS:
+                    _iosAppSignatureProp.stringValue = EditorGUILayout.TextField("iOS App Signature", _iosAppSignatureProp.stringValue);
+                    break;
             }
-            if (_settingsWindow.IsIOS)
-            {
-                _iosAppSignatureProp.stringValue = EditorGUILayout.TextField("iOS App Signature", _iosAppSignatureProp.stringValue);
-            }
-            GUILayout.EndVertical();
         }
     }
 } // namespace Virterix.AdMediation.Editor

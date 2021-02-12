@@ -76,8 +76,6 @@ namespace Virterix.AdMediation
                     AdUnit[] units = m_tiers[tierIndex];
                     for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
                     {
-                        Debug.Log(units[unitIndex]);
-
                         if (units[unitIndex].IsAdReady)
                         {
                             ready = true;
@@ -114,6 +112,8 @@ namespace Virterix.AdMediation
                     for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
                     {
                         AdUnit unit = units[unitIndex];
+                        unit.TierIndex = tierIndex;
+                        unit.Index = unitIndex;
                         count += unit.IsTimeout ? 0 : 1;
                     }
                 }
@@ -311,6 +311,9 @@ namespace Virterix.AdMediation
             {
                 return false;
             }
+
+            int currTierIndex = m_currUnit != null ? m_currUnit.TierIndex : 0;
+            int currUnitIndex = m_currUnit != null ? m_currUnit.Index : 0;
 
             AdUnit readyUnit = null;
             AdUnit[] units = null;

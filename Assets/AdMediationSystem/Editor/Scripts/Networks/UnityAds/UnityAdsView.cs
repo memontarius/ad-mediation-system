@@ -3,7 +3,7 @@ namespace Virterix.AdMediation.Editor
 {
     public class UnityAdsView : BaseAdNetworkView
     {
-        protected override bool IsAppIdSupported => true;
+       // protected override bool IsAppIdSupported => true;
 
         protected override string SettingsFileName => "AdmUnityAdsSettings.asset";
 

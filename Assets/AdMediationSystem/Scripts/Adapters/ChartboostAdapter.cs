@@ -12,7 +12,7 @@ namespace Virterix.AdMediation
 {
     public class ChartboostAdapter : AdNetworkAdapter
     {
-        public static void SetupNetworkSettings(string androidAppId, string androidAppSignatre, string iOSAppId, string iOSAppSignatre)
+        public static void SetupNetworkNativeSettings(string androidAppId, string androidAppSignatre, string iOSAppId, string iOSAppSignatre)
         {
 #if UNITY_EDITOR && _AMS_CHARTBOOST
             CBSettings networkSettings = null;
@@ -25,10 +25,11 @@ namespace Virterix.AdMediation
 
             if (networkSettings != null)
             {
-                networkSettings.androidAppId = androidAppId;
-                networkSettings.androidAppSecret = androidAppSignatre;
-                networkSettings.iOSAppId = iOSAppId;
-                networkSettings.iOSAppSecret = iOSAppSignatre;
+                networkSettings.SetAndroidPlatformIndex(0);
+                networkSettings.SetAndroidAppId(androidAppId);
+                networkSettings.SetAndroidAppSecret(androidAppSignatre);
+                networkSettings.SetIOSAppId(iOSAppId);
+                networkSettings.SetIOSAppSecret(iOSAppSignatre);
             }
             else
             {

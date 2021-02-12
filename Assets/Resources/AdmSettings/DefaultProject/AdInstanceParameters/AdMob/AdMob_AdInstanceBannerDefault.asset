@@ -9,13 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 020f93c8651de7646badc5e14f92513d, type: 3}
-  m_Name: AdMediationProjectSettings
+  m_Script: {fileID: 11500000, guid: 6e13d8dc32e2c0941a669685f602cf0a, type: 3}
+  m_Name: AdMob_AdInstanceBannerDefault
   m_EditorClassIdentifier: 
-  _initializeOnStart: 1
-  _personalizeAdsOnInit: 1
-  _bannerMediators: []
-  _interstitialMediators: []
-  _incentivizedMediators: []
-  _isIOS: 1
-  _isAndroid: 1
+  m_name: Default
+  m_bannerSize: 0
+  m_bannerPositions: []

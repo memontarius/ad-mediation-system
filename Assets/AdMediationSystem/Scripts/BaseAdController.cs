@@ -18,11 +18,6 @@ namespace Virterix.AdMediation
         protected float m_lastTimeScale;
         protected int m_interstitialCount;
 
-        private void Awake()
-        {
-            m_inheritor = this;
-        }
-
         private void OnEnable()
         {
             SubscribeEvents();
@@ -43,7 +38,7 @@ namespace Virterix.AdMediation
             AdMediationSystem.OnAdNetworkEvent -= OnAdNetworkEvent;
         }
 
-        protected virtual void OnAdNetworkEvent(AdMediator mediator, AdNetworkAdapter network, AdType adType, AdEvent adEvent, string adInstanceName)
+        private void OnAdNetworkEvent(AdMediator mediator, AdNetworkAdapter network, AdType adType, AdEvent adEvent, string adInstanceName)
         {
             if (adType == AdType.Interstitial || adType == AdType.Incentivized)
             {
@@ -74,6 +69,11 @@ namespace Virterix.AdMediation
                         break;
                 }
             }
+            HandleNetworkEvent(mediator, network, adType, adEvent, adInstanceName);
+        }
+
+        protected virtual void HandleNetworkEvent(AdMediator mediator, AdNetworkAdapter network, AdType adType, AdEvent adEvent, string adInstanceName)
+        {
         }
 
         public T GetAdController<T>() where T : BaseAdController

@@ -6,8 +6,6 @@ namespace Virterix.AdMediation.Editor
     {
         protected override string SettingsFileName => "AdmAudienceNetworkSettings.asset";
 
-        protected override bool IsAppIdSupported => false;
-
         public AudienceNetworkView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
             base(settingsWindow, name, identifier)
         {

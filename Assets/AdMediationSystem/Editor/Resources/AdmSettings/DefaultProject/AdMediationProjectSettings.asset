@@ -84,7 +84,7 @@ MonoBehaviour:
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0
-        _prepareOnExit: 0
+        _prepareOnExit: 1
         _percentage: 100
       - _networkName: Audience Network
         _networkIndex: 1
@@ -94,8 +94,16 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
-      - _networkName: AppLovin
+      - _networkName: Unity Ads
         _networkIndex: 2
+        _networkIdentifier: unityads
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 100
+      - _networkName: AppLovin
+        _networkIndex: 3
         _networkIdentifier: applovin
         _instanceIndex: 0
         _instanceName: Default
@@ -103,7 +111,7 @@ MonoBehaviour:
         _prepareOnExit: 0
         _percentage: 100
       - _networkName: Chartboost
-        _networkIndex: 3
+        _networkIndex: 4
         _networkIdentifier: chartboost
         _instanceIndex: 0
         _instanceName: Default
@@ -137,8 +145,16 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
-      - _networkName: AppLovin
+      - _networkName: Unity Ads
         _networkIndex: 2
+        _networkIdentifier: unityads
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 100
+      - _networkName: AppLovin
+        _networkIndex: 3
         _networkIdentifier: applovin
         _instanceIndex: 0
         _instanceName: Default
@@ -146,7 +162,7 @@ MonoBehaviour:
         _prepareOnExit: 0
         _percentage: 100
       - _networkName: Chartboost
-        _networkIndex: 3
+        _networkIndex: 4
         _networkIdentifier: chartboost
         _instanceIndex: 0
         _instanceName: Default

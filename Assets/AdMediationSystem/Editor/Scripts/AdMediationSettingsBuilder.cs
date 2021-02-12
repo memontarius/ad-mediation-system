@@ -132,7 +132,6 @@ namespace Virterix.AdMediation.Editor
                     network.SetupNetworkAdapterScript();
                 }             
             }
-            AssetDatabase.Refresh();
         }
 
         //-------------------------------------------------------------
@@ -211,13 +210,29 @@ namespace Virterix.AdMediation.Editor
             JSONArray jsonNetworks = new JSONArray();
 
             foreach(var settings in networkSettings)
-            {
+            { 
                 if (settings._enabled)
                 {
+                    // Common parameters
                     JSONObject jsonNetwork = new JSONObject();
                     jsonNetwork.Add("name", settings._networkIdentifier);
-
-                    Dictionary<string, object> specificParameters = settings.GetSpecificNetworkParameters();
+                    if (settings.IsAppIdSupported)
+                    {
+                        string appId = "";
+                        switch (platform)
+                        {
+                            case AppPlatform.Android:
+                                appId = settings._androidAppId;
+                                break;
+                            case AppPlatform.iOS:
+                                appId = settings._iosAppId;
+                                break;
+                        }
+                        jsonNetwork.Add(settings.JsonAppIdKey, appId);
+                    }
+                    
+                    // Insert specifiec paramters
+                    Dictionary<string, object> specificParameters = settings.GetSpecificNetworkParameters(platform);
                     foreach (KeyValuePair<string, object> parametersPair in specificParameters)
                     {
                         string valueType = parametersPair.Value.GetType().Name.ToString();
@@ -229,12 +244,16 @@ namespace Virterix.AdMediation.Editor
                             case "Int32":
                                 jsonNetwork.Add(parametersPair.Key, (int)parametersPair.Value);
                                 break;
+                            case "Boolean":
+                                jsonNetwork.Add(parametersPair.Key, (bool)parametersPair.Value);
+                                break;
                             case "Single":
                                 jsonNetwork.Add(parametersPair.Key, (float)parametersPair.Value);
                                 break;
                         }
                     }
 
+                    // Ad instances
                     if (!settings.IsTotallyAdInstanceUnsupported)
                     {
                         jsonNetwork.Add("instances", CreateAdnstances(settings, platform));

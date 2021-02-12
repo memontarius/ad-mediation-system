@@ -1,4 +1,4 @@
-//#define _AMS_UNITY_ADS
+#define _AMS_UNITY_ADS
 
 using System.Collections;
 using System.Collections.Generic;

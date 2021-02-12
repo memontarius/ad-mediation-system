@@ -47,7 +47,7 @@ namespace Virterix.AdMediation.Editor
 
         protected virtual string[] BannerTypes { get; set; }
 
-        protected virtual bool IsAppIdSupported { get; set; }
+        protected virtual bool IsSeparatedPlatformSettings { get; } = false;
 
         protected string SettingsFilePath
         {
@@ -150,7 +150,7 @@ namespace Virterix.AdMediation.Editor
                 }
                 _enabledProp.boolValue = Enabled;
                 DrawCommonSettigns();
-                DrawAppIds();
+                DrawPlatformSettings();
                 DrawSpecificSettings();
                 DrawAdInstanceLists();
                 _serializedSettings.ApplyModifiedProperties();
@@ -273,6 +273,10 @@ namespace Virterix.AdMediation.Editor
         {
         }
 
+        protected virtual void DrawSpecificPlatformSettings(AppPlatform platform)
+        {
+        }
+
         private void DrawCommonSettigns()
         {
             GUILayout.BeginVertical("box");
@@ -280,18 +284,24 @@ namespace Virterix.AdMediation.Editor
             GUILayout.EndVertical();
         }
 
-        private void DrawAppIds()
+        private void DrawPlatformSettings()
         {
-            if (IsAppIdSupported)
+            if (_settings.IsAppIdSupported)
             {
                 GUILayout.BeginVertical("box");
                 if (_settingsWindow.IsAndroid)
                 {
                     _androidAppIdProp.stringValue = EditorGUILayout.TextField("Android App Id", _androidAppIdProp.stringValue);
+                    DrawSpecificPlatformSettings(AppPlatform.Android);
                 }
                 if (_settingsWindow.IsIOS)
                 {
+                    if (_settingsWindow.IsAndroid && IsSeparatedPlatformSettings)
+                    {
+                        EditorGUILayout.Space(6);
+                    }
                     _iosAppIdProp.stringValue = EditorGUILayout.TextField("iOS App Id", _iosAppIdProp.stringValue);
+                    DrawSpecificPlatformSettings(AppPlatform.iOS);
                 }
                 GUILayout.EndVertical();
             }
@@ -421,6 +431,8 @@ namespace Virterix.AdMediation.Editor
                 {
                     property.FindPropertyRelative("_name").stringValue = "";
                 }
+                property.FindPropertyRelative("_androidId").stringValue = "";
+                property.FindPropertyRelative("_iosId").stringValue = "";
             };
             list.onRemoveCallback = (ReorderableList l) =>
             {

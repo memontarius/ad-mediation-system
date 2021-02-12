@@ -28,6 +28,7 @@ namespace Virterix.AdMediation
         }
 
         public int Index { get; set; }
+        public int TierIndex { get; set; }
 
         public string PlacementName
         {

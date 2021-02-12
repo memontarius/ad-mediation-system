@@ -206,9 +206,17 @@ namespace Virterix.AdMediation.Editor
             return foundView;
         }
 
-        public string GetNetworkIndentifier(int index)
+        public string GetNetworkIndentifier(string networkName)
         {
-            string identifier = _networks[index].Identifier;
+            string identifier = "";
+            foreach(var network in _networks)
+            {
+                if (network.Name == networkName)
+                {
+                    identifier = network.Identifier;
+                    break;
+                }
+            }
             return identifier;
         }
 
@@ -224,13 +232,13 @@ namespace Virterix.AdMediation.Editor
             }
         }
 
-        public string[] GetAdInstancesFromStorage(string network, AdType adType)
+        public string[] GetAdInstancesFromStorage(string networkIdentifier, AdType adType)
         {
-            string key = network + adType.ToString();
+            string key = networkIdentifier + adType.ToString();
             string[] instances = null;
             if (!_adInstanceStorage.TryGetValue(key, out instances))
             {
-                Debug.LogWarning("Not found active network: " + network);
+                Debug.LogWarning("Not found active network: " + key);
             }
             return instances;
         }
@@ -239,10 +247,23 @@ namespace Virterix.AdMediation.Editor
         {
             foreach(var network in _networks)
             {
-                string key = network.Name + adType.ToString();
+                string key = network.Identifier + adType.ToString();
                 _adInstanceStorage[key] = network.GetAdInstances(adType);
             }
         }
+
+        private void UpdateAllAdInstanceStorage()
+        {
+            AdType[] adTypes = System.Enum.GetValues(typeof(AdType)) as AdType[];
+            foreach (var adType in adTypes)
+            {
+                if (adType != AdType.Unknown)
+                {
+                    UpdateAdInstanceStorage(adType);
+                }
+            }
+        }
+
 
         private void DuplicateSettings(string currProjectSettings, string targetProjectSettings)
         {
@@ -369,6 +390,8 @@ namespace Virterix.AdMediation.Editor
                 _networkEnabledStates[i] = _networks[i].Settings._enabled;
             }
             UpdateActiveNetworks();
+            UpdateAllAdInstanceStorage();
+            AssetDatabase.Refresh();
         }
 
         private string GetNetworkEnabledStateSaveKey(BaseAdNetworkView networkView)
@@ -425,6 +448,18 @@ namespace Virterix.AdMediation.Editor
             foreach (var mediator in mediators)
             {
                 mediator.FixPopupSelection();
+            }
+        }
+
+        private void FixUnitSelectionInAllMediators()
+        {
+            AdType[] adTypes = System.Enum.GetValues(typeof(AdType)) as AdType[];
+            foreach(var adType in adTypes)
+            {
+                if (adType != AdType.Unknown)
+                {
+                    FixUnitSelectionInMediators(adType);
+                }
             }
         }
 
@@ -610,9 +645,10 @@ namespace Virterix.AdMediation.Editor
                 if (activationChanged)
                 {
                     _networkEnabledStates[i] = network.Settings._enabled;
+                    UpdateActiveNetworks();
+                    FixUnitSelectionInAllMediators();
                     network.Settings.SetupNetworkAdapterScript();
                     AssetDatabase.Refresh(ImportAssetOptions.Default);
-                    UpdateActiveNetworks();
                 }
                 GUILayout.EndVertical();
             }

@@ -15,7 +15,7 @@ namespace Virterix.AdMediation
         iOS
     }
 
-    public class AdMediationSystem : MonoBehaviour
+    public class AdMediationSystem : Singleton<AdMediationSystem>
     {
         public const string AD_SETTINGS_FOLDER = "AdmSettings";
         public const string PREFAB_NAME = "AdMediationSystem";
@@ -83,30 +83,6 @@ namespace Virterix.AdMediation
         private AdNetworkAdapter[] m_networkAdapters;
         private List<AdMediator> m_mediators = new List<AdMediator>();
         private JSONObject m_currSettings;
-
-        protected static AdMediationSystem m_instance;
-        private static bool m_wasTryingLoadPrefab;
-
-        public static AdMediationSystem Instance
-        {
-            get
-            {
-                if (m_instance == null)
-                {
-                    m_instance = (AdMediationSystem)FindObjectOfType(typeof(AdMediationSystem));
-                    if (m_instance == null && !m_wasTryingLoadPrefab)
-                    {
-                        m_wasTryingLoadPrefab = true;
-                        m_instance = Load();
-                    }
-                    if (m_instance == null)
-                    {
-                        Debug.LogWarning("An instance of AdMediationSystem is needed in the scene, but there is none.");
-                    }
-                }
-                return m_instance;
-            }
-        }
 
         /// <summary>
         /// Use a personal data of user. For GDPR Compliance
@@ -735,10 +711,6 @@ namespace Virterix.AdMediation
 
                                 networkAdapter = GetNetwork(networkName);
                                 AdType unitAdType = adType;
-
-                                Debug.Log("networkAdapter is null: " + (networkAdapter == null));
-                                Debug.Log("networkAdapter is enabled: " + networkAdapter.enabled);
-
                                 if (networkAdapter == null || !networkAdapter.enabled)
                                 {
                                     continue;

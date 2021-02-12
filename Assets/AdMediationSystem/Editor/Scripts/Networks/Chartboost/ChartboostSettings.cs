@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Virterix.AdMediation.Editor
@@ -30,7 +31,27 @@ namespace Virterix.AdMediation.Editor
 
         public override void SetupNetworkAdapter(Component networkAdapter)
         {
-            ChartboostAdapter.SetupNetworkSettings(_androidAppId, _androidAppSignature, _iosAppId, _iosAppSignature);
+            ChartboostAdapter.SetupNetworkNativeSettings(_androidAppId, _androidAppSignature, _iosAppId, _iosAppSignature);
+        }
+
+        public override Dictionary<string, object> GetSpecificNetworkParameters(AppPlatform platform)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+            string appSignature = "";
+            switch (platform)
+            {
+                case AppPlatform.Android:
+                    appSignature = _androidAppSignature;
+                    break;
+                case AppPlatform.iOS:
+                    appSignature = _iosAppSignature;
+                    break;
+            }
+
+            parameters.Add("appSignature", appSignature);
+            parameters.Add("autocache", false);
+            return parameters;
         }
     }
 } // namespace Virterix.AdMediation.Editor

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Virterix.AdMediation.Editor
@@ -6,6 +7,8 @@ namespace Virterix.AdMediation.Editor
     public class ApplovinSettings : BaseAdNetworkSettings
     {
         public string _sdkKey;
+
+        public override bool IsAppIdSupported => false;
 
         public override Type NetworkAdapterType => typeof(AppLovinAdapter);
 
@@ -25,7 +28,14 @@ namespace Virterix.AdMediation.Editor
 
         public override void SetupNetworkAdapter(Component networkAdapter)
         {
-            AppLovinAdapter.SetupNetworkSettings(_sdkKey);
+            AppLovinAdapter.SetupNetworkNativeSettings(_sdkKey);
+        }
+
+        public override Dictionary<string, object> GetSpecificNetworkParameters(AppPlatform platform)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("sdkKey", _sdkKey);
+            return parameters;
         }
     }
 } // namespace Virterix.AdMediation.Editor

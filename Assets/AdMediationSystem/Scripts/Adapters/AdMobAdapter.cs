@@ -55,7 +55,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public static void SetupNetworkSettings(string iOSAppId, string androidAppId)
+        public static void SetupNetworkNativeSettings(string iOSAppId, string androidAppId)
         {
 #if UNITY_EDITOR && _AMS_ADMOB
             string path = "Assets/GoogleMobileAds/Resources/GoogleMobileAdsSettings.asset";

@@ -149,14 +149,19 @@ namespace Virterix.AdMediation.Editor
                         {
                             currNetworkName = activeNetworks[networkIndexProp.intValue];
                             networkNameProp.stringValue = currNetworkName;
-                            networkIdentifierProp.stringValue = _settingsWindow.GetNetworkIndentifier(networkIndexProp.intValue);
+                            networkIdentifierProp.stringValue = _settingsWindow.GetNetworkIndentifier(currNetworkName);
                         }
 
                         string[] adInstanceNames = { };
                         if (!string.IsNullOrEmpty(currNetworkName))
                         {
                             var networkView = _settingsWindow.GetNetworkView(currNetworkName);
-                            adInstanceNames = _settingsWindow.GetAdInstancesFromStorage(networkView.Name, _adType);
+                            adInstanceNames = _settingsWindow.GetAdInstancesFromStorage(networkView.Identifier, _adType);
+                            if (adInstanceNames == null)
+                            {
+                                _settingsWindow.UpdateAdInstanceStorage(_adType);
+                                adInstanceNames = _settingsWindow.GetAdInstancesFromStorage(networkView.Identifier, _adType);
+                            }
                         }
 
                         popupRect.x += popupRect.width + 2;
@@ -334,7 +339,7 @@ namespace Virterix.AdMediation.Editor
                     {
                         networkIndexProp.intValue = solvedNetworkIndex;
                         networkNameProp.stringValue = activeNetworks[solvedNetworkIndex];
-                        networkIdentifierProp.stringValue = _settingsWindow.GetNetworkIndentifier(solvedNetworkIndex);
+                        networkIdentifierProp.stringValue = _settingsWindow.GetNetworkIndentifier(networkNameProp.stringValue);
                     }
                 }
             }

@@ -23,7 +23,7 @@ namespace Virterix.AdMediation
         public AppLovinBannerPosition m_bannerPlacementPosX;
         public AppLovinBannerPosition m_bannerPlacementPosY;
 
-        public static void SetupNetworkSettings(string sdkKey)
+        public static void SetupNetworkNativeSettings(string sdkKey)
         {
 #if UNITY_EDITOR && _AMS_APPLOVIN
             AppLovinSettings networkSettings = null;
@@ -36,6 +36,7 @@ namespace Virterix.AdMediation
 
             if (networkSettings != null)
             {
+                networkSettings.QualityServiceEnabled = true;
                 networkSettings.SdkKey = sdkKey;
             }
             else

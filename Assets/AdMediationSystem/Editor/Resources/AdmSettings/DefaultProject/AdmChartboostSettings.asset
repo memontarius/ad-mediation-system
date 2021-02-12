@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3aa395e8a3417949bb2f456cb45fec4, type: 3}
   m_Name: AdmChartboostSettings
   m_EditorClassIdentifier: 
-  _enabled: 0
+  _enabled: 1
   _networkIdentifier: chartboost
-  _androidAppId: 
-  _iosAppId: 
+  _androidAppId: 54f98cb30d60257eaf2c13d5
+  _iosAppId: 54f98cb20d60257eaf2c13d3
   _responseWaitTime: 30
   _bannerAdInstances: []
   _interstitialAdInstances: []
   _rewardAdInstances: []
-  _androidAppSignature: 
-  _iosAppSignature: 
+  _androidAppSignature: bee4501e83fd1346d378575666a97f44dec0b899
+  _iosAppSignature: 3d45615701f3e12f9df676f17389c9382518e44a
