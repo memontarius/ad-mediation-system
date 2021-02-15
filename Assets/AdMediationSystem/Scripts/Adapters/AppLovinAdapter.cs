@@ -164,18 +164,21 @@ namespace Virterix.AdMediation
             bool isReady = false;
             AdType adType = adInstance.m_adType;
 #if UNITY_ANDROID || UNITY_IOS
-            switch (adType)
+            if (adInstance.m_state == AdState.Received)
             {
-                case AdType.Interstitial:
-                    isReady = MaxSdk.IsInterstitialReady(adInstance.m_adId);
-                    break;
-                case AdType.Incentivized:
-                    isReady = MaxSdk.IsRewardedAdReady(adInstance.m_adId);
-                    break;
-                case AdType.Banner:
-                    isReady = m_isBannerLoaded;
-                    break;
-            }
+                switch (adType)
+                {
+                    case AdType.Interstitial:
+                        isReady = MaxSdk.IsInterstitialReady(adInstance.m_adId);
+                        break;
+                    case AdType.Incentivized:
+                        isReady = MaxSdk.IsRewardedAdReady(adInstance.m_adId);
+                        break;
+                    case AdType.Banner:
+                        isReady = m_isBannerLoaded;
+                        break;
+                }
+            }   
 #endif
             return isReady;
         }
@@ -238,6 +241,7 @@ namespace Virterix.AdMediation
         {
             // Interstitial ad is ready to be shown. MaxSdk.IsInterstitialReady(adUnitId) will now return 'true'
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
+            adInstance.m_state = AdState.Received;
             AddEvent(AdType.Interstitial, AdEvent.Prepare, adInstance);
         }
 
@@ -249,6 +253,7 @@ namespace Virterix.AdMediation
             // Interstitial ad failed to load 
             // We recommend retrying with exponentially higher delays up to a maximum delay (in this case 64 seconds)
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
+            adInstance.m_state = AdState.NotAvailable;
             AddEvent(AdType.Interstitial, AdEvent.FailedPreparation, adInstance);
         }
 
@@ -262,6 +267,7 @@ namespace Virterix.AdMediation
         {
             // Interstitial ad failed to display. We recommend loading the next ad  
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
+            adInstance.m_state = AdState.NotAvailable;
             AddEvent(AdType.Interstitial, AdEvent.Hide, adInstance);
         }
 
@@ -275,6 +281,7 @@ namespace Virterix.AdMediation
         {
             // Interstitial ad is hidden. Pre-load the next ad
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
+            adInstance.m_state = AdState.NotAvailable;
             AddEvent(AdType.Interstitial, AdEvent.Hide, adInstance);
         }
 
@@ -285,6 +292,7 @@ namespace Virterix.AdMediation
         {
             // Rewarded ad is ready to be shown. MaxSdk.IsRewardedAdReady(adUnitId) will now return 'true'
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
+            adInstance.m_state = AdState.Received;
             AddEvent(AdType.Incentivized, AdEvent.Prepare, adInstance);
         }
 
@@ -296,6 +304,7 @@ namespace Virterix.AdMediation
             // Rewarded ad failed to load 
             // We recommend retrying with exponentially higher delays up to a maximum delay (in this case 64 seconds)
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
+            adInstance.m_state = AdState.NotAvailable;
             AddEvent(AdType.Incentivized, AdEvent.FailedPreparation, adInstance);
         }
 
@@ -303,6 +312,7 @@ namespace Virterix.AdMediation
         {
             // Rewarded ad failed to display. We recommend loading the next ad
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
+            adInstance.m_state = AdState.NotAvailable;
             AddEvent(AdType.Incentivized, AdEvent.Hide, adInstance);
         }
 
@@ -322,6 +332,7 @@ namespace Virterix.AdMediation
         {
             // Rewarded ad is hidden. Pre-load the next ad
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
+            adInstance.m_state = AdState.NotAvailable;
             AddEvent(AdType.Incentivized, AdEvent.Hide, adInstance);
         }
 

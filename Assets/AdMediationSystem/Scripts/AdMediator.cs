@@ -320,22 +320,45 @@ namespace Virterix.AdMediation
             int readyTierIndex = 0;
             int readyUnitIndex = 0;
 
-            for (int tierIndex = 0; tierIndex < m_tiers.Count; tierIndex++)
+            for (int tierIndex = currTierIndex; ; tierIndex++)
             {
-                units = m_tiers[tierIndex];
-                for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
+                if (tierIndex >= m_tiers.Count)
                 {
+                    tierIndex = 0;
+                }
+
+                units = m_tiers[tierIndex];
+                bool isEnded = false;
+
+                for (int unitIndex = currUnitIndex + 1; ; unitIndex++)
+                {
+                    if (unitIndex >= units.Length)
+                    {
+                        unitIndex = 0;
+                    }
+
                     readyUnit = units[unitIndex];
                     if (readyUnit.IsAdReady)
                     {
                         readyTierIndex = tierIndex;
                         readyUnitIndex = unitIndex;
+                        isEnded = true;
                         break;
                     }
                     else
                     {
                         readyUnit = null;
                     }
+
+                    isEnded = tierIndex == currTierIndex && unitIndex == currUnitIndex;
+                    if (isEnded)
+                        break;
+                }
+
+                if (isEnded)
+                {
+                    Debug.Log("tierIndex: " + tierIndex + " isEnded: " + isEnded);
+                    break;
                 }
             }
 

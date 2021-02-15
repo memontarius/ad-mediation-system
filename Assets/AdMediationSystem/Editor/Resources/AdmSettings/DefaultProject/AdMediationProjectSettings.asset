@@ -94,9 +94,9 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
-      - _networkName: Unity Ads
-        _networkIndex: 2
-        _networkIdentifier: unityads
+      - _networkName: Chartboost
+        _networkIndex: 4
+        _networkIdentifier: chartboost
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0
@@ -110,9 +110,35 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
+    - _units:
+      - _networkName: Audience Network
+        _networkIndex: 1
+        _networkIdentifier: audiencenetwork
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
       - _networkName: Chartboost
         _networkIndex: 4
         _networkIdentifier: chartboost
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+    - _units:
+      - _networkName: Audience Network
+        _networkIndex: 1
+        _networkIdentifier: audiencenetwork
+        _instanceIndex: 1
+        _instanceName: DefaultHighCPM
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 100
+      - _networkName: Audience Network
+        _networkIndex: 1
+        _networkIdentifier: audiencenetwork
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0

@@ -538,8 +538,10 @@ namespace Virterix.AdMediation
             {
                 mediationSystem = Instantiate(prefab).GetComponent<AdMediationSystem>();
                 mediationSystem.name = PREFAB_NAME;
+#if AD_MEDIATION_DEBUG_MODE
+                Debug.Log("[AdMediationSystem] Project settings loaded: " + mediationSystem.m_projectName);
+#endif
             }
-
             return mediationSystem;
         }
 

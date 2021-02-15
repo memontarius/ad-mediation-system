@@ -252,19 +252,6 @@ namespace Virterix.AdMediation.Editor
             }
         }
 
-        private void UpdateAllAdInstanceStorage()
-        {
-            AdType[] adTypes = System.Enum.GetValues(typeof(AdType)) as AdType[];
-            foreach (var adType in adTypes)
-            {
-                if (adType != AdType.Unknown)
-                {
-                    UpdateAdInstanceStorage(adType);
-                }
-            }
-        }
-
-
         private void DuplicateSettings(string currProjectSettings, string targetProjectSettings)
         {
             DeleteSettings(targetProjectSettings);
@@ -375,6 +362,7 @@ namespace Virterix.AdMediation.Editor
             AddNetwork(new UnityAdsView(this, "Unity Ads", "unityads"));
             AddNetwork(new ApplovinView(this, "AppLovin", "applovin"));
             AddNetwork(new ChartboostView(this, "Chartboost", "chartboost"));
+            AddNetwork(new PollfishView(this, "Pollfish", "pollfish"));
 
             if (_networkEnabledStates == null)
             {
@@ -390,7 +378,7 @@ namespace Virterix.AdMediation.Editor
                 _networkEnabledStates[i] = _networks[i].Settings._enabled;
             }
             UpdateActiveNetworks();
-            UpdateAllAdInstanceStorage();
+            UpdateActiveNetworks();
             AssetDatabase.Refresh();
         }
 
@@ -495,6 +483,8 @@ namespace Virterix.AdMediation.Editor
                     mediatorsProp.GetArrayElementAtIndex(i), Repaint, adType);
                 mediatorList.Add(mediatorView);
             }
+            FixUnitSelectionInMediators(adType);
+            UpdateAdInstanceStorage(adType);
         }
 
         private void DrawMediators(List<AdMediatorView> mediatorList, string propertyName)
