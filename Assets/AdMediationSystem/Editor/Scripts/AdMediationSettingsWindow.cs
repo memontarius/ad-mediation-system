@@ -70,22 +70,22 @@ namespace Virterix.AdMediation.Editor
         
         private SerializedProperty _isAndroidProp;
         private SerializedProperty _isIOSProp;
+        private SerializedProperty _enableTestModeProp;
 
         public bool IsAndroid 
         {
             get { return _isAndroidProp.boolValue; }
-            private set
-            {
-                _isAndroidProp.boolValue = value;
-            }
+            private set { _isAndroidProp.boolValue = value; }
         }
         public bool IsIOS
         {
             get { return _isIOSProp.boolValue; }
-            private set
-            {
-                _isIOSProp.boolValue = value;
-            }
+            private set { _isIOSProp.boolValue = value; }
+        }
+
+        public bool IsTestModeEnabled 
+        {
+            get { return _enableTestModeProp.boolValue; }
         }
 
         public string[] ActiveNetworks
@@ -131,7 +131,7 @@ namespace Virterix.AdMediation.Editor
 
         private void OnDisable()
         {
-            if (_networkEnabledStates != null)
+            if (_networkEnabledStates != null) 
             {
                 for (int i = 0; i < _networkEnabledStates.Length; i++)
                 {
@@ -174,7 +174,7 @@ namespace Virterix.AdMediation.Editor
             EditorGUILayout.EndScrollView();
         }
 
-        [MenuItem("Tools/Ad Mediation/Ad Mediation Settings")]
+        [MenuItem("Tools/Ad Mediation System")]
         public static void ShowWindow()
         {
             EditorWindow editorWindow = GetWindow(typeof(AdMediationSettingsWindow));
@@ -331,6 +331,8 @@ namespace Virterix.AdMediation.Editor
 
             _isAndroidProp = _serializedProjectSettings.FindProperty("_isAndroid");
             _isIOSProp = _serializedProjectSettings.FindProperty("_isIOS");
+            _enableTestModeProp = _serializedProjectSettings.FindProperty("_enableTestMode");
+
             InitProjectNames();
         }
 
@@ -618,8 +620,11 @@ namespace Virterix.AdMediation.Editor
             }
 
             GUILayout.BeginVertical("box");
+
             Utils.DrawPropertyField(_serializedProjectSettings, "_initializeOnStart", GUILayout.ExpandWidth(true));
             Utils.DrawPropertyField(_serializedProjectSettings, "_personalizeAdsOnInit");
+            Utils.DrawPropertyField(_serializedProjectSettings, _enableTestModeProp);
+            
             GUILayout.EndVertical();
         }
 

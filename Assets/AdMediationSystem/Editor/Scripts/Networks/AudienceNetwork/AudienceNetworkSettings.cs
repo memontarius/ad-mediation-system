@@ -8,9 +8,9 @@ namespace Virterix.AdMediation.Editor
         public override bool IsAppIdSupported => false;
 
         public override Type NetworkAdapterType => typeof(AudienceNetworkAdapter);
-
         protected override string AdapterScriptName => "AudienceNetworkAdapter";
         protected override string AdapterDefinePeprocessorKey => "_AMS_AUDIENCE_NETWORK";
+        public override bool IsTestDeviceSupported => true;
 
         public override bool IsAdSupported(AdType adType)
         {
@@ -22,9 +22,8 @@ namespace Virterix.AdMediation.Editor
             return true;
         }
 
-        public override void SetupNetworkAdapter(Component networkAdapter)
+        public override void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {
-            var adapter = networkAdapter as AudienceNetworkAdapter;
         }
 
         public override AdInstanceParameters CreateBannerAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)

@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Virterix.AdMediation.Editor
 {
@@ -17,6 +18,10 @@ namespace Virterix.AdMediation.Editor
         public override bool IsCheckAvailabilityWhenPreparing(AdType adType)
         {
             return true;
+        }
+
+        public override void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
+        {
         }
     }
 } // namespace Virterix.AdMediation.Editor

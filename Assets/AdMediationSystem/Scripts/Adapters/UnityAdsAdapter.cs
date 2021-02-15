@@ -16,9 +16,7 @@ namespace Virterix.AdMediation
     ,IUnityAdsListener
 #endif
     {
-
-        public bool m_isInitializeWhenStart = true;
-        public bool m_isTestMode;
+        public bool m_isInitializeWhenStart = true; 
 
         private string m_appId;
         private bool m_isBannerDisplayed;
@@ -51,7 +49,7 @@ namespace Virterix.AdMediation
             {
                 if (m_isInitializeWhenStart)
                 {
-                    Advertisement.Initialize(m_appId, m_isTestMode);
+                    Advertisement.Initialize(m_appId, m_isTestModeEnabled);
                 }
                 Advertisement.AddListener(this);
             }
@@ -160,7 +158,7 @@ namespace Virterix.AdMediation
                 {
                     Show(adInstance);
                 }
-                AddEvent(adInstance.m_adType, AdEvent.Prepare, adInstance);
+                AddEvent(adInstance.m_adType, AdEvent.Prepared, adInstance);
             }
         }
 
@@ -193,15 +191,15 @@ namespace Virterix.AdMediation
                     switch (showResult)
                     {
                         case ShowResult.Finished:
-                            AddEvent(adInstance.m_adType, AdEvent.IncentivizedComplete, adInstance);
+                            AddEvent(adInstance.m_adType, AdEvent.IncentivizedCompleted, adInstance);
                             break;
                         case ShowResult.Skipped:
                         case ShowResult.Failed:
-                            AddEvent(adInstance.m_adType, AdEvent.IncentivizedIncomplete, adInstance);
+                            AddEvent(adInstance.m_adType, AdEvent.IncentivizedUncompleted, adInstance);
                             break;
                     }
                 }
-                AddEvent(adInstance.m_adType, AdEvent.Hide, adInstance);
+                AddEvent(adInstance.m_adType, AdEvent.Hiding, adInstance);
             }
         }
 

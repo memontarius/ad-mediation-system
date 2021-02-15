@@ -187,7 +187,7 @@ namespace Virterix.AdMediation
         // Interstitial
         private void DidCacheInterstitial(CBLocation location)
         {
-            AddEvent(AdType.Interstitial, AdEvent.Prepare, m_interstitialInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Prepared, m_interstitialInstance);
         }
 
         private void DidFailToLoadInterstitial(CBLocation location, CBImpressionError error)
@@ -212,13 +212,13 @@ namespace Virterix.AdMediation
 
         void DidDismissInterstitial(CBLocation location)
         {
-            AddEvent(AdType.Interstitial, AdEvent.Hide, m_interstitialInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Hiding, m_interstitialInstance);
         }
 
         // Reward Video
         private void DidCacheRewardedVideo(CBLocation location)
         {
-            AddEvent(AdType.Incentivized, AdEvent.Prepare, m_incentivizedInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Prepared, m_incentivizedInstance);
         }
 
         private void DidFailToLoadRewardedVideo(CBLocation location, CBImpressionError error)
@@ -245,12 +245,12 @@ namespace Virterix.AdMediation
         {
             m_lastReward.label = location.ToString();
             m_lastReward.amount = count;
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedComplete, m_incentivizedInstance);
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, m_incentivizedInstance);
         }
 
         private void DidDismissRewardedVideo(CBLocation location)
         {
-            AddEvent(AdType.Incentivized, AdEvent.Hide, m_incentivizedInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Hiding, m_incentivizedInstance);
         }
 
 #endif // _AMS_CHARTBOOST

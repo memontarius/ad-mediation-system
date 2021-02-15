@@ -11,15 +11,14 @@ namespace Virterix.AdMediation
 {
     public enum AdEvent
     {
-        None = 0,
-        Select,
-        Prepare,
+        Selected,
+        Prepared,
         Show,
         Click,
-        Hide,
+        Hiding,
         FailedPreparation,
-        IncentivizedComplete,
-        IncentivizedIncomplete
+        IncentivizedCompleted,
+        IncentivizedUncompleted
     }
 
     public struct IncentivizedReward
@@ -99,6 +98,8 @@ namespace Virterix.AdMediation
 
         public string m_networkName;
         public AdParam[] m_adSupportParams;
+        public bool m_isTestModeEnabled = false;
+        public string[] m_testDevices;
 
         //_______________________________________________________________________________
         #region Properties
@@ -169,7 +170,6 @@ namespace Virterix.AdMediation
             {
                 InitializeParameters(parameters, adInstances);
             }
-
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AdNetworkAdapter.Initialize() Initialize network adapter: " + m_networkName + " adInstances:" + m_adInstances.Count);
 #endif
@@ -255,9 +255,9 @@ namespace Virterix.AdMediation
         public void NotifyEvent(AdType adType, AdEvent adEvent, AdInstanceData adInstance)
         {
             string adInstanceName = adInstance != null ? adInstance.Name : AdInstanceData._AD_INSTANCE_DEFAULT_NAME;
-            if (adInstance != null && (adEvent == AdEvent.FailedPreparation || adEvent == AdEvent.Prepare))
+            if (adInstance != null && (adEvent == AdEvent.FailedPreparation || adEvent == AdEvent.Prepared))
             {
-                adInstance.m_lastAdPrepared = adEvent == AdEvent.Prepare;
+                adInstance.m_lastAdPrepared = adEvent == AdEvent.Prepared;
             }
             OnEvent(this, adType, adEvent, adInstance);
         }

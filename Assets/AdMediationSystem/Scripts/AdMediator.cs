@@ -402,7 +402,7 @@ namespace Virterix.AdMediation
                 {
                     if (unit.IsAdReady)
                     {
-                        unit.AdNetwork.NotifyEvent(unit.AdapterAdType, AdEvent.Prepare, unit.AdInstance);
+                        unit.AdNetwork.NotifyEvent(unit.AdapterAdType, AdEvent.Prepared, unit.AdInstance);
                         break;
                     }
                 }
@@ -479,11 +479,11 @@ namespace Virterix.AdMediation
                 m_currUnit.AdNetwork.OnEvent += OnCurrentNetworkEvent;
             }
 
-            m_currUnit.AdNetwork.NotifyEvent(m_currUnit.AdapterAdType, AdEvent.Select, m_currUnit.AdInstance);
+            m_currUnit.AdNetwork.NotifyEvent(m_currUnit.AdapterAdType, AdEvent.Selected, m_currUnit.AdInstance);
 
             if (m_currUnit.IsAdReady)
             {
-                m_currUnit.AdNetwork.NotifyEvent(m_currUnit.AdapterAdType, AdEvent.Prepare, m_currUnit.AdInstance);
+                m_currUnit.AdNetwork.NotifyEvent(m_currUnit.AdapterAdType, AdEvent.Prepared, m_currUnit.AdInstance);
             }
             else
             {
@@ -536,7 +536,7 @@ namespace Virterix.AdMediation
             
             AdMediationSystem.NotifyAdNetworkEvent(this, network, m_adType, adEvent, adInstanceName);
             
-            if (adEvent == AdEvent.FailedPreparation || adEvent == AdEvent.Hide || adEvent == AdEvent.Show)
+            if (adEvent == AdEvent.FailedPreparation || adEvent == AdEvent.Hiding || adEvent == AdEvent.Show)
             {
                 if (m_currUnit != null)
                 {
@@ -570,12 +570,12 @@ namespace Virterix.AdMediation
                         StartDeferredFetch(0.2f);
                     }
                     break;
-                case AdEvent.Prepare:
+                case AdEvent.Prepared:
                     m_isLastNetworkSuccessfullyPrepared = true;
                     CancelWaitNetworkPreparing();
                     m_adPreparationFailureCount = 0;
                     break;
-                case AdEvent.Hide:
+                case AdEvent.Hiding:
                     AdUnit currAdUnit = m_currUnit;
 
                     if (m_isAutoFetchWhenHide)

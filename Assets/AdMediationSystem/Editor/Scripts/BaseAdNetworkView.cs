@@ -72,6 +72,7 @@ namespace Virterix.AdMediation.Editor
         private SerializedProperty _androidAppIdProp;
         private SerializedProperty _iosAppIdProp;
         private SerializedProperty _responseWaitTimeProp;
+        private SerializedProperty _testDeviceProp;
 
         private AnimBool _showSettings;
         private SerializedProperty _enabledProp;
@@ -111,6 +112,8 @@ namespace Virterix.AdMediation.Editor
 
             _enabledProp = _serializedSettings.FindProperty("_enabled");
             _responseWaitTimeProp = _serializedSettings.FindProperty("_responseWaitTime");
+            _testDeviceProp = _serializedSettings.FindProperty("_testDevices");
+
             // Android
             _androidAppIdProp = _serializedSettings.FindProperty("_androidAppId");
             // iOS
@@ -171,8 +174,13 @@ namespace Virterix.AdMediation.Editor
             }
         }
 
-        public virtual string[] GetAdInstances(AdType adType)
+        public string[] GetAdInstances(AdType adType)
         {
+            if (Settings.IsTotallyAdInstanceUnsupported)
+            {
+                return new string[] { AdInstanceData._AD_INSTANCE_DEFAULT_NAME };
+            }
+
             string[] instances = null;
             switch (adType)
             {
@@ -281,6 +289,10 @@ namespace Virterix.AdMediation.Editor
         {
             GUILayout.BeginVertical("box");
             Utils.DrawPropertyField(_serializedSettings, _responseWaitTimeProp, GUILayout.ExpandWidth(true));
+            if (_settingsWindow.IsTestModeEnabled && _settings.IsTestDeviceSupported)
+            {
+                Utils.DrawPropertyField(_serializedSettings, _testDeviceProp, GUILayout.ExpandWidth(true));
+            }
             GUILayout.EndVertical();
         }
 

@@ -16,13 +16,24 @@ namespace Virterix.AdMediation
 
         private const string _UPDATE_DATA_SAVE_KEY = "adm.settings.update.date";
         private const float _LOAD_SETTINGS_WAITING_TIME = 30.0f;
-        private TimeSnapshot m_сheckUpdateData;
 
-        public override void Load()
+        private TimeSnapshot LastUpdateData
         {
-            base.Load();
-            m_сheckUpdateData = new TimeSnapshot(_UPDATE_DATA_SAVE_KEY, m_periodUpdateInHours, TimeSnapshot.PeriodType.Hours);
+            get
+            {
+                if (m_lastUpdateData != null)
+                {
+                    m_lastUpdateData = new TimeSnapshot(_UPDATE_DATA_SAVE_KEY, m_periodUpdateInHours, TimeSnapshot.PeriodType.Hours);
+                }
+                return m_lastUpdateData;
+            }
+        }
+        private TimeSnapshot m_lastUpdateData;
 
+        public override bool IsUpdateRequired => LastUpdateData.IsPeriodOver;
+
+        public override void Request()
+        {
             if (IsRequiredCheckUpdateSettingsFile())
             {
                 StartLoadSettingsFromServer();
@@ -35,11 +46,11 @@ namespace Virterix.AdMediation
 
         private bool IsRequiredCheckUpdateSettingsFile()
         {
-            bool isRequiredCheckUpdate = m_сheckUpdateData.IsPeriodOver || !m_сheckUpdateData.WasSaved;
+            bool isRequiredCheckUpdate = LastUpdateData.IsPeriodOver || !LastUpdateData.WasSaved;
 
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("AdMediationSystem.IsRequiredCheckUpdateSettingsFile() Elapsed hours:" + m_сheckUpdateData.PassedHoursSinceLastSave +
-                " requiredHours:" + m_сheckUpdateData.m_period);
+            Debug.Log("AdMediationSystem.IsRequiredCheckUpdateSettingsFile() Elapsed hours:" + LastUpdateData.PassedHoursSinceLastSave +
+                " requiredHours:" + LastUpdateData.m_period);
 #endif
 
             return isRequiredCheckUpdate;
@@ -56,7 +67,7 @@ namespace Virterix.AdMediation
 
         private void SaveCheckUpdateDateTimeSettings()
         {
-            m_сheckUpdateData.Save();
+            LastUpdateData.Save();
         }
 
         private void StartLoadSettingsFromServer()

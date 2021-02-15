@@ -18,7 +18,9 @@ namespace Virterix.AdMediation
 
         public event Action<LoadingState, JSONObject> OnSettingsReceived;
 
-        public virtual void Load()
+        public virtual bool IsUpdateRequired => true;
+
+        public virtual void Request()
         {
         }
 

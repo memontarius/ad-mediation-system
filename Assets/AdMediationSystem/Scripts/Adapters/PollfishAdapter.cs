@@ -9,7 +9,6 @@ namespace Virterix.AdMediation
 {
     public class PollfishAdapter : AdNetworkAdapter
     {
-
         public enum SurveyPosition
         {
             TOP_LEFT = 0,
@@ -32,7 +31,6 @@ namespace Virterix.AdMediation
         }
 
         public string m_defaultApiKey = "";
-        public bool m_isDebugMode = false;
         public SurveyPosition m_pollfishPosition = SurveyPosition.BOTTOM_RIGHT;
         public bool m_isAutoFetchOnHide = true;
         public bool m_isRestoreBannersOnHideSurvey;
@@ -139,7 +137,7 @@ namespace Virterix.AdMediation
 
             bool offerwallMode = false;
             int indPadding = 10;
-            bool releaseMode = !m_isDebugMode;
+            bool releaseMode = !m_isTestModeEnabled;
             bool rewardMode = true;
             string requestUUID = SystemInfo.deviceUniqueIdentifier;
             Dictionary<string, string> userAttributes = new Dictionary<string, string>();
@@ -352,7 +350,7 @@ namespace Virterix.AdMediation
             }
 #endif
 
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedComplete, null);
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, null);
         }
 
         private void surveyOpened()
@@ -364,7 +362,7 @@ namespace Virterix.AdMediation
 
         private void surveyClosed()
         {
-            AddEvent(AdType.Incentivized, AdEvent.Hide, null);
+            AddEvent(AdType.Incentivized, AdEvent.Hiding, null);
 
             if (m_isRestoreBannersOnHideSurvey)
             {
@@ -419,7 +417,7 @@ namespace Virterix.AdMediation
                 m_lastReceivedSurveyInfo.m_surveyTypeName = "offerwall";
             }
 
-            AddEvent(AdType.Incentivized, AdEvent.Prepare, null);
+            AddEvent(AdType.Incentivized, AdEvent.Prepared, null);
         }
 
         private void surveyNotAvailable()

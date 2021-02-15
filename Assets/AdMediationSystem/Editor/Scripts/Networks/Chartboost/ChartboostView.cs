@@ -27,11 +27,6 @@ namespace Virterix.AdMediation.Editor
             return settings;
         }
 
-        public override string[] GetAdInstances(AdType adType)
-        {
-            return new string[] { AdInstanceData._AD_INSTANCE_DEFAULT_NAME };
-        }
-
         protected override void DrawSpecificPlatformSettings(AppPlatform platform)
         {
             switch(platform)

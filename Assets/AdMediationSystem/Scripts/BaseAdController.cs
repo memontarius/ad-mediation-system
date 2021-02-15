@@ -58,7 +58,7 @@ namespace Virterix.AdMediation
                         }
 
                         break;
-                    case AdEvent.Hide:
+                    case AdEvent.Hiding:
 #if UNITY_IOS
                             AudioListener.volume = 1.0f;
 #endif

@@ -44,9 +44,7 @@ namespace Virterix.AdMediation
 
         public bool m_tagForChildDirectedTreatment = false;
         public Color m_adBackgoundColor = Color.gray;
-        public bool m_isAddTestDevices = false;
-        public string[] m_testDeviceListIds;
-
+ 
         protected override string AdInstanceParametersFolder
         {
             get
@@ -246,7 +244,7 @@ namespace Virterix.AdMediation
                         BannerView bannerView = adInstance.m_adView as BannerView;
                         bannerView.Hide();
                     }
-                    AddEvent(AdType.Banner, AdEvent.Hide, adInstance);
+                    AddEvent(AdType.Banner, AdEvent.Hiding, adInstance);
                     break;
             }
         }
@@ -487,15 +485,14 @@ namespace Virterix.AdMediation
                     .TagForChildDirectedTreatment(m_tagForChildDirectedTreatment)
                     .AddExtra("color_bg", ColorUtility.ToHtmlStringRGB(m_adBackgoundColor));
 
-            // Set non-personalized ads
             if (!AdMediationSystem.Instance.IsPersonalizedAds)
             {
                 requestBuilder.AddExtra("npa", "1");
             }
 
-            if (m_isAddTestDevices)
+            if (m_isTestModeEnabled)
             {
-                foreach (string deviceId in m_testDeviceListIds)
+                foreach (string deviceId in m_testDevices)
                 {
                     requestBuilder.AddTestDevice(deviceId);
                 }
@@ -534,7 +531,7 @@ namespace Virterix.AdMediation
             {
                 bannerView.Hide();
             }
-            AddEvent(AdType.Banner, AdEvent.Prepare, adInstance);
+            AddEvent(AdType.Banner, AdEvent.Prepared, adInstance);
         }
 
         public void HandleAdFailedToLoad(AdMobAdInstanceData adInstance, object sender, AdFailedToLoadEventArgs args)
@@ -560,7 +557,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             print("AdMobAdapter.HandleAdClosing() " + " adInstance: " + adInstance.Name);
 #endif
-            AddEvent(AdType.Banner, AdEvent.Hide, adInstance);
+            AddEvent(AdType.Banner, AdEvent.Hiding, adInstance);
         }
 
         public void HandleAdClosed(AdMobAdInstanceData adInstance, object sender, EventArgs args)
@@ -588,7 +585,7 @@ namespace Virterix.AdMediation
             print("AdMobAdapter.HandleInterstitialLoaded()");
 #endif
             adInstance.m_state = AdState.Received;
-            AddEvent(AdType.Interstitial, AdEvent.Prepare, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Prepared, adInstance);
         }
 
         public void HandleInterstitialFailedToLoad(AdMobAdInstanceData adInstance, object sender, AdFailedToLoadEventArgs args)
@@ -621,7 +618,7 @@ namespace Virterix.AdMediation
             print("AdMobAdapter.HandleInterstitialClosed()");
 #endif
             DestroyInterstitial(adInstance);
-            AddEvent(AdType.Interstitial, AdEvent.Hide, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Hiding, adInstance);
         }
 
         public void HandleInterstitialLeftApplication(AdMobAdInstanceData adInstance, object sender, EventArgs args)
@@ -642,7 +639,7 @@ namespace Virterix.AdMediation
             MonoBehaviour.print("HandleRewardBasedVideoLoaded event received");
 #endif
             m_rewardInstance.m_state = AdState.Received;
-            AddEvent(AdType.Incentivized, AdEvent.Prepare, m_rewardInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Prepared, m_rewardInstance);
         }
 
         public void HandleRewardBasedVideoFailedToLoad(object sender, AdFailedToLoadEventArgs args)
@@ -675,7 +672,7 @@ namespace Virterix.AdMediation
             MonoBehaviour.print("HandleRewardBasedVideoClosed event received");
 #endif
             m_rewardInstance.m_state = AdState.Uncertain;
-            AddEvent(AdType.Incentivized, AdEvent.Hide, m_rewardInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Hiding, m_rewardInstance);
         }
 
         public void HandleRewardBasedVideoRewarded(object sender, Reward args)
@@ -685,7 +682,7 @@ namespace Virterix.AdMediation
 #endif
             m_lastReward.label = args.Type;
             m_lastReward.amount = args.Amount;
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedComplete, m_rewardInstance);
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, m_rewardInstance);
         }
 
         public void HandleRewardBasedVideoLeftApplication(object sender, EventArgs args)

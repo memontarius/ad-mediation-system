@@ -29,7 +29,7 @@ namespace Virterix.AdMediation.Editor
             return false;
         }
 
-        public override void SetupNetworkAdapter(Component networkAdapter)
+        public override void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {
             ChartboostAdapter.SetupNetworkNativeSettings(_androidAppId, _androidAppSignature, _iosAppId, _iosAppSignature);
         }

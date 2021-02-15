@@ -548,21 +548,20 @@ namespace Virterix.AdMediation
         public void Initialize()
         {
             m_networkAdapters = GetComponentsInChildren<AdNetworkAdapter>(true);
-            AdMediator[] mediators = GetComponentsInChildren<AdMediator>();
+            AdMediator[] mediators = GetComponentsInChildren<AdMediator>(true);
             m_mediators.AddRange(mediators);
-            StartInitializeSettings();
+            InitializeSettings();
         }
 
-        private void StartInitializeSettings()
+        private void InitializeSettings()
         {
-            bool isLoaded = LoadJsonSettingsFromFile(ref m_currSettings, m_isLoadOnlyDefaultSettings);
-
-            if (isLoaded && !m_isLoadOnlyDefaultSettings && m_remoteSettingsProvider != null)
+            if (!m_isLoadOnlyDefaultSettings && m_remoteSettingsProvider != null && m_remoteSettingsProvider.IsUpdateRequired)
             {
-                m_remoteSettingsProvider.Load();
+                m_remoteSettingsProvider.Request();
             }
             else
             {
+                LoadJsonSettingsFromFile(ref m_currSettings, m_isLoadOnlyDefaultSettings);
                 SetupCurrentSettings();
             }
         }
@@ -842,7 +841,7 @@ namespace Virterix.AdMediation
         private bool LoadJsonSettingsFromFile(ref JSONObject resultSettings, bool ignoreLoadedSettings = false)
         {
             JSONObject settings = null;
-            bool isLoadSuccessfully = false;
+            bool isLoadedSuccessfully = false;
 
             if (!ignoreLoadedSettings && File.Exists(SettingsFilePath))
             {
@@ -851,20 +850,20 @@ namespace Virterix.AdMediation
                 if (IsSettingsHashValid(jsonString))
                 {
                     settings = JSONObject.Parse(jsonString);
-                    isLoadSuccessfully = settings != null;
+                    isLoadedSuccessfully = settings != null;
                 }
 
-                if (!isLoadSuccessfully)
+                if (!isLoadedSuccessfully)
                 {
                     File.Delete(SettingsFilePath);
                 }
 
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("AdMediationSystem.LoadJsonSettingsFromFile() " + (isLoadSuccessfully ? " Valid settings" : " Not valid settings"));
+                Debug.Log("AdMediationSystem.LoadJsonSettingsFromFile() " + (isLoadedSuccessfully ? " Valid settings" : " Not valid settings"));
 #endif
             }
 
-            if (!isLoadSuccessfully)
+            if (!isLoadedSuccessfully)
             {
                 TextAsset textAsset = Resources.Load<TextAsset>(DefaultSettingsFilePathInResources);
                 if (textAsset != null)
@@ -879,9 +878,9 @@ namespace Virterix.AdMediation
             }
 
             resultSettings = settings;
-            isLoadSuccessfully = resultSettings != null;
+            isLoadedSuccessfully = resultSettings != null;
 
-            return isLoadSuccessfully;
+            return isLoadedSuccessfully;
         }
 
         private void OnRemoteSettingsReceived(AdRemoteSettingsProvider.LoadingState loadingState, JSONObject remoteJsonSettings)
@@ -896,7 +895,7 @@ namespace Virterix.AdMediation
 
                 if (remoteJsonSettings != null)
                 {
-                    bool isModifiedRemoteSettings = true;
+                    bool isRemoteSettingsModified = true;
                     string currSettingsStr = CurrSettings != null ? CurrSettings.ToString() : "";
 
                     string remoteHash = "";
@@ -909,14 +908,14 @@ namespace Virterix.AdMediation
                         case AdSettingsCompareMode.Hash:
                             localHash = AdUtils.GetHash(currSettingsStr);
                             remoteHash = AdUtils.GetHash(remoteJsonSettings.ToString());
-                            isModifiedRemoteSettings = localHash != remoteHash;
+                            isRemoteSettingsModified = localHash != remoteHash;
                             break;
                         case AdSettingsCompareMode.Version:
                             if (remoteJsonSettings.ContainsKey(SETTINGS_VERSION_PARAM_KEY))
                             {
                                 remoteVersion = Convert.ToInt32(remoteJsonSettings.GetValue(SETTINGS_VERSION_PARAM_KEY).Number);
                             }
-                            isModifiedRemoteSettings = remoteVersion > localVersion;
+                            isRemoteSettingsModified = remoteVersion > localVersion;
                             break;
                     }
 
@@ -929,7 +928,7 @@ namespace Virterix.AdMediation
                         Debug.Log("AdMediationSystem.OnRemoteSettingsReceived()");
 #endif
 
-                    if (isModifiedRemoteSettings)
+                    if (isRemoteSettingsModified)
                     {
                         if (remoteHash.Length == 0)
                         {

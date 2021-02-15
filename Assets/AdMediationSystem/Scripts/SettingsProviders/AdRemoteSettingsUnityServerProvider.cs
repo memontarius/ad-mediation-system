@@ -1,12 +1,12 @@
 ﻿
-#define _MS_USE_NITY_REMOTE_CONFIG
+#define _AMS_USE_UNITY_REMOTE_CONFIG
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Virterix.Common;
 using Boomlagoon.JSON;
-#if _MS_USE_NITY_REMOTE_CONFIG
+#if _AMS_USE_UNITY_REMOTE_CONFIG
 using Unity.RemoteConfig;
 #endif
 
@@ -17,7 +17,7 @@ namespace Virterix.AdMediation
 
         public bool m_isFetchConfigs;
         [Tooltip("Will be add platform key (prefix + platform)")]
-        public string m_settingsParamPrefixKey;
+        public string m_settingsPrefixKey;
 
         public string UniqueUserId
         {
@@ -34,7 +34,7 @@ namespace Virterix.AdMediation
 
         string SettingsParamKey
         {
-            get { return m_settingsParamPrefixKey + AdMediationSystem.Instance.PlatfomName; }
+            get { return m_settingsPrefixKey + AdMediationSystem.Instance.PlatfomName; }
         }
 
         public struct userAttributes
@@ -47,7 +47,7 @@ namespace Virterix.AdMediation
 
         string m_assignmentId;
 
-#if _MS_USE_NITY_REMOTE_CONFIG
+#if _AMS_USE_UNITY_REMOTE_CONFIG
         ConfigResponse m_lastConfigResponse;
         bool m_wasConfigResponse;
 
@@ -61,10 +61,8 @@ namespace Virterix.AdMediation
             ConfigManager.FetchCompleted -= ApplyRemoteSettings;
         }
 
-        public override void Load()
+        public override void Request()
         {
-            base.Load();
-
             if (m_isFetchConfigs)
             {
                 if (m_wasConfigResponse)

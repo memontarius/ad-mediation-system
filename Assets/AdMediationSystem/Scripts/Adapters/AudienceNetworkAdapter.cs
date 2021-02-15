@@ -39,8 +39,7 @@ namespace Virterix.AdMediation
         public float m_defaultBannerRefreshTime = 60f;
         
         public bool m_isDefaultServerValidation;
-        public bool m_isAddTestDevices = false;
-        public string m_testDeviceId;
+        
 
         protected override string AdInstanceParametersFolder
         {
@@ -51,7 +50,7 @@ namespace Virterix.AdMediation
         }
 
 #if _AMS_AUDIENCE_NETWORK
-        class AudienceNetworkAdInstanceData : AdInstanceData
+        private class AudienceNetworkAdInstanceData : AdInstanceData
         {
             public AudienceNetworkAdInstanceData() : base()
             {
@@ -78,9 +77,12 @@ namespace Virterix.AdMediation
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
-            if (m_isAddTestDevices)
+            if (m_isTestModeEnabled)
             {
-                AdSettings.AddTestDevice(m_testDeviceId);
+                foreach(string device in m_testDevices)
+                {
+                    AdSettings.AddTestDevice(device);
+                }
             }
         }
 
@@ -203,7 +205,7 @@ namespace Virterix.AdMediation
                             bannerView.Show(-10000);
                         }
                     }
-                    NotifyEvent(adType, AdEvent.Hide, audienceNetworkAdInstance);
+                    NotifyEvent(adType, AdEvent.Hiding, audienceNetworkAdInstance);
                     break;
             }
         }
@@ -553,7 +555,7 @@ namespace Virterix.AdMediation
                 bool success = bannerView.Show(bannerPosition.x, bannerPosition.y);
             }
 
-            AddEvent(AdType.Banner, AdEvent.Prepare, adInstance);
+            AddEvent(AdType.Banner, AdEvent.Prepared, adInstance);
         }
 
         void BannerAdViewDidFailWithError(AudienceNetworkAdInstanceData adInstance, string error)
@@ -592,7 +594,7 @@ namespace Virterix.AdMediation
             Debug.Log("AudienceNetworkAdapter.InterstitialAdDidLoad()");
 #endif
             adInstance.m_state = AdState.Received;
-            AddEvent(AdType.Interstitial, AdEvent.Prepare, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Prepared, adInstance);
         }
 
         void InterstitialAdDidFailWithError(AudienceNetworkAdInstanceData adInstance, string error)
@@ -610,7 +612,7 @@ namespace Virterix.AdMediation
             Debug.Log("AudienceNetworkAdapter.InterstitialAdDidClose()");
 #endif
             DestroyInterstitial(adInstance);
-            AddEvent(AdType.Interstitial, AdEvent.Hide, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Hiding, adInstance);
         }
 
         void InterstitialAdDidClick(AudienceNetworkAdInstanceData adInstance)
@@ -632,7 +634,7 @@ namespace Virterix.AdMediation
             Debug.Log("AudienceNetworkAdapter.RewardedVideoAdDidLoad()");
 #endif
             adInstance.m_state = AdState.Received;
-            AddEvent(AdType.Incentivized, AdEvent.Prepare, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Prepared, adInstance);
         }
 
         void RewardedVideoAdDidFailWithError(AudienceNetworkAdInstanceData adInstance, string error)
@@ -658,7 +660,7 @@ namespace Virterix.AdMediation
             Debug.Log("AudienceNetworkAdapter.RewardedVideoAdDidClose()");
 #endif
             DestroyRewardVideo(adInstance);
-            AddEvent(AdType.Incentivized, AdEvent.Hide, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Hiding, adInstance);
         }
 
         void RewardedVideoAdComplete(AudienceNetworkAdInstanceData adInstance)
@@ -666,7 +668,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AudienceNetworkAdapter.RewardedVideoAdComplete()");
 #endif
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedComplete, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, adInstance);
         }
 
         // S2S validation result
@@ -675,7 +677,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AudienceNetworkAdapter.RewardedVideoAdDidSucceed()");
 #endif
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedComplete, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, adInstance);
         }
 
         // S2S validation result
@@ -684,7 +686,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AudienceNetworkAdapter.RewardedVideoAdDidFail()");
 #endif
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedIncomplete, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizedUncompleted, adInstance);
         }
 
         #endregion // Reward Video callback handlers

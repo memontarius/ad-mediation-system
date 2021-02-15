@@ -132,8 +132,8 @@ public class AdMediationController : BaseAdController
 
     public void TogglePollfishReleaseMode(Text label) {
         if (m_pollfishNetwork != null) {
-            m_pollfishNetwork.m_isDebugMode = !m_pollfishNetwork.m_isDebugMode;
-            label.text = m_pollfishNetwork.m_isDebugMode ? "Toggle to Release" : "Toggle to Debug";
+            m_pollfishNetwork.m_isTestModeEnabled = !m_pollfishNetwork.m_isTestModeEnabled;
+            label.text = m_pollfishNetwork.m_isTestModeEnabled ? "Toggle to Release" : "Toggle to Debug";
         }
     }
 

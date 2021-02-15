@@ -43,7 +43,8 @@ namespace Virterix.AdMediation.Editor
         public List<AdInstance> _bannerAdInstances = new List<AdInstance>();
         public List<AdInstance> _interstitialAdInstances = new List<AdInstance>();
         public List<AdInstance> _rewardAdInstances = new List<AdInstance>();
-
+        public string[] _testDevices;
+        
         public virtual System.Type NetworkAdapterType
         {
             get;
@@ -71,6 +72,7 @@ namespace Virterix.AdMediation.Editor
         protected virtual string AdapterDefinePeprocessorKey { get; }
         public virtual string JsonAppIdKey { get { return "appId"; } }
         public virtual bool IsAppIdSupported { get; } = true;
+        public virtual bool IsTestDeviceSupported { get; }
 
         public virtual Dictionary<string, object> GetSpecificNetworkParameters(AppPlatform platform)
         {
@@ -83,7 +85,7 @@ namespace Virterix.AdMediation.Editor
             return null;
         }
 
-        public virtual void SetupNetworkAdapter(Component networkAdapter)
+        public virtual void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {
         }
 

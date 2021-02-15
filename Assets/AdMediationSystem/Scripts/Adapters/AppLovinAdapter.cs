@@ -65,6 +65,11 @@ namespace Virterix.AdMediation
 
             SubscribeEvents();
 
+            if (m_isTestModeEnabled)
+            {
+                MaxSdk.SetTestDeviceAdvertisingIdentifiers(m_testDevices);
+            }
+
 #if UNITY_ANDROID || UNITY_IPHONE
             MaxSdk.SetSdkKey(sdkKey);
             MaxSdk.InitializeSdk();
@@ -242,7 +247,7 @@ namespace Virterix.AdMediation
             // Interstitial ad is ready to be shown. MaxSdk.IsInterstitialReady(adUnitId) will now return 'true'
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
             adInstance.m_state = AdState.Received;
-            AddEvent(AdType.Interstitial, AdEvent.Prepare, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Prepared, adInstance);
         }
 
         private void OnInterstitialFailedEvent(string adUnitId, int errorCode)
@@ -268,7 +273,7 @@ namespace Virterix.AdMediation
             // Interstitial ad failed to display. We recommend loading the next ad  
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
             adInstance.m_state = AdState.NotAvailable;
-            AddEvent(AdType.Interstitial, AdEvent.Hide, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Hiding, adInstance);
         }
 
         private void OnInterstitialClickedEvent(string adUnitId)
@@ -282,7 +287,7 @@ namespace Virterix.AdMediation
             // Interstitial ad is hidden. Pre-load the next ad
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
             adInstance.m_state = AdState.NotAvailable;
-            AddEvent(AdType.Interstitial, AdEvent.Hide, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Hiding, adInstance);
         }
 
         // _____________________________________________
@@ -293,7 +298,7 @@ namespace Virterix.AdMediation
             // Rewarded ad is ready to be shown. MaxSdk.IsRewardedAdReady(adUnitId) will now return 'true'
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
             adInstance.m_state = AdState.Received;
-            AddEvent(AdType.Incentivized, AdEvent.Prepare, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Prepared, adInstance);
         }
 
         private void OnRewardedAdFailedEvent(string adUnitId, int errorCode)
@@ -313,7 +318,7 @@ namespace Virterix.AdMediation
             // Rewarded ad failed to display. We recommend loading the next ad
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
             adInstance.m_state = AdState.NotAvailable;
-            AddEvent(AdType.Incentivized, AdEvent.Hide, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Hiding, adInstance);
         }
 
         private void OnRewardedAdDisplayedEvent(string adUnitId)
@@ -333,7 +338,7 @@ namespace Virterix.AdMediation
             // Rewarded ad is hidden. Pre-load the next ad
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
             adInstance.m_state = AdState.NotAvailable;
-            AddEvent(AdType.Incentivized, AdEvent.Hide, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Hiding, adInstance);
         }
 
         private void OnRewardedAdReceivedRewardEvent(string adUnitId, MaxSdk.Reward reward)
@@ -342,7 +347,7 @@ namespace Virterix.AdMediation
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
             m_lastReward.label = reward.Label;
             m_lastReward.amount = reward.Amount;
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedComplete, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, adInstance);
         }
 
 #endif // _AMS_APPLOVIN

@@ -46,7 +46,8 @@ namespace Virterix.AdMediation.Editor
     public class AdMediationProjectSettings : ScriptableObject
     {
         public bool _initializeOnStart = true;
-        public bool _personalizeAdsOnInit = true;       
+        public bool _personalizeAdsOnInit = true;
+        public bool _enableTestMode = false;
         public List<AdUnitMediator> _bannerMediators = new List<AdUnitMediator>();
         public List<AdUnitMediator> _interstitialMediators = new List<AdUnitMediator>();
         public List<AdUnitMediator> _incentivizedMediators = new List<AdUnitMediator>();

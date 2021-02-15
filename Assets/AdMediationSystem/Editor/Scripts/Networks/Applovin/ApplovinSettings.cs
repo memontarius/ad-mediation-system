@@ -14,6 +14,7 @@ namespace Virterix.AdMediation.Editor
 
         protected override string AdapterScriptName => "AppLovinAdapter";
         protected override string AdapterDefinePeprocessorKey => "_AMS_APPLOVIN";
+        public override bool IsTestDeviceSupported => true;
 
         public override bool IsAdSupported(AdType adType)
         {
@@ -26,7 +27,7 @@ namespace Virterix.AdMediation.Editor
             return false;
         }
 
-        public override void SetupNetworkAdapter(Component networkAdapter)
+        public override void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {
             AppLovinAdapter.SetupNetworkNativeSettings(_sdkKey);
         }

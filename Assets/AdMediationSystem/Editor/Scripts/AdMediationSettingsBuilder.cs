@@ -313,62 +313,67 @@ namespace Virterix.AdMediation.Editor
         //-------------------------------------------------------------
         #region System Prefab
 
-        private static GameObject CreateSystemObject(string projectName, AdMediationProjectSettings settings, BaseAdNetworkSettings[] networksSettings, AdUnitMediator[] mediators)
+        private static GameObject CreateSystemObject(string projectName, AdMediationProjectSettings commonSettings, BaseAdNetworkSettings[] networksSettings, AdUnitMediator[] mediators)
         {
             GameObject mediationSystemObject = new GameObject(AdMediationSystem.PREFAB_NAME + ".prefab");
             AdMediationSystem adSystem = mediationSystemObject.AddComponent<AdMediationSystem>();
             adSystem.m_projectName = projectName;
             adSystem.m_isLoadOnlyDefaultSettings = true;
-            adSystem.m_isInitializeOnStart = settings._initializeOnStart;
-            adSystem.m_isPersonalizeAdsOnInit = settings._personalizeAdsOnInit;
+            adSystem.m_isInitializeOnStart = commonSettings._initializeOnStart;
+            adSystem.m_isPersonalizeAdsOnInit = commonSettings._personalizeAdsOnInit;
 
             GameObject networkAdapterHolder = new GameObject("NetworkAdapters");
             networkAdapterHolder.transform.SetParent(mediationSystemObject.transform);
-            FillNetworkHolder(networkAdapterHolder, networksSettings);
+            FillNetworkHolder(networkAdapterHolder, commonSettings, networksSettings);
 
             GameObject mediatorHolder = new GameObject("Mediators");
             mediatorHolder.transform.SetParent(mediationSystemObject.transform);
             
             GameObject bannerMediatorHolder = new GameObject("Banner");
             bannerMediatorHolder.transform.SetParent(mediatorHolder.transform);
-            FillMediatorHolder(bannerMediatorHolder, settings._bannerMediators);
+            FillMediatorHolder(bannerMediatorHolder, commonSettings._bannerMediators);
 
             GameObject interstitialMediatorHolder = new GameObject("Interstitial");
             interstitialMediatorHolder.transform.SetParent(mediatorHolder.transform);
-            FillMediatorHolder(interstitialMediatorHolder, settings._interstitialMediators);
+            FillMediatorHolder(interstitialMediatorHolder, commonSettings._interstitialMediators);
 
             GameObject incentivizedMediatorHolder = new GameObject("Incentivized");
             incentivizedMediatorHolder.transform.SetParent(mediatorHolder.transform);
-            FillMediatorHolder(incentivizedMediatorHolder, settings._incentivizedMediators);
+            FillMediatorHolder(incentivizedMediatorHolder, commonSettings._incentivizedMediators);
 
             return mediationSystemObject;
         }
 
-        private static void FillNetworkHolder(GameObject networkHolder, BaseAdNetworkSettings[] networksSettings)
+        private static void FillNetworkHolder(GameObject networkHolder, AdMediationProjectSettings commonSettings, BaseAdNetworkSettings[] networksSettings)
         {
             AdType[] adTypeArray = System.Enum.GetValues(typeof(AdType)) as AdType[];
             List<AdType> adTypes = adTypeArray.ToList();
             adTypes.Remove(AdType.Unknown);
 
-            foreach (var network in networksSettings)
+            foreach (var settings in networksSettings)
             {
-                if (network._enabled)
+                if (settings._enabled)
                 {
-                    AdNetworkAdapter adapter = networkHolder.AddComponent(network.NetworkAdapterType) as AdNetworkAdapter;
+                    AdNetworkAdapter adapter = networkHolder.AddComponent(settings.NetworkAdapterType) as AdNetworkAdapter;
                     List<AdNetworkAdapter.AdParam> adSupportedParams = new List<AdNetworkAdapter.AdParam>();
                     for (int i = 0; i < adTypes.Count; i++)
                     {
-                        if (network.IsAdSupported(adTypes[i]))
+                        if (settings.IsAdSupported(adTypes[i]))
                         {
                             var supportedParam = new AdNetworkAdapter.AdParam();
                             supportedParam.m_adType = adTypes[i];
-                            supportedParam.m_isCheckAvailabilityWhenPreparing = network.IsCheckAvailabilityWhenPreparing(supportedParam.m_adType);
+                            supportedParam.m_isCheckAvailabilityWhenPreparing = settings.IsCheckAvailabilityWhenPreparing(supportedParam.m_adType);
                             adSupportedParams.Add(supportedParam);
                         }
                     }
-                    adapter.m_networkName = network._networkIdentifier;
+                    adapter.m_networkName = settings._networkIdentifier;
                     adapter.m_adSupportParams = adSupportedParams.ToArray();
-                    network.SetupNetworkAdapter(adapter);
+                    adapter.m_isTestModeEnabled = commonSettings._enableTestMode;
+                    if (commonSettings._enableTestMode)
+                    {
+                        adapter.m_testDevices = settings._testDevices;
+                    }
+                    settings.SetupNetworkAdapter(commonSettings, adapter);
                 }
             }
         }
