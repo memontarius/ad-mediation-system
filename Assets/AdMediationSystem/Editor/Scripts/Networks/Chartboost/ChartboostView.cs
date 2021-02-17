@@ -12,6 +12,19 @@ namespace Virterix.AdMediation.Editor
 
         protected override bool IsSeparatedPlatformSettings => true;
 
+        public override bool Enabled
+        {
+            get => base.Enabled;
+            set
+            {
+                if (!base.Enabled && value)
+                {
+                    ((ChartboostSettings)_settings).FixChartboostNativeScript();
+                }
+                base.Enabled = value;
+            }
+        }
+
         public ChartboostView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
             base(settingsWindow, name, identifier)
         {

@@ -64,13 +64,15 @@ namespace Virterix.AdMediation
             }
 
             SubscribeEvents();
-
-            if (m_isTestModeEnabled)
-            {
-                MaxSdk.SetTestDeviceAdvertisingIdentifiers(m_testDevices);
-            }
-
 #if UNITY_ANDROID || UNITY_IPHONE
+            if (AdMediationSystem.Instance.m_testModeEnabled)
+            {
+                MaxSdk.SetTestDeviceAdvertisingIdentifiers(AdMediationSystem.Instance.m_testDevices);
+            }
+            if (AdMediationSystem.Instance.m_isChildrenDirected)
+            {
+                MaxSdk.SetIsAgeRestrictedUser(AdMediationSystem.Instance.m_isChildrenDirected);
+            }
             MaxSdk.SetSdkKey(sdkKey);
             MaxSdk.InitializeSdk();
 #endif

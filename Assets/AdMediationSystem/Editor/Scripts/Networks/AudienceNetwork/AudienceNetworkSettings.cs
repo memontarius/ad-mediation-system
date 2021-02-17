@@ -10,7 +10,6 @@ namespace Virterix.AdMediation.Editor
         public override Type NetworkAdapterType => typeof(AudienceNetworkAdapter);
         protected override string AdapterScriptName => "AudienceNetworkAdapter";
         protected override string AdapterDefinePeprocessorKey => "_AMS_AUDIENCE_NETWORK";
-        public override bool IsTestDeviceSupported => true;
 
         public override bool IsAdSupported(AdType adType)
         {

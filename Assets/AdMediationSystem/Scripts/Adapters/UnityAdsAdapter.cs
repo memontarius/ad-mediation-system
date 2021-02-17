@@ -49,7 +49,7 @@ namespace Virterix.AdMediation
             {
                 if (m_isInitializeWhenStart)
                 {
-                    Advertisement.Initialize(m_appId, m_isTestModeEnabled);
+                    Advertisement.Initialize(m_appId, AdMediationSystem.Instance.m_testModeEnabled);
                 }
                 Advertisement.AddListener(this);
             }
@@ -152,9 +152,9 @@ namespace Virterix.AdMediation
             if (adInstance != null)
             {
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("UnityAdsAdapter.OnUnityAdsReady() " + adInstance.m_adId + " m_isBannerAdTypeVisibled:" + adInstance.m_isBannerAdTypeVisibled);
+                Debug.Log("UnityAdsAdapter.OnUnityAdsReady() " + adInstance.m_adId + " m_bannerVisibled:" + adInstance.m_bannerVisibled);
 #endif
-                if (adInstance.m_adType == AdType.Banner && adInstance.m_isBannerAdTypeVisibled)
+                if (adInstance.m_adType == AdType.Banner && adInstance.m_bannerVisibled)
                 {
                     Show(adInstance);
                 }

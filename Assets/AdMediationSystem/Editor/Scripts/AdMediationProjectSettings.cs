@@ -48,6 +48,7 @@ namespace Virterix.AdMediation.Editor
         public bool _initializeOnStart = true;
         public bool _personalizeAdsOnInit = true;
         public bool _enableTestMode = false;
+        public string[] _testDevices;
         public List<AdUnitMediator> _bannerMediators = new List<AdUnitMediator>();
         public List<AdUnitMediator> _interstitialMediators = new List<AdUnitMediator>();
         public List<AdUnitMediator> _incentivizedMediators = new List<AdUnitMediator>();

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEditor.AnimatedValues;
@@ -34,7 +31,11 @@ namespace Virterix.AdMediation.Editor
 
         public string Identifier { get; private set; }
 
-        public bool Enabled { get; set; }
+        public virtual bool Enabled {
+            get { return _enabled; }
+            set { _enabled = value; } 
+        }
+        private bool _enabled;
 
         public bool Collapsed { get; set; }
 
@@ -72,7 +73,6 @@ namespace Virterix.AdMediation.Editor
         private SerializedProperty _androidAppIdProp;
         private SerializedProperty _iosAppIdProp;
         private SerializedProperty _responseWaitTimeProp;
-        private SerializedProperty _testDeviceProp;
 
         private AnimBool _showSettings;
         private SerializedProperty _enabledProp;
@@ -112,15 +112,14 @@ namespace Virterix.AdMediation.Editor
 
             _enabledProp = _serializedSettings.FindProperty("_enabled");
             _responseWaitTimeProp = _serializedSettings.FindProperty("_responseWaitTime");
-            _testDeviceProp = _serializedSettings.FindProperty("_testDevices");
-
+ 
             // Android
             _androidAppIdProp = _serializedSettings.FindProperty("_androidAppId");
             // iOS
             _iosAppIdProp = _serializedSettings.FindProperty("_iosAppId");
 
             UpdateElementHeight();
-            Enabled = _enabledProp.boolValue;
+            _enabled = _enabledProp.boolValue;
         }
 
         private void InitAdInstanceBlock(AdType adType, string title, string propertyName)
@@ -153,7 +152,7 @@ namespace Virterix.AdMediation.Editor
                 }
                 _enabledProp.boolValue = Enabled;
                 DrawCommonSettigns();
-                DrawPlatformSettings();
+                DrawPlatformSettings();               
                 DrawSpecificSettings();
                 DrawAdInstanceLists();
                 _serializedSettings.ApplyModifiedProperties();
@@ -289,10 +288,6 @@ namespace Virterix.AdMediation.Editor
         {
             GUILayout.BeginVertical("box");
             Utils.DrawPropertyField(_serializedSettings, _responseWaitTimeProp, GUILayout.ExpandWidth(true));
-            if (_settingsWindow.IsTestModeEnabled && _settings.IsTestDeviceSupported)
-            {
-                Utils.DrawPropertyField(_serializedSettings, _testDeviceProp, GUILayout.ExpandWidth(true));
-            }
             GUILayout.EndVertical();
         }
 

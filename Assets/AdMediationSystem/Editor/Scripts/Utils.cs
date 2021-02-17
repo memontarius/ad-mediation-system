@@ -27,13 +27,13 @@ namespace Virterix.AdMediation.Editor
             return settings;
         }
 
-        public static void DrawPropertyField(SerializedObject serializedObject, string fieldName, GUILayoutOption options = null)
+        public static void DrawPropertyField(SerializedObject serializedObject, string fieldName, params GUILayoutOption[] options)
         {
             SerializedProperty property = serializedObject.FindProperty(fieldName);
             DrawPropertyField(serializedObject, property, options);
         }
 
-        public static void DrawPropertyField(SerializedObject serializedObject, SerializedProperty property, GUILayoutOption options = null)
+        public static void DrawPropertyField(SerializedObject serializedObject, SerializedProperty property, params GUILayoutOption[] options)
         {
             if (options == null)
             {

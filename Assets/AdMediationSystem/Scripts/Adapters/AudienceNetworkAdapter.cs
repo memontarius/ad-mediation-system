@@ -35,12 +35,12 @@ namespace Virterix.AdMediation
             Top
         }
 
+        /*
         [Tooltip("In Seconds")]
         public float m_defaultBannerRefreshTime = 60f;
-        
-        public bool m_isDefaultServerValidation;
-        
-
+        */
+        public bool m_isDefaultServerValidation = false;
+   
         protected override string AdInstanceParametersFolder
         {
             get
@@ -77,9 +77,9 @@ namespace Virterix.AdMediation
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
-            if (m_isTestModeEnabled)
+            if (AdMediationSystem.Instance.m_testModeEnabled)
             {
-                foreach(string device in m_testDevices)
+                foreach(string device in AdMediationSystem.Instance.m_testDevices)
                 {
                     AdSettings.AddTestDevice(device);
                 }
@@ -91,7 +91,7 @@ namespace Virterix.AdMediation
             base.InitializeAdInstanceData(adInstance, jsonAdInstance);
 
             AudienceNetworkAdInstanceData audienceNetworkAdInstance = adInstance as AudienceNetworkAdInstanceData;
-            audienceNetworkAdInstance.m_refreshTime = m_defaultBannerRefreshTime;
+            audienceNetworkAdInstance.m_refreshTime = 900;
 
             if (adInstance.m_adType == AdType.Banner)
             {
@@ -139,7 +139,7 @@ namespace Virterix.AdMediation
             switch (adType)
             {
                 case AdType.Banner:
-                    audienceNetworkAdInstance.m_isBannerAdTypeVisibled = true;
+                    audienceNetworkAdInstance.m_bannerVisibled = true;
                     if (adInstance.m_state == AdState.Received)
                     {
                         AdView bannerView = audienceNetworkAdInstance.m_adView as AdView;
@@ -195,7 +195,7 @@ namespace Virterix.AdMediation
             {
                 case AdType.Banner:
                     //case AdType.Native:
-                    audienceNetworkAdInstance.m_isBannerAdTypeVisibled = false;
+                    audienceNetworkAdInstance.m_bannerVisibled = false;
 
                     if (adType == AdType.Banner)
                     {
@@ -218,7 +218,7 @@ namespace Virterix.AdMediation
             {
                 return;
             }
-            audienceNetworkAdInstance.m_isBannerAdTypeVisibled = false;
+            audienceNetworkAdInstance.m_bannerVisibled = false;
 
             switch (adType)
             {
@@ -305,7 +305,7 @@ namespace Virterix.AdMediation
             while (true)
             {
                 yield return waitInstruction;
-                if (adInstance.m_state == AdState.Received && adInstance.m_isBannerAdTypeVisibled)
+                if (adInstance.m_state == AdState.Received && adInstance.m_bannerVisibled)
                 {
                     lifeTime += period;
                 }
@@ -358,7 +358,7 @@ namespace Virterix.AdMediation
             }
 
 #if UNITY_EDITOR
-            return;
+            //return;
 #endif
 
 #if UNITY_IOS || UNITY_ANDROID
@@ -547,7 +547,7 @@ namespace Virterix.AdMediation
 #endif
 
             adInstance.m_state = AdState.Received;
-            if (adInstance.m_isBannerAdTypeVisibled && adInstance.m_adView != null)
+            if (adInstance.m_bannerVisibled && adInstance.m_adView != null)
             {
                 AudienceNetworkAdInstanceBannerParameters adInstanceParams = adInstance.m_adInstanceParams as AudienceNetworkAdInstanceBannerParameters;
                 AdView bannerView = adInstance.m_adView as AdView;

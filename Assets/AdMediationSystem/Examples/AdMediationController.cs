@@ -130,13 +130,6 @@ public class AdMediationController : BaseAdController
         m_adPersonalizedText.text = buttonText;
     }
 
-    public void TogglePollfishReleaseMode(Text label) {
-        if (m_pollfishNetwork != null) {
-            m_pollfishNetwork.m_isTestModeEnabled = !m_pollfishNetwork.m_isTestModeEnabled;
-            label.text = m_pollfishNetwork.m_isTestModeEnabled ? "Toggle to Release" : "Toggle to Debug";
-        }
-    }
-
     void OnAdPollfishNetworkEvent(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstanceData adInstance) {
         HandleNetworkEvent(null, network, adType, adEvent, adInstance == null ? "" : adInstance.Name);
     }

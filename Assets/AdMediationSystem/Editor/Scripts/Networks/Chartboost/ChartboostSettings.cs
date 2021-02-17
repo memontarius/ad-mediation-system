@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,6 +33,7 @@ namespace Virterix.AdMediation.Editor
         public override void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {
             ChartboostAdapter.SetupNetworkNativeSettings(_androidAppId, _androidAppSignature, _iosAppId, _iosAppSignature);
+            FixChartboostNativeScript();
         }
 
         public override Dictionary<string, object> GetSpecificNetworkParameters(AppPlatform platform)
@@ -52,6 +54,26 @@ namespace Virterix.AdMediation.Editor
             parameters.Add("appSignature", appSignature);
             parameters.Add("autocache", false);
             return parameters;
+        }
+
+        public void FixChartboostNativeScript()
+        {
+            string chartboostPath = string.Format("{0}/{1}", Application.dataPath, "/Chartboost/Scripts/Chartboost.cs");
+            if (File.Exists(chartboostPath))
+            {
+                string content = File.ReadAllText(chartboostPath);
+                if (content.Length > 0)
+                {
+                    string expectedString = "//Time.timeScale =";
+                    string replaceableString = "Time.timeScale =";
+
+                    if (!content.Contains(expectedString))
+                    {
+                        content = content.Replace(replaceableString, expectedString);
+                    }
+                    File.WriteAllText(chartboostPath, content);
+                }
+            }
         }
     }
 } // namespace Virterix.AdMediation.Editor

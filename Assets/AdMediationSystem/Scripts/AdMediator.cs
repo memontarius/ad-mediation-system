@@ -357,7 +357,6 @@ namespace Virterix.AdMediation
 
                 if (isEnded)
                 {
-                    Debug.Log("tierIndex: " + tierIndex + " isEnded: " + isEnded);
                     break;
                 }
             }

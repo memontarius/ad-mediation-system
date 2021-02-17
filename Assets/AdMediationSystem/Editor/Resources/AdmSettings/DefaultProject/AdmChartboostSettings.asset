@@ -17,6 +17,7 @@ MonoBehaviour:
   _androidAppId: 54f98cb30d60257eaf2c13d5
   _iosAppId: 54f98cb20d60257eaf2c13d3
   _responseWaitTime: 30
+  _directedTowardsChildren: 0
   _bannerAdInstances: []
   _interstitialAdInstances: []
   _rewardAdInstances: []

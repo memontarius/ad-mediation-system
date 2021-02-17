@@ -1,17 +1,19 @@
 ﻿using System;
 using UnityEngine;
+using UnityEditor;
 
 namespace Virterix.AdMediation.Editor
 {
     [Serializable]
     public class AdMobSettings : BaseAdNetworkSettings
     {
+
+
         public override Type NetworkAdapterType => typeof(AdMobAdapter);
 
         protected override string AdapterScriptName => "AdMobAdapter";
         protected override string AdapterDefinePeprocessorKey => "_AMS_ADMOB";
-        public override bool IsTestDeviceSupported => true;
-
+ 
         public override bool IsAdSupported(AdType adType)
         {
             return true;
@@ -30,7 +32,14 @@ namespace Virterix.AdMediation.Editor
         public override AdInstanceParameters CreateBannerAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
         {
             AdMobAdInstanceBannerParameters parameters = AdMobAdInstanceBannerParameters.CreateParameters(projectName, instanceName);
-            parameters.Name = instanceName;
+            SerializedObject serializedObj = new SerializedObject(parameters);
+
+            serializedObj.FindProperty("m_name").stringValue = instanceName;
+
+           
+            serializedObj.FindProperty("m_bannerSize").stringValue = instanceName;
+
+            //parameters.Name = instanceName;
             parameters.m_bannerSize = (AdMobAdapter.AdMobBannerSize)bannerType;
 
             var specificBannerPositions = new AdMobAdInstanceBannerParameters.BannerPosition[bannerPositions.Length];
@@ -52,6 +61,8 @@ namespace Virterix.AdMediation.Editor
                 specificBannerPositions[i] = specificPosition;
             }
             parameters.m_bannerPositions = specificBannerPositions;
+
+            serializedObj.ApplyModifiedProperties();
 
             return parameters;
         }

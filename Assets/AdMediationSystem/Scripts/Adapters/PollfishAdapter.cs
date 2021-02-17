@@ -11,12 +11,12 @@ namespace Virterix.AdMediation
     {
         public enum SurveyPosition
         {
-            TOP_LEFT = 0,
-            BOTTOM_LEFT,
-            TOP_RIGHT,
-            BOTTOM_RIGHT,
-            MIDDLE_LEFT,
-            MIDDLE_RIGHT
+            TopLeft = 0,
+            BottomLeft,
+            TopRight,
+            BottomRight,
+            MiddleLeft,
+            MiddleRight
         }
 
         public struct SurveyInfo
@@ -30,11 +30,10 @@ namespace Virterix.AdMediation
             public int m_rewardValue;
         }
 
-        public string m_defaultApiKey = "";
-        public SurveyPosition m_pollfishPosition = SurveyPosition.BOTTOM_RIGHT;
-        public bool m_isAutoFetchOnHide = true;
-        public bool m_isRestoreBannersOnHideSurvey;
-        [Tooltip("Auto prepere survey by time. 0 - disabled.")]
+        public SurveyPosition m_indicatorPosition = SurveyPosition.BottomRight;
+        public bool m_autoPrepareOnHide = true;
+        public bool m_restoreBannersOnHideSurvey = true;
+        [Tooltip("Auto prepere survey by time (0 - disabled).")]
         public int m_autoPrepareIntervalInMinutes = 0;
 
         private string m_apiKey = "";
@@ -109,7 +108,7 @@ namespace Virterix.AdMediation
 
             StopProcInitializePollfishWithDelay();
 
-            string apiKey = m_defaultApiKey;
+            string apiKey = "";
             if (parameters != null)
             {
                 if (!parameters.TryGetValue("apiKey", out apiKey))
@@ -137,7 +136,7 @@ namespace Virterix.AdMediation
 
             bool offerwallMode = false;
             int indPadding = 10;
-            bool releaseMode = !m_isTestModeEnabled;
+            bool releaseMode = !AdMediationSystem.Instance.m_testModeEnabled;
             bool rewardMode = true;
             string requestUUID = SystemInfo.deviceUniqueIdentifier;
             Dictionary<string, string> userAttributes = new Dictionary<string, string>();
@@ -146,7 +145,7 @@ namespace Virterix.AdMediation
             pollfishParams.IndicatorPadding(indPadding);
             pollfishParams.ReleaseMode(releaseMode);
             pollfishParams.RewardMode(rewardMode);
-            pollfishParams.IndicatorPosition((int)m_pollfishPosition);
+            pollfishParams.IndicatorPosition((int)m_indicatorPosition);
             pollfishParams.RequestUUID(requestUUID);
             pollfishParams.UserAttributes(userAttributes);
 
@@ -364,12 +363,12 @@ namespace Virterix.AdMediation
         {
             AddEvent(AdType.Incentivized, AdEvent.Hiding, null);
 
-            if (m_isRestoreBannersOnHideSurvey)
+            if (m_restoreBannersOnHideSurvey)
             {
                 RestoreBanners();
             }
 
-            if (m_isAutoFetchOnHide)
+            if (m_autoPrepareOnHide)
             {
                 AdState state = m_adInstance.m_state;
                 if (state == AdState.Uncertain || state == AdState.NotAvailable)

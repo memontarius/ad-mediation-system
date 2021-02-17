@@ -44,7 +44,7 @@ namespace Virterix.AdMediation
         public AdType m_adType;
         public string m_adId;
         public AdNetworkAdapter.TimeoutParams? m_timeout;
-        public bool m_isBannerAdTypeVisibled;
+        public bool m_bannerVisibled;
         public AdNetworkAdapter.AdState m_state = AdNetworkAdapter.AdState.Uncertain;
         public bool m_lastAdPrepared;
         public bool m_enabledState;

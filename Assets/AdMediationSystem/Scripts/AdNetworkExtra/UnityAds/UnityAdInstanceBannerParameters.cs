@@ -1,8 +1,4 @@
-﻿using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
+﻿
 namespace Virterix.AdMediation
 {
     public class UnityAdInstanceBannerParameters : AdInstanceParameters

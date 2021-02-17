@@ -115,7 +115,7 @@ namespace Virterix.AdMediation.Editor
                             string instanceName = adInstanceDataHolder._adInstance._name;
                             int bannerType = adInstanceDataHolder._adInstance._bannerType;
                             var bannerPositions = FindBannerPositions(adInstanceDataHolder, mediators);
-                            var adInstanceParameters = network.CreateBannerAdInstanceParameters(projectName, instanceName, bannerType, bannerPositions);
+                            network.CreateBannerAdInstanceParameters(projectName, instanceName, bannerType, bannerPositions);
                         }
                     }
                 }
@@ -316,11 +316,13 @@ namespace Virterix.AdMediation.Editor
         private static GameObject CreateSystemObject(string projectName, AdMediationProjectSettings commonSettings, BaseAdNetworkSettings[] networksSettings, AdUnitMediator[] mediators)
         {
             GameObject mediationSystemObject = new GameObject(AdMediationSystem.PREFAB_NAME + ".prefab");
-            AdMediationSystem adSystem = mediationSystemObject.AddComponent<AdMediationSystem>();
-            adSystem.m_projectName = projectName;
-            adSystem.m_isLoadOnlyDefaultSettings = true;
-            adSystem.m_isInitializeOnStart = commonSettings._initializeOnStart;
-            adSystem.m_isPersonalizeAdsOnInit = commonSettings._personalizeAdsOnInit;
+            AdMediationSystem admSystem = mediationSystemObject.AddComponent<AdMediationSystem>();
+            admSystem.m_projectName = projectName;
+            admSystem.m_isLoadOnlyDefaultSettings = true;
+            admSystem.m_initializeOnStart = commonSettings._initializeOnStart;
+            admSystem.m_personalizeAdsOnInit = commonSettings._personalizeAdsOnInit;
+            admSystem.m_testModeEnabled = commonSettings._enableTestMode;
+            admSystem.m_testDevices = commonSettings._testDevices;
 
             GameObject networkAdapterHolder = new GameObject("NetworkAdapters");
             networkAdapterHolder.transform.SetParent(mediationSystemObject.transform);
@@ -368,11 +370,6 @@ namespace Virterix.AdMediation.Editor
                     }
                     adapter.m_networkName = settings._networkIdentifier;
                     adapter.m_adSupportParams = adSupportedParams.ToArray();
-                    adapter.m_isTestModeEnabled = commonSettings._enableTestMode;
-                    if (commonSettings._enableTestMode)
-                    {
-                        adapter.m_testDevices = settings._testDevices;
-                    }
                     settings.SetupNetworkAdapter(commonSettings, adapter);
                 }
             }

@@ -1,11 +1,7 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Boomlagoon.JSON;
-using System.Linq;
-using System.IO;
 
 namespace Virterix.AdMediation
 {
@@ -98,8 +94,6 @@ namespace Virterix.AdMediation
 
         public string m_networkName;
         public AdParam[] m_adSupportParams;
-        public bool m_isTestModeEnabled = false;
-        public string[] m_testDevices;
 
         //_______________________________________________________________________________
         #region Properties
@@ -390,6 +384,10 @@ namespace Virterix.AdMediation
             adInstance.m_adType = AdUtils.StringToAdType(jsonAdInstance.Obj.GetString("adType"));
             adInstance.m_adId = jsonAdInstance.Obj.GetString("id");
             adInstance.m_adInstanceParams = GetAdInstanceParams(adInstance.m_adType, parametersName);
+            if (adInstance.m_adType == AdType.Banner && adInstance.m_adInstanceParams == null)
+            {
+                Debug.LogWarning("[AdMediationSystem] Ad instance banner " + m_networkName + " parameters in NULL! It needs to be fixed.");
+            }
             if (jsonAdInstance.Obj.ContainsKey("timeout"))
             {
                 TimeoutParams timeoutParameters = new TimeoutParams();

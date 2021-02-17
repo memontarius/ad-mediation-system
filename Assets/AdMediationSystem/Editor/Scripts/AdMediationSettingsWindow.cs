@@ -71,6 +71,7 @@ namespace Virterix.AdMediation.Editor
         private SerializedProperty _isAndroidProp;
         private SerializedProperty _isIOSProp;
         private SerializedProperty _enableTestModeProp;
+        private SerializedProperty _testDevicesProp;
 
         public bool IsAndroid 
         {
@@ -143,22 +144,28 @@ namespace Virterix.AdMediation.Editor
         private void OnGUI()
         {
             _scrollPositioin = EditorGUILayout.BeginScrollView(_scrollPositioin, false, false);
+            float previousLabelWidth = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = 160.0f;
 
             DrawTabs();
 
             EditorGUILayout.BeginHorizontal(GUILayout.Width(580), GUILayout.Height(0));
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
+
             
             switch (SelectedTab)
             {
                 case 0: // Settings
+                    _serializedProjectSettings.Update();
                     DrawProjectName();
                     if (IsProjectValid)
                     {
                         DrawProjectSettings();
                         DrawAdNetworks();
                     }
+                    _serializedProjectSettings.ApplyModifiedProperties();
+
                     break;
                 case 1: // Banner mediators
                     DrawMediators(_bannerMediators, "_bannerMediators");
@@ -170,7 +177,9 @@ namespace Virterix.AdMediation.Editor
                     DrawMediators(_incentivizedMediators, "_incentivizedMediators");
                     break;
             }
-            DrawBuild();           
+            DrawBuild();
+
+            EditorGUIUtility.labelWidth = previousLabelWidth;
             EditorGUILayout.EndScrollView();
         }
 
@@ -332,6 +341,7 @@ namespace Virterix.AdMediation.Editor
             _isAndroidProp = _serializedProjectSettings.FindProperty("_isAndroid");
             _isIOSProp = _serializedProjectSettings.FindProperty("_isIOS");
             _enableTestModeProp = _serializedProjectSettings.FindProperty("_enableTestMode");
+            _testDevicesProp = _serializedProjectSettings.FindProperty("_testDevices");
 
             InitProjectNames();
         }
@@ -621,10 +631,13 @@ namespace Virterix.AdMediation.Editor
 
             GUILayout.BeginVertical("box");
 
-            Utils.DrawPropertyField(_serializedProjectSettings, "_initializeOnStart", GUILayout.ExpandWidth(true));
+            Utils.DrawPropertyField(_serializedProjectSettings, "_initializeOnStart");
             Utils.DrawPropertyField(_serializedProjectSettings, "_personalizeAdsOnInit");
-            Utils.DrawPropertyField(_serializedProjectSettings, _enableTestModeProp);
-            
+            Utils.DrawPropertyField(_serializedProjectSettings, _enableTestModeProp);          
+            if (_enableTestModeProp.boolValue)
+            {
+                Utils.DrawPropertyField(_serializedProjectSettings, _testDevicesProp);
+            }
             GUILayout.EndVertical();
         }
 

@@ -65,12 +65,15 @@ namespace Virterix.AdMediation
         [Tooltip("Compare settings loaded from server")]
         public AdSettingsCompareMode m_settingsCompareMode;
         public AdRemoteSettingsProvider m_remoteSettingsProvider;
-        public AppPlatform m_defaultPlatformName;
+        public AppPlatform m_platformInEditor;
         public string m_hashCryptKey;
-        public bool m_isInitializeOnStart = true;
-        public bool m_isPersonalizeAdsOnInit = true;
+        public bool m_isChildrenDirected = false;
+        public bool m_initializeOnStart = true;
+        public bool m_personalizeAdsOnInit = true;
+        public bool m_testModeEnabled = false;
+        public string[] m_testDevices;
         // For GDPR Compliance
-        private bool m_isPersonalizedAds;
+        private bool m_isAdsPersonalized;
 
         public static event Action OnInitializeComplete = delegate { };
         /// <summary>
@@ -89,7 +92,7 @@ namespace Virterix.AdMediation
         /// </summary>
         public bool IsPersonalizedAds
         {
-            get { return m_isPersonalizedAds; }
+            get { return m_isAdsPersonalized; }
         }
 
         public bool IsInitialized
@@ -107,7 +110,7 @@ namespace Virterix.AdMediation
         {
             get
             {
-                string platformName = m_defaultPlatformName.ToString();
+                string platformName = m_platformInEditor.ToString();
                 
                 switch (Application.platform)
                 {
@@ -200,7 +203,7 @@ namespace Virterix.AdMediation
 
         private void Awake()
         {
-            m_isPersonalizedAds = PlayerPrefs.GetInt(PERSONALIZED_ADS_SAVE_KEY, 1) == 1 ? true : false;
+            m_isAdsPersonalized = PlayerPrefs.GetInt(PERSONALIZED_ADS_SAVE_KEY, 1) == 1 ? true : false;
             if (m_remoteSettingsProvider != null)
             {
                 m_remoteSettingsProvider.OnSettingsReceived += OnRemoteSettingsReceived;
@@ -210,7 +213,7 @@ namespace Virterix.AdMediation
 
         private void Start()
         {
-            if (m_isInitializeOnStart)
+            if (m_initializeOnStart)
             {
                 Initialize();
             }
@@ -402,7 +405,7 @@ namespace Virterix.AdMediation
         /// <param name="isAnalyticsControl"></param>
         public void SetPersonalizedAds(bool isPersonalizedAds, bool isAnalyticsControl = true)
         {
-            m_isPersonalizedAds = isPersonalizedAds;
+            m_isAdsPersonalized = isPersonalizedAds;
             PlayerPrefs.SetInt(PERSONALIZED_ADS_SAVE_KEY, isPersonalizedAds ? 1 : 0);
 
             if (m_networkAdapters != null)
@@ -781,7 +784,7 @@ namespace Virterix.AdMediation
                     Dictionary<string, string> networkParameters = (Dictionary<string, string>)pair.Value.m_parameters;
                     netwrok.Initialize(networkParameters, pair.Value.m_adInstances);
 
-                    if (m_isPersonalizeAdsOnInit)
+                    if (m_personalizeAdsOnInit)
                     {
                         netwrok.SetPersonalizedAds(IsPersonalizedAds);
                     }

@@ -12,7 +12,6 @@ namespace Virterix.AdMediation
 {
     public class AdColonyAdapter : AdNetworkAdapter
     {
-
         public enum AdColonyOrientationType
         {
             All,

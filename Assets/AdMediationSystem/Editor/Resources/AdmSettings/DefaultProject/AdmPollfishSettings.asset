@@ -17,6 +17,10 @@ MonoBehaviour:
   _androidAppId: e2b6bae0-5476-499d-a26f-a4af325590cb
   _iosAppId: 8cf4efdc-7615-4b94-82df-9079d688de75
   _responseWaitTime: 30
+  _directedTowardsChildren: 0
   _bannerAdInstances: []
   _interstitialAdInstances: []
   _rewardAdInstances: []
+  _autoPrepareOnHide: 1
+  _restoreBanners: 1
+  _autoPrepareInterval: 0

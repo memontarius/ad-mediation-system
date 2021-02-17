@@ -42,7 +42,6 @@ namespace Virterix.AdMediation
             BottomRight
         }
 
-        public bool m_tagForChildDirectedTreatment = false;
         public Color m_adBackgoundColor = Color.gray;
  
         protected override string AdInstanceParametersFolder
@@ -198,7 +197,7 @@ namespace Virterix.AdMediation
 
             if (adType == AdType.Banner)
             {
-                adMobAdInstance.m_isBannerAdTypeVisibled = true;
+                adMobAdInstance.m_bannerVisibled = true;
             }
 
             if (isAdAvailable)
@@ -237,7 +236,7 @@ namespace Virterix.AdMediation
             switch (adType)
             {
                 case AdType.Banner:
-                    adMobAdInstance.m_isBannerAdTypeVisibled = false;
+                    adMobAdInstance.m_bannerVisibled = false;
 
                     if (adInstance.m_state == AdState.Received)
                     {
@@ -252,7 +251,7 @@ namespace Virterix.AdMediation
         public override void HideBannerTypeAdWithoutNotify(AdInstanceData adInstance = null)
         {
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
-            adMobAdInstance.m_isBannerAdTypeVisibled = false;
+            adMobAdInstance.m_bannerVisibled = false;
             AdType adType = adInstance.m_adType;
 
             switch (adType)
@@ -482,7 +481,7 @@ namespace Virterix.AdMediation
         private AdRequest CreateAdRequest()
         {
             AdRequest.Builder requestBuilder = new AdRequest.Builder()
-                    .TagForChildDirectedTreatment(m_tagForChildDirectedTreatment)
+                    .TagForChildDirectedTreatment(AdMediationSystem.Instance.m_isChildrenDirected)
                     .AddExtra("color_bg", ColorUtility.ToHtmlStringRGB(m_adBackgoundColor));
 
             if (!AdMediationSystem.Instance.IsPersonalizedAds)
@@ -490,9 +489,9 @@ namespace Virterix.AdMediation
                 requestBuilder.AddExtra("npa", "1");
             }
 
-            if (m_isTestModeEnabled)
+            if (AdMediationSystem.Instance.m_testModeEnabled)
             {
-                foreach (string deviceId in m_testDevices)
+                foreach (string deviceId in AdMediationSystem.Instance.m_testDevices)
                 {
                     requestBuilder.AddTestDevice(deviceId);
                 }
@@ -515,12 +514,12 @@ namespace Virterix.AdMediation
         {
 #if AD_MEDIATION_DEBUG_MODE
             print("AdMobAdapter.HandleAdLoaded() " + " adInstance: " + adInstance.Name +
-                " isVisibled: " + adInstance.m_isBannerAdTypeVisibled);
+                " isVisibled: " + adInstance.m_bannerVisibled);
 #endif
 
             adInstance.m_state = AdState.Received;
             BannerView bannerView = adInstance.m_adView as BannerView;
-            if (adInstance.m_isBannerAdTypeVisibled)
+            if (adInstance.m_bannerVisibled)
             {
 #if UNITY_EDITOR
                 bannerView.Hide();
