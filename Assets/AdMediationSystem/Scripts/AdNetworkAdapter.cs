@@ -12,7 +12,7 @@ namespace Virterix.AdMediation
         Show,
         Click,
         Hiding,
-        FailedPreparation,
+        PreparationFailed,
         IncentivizedCompleted,
         IncentivizedUncompleted
     }
@@ -190,27 +190,27 @@ namespace Virterix.AdMediation
 
         public virtual void Hide(AdInstanceData adInstance) { }
 
-        public bool IsReady(AdType adType, string adInstanceName = AdInstanceData._AD_INSTANCE_DEFAULT_NAME)
+        public bool IsReady(AdType adType, string adInstanceName = AdInstanceData.AD_INSTANCE_DEFAULT_NAME)
         {
             AdInstanceData adInstance = GetAdInstance(adType, adInstanceName);
             bool result = IsReady(adInstance);
             return result;
         }
 
-        public void Prepare(AdType adType, string adInstanceName = AdInstanceData._AD_INSTANCE_DEFAULT_NAME) 
+        public void Prepare(AdType adType, string adInstanceName = AdInstanceData.AD_INSTANCE_DEFAULT_NAME) 
         {
             AdInstanceData adInstance = GetAdInstance(adType, adInstanceName);
             Prepare(adInstance);
         }
 
-        public bool Show(AdType adType, string adInstanceName = AdInstanceData._AD_INSTANCE_DEFAULT_NAME) 
+        public bool Show(AdType adType, string adInstanceName = AdInstanceData.AD_INSTANCE_DEFAULT_NAME) 
         {
             AdInstanceData adInstance = GetAdInstance(adType, adInstanceName);
             bool result = Show(adInstance);
             return result; 
         }
 
-        public void Hide(AdType adType, string adInstanceName = AdInstanceData._AD_INSTANCE_DEFAULT_NAME) 
+        public void Hide(AdType adType, string adInstanceName = AdInstanceData.AD_INSTANCE_DEFAULT_NAME) 
         {
             AdInstanceData adInstance = GetAdInstance(adType, adInstanceName);
             Hide(adInstance);
@@ -248,8 +248,8 @@ namespace Virterix.AdMediation
 
         public void NotifyEvent(AdType adType, AdEvent adEvent, AdInstanceData adInstance)
         {
-            string adInstanceName = adInstance != null ? adInstance.Name : AdInstanceData._AD_INSTANCE_DEFAULT_NAME;
-            if (adInstance != null && (adEvent == AdEvent.FailedPreparation || adEvent == AdEvent.Prepared))
+            string adInstanceName = adInstance != null ? adInstance.Name : AdInstanceData.AD_INSTANCE_DEFAULT_NAME;
+            if (adInstance != null && (adEvent == AdEvent.PreparationFailed || adEvent == AdEvent.Prepared))
             {
                 adInstance.m_lastAdPrepared = adEvent == AdEvent.Prepared;
             }
@@ -379,8 +379,8 @@ namespace Virterix.AdMediation
         /// </summary>
         protected virtual void InitializeAdInstanceData(AdInstanceData adInstance, JSONValue jsonAdInstance)
         {
-            adInstance.Name = jsonAdInstance.Obj.ContainsKey("name") ? jsonAdInstance.Obj.GetString("name") : AdInstanceData._AD_INSTANCE_DEFAULT_NAME;
-            string parametersName = jsonAdInstance.Obj.ContainsKey("param") ? jsonAdInstance.Obj.GetString("param") : AdInstanceParameters._AD_INSTANCE_PARAMETERS_DEFAULT_NAME;
+            adInstance.Name = jsonAdInstance.Obj.ContainsKey("name") ? jsonAdInstance.Obj.GetString("name") : AdInstanceData.AD_INSTANCE_DEFAULT_NAME;
+            string parametersName = jsonAdInstance.Obj.ContainsKey("param") ? jsonAdInstance.Obj.GetString("param") : AdInstanceParameters.AD_INSTANCE_PARAMETERS_DEFAULT_NAME;
             adInstance.m_adType = AdUtils.StringToAdType(jsonAdInstance.Obj.GetString("adType"));
             adInstance.m_adId = jsonAdInstance.Obj.GetString("id");
             adInstance.m_adInstanceParams = GetAdInstanceParams(adInstance.m_adType, parametersName);

@@ -1,10 +1,5 @@
-﻿
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 using Virterix.AdMediation;
-using Virterix.Common;
 
 public class AdMediationController : BaseAdController
 {
@@ -24,13 +19,10 @@ public class AdMediationController : BaseAdController
     void Awake() {
         AdMediationSystem.Load("DefaultProject");
         m_adPersonalizedText.rectTransform.parent.GetComponent<Button>().interactable = false;
-        AdMediationSystem.OnInitializeComplete += OnMediationSystemInitializeComplete;
+        AdMediationSystem.OnInitialized += OnMediationSystemInitialized;
     }
 
-    private void Start() {
-    }
-
-    private void OnMediationSystemInitializeComplete() {
+    private void OnMediationSystemInitialized() {
         m_adPersonalizedText.rectTransform.parent.GetComponent<Button>().interactable = true;
         UpdatePersonalizedAdsButtonText();
 
@@ -38,12 +30,6 @@ public class AdMediationController : BaseAdController
         if (m_pollfishNetwork != null) {
             m_pollfishNetwork.OnEvent += OnAdPollfishNetworkEvent;
         }
-    }
-
-    private void Initialize()
-    {
-        AdMediationSystem.Instance.Initialize();
-        AdMediationSystem.Instance.SetPersonalizedAds(true);
     }
 
     private void FetchAllAds()
@@ -85,10 +71,6 @@ public class AdMediationController : BaseAdController
         AdMediationSystem.Hide(AdType.Banner, placement);
     }
 
-    public void SetupPersonalizedAds() {
-        AdMediationSystem.Instance.SetPersonalizedAds(true, false);
-    }
-
     public void PrepareSurvey() {
         if (m_pollfishNetwork != null) {
             m_pollfishNetwork.Prepare(AdType.Incentivized);
@@ -108,20 +90,15 @@ public class AdMediationController : BaseAdController
     }
 
     public void ToggleChangePersonalizedAds() {
-        if (AdMediationSystem.Instance.IsInitialized) {
-            if (AdMediationSystem.Instance.IsPersonalizedAds) {
-                AdMediationSystem.Instance.SetPersonalizedAds(false);
-            }
-            else {
-                AdMediationSystem.Instance.SetPersonalizedAds(true);
-            }
+        if (AdMediationSystem.IsInitialized) {
+            AdMediationSystem.SetPersonalizedAds(!AdMediationSystem.IsAdsPersonalized);
             UpdatePersonalizedAdsButtonText();
         }
     }
 
     void UpdatePersonalizedAdsButtonText() {
         string buttonText = "";
-        if (AdMediationSystem.Instance.IsPersonalizedAds) {
+        if (AdMediationSystem.IsAdsPersonalized) {
             buttonText = "Change to Non-Personalized Ads";
         }
         else {

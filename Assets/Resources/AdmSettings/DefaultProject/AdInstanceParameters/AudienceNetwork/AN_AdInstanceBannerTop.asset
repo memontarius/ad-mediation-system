@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 443d269b814751443a82e245d0f5a0f0, type: 3}
   m_Name: AN_AdInstanceBannerTop
   m_EditorClassIdentifier: 
-  m_name: Default
+  m_name: Top
   m_bannerSize: 0
-  m_bannerPositions: []
+  m_bannerPositions:
+  - m_placementName: Top
+    m_bannerPosition: 1

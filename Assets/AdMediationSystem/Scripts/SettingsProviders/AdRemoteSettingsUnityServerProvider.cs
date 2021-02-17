@@ -1,10 +1,6 @@
-﻿
-#define _AMS_USE_UNITY_REMOTE_CONFIG
+﻿#define _AMS_USE_UNITY_REMOTE_CONFIG
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Virterix.Common;
 using Boomlagoon.JSON;
 #if _AMS_USE_UNITY_REMOTE_CONFIG
 using Unity.RemoteConfig;

@@ -195,7 +195,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("ChartboostAdapter.DidFailToLoadInterstitial() error:" + error.ToString());
 #endif
-            AddEvent(AdType.Interstitial, AdEvent.FailedPreparation, m_interstitialInstance);
+            AddEvent(AdType.Interstitial, AdEvent.PreparationFailed, m_interstitialInstance);
         }
 
         private bool ShouldDisplayInterstitial(CBLocation location)
@@ -226,7 +226,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("ChartboostAdapter.DidFailToLoadRewardedVideo() error:" + error.ToString());
 #endif
-            AddEvent(AdType.Incentivized, AdEvent.FailedPreparation, m_incentivizedInstance);
+            AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, m_incentivizedInstance);
         }
 
         private bool ShouldDisplayRewardedVideo(CBLocation location)

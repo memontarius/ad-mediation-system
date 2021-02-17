@@ -23,10 +23,10 @@ namespace Virterix.AdMediation
 
         public enum AudienceNetworkBannerSize
         {
-            BANNER_HEIGHT_50,
-            BANNER_HEIGHT_90,
-            RECTANGLE_HEIGHT_250,
-            CUSTOM
+            BannerHeight50,
+            BannerHeight90,
+            RectangleHeight250,
+            Custom
         }
 
         public enum AudienceNetworkBannerPosition
@@ -55,7 +55,7 @@ namespace Virterix.AdMediation
             public AudienceNetworkAdInstanceData() : base()
             {
             }
-            public AudienceNetworkAdInstanceData(AdType adType, string adID, string adInstanceName = AdInstanceData._AD_INSTANCE_DEFAULT_NAME) :
+            public AudienceNetworkAdInstanceData(AdType adType, string adID, string adInstanceName = AdInstanceData.AD_INSTANCE_DEFAULT_NAME) :
                 base(adType, adID, adInstanceName)
             {
             }
@@ -244,13 +244,13 @@ namespace Virterix.AdMediation
             AdSize nativeAdSize = AdSize.BANNER_HEIGHT_50;
             switch (bannerSize)
             {
-                case AudienceNetworkBannerSize.BANNER_HEIGHT_50:
+                case AudienceNetworkBannerSize.BannerHeight50:
                     nativeAdSize = AdSize.BANNER_HEIGHT_50;
                     break;
-                case AudienceNetworkBannerSize.BANNER_HEIGHT_90:
+                case AudienceNetworkBannerSize.BannerHeight90:
                     nativeAdSize = AdSize.BANNER_HEIGHT_90;
                     break;
-                case AudienceNetworkBannerSize.RECTANGLE_HEIGHT_250:
+                case AudienceNetworkBannerSize.RectangleHeight250:
                     nativeAdSize = AdSize.RECTANGLE_HEIGHT_250;
                     break;
             }
@@ -269,13 +269,13 @@ namespace Virterix.AdMediation
 
             switch (adInstanceParams.m_bannerSize)
             {
-                case AudienceNetworkBannerSize.BANNER_HEIGHT_50:
+                case AudienceNetworkBannerSize.BannerHeight50:
                     bannerHight = 50f;
                     break;
-                case AudienceNetworkBannerSize.BANNER_HEIGHT_90:
+                case AudienceNetworkBannerSize.BannerHeight90:
                     bannerHight = 90f;
                     break;
-                case AudienceNetworkBannerSize.RECTANGLE_HEIGHT_250:
+                case AudienceNetworkBannerSize.RectangleHeight250:
                     bannerHight = 250f;
                     break;
             }
@@ -358,7 +358,7 @@ namespace Virterix.AdMediation
             }
 
 #if UNITY_EDITOR
-            //return;
+            return;
 #endif
 
 #if UNITY_IOS || UNITY_ANDROID
@@ -565,7 +565,7 @@ namespace Virterix.AdMediation
 #endif
 
             DestroyBanner(adInstance);
-            AddEvent(AdType.Banner, AdEvent.FailedPreparation, adInstance);
+            AddEvent(AdType.Banner, AdEvent.PreparationFailed, adInstance);
         }
 
         void BannerAdViewWillLogImpression(AudienceNetworkAdInstanceData adInstance)
@@ -603,7 +603,7 @@ namespace Virterix.AdMediation
             Debug.Log("AudienceNetworkAdapter.InterstitialAdDidFailWithError() error: " + error);
 #endif
             DestroyInterstitial(adInstance);
-            AddEvent(AdType.Interstitial, AdEvent.FailedPreparation, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.PreparationFailed, adInstance);
         }
 
         void InterstitialAdDidClose(AudienceNetworkAdInstanceData adInstance)
@@ -643,7 +643,7 @@ namespace Virterix.AdMediation
             Debug.Log("AudienceNetworkAdapter.RewardedVideoAdDidFailWithError() error: " + error);
 #endif
             DestroyRewardVideo(adInstance);
-            AddEvent(AdType.Incentivized, AdEvent.FailedPreparation, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, adInstance);
         }
 
         void RewardedVideoAdDidClick(AudienceNetworkAdInstanceData adInstance)

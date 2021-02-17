@@ -4,13 +4,13 @@ namespace Virterix.AdMediation
 {
     public class AdInstanceData
     {
-        public const string _AD_INSTANCE_DEFAULT_NAME = "Default";
+        public const string AD_INSTANCE_DEFAULT_NAME = "Default";
 
         public AdInstanceData()
         {
         }
 
-        public AdInstanceData(AdType adType, string adID, string name = _AD_INSTANCE_DEFAULT_NAME)
+        public AdInstanceData(AdType adType, string adID, string name = AD_INSTANCE_DEFAULT_NAME)
         {
             m_enabledState = true;
             m_adType = adType;
@@ -33,12 +33,12 @@ namespace Virterix.AdMediation
 
         public string ParametersName
         {
-            get { return m_adInstanceParams != null ? m_adInstanceParams.Name : AdInstanceParameters._AD_INSTANCE_PARAMETERS_DEFAULT_NAME; }
+            get { return m_adInstanceParams != null ? m_adInstanceParams.Name : AdInstanceParameters.AD_INSTANCE_PARAMETERS_DEFAULT_NAME; }
         }
 
         public bool IsDefault
         {
-            get { return Name.Length == 0 || Name == _AD_INSTANCE_DEFAULT_NAME; }
+            get { return Name.Length == 0 || Name == AD_INSTANCE_DEFAULT_NAME; }
         }
         
         public AdType m_adType;

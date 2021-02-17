@@ -180,7 +180,7 @@ namespace Virterix.AdMediation.Editor
             JSONObject jsonUnit = new JSONObject();
 
             jsonUnit.Add("network", adUnit._networkIdentifier);
-            if (adUnit._instanceName != AdInstanceData._AD_INSTANCE_DEFAULT_NAME)
+            if (adUnit._instanceName != AdInstanceData.AD_INSTANCE_DEFAULT_NAME)
             {
                 jsonUnit.Add("instance", adUnit._instanceName);
             }
@@ -274,7 +274,7 @@ namespace Virterix.AdMediation.Editor
             {
                 JSONObject jsonAdInstance = new JSONObject();
                 jsonAdInstance.Add("adType", AdUtils.AdTypeToString(adInstanceHolder._adType));
-                if (adInstanceHolder._adInstance._name != AdInstanceData._AD_INSTANCE_DEFAULT_NAME)
+                if (adInstanceHolder._adInstance._name != AdInstanceData.AD_INSTANCE_DEFAULT_NAME)
                 {
                     jsonAdInstance.Add("name", adInstanceHolder._adInstance._name);
                 }

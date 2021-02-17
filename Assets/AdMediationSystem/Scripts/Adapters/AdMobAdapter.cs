@@ -84,7 +84,7 @@ namespace Virterix.AdMediation
             {
             }
 
-            public AdMobAdInstanceData(AdType adType, string adID, string name = AdInstanceData._AD_INSTANCE_DEFAULT_NAME) :
+            public AdMobAdInstanceData(AdType adType, string adID, string name = AdInstanceData.AD_INSTANCE_DEFAULT_NAME) :
                 base(adType, adID, name)
             {
             }
@@ -484,7 +484,7 @@ namespace Virterix.AdMediation
                     .TagForChildDirectedTreatment(AdMediationSystem.Instance.m_isChildrenDirected)
                     .AddExtra("color_bg", ColorUtility.ToHtmlStringRGB(m_adBackgoundColor));
 
-            if (!AdMediationSystem.Instance.IsPersonalizedAds)
+            if (!AdMediationSystem.IsAdsPersonalized)
             {
                 requestBuilder.AddExtra("npa", "1");
             }
@@ -519,6 +519,7 @@ namespace Virterix.AdMediation
 
             adInstance.m_state = AdState.Received;
             BannerView bannerView = adInstance.m_adView as BannerView;
+            AddEvent(AdType.Banner, AdEvent.Prepared, adInstance);
             if (adInstance.m_bannerVisibled)
             {
 #if UNITY_EDITOR
@@ -530,7 +531,6 @@ namespace Virterix.AdMediation
             {
                 bannerView.Hide();
             }
-            AddEvent(AdType.Banner, AdEvent.Prepared, adInstance);
         }
 
         public void HandleAdFailedToLoad(AdMobAdInstanceData adInstance, object sender, AdFailedToLoadEventArgs args)
@@ -540,7 +540,7 @@ namespace Virterix.AdMediation
                 " message: " + args.Message);
 #endif
             DestroyBanner(adInstance);
-            AddEvent(AdType.Banner, AdEvent.FailedPreparation, adInstance);
+            AddEvent(AdType.Banner, AdEvent.PreparationFailed, adInstance);
         }
 
         public void HandleAdOpened(AdMobAdInstanceData adInstance, object sender, EventArgs args)
@@ -593,7 +593,7 @@ namespace Virterix.AdMediation
             print("AdMobAdapter.HandleInterstitialFailedToLoad() message: " + args.Message);
 #endif
             DestroyInterstitial(adInstance);
-            AddEvent(AdType.Interstitial, AdEvent.FailedPreparation, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.PreparationFailed, adInstance);
         }
 
         public void HandleInterstitialOpened(AdMobAdInstanceData adInstance, object sender, EventArgs args)
@@ -647,7 +647,7 @@ namespace Virterix.AdMediation
             MonoBehaviour.print("HandleRewardBasedVideoFailedToLoad event received with message: " + args.Message);
 #endif
             m_rewardInstance.m_state = AdState.Uncertain;
-            AddEvent(AdType.Incentivized, AdEvent.FailedPreparation, m_rewardInstance);
+            AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, m_rewardInstance);
         }
 
         public void HandleRewardBasedVideoOpened(object sender, EventArgs args)

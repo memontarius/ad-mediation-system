@@ -7,13 +7,11 @@ namespace Virterix.AdMediation.Editor
     [Serializable]
     public class AdMobSettings : BaseAdNetworkSettings
     {
-
-
         public override Type NetworkAdapterType => typeof(AdMobAdapter);
 
         protected override string AdapterScriptName => "AdMobAdapter";
         protected override string AdapterDefinePeprocessorKey => "_AMS_ADMOB";
- 
+
         public override bool IsAdSupported(AdType adType)
         {
             return true;
@@ -29,42 +27,36 @@ namespace Virterix.AdMediation.Editor
             AdMobAdapter.SetupNetworkNativeSettings(_iosAppId, _androidAppId);
         }
 
-        public override AdInstanceParameters CreateBannerAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
+        protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
         {
-            AdMobAdInstanceBannerParameters parameters = AdMobAdInstanceBannerParameters.CreateParameters(projectName, instanceName);
-            SerializedObject serializedObj = new SerializedObject(parameters);
+            AdMobAdInstanceBannerParameters parameterHolder = AdMobAdInstanceBannerParameters.CreateParameters(projectName, instanceName);
+            parameterHolder.m_bannerSize = (AdMobAdapter.AdMobBannerSize)bannerType;
 
-            serializedObj.FindProperty("m_name").stringValue = instanceName;
-
-           
-            serializedObj.FindProperty("m_bannerSize").stringValue = instanceName;
-
-            //parameters.Name = instanceName;
-            parameters.m_bannerSize = (AdMobAdapter.AdMobBannerSize)bannerType;
-
-            var specificBannerPositions = new AdMobAdInstanceBannerParameters.BannerPosition[bannerPositions.Length];
-            for(int i = 0; i < specificBannerPositions.Length; i++)
+            var specificPositions = new AdMobAdInstanceBannerParameters.BannerPosition[bannerPositions.Length];
+            for (int i = 0; i < specificPositions.Length; i++)
             {
                 var specificPosition = new AdMobAdInstanceBannerParameters.BannerPosition();
                 specificPosition.m_placementName = bannerPositions[i].m_placementName;
-
-                switch (bannerPositions[i].m_bannerPosition)
-                {
-                    case BannerPosition.Bottom:
-                        specificPosition.m_bannerPosition = AdMobAdapter.AdMobBannerPosition.Bottom;
-                        break;
-                    case BannerPosition.Top:
-                        specificPosition.m_bannerPosition = AdMobAdapter.AdMobBannerPosition.Top;
-                        break;
-                }
-
-                specificBannerPositions[i] = specificPosition;
+                specificPosition.m_bannerPosition = (AdMobAdapter.AdMobBannerPosition)ConvertToSpecificBannerPosition(bannerPositions[i].m_bannerPosition);
+                specificPositions[i] = specificPosition;
             }
-            parameters.m_bannerPositions = specificBannerPositions;
+            parameterHolder.m_bannerPositions = specificPositions;
+            return parameterHolder;
+        }
 
-            serializedObj.ApplyModifiedProperties();
-
-            return parameters;
+        protected override int ConvertToSpecificBannerPosition(BannerPosition bannerPosition)
+        {
+            int specificBannerPosition = 0;
+            switch (bannerPosition)
+            {
+                case BannerPosition.Bottom:
+                    specificBannerPosition = (int)AdMobAdapter.AdMobBannerPosition.Bottom;
+                    break;
+                case BannerPosition.Top:
+                    specificBannerPosition = (int)AdMobAdapter.AdMobBannerPosition.Top;
+                    break;
+            }
+            return specificBannerPosition;
         }
     }
 } // namespace Virterix.AdMediation.Editor

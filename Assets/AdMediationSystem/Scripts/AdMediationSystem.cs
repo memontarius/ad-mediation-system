@@ -73,9 +73,9 @@ namespace Virterix.AdMediation
         public bool m_testModeEnabled = false;
         public string[] m_testDevices;
         // For GDPR Compliance
-        private bool m_isAdsPersonalized;
+        private static bool m_isAdsPersonalized;
 
-        public static event Action OnInitializeComplete = delegate { };
+        public static event Action OnInitialized = delegate { };
         /// <summary>
         /// Callback all events of advertising networks.
         /// 5th parameter is the ad instance name
@@ -90,16 +90,16 @@ namespace Virterix.AdMediation
         /// <summary>
         /// Use a personal data of user. For GDPR Compliance
         /// </summary>
-        public bool IsPersonalizedAds
+        public static bool IsAdsPersonalized
         {
             get { return m_isAdsPersonalized; }
         }
 
-        public bool IsInitialized
+        public static bool IsInitialized
         {
             get { return m_isInitialized; }
         }
-        bool m_isInitialized;
+        private static bool m_isInitialized;
 
         public JSONObject CurrSettings
         {
@@ -354,7 +354,7 @@ namespace Virterix.AdMediation
             return mediators.ToArray();
         }
 
-        public static void Fetch(AdType adType, string placementName = AdMediationSystem.PLACEMENT_DEFAULT_NAME, Hashtable parameters = null)
+        public static void Fetch(AdType adType, string placementName = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdMediator mediator = Instance.GetMediator(adType, placementName);
             if (mediator != null)
@@ -367,7 +367,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public static void Show(AdType adType, string placementName = AdMediationSystem.PLACEMENT_DEFAULT_NAME, Hashtable parameters = null)
+        public static void Show(AdType adType, string placementName = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdMediator mediator = Instance.GetMediator(adType, placementName);
             if (mediator != null)
@@ -403,22 +403,17 @@ namespace Virterix.AdMediation
         /// </summary>
         /// <param name="isPersonalizedAds"></param>
         /// <param name="isAnalyticsControl"></param>
-        public void SetPersonalizedAds(bool isPersonalizedAds, bool isAnalyticsControl = true)
+        public static void SetPersonalizedAds(bool isPersonalizedAds)
         {
             m_isAdsPersonalized = isPersonalizedAds;
             PlayerPrefs.SetInt(PERSONALIZED_ADS_SAVE_KEY, isPersonalizedAds ? 1 : 0);
 
-            if (m_networkAdapters != null)
+            if (AdMediationSystem.Instance.m_networkAdapters != null)
             {
-                foreach (AdNetworkAdapter network in m_networkAdapters)
+                foreach (AdNetworkAdapter network in AdMediationSystem.Instance.m_networkAdapters)
                 {
                     network.SetPersonalizedAds(isPersonalizedAds);
                 }
-            }
-
-            if (isAnalyticsControl)
-            {
-                UnityEngine.Analytics.Analytics.enabled = isPersonalizedAds;
             }
         }
 
@@ -509,7 +504,7 @@ namespace Virterix.AdMediation
         private void NotifyInitializeCompleted()
         {
             m_isInitialized = true;
-            OnInitializeComplete();
+            OnInitialized();
         }
 
         #endregion // Other internal methods
@@ -707,7 +702,7 @@ namespace Virterix.AdMediation
                                 JSONValue jsonNetworkUnits = jsonTier.Array[unitIndex];
 
                                 string networkName = jsonNetworkUnits.Obj.GetValue(networkNameInUnitKey).Str;
-                                string adInstanceName = AdInstanceData._AD_INSTANCE_DEFAULT_NAME;
+                                string adInstanceName = AdInstanceData.AD_INSTANCE_DEFAULT_NAME;
                                 if (jsonNetworkUnits.Obj.ContainsKey(adInstanceNameInUnitKey))
                                 {
                                     adInstanceName = jsonNetworkUnits.Obj.GetValue(adInstanceNameInUnitKey).Str;
@@ -786,7 +781,7 @@ namespace Virterix.AdMediation
 
                     if (m_personalizeAdsOnInit)
                     {
-                        netwrok.SetPersonalizedAds(IsPersonalizedAds);
+                        netwrok.SetPersonalizedAds(IsAdsPersonalized);
                     }
                 }
 

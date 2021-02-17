@@ -424,7 +424,7 @@ namespace Virterix.AdMediation
             ResetStatus();
             m_adInstance.m_state = AdState.NotAvailable;
 
-            AddEvent(AdType.Incentivized, AdEvent.FailedPreparation, null);
+            AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, null);
             StartAutoPrepare();
         }
 
@@ -433,7 +433,7 @@ namespace Virterix.AdMediation
             ResetStatus();
             m_adInstance.m_state = AdState.NotAvailable;
 
-            AddEvent(AdType.Incentivized, AdEvent.FailedPreparation, null);
+            AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, null);
         }
 
         private void userRejectedSurvey()
@@ -443,7 +443,7 @@ namespace Virterix.AdMediation
             m_surveyRejected = true;
             m_adInstance.m_state = AdState.NotAvailable;
 
-            AddEvent(AdType.Incentivized, AdEvent.FailedPreparation, null);
+            AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, null);
         }
 
         #endregion // Pollfish callback

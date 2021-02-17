@@ -14,9 +14,9 @@ namespace Virterix.AdMediation
 
     public class AdInstanceParameters : ScriptableObject, IAdInstanceParameters
     {
-        public const string _AD_INSTANCE_PARAMETERS_DEFAULT_NAME = "Default";
+        public const string AD_INSTANCE_PARAMETERS_DEFAULT_NAME = "Default";
         [SerializeField]
-        private string m_name = _AD_INSTANCE_PARAMETERS_DEFAULT_NAME;
+        private string m_name = AD_INSTANCE_PARAMETERS_DEFAULT_NAME;
 
         public virtual AdType AdvertiseType
         {
@@ -46,8 +46,6 @@ namespace Virterix.AdMediation
             T asset = ScriptableObject.CreateInstance<T>();
             AssetDatabase.CreateAsset(asset, path);
             AssetDatabase.SaveAssets();
-            //EditorUtility.FocusProjectWindow();
-            //Selection.activeObject = asset;
             AssetDatabase.Refresh();
             return asset;
         }

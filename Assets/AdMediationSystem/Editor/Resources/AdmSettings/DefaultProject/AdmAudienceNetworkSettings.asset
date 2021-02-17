@@ -17,6 +17,7 @@ MonoBehaviour:
   _androidAppId: 
   _iosAppId: 
   _responseWaitTime: 30
+  _directedTowardsChildren: 0
   _bannerAdInstances:
   - _name: Default
     _androidId: 932838540097052_936970156350557

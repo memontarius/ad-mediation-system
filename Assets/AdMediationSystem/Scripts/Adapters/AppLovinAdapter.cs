@@ -261,7 +261,7 @@ namespace Virterix.AdMediation
             // We recommend retrying with exponentially higher delays up to a maximum delay (in this case 64 seconds)
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
             adInstance.m_state = AdState.NotAvailable;
-            AddEvent(AdType.Interstitial, AdEvent.FailedPreparation, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.PreparationFailed, adInstance);
         }
 
         private void OnInterstitialDisplayedEvent(string adUnitId)
@@ -312,7 +312,7 @@ namespace Virterix.AdMediation
             // We recommend retrying with exponentially higher delays up to a maximum delay (in this case 64 seconds)
             AdInstanceData adInstance = GetAdInstanceByAdId(adUnitId);
             adInstance.m_state = AdState.NotAvailable;
-            AddEvent(AdType.Incentivized, AdEvent.FailedPreparation, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, adInstance);
         }
 
         private void OnRewardedAdFailedToDisplayEvent(string adUnitId, int errorCode)

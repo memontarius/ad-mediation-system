@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 020f93c8651de7646badc5e14f92513d, type: 3}
   m_Name: AdMediationProjectSettings
   m_EditorClassIdentifier: 
-  _initializeOnStart: 0
+  _initializeOnStart: 1
   _personalizeAdsOnInit: 1
-  _enableTestMode: 0
+  _enableTestMode: 1
   _testDevices:
   - d1fd5cf4-8138-4911-8343-38e5f4dc597b
   - 042ba23b-a110-4288-ae66-0996e9ccb93f
+  - eb543d8d-0b6b-499e-bd0e-2f3a4511371f
   _bannerMediators:
   - _adType: 1
     _name: Default
@@ -25,10 +26,18 @@ MonoBehaviour:
     _isAutoFetchOnHide: 1
     _bannerMinDisplayTime: 30
     _deferredFetchDelay: 90
-    _fetchStrategyType: 0
+    _fetchStrategyType: 1
     _bannerPosition: 1
     _tiers:
     - _units:
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 49
       - _networkName: Audience Network
         _networkIndex: 1
         _networkIdentifier: audiencenetwork
@@ -36,15 +45,57 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 0
-      - _networkName: Audience Network
-        _networkIndex: 1
-        _networkIdentifier: audiencenetwork
+        _percentage: 51
+    - _units:
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+    - _units:
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
   - _adType: 1
     _name: Top
     _isContinueAfterEndSession: 1
@@ -55,9 +106,9 @@ MonoBehaviour:
     _bannerPosition: 0
     _tiers:
     - _units:
-      - _networkName: Audience Network
-        _networkIndex: 1
-        _networkIdentifier: audiencenetwork
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
         _instanceIndex: 1
         _instanceName: Top
         _replaced: 0
@@ -71,6 +122,40 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 0
+  - _adType: 1
+    _name: 
+    _isContinueAfterEndSession: 1
+    _isAutoFetchOnHide: 1
+    _bannerMinDisplayTime: 30
+    _deferredFetchDelay: 90
+    _fetchStrategyType: 1
+    _bannerPosition: 0
+    _tiers:
+    - _units:
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 51
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 49
   _interstitialMediators:
   - _adType: 2
     _name: Default
@@ -82,9 +167,9 @@ MonoBehaviour:
     _bannerPosition: 0
     _tiers:
     - _units:
-      - _networkName: Audience Network
-        _networkIndex: 1
-        _networkIdentifier: audiencenetwork
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0
@@ -191,5 +276,5 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
-  _isIOS: 0
+  _isIOS: 1
   _isAndroid: 1

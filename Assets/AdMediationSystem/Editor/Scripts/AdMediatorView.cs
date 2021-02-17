@@ -102,6 +102,7 @@ namespace Virterix.AdMediation.Editor
                         ReorderableList.defaultBehaviours.DoAddButton(list);
                         SerializedProperty unitElement = unitReorderableList.serializedProperty.GetArrayElementAtIndex(list.count - 1);
                         FetchStrategyType strategyType = (FetchStrategyType)_fetchStrategyProp.intValue;
+
                         switch (strategyType)
                         {
                             case FetchStrategyType.Sequence:
@@ -366,7 +367,7 @@ namespace Virterix.AdMediation.Editor
 
         public void SetupDefaultParameters()
         {
-            _mediatorNameProp.stringValue = _index == 0 ? "Default" : "";
+            _mediatorNameProp.stringValue = _index == 0 ? AdMediationSystem.PLACEMENT_DEFAULT_NAME : "";
             _fetchStrategyProp.intValue = 0;
             _continueAfterEndSessionProp.boolValue = true;
             _autoFetchOnHideProp.boolValue = true;
@@ -402,7 +403,16 @@ namespace Virterix.AdMediation.Editor
 
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField("Mediation Strategy", GUILayout.Width(150));
+
+                EditorGUI.BeginChangeCheck();
                 _fetchStrategyProp.intValue = EditorGUILayout.Popup(_fetchStrategyProp.intValue, MediationStratageTypes, GUILayout.Width(180));
+
+                if (EditorGUI.EndChangeCheck() &&
+                    (FetchStrategyType)_fetchStrategyProp.intValue == FetchStrategyType.Random)
+                {
+                    FixRandomStrategyItemPercentageValues();
+                }
+
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.BeginHorizontal();
@@ -442,5 +452,24 @@ namespace Virterix.AdMediation.Editor
             EditorGUILayout.EndVertical();
         }
 
+        private void FixRandomStrategyItemPercentageValues()
+        {
+            for(int i = 0; i < _tierReorderableList.count; i++)
+            {
+                var tierProp = _tierReorderableList.serializedProperty.GetArrayElementAtIndex(i);
+                string listKey = tierProp.propertyPath;
+                
+                if (_unitListDict.ContainsKey(listKey))
+                {
+                    var units = _unitListDict[listKey];
+
+                    for (int unitIndex = 0; unitIndex < units.count; unitIndex++)
+                    {
+                        var unitProp = units.serializedProperty.GetArrayElementAtIndex(unitIndex);
+                        int percentage = unitProp.FindPropertyRelative("_percentage").intValue;
+                    }
+                }
+            }
+        }
     }
 } // Virterix.AdMediation.Editor

@@ -53,7 +53,7 @@ namespace Virterix.AdMediation
             return fetchStrategyParams;
         }
 
-        public static AdInstanceData CreateAdInstacne(AdType adType, string instanceName = AdInstanceData._AD_INSTANCE_DEFAULT_NAME, 
+        public static AdInstanceData CreateAdInstacne(AdType adType, string instanceName = AdInstanceData.AD_INSTANCE_DEFAULT_NAME, 
             string adId = "", float timeout = 0.0f)
         {
             AdInstanceData adInstance = new AdInstanceData(adType, adId, instanceName);

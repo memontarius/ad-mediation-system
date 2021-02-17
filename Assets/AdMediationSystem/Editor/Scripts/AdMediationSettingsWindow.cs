@@ -139,6 +139,7 @@ namespace Virterix.AdMediation.Editor
                     EditorPrefs.SetBool(GetNetworkEnabledStateSaveKey(_networks[i]), _networkEnabledStates[i]);
                 }
             }
+            AssetDatabase.SaveAssets();
         }
 
         private void OnGUI()
@@ -153,7 +154,6 @@ namespace Virterix.AdMediation.Editor
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
 
-            
             switch (SelectedTab)
             {
                 case 0: // Settings
@@ -187,7 +187,7 @@ namespace Virterix.AdMediation.Editor
         public static void ShowWindow()
         {
             EditorWindow editorWindow = GetWindow(typeof(AdMediationSettingsWindow));
-            editorWindow.titleContent = new GUIContent("Ad Mediation Settings");
+            editorWindow.titleContent = new GUIContent("Ad Mediation System");
             editorWindow.Show();
         }
 
@@ -391,6 +391,7 @@ namespace Virterix.AdMediation.Editor
             }
             UpdateActiveNetworks();
             UpdateActiveNetworks();
+            AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
 
@@ -539,6 +540,9 @@ namespace Virterix.AdMediation.Editor
                     _serializedProjectSettings, _mediatorProp, Repaint, GetActiveTab());
                 mediatorView.SetupDefaultParameters();
                 mediatorList.Add(mediatorView);
+                _serializedProjectSettings.ApplyModifiedProperties();
+                EditorUtility.SetDirty(_projectSettings);
+                AssetDatabase.SaveAssets();
             }
             GUILayout.EndHorizontal();
             _serializedProjectSettings.ApplyModifiedProperties();

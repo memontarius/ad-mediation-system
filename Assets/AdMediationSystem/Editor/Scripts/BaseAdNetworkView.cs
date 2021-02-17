@@ -120,6 +120,9 @@ namespace Virterix.AdMediation.Editor
 
             UpdateElementHeight();
             _enabled = _enabledProp.boolValue;
+
+            _serializedSettings.ApplyModifiedProperties();
+            EditorUtility.SetDirty(_settings);
         }
 
         private void InitAdInstanceBlock(AdType adType, string title, string propertyName)
@@ -144,19 +147,19 @@ namespace Virterix.AdMediation.Editor
 
             _showSettings.target = Collapsed;
             if (EditorGUILayout.BeginFadeGroup(_showSettings.faded))
-            {
+            {       
                 Enabled = EditorGUILayout.BeginToggleGroup("Enable", Enabled);
                 if (_enabledProp.boolValue != Enabled)
                 {
                     activationChanged = true;
                 }
+                _serializedSettings.Update();
                 _enabledProp.boolValue = Enabled;
                 DrawCommonSettigns();
                 DrawPlatformSettings();               
                 DrawSpecificSettings();
                 DrawAdInstanceLists();
                 _serializedSettings.ApplyModifiedProperties();
-                _serializedSettings.Update();
                 EditorGUILayout.EndToggleGroup();
             }
             EditorGUILayout.EndFadeGroup();
@@ -177,7 +180,7 @@ namespace Virterix.AdMediation.Editor
         {
             if (Settings.IsTotallyAdInstanceUnsupported)
             {
-                return new string[] { AdInstanceData._AD_INSTANCE_DEFAULT_NAME };
+                return new string[] { AdInstanceData.AD_INSTANCE_DEFAULT_NAME };
             }
 
             string[] instances = null;
@@ -432,7 +435,7 @@ namespace Virterix.AdMediation.Editor
                 property.FindPropertyRelative("_timeout").floatValue = 90;
                 if (list.index == 0)
                 {
-                    property.FindPropertyRelative("_name").stringValue = "Default";
+                    property.FindPropertyRelative("_name").stringValue = AdInstanceData.AD_INSTANCE_DEFAULT_NAME;
                 }
                 else
                 {
@@ -440,6 +443,8 @@ namespace Virterix.AdMediation.Editor
                 }
                 property.FindPropertyRelative("_androidId").stringValue = "";
                 property.FindPropertyRelative("_iosId").stringValue = "";
+
+                property.serializedObject.ApplyModifiedProperties();
             };
             list.onRemoveCallback = (ReorderableList l) =>
             {

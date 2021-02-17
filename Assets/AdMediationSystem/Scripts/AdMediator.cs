@@ -394,7 +394,7 @@ namespace Virterix.AdMediation
 
                 if (passedTime > waitingTime)
                 {
-                    unit.AdNetwork.NotifyEvent(unit.AdapterAdType, AdEvent.FailedPreparation, unit.AdInstance);
+                    unit.AdNetwork.NotifyEvent(unit.AdapterAdType, AdEvent.PreparationFailed, unit.AdInstance);
                     break;
                 }
                 else if (isCheckAvailabilityWhenPreparing && passedTimeForCheckAvailability > 2.0f)
@@ -535,7 +535,7 @@ namespace Virterix.AdMediation
             
             AdMediationSystem.NotifyAdNetworkEvent(this, network, m_adType, adEvent, adInstanceName);
             
-            if (adEvent == AdEvent.FailedPreparation || adEvent == AdEvent.Hiding || adEvent == AdEvent.Show)
+            if (adEvent == AdEvent.PreparationFailed || adEvent == AdEvent.Hiding || adEvent == AdEvent.Show)
             {
                 if (m_currUnit != null)
                 {
@@ -546,7 +546,7 @@ namespace Virterix.AdMediation
 
             switch (adEvent)
             {
-                case AdEvent.FailedPreparation:
+                case AdEvent.PreparationFailed:
                     m_isLastNetworkSuccessfullyPrepared = false;
                     CancelWaitNetworkPreparing();
                     adInstance?.SaveFailedLoadingTime();
