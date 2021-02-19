@@ -116,9 +116,9 @@ namespace Virterix.AdMediation
                 appSignature = "";
             }
 
-            m_interstitialInstance = AdFactory.CreateAdInstacne(AdType.Interstitial);
+            m_interstitialInstance = AdFactory.CreateAdInstacne(this, AdType.Interstitial);
             AddAdInstance(m_interstitialInstance);
-            m_incentivizedInstance= AdFactory.CreateAdInstacne(AdType.Incentivized);
+            m_incentivizedInstance= AdFactory.CreateAdInstacne(this, AdType.Incentivized);
             AddAdInstance(m_incentivizedInstance);
 
             if (appId != null && appSignature != null)
@@ -130,14 +130,18 @@ namespace Virterix.AdMediation
 
         public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
-            switch (adInstance.m_adType)
+            if (!IsReady(adInstance))
             {
-                case AdType.Interstitial:
-                    Chartboost.cacheInterstitial(CBLocation.Default);
-                    break;
-                case AdType.Incentivized:
-                    Chartboost.cacheRewardedVideo(CBLocation.Default);
-                    break;
+                adInstance.State = AdState.Loading;
+                switch (adInstance.m_adType)
+                {
+                    case AdType.Interstitial:
+                        Chartboost.cacheInterstitial(CBLocation.Default);
+                        break;
+                    case AdType.Incentivized:
+                        Chartboost.cacheRewardedVideo(CBLocation.Default);
+                        break;
+                }
             }
         }
 
@@ -187,6 +191,7 @@ namespace Virterix.AdMediation
         // Interstitial
         private void DidCacheInterstitial(CBLocation location)
         {
+            m_interstitialInstance.State = AdState.Received;
             AddEvent(AdType.Interstitial, AdEvent.Prepared, m_interstitialInstance);
         }
 
@@ -195,6 +200,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("ChartboostAdapter.DidFailToLoadInterstitial() error:" + error.ToString());
 #endif
+            m_interstitialInstance.State = AdState.NotAvailable;
             AddEvent(AdType.Interstitial, AdEvent.PreparationFailed, m_interstitialInstance);
         }
 
@@ -207,7 +213,6 @@ namespace Virterix.AdMediation
 
         private void DidCloseInterstitial(CBLocation location)
         {
-            
         }
 
         void DidDismissInterstitial(CBLocation location)
@@ -218,6 +223,7 @@ namespace Virterix.AdMediation
         // Reward Video
         private void DidCacheRewardedVideo(CBLocation location)
         {
+            m_incentivizedInstance.State = AdState.Received;
             AddEvent(AdType.Incentivized, AdEvent.Prepared, m_incentivizedInstance);
         }
 
@@ -226,6 +232,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("ChartboostAdapter.DidFailToLoadRewardedVideo() error:" + error.ToString());
 #endif
+            m_incentivizedInstance.State = AdState.NotAvailable;
             AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, m_incentivizedInstance);
         }
 

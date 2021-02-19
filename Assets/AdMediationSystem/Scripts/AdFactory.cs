@@ -53,10 +53,10 @@ namespace Virterix.AdMediation
             return fetchStrategyParams;
         }
 
-        public static AdInstance CreateAdInstacne(AdType adType, string instanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME, 
+        public static AdInstance CreateAdInstacne(AdNetworkAdapter network, AdType adType, string instanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME, 
             string adId = "", float timeout = 0.0f)
         {
-            AdInstance adInstance = new AdInstance(adType, adId, instanceName);
+            AdInstance adInstance = new AdInstance(network, adType, adId, instanceName);
             if (timeout > 0.0001f)
             {
                 AdNetworkAdapter.TimeoutParams timeoutParameters = new AdNetworkAdapter.TimeoutParams();

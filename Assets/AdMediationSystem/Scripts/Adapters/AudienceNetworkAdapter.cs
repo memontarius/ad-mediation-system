@@ -35,10 +35,6 @@ namespace Virterix.AdMediation
             Top
         }
 
-        /*
-        [Tooltip("In Seconds")]
-        public float m_defaultBannerRefreshTime = 60f;
-        */
         public bool m_isDefaultServerValidation = false;
    
         protected override string AdInstanceParametersFolder
@@ -52,11 +48,13 @@ namespace Virterix.AdMediation
 #if _AMS_AUDIENCE_NETWORK
         private class AudienceNetworkAdInstanceData : AdInstance
         {
-            public AudienceNetworkAdInstanceData() : base()
+            public AudienceNetworkAdInstanceData(AdNetworkAdapter network) : base(network)
             {
             }
-            public AudienceNetworkAdInstanceData(AdType adType, string adID, string adInstanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME) :
-                base(adType, adID, adInstanceName)
+
+            public AudienceNetworkAdInstanceData(AdNetworkAdapter network, AdType adType, string adID, 
+                string adInstanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME) :
+                base(network, adType, adID, adInstanceName)
             {
             }
 
@@ -104,7 +102,7 @@ namespace Virterix.AdMediation
 
         protected override AdInstance CreateAdInstanceData(JSONValue jsonAdInstance)
         {
-            AdInstance adInstance = new AudienceNetworkAdInstanceData();
+            AdInstance adInstance = new AudienceNetworkAdInstanceData(this);
             return adInstance;
         }
 
@@ -113,7 +111,7 @@ namespace Virterix.AdMediation
             AudienceNetworkAdInstanceData audienceNetworkAdInstance = adInstance as AudienceNetworkAdInstanceData;
             AdType adType = adInstance.m_adType;
 
-            if (adInstance.m_state != AdState.Loading)
+            if (adInstance.State != AdState.Loading)
             {
                 switch (adType)
                 {
@@ -140,7 +138,7 @@ namespace Virterix.AdMediation
             {
                 case AdType.Banner:
                     audienceNetworkAdInstance.m_bannerVisibled = true;
-                    if (adInstance.m_state == AdState.Received)
+                    if (adInstance.State == AdState.Received)
                     {
                         AdView bannerView = audienceNetworkAdInstance.m_adView as AdView;
                         Vector2 bannerPosition = CalculateBannerPosition(audienceNetworkAdInstance, placement);
@@ -148,18 +146,18 @@ namespace Virterix.AdMediation
                         isShowSuccessful = bannerView.Show(bannerPosition.x, bannerPosition.y);
                         if (isShowSuccessful)
                         {
-                            NotifyEvent(adType, AdEvent.Show, audienceNetworkAdInstance);
+                            NotifyEvent(AdEvent.Show, audienceNetworkAdInstance);
                         }
                     }
                     break;
                 case AdType.Interstitial:
-                    if (adInstance.m_state == AdState.Received)
+                    if (adInstance.State == AdState.Received)
                     {
                         InterstitialAd interstitialAd = audienceNetworkAdInstance.m_adView as InterstitialAd;
                         isShowSuccessful = interstitialAd.Show();
                         if (isShowSuccessful)
                         {
-                            NotifyEvent(AdType.Interstitial, AdEvent.Show, audienceNetworkAdInstance);
+                            NotifyEvent(AdEvent.Show, audienceNetworkAdInstance);
                         }
                         else
                         {
@@ -168,13 +166,13 @@ namespace Virterix.AdMediation
                     }
                     break;
                 case AdType.Incentivized:
-                    if (adInstance.m_state == AdState.Received)
+                    if (adInstance.State == AdState.Received)
                     {
                         RewardedVideoAd rewardVideo = audienceNetworkAdInstance.m_adView as RewardedVideoAd;
                         isShowSuccessful = rewardVideo.Show();
                         if (isShowSuccessful)
                         {
-                            NotifyEvent(AdType.Incentivized, AdEvent.Show, audienceNetworkAdInstance);
+                            NotifyEvent(AdEvent.Show, audienceNetworkAdInstance);
                         }
                         else
                         {
@@ -199,13 +197,13 @@ namespace Virterix.AdMediation
 
                     if (adType == AdType.Banner)
                     {
-                        if (adInstance.m_state == AdState.Received)
+                        if (adInstance.State == AdState.Received)
                         {
                             AdView bannerView = adInstance.m_adView as AdView;
                             bannerView.Show(-10000);
                         }
                     }
-                    NotifyEvent(adType, AdEvent.Hiding, audienceNetworkAdInstance);
+                    NotifyEvent(AdEvent.Hiding, audienceNetworkAdInstance);
                     break;
             }
         }
@@ -223,7 +221,7 @@ namespace Virterix.AdMediation
             switch (adType)
             {
                 case AdType.Banner:
-                    if (adInstance.m_state == AdState.Received)
+                    if (adInstance.State == AdState.Received)
                     {
                         AdView bannerView = adInstance.m_adView as AdView;
                         bannerView.Show(-10000);
@@ -235,7 +233,7 @@ namespace Virterix.AdMediation
         public override bool IsReady(AdInstance adInstance = null)
         {
             AdType adType = adInstance.m_adType;
-            bool isReady = adInstance.m_state == AdState.Received;
+            bool isReady = adInstance.State == AdState.Received;
             return isReady;
         }
 
@@ -305,7 +303,7 @@ namespace Virterix.AdMediation
             while (true)
             {
                 yield return waitInstruction;
-                if (adInstance.m_state == AdState.Received && adInstance.m_bannerVisibled)
+                if (adInstance.State == AdState.Received && adInstance.m_bannerVisibled)
                 {
                     lifeTime += period;
                 }
@@ -318,7 +316,7 @@ namespace Virterix.AdMediation
                             lifeTime = 0.0f;
                             if (adInstance.m_adView != null)
                             {
-                                adInstance.m_state = AdState.Loading;
+                                adInstance.State = AdState.Loading;
                                 AdView adView = adInstance.m_adView as AdView;
                                 adView.LoadAd();
                             }
@@ -346,7 +344,7 @@ namespace Virterix.AdMediation
         void RequestBanner(AudienceNetworkAdInstanceData adInstance, string placement)
         {
             DestroyBanner(adInstance);
-            adInstance.m_state = AdState.Loading;
+            adInstance.State = AdState.Loading;
 
             //StartRefreshBannerProcess(adInstance);
 
@@ -405,13 +403,13 @@ namespace Virterix.AdMediation
                 }
 
             }
-            adInstance.m_state = AdState.Uncertain;
+            adInstance.State = AdState.Uncertain;
         }
 
         void RequestInterstitial(AudienceNetworkAdInstanceData adInstance)
         {
             DestroyInterstitial(adInstance);
-            adInstance.m_state = AdState.Loading;
+            adInstance.State = AdState.Loading;
 
 #if UNITY_EDITOR
             return;
@@ -449,7 +447,7 @@ namespace Virterix.AdMediation
                 interstitialAd.InterstitialAdDidClick = null;
 
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("AudienceNetworkAdapter.DestroyInterstitial() state:" + adInstance.m_state);
+                Debug.Log("AudienceNetworkAdapter.DestroyInterstitial() state:" + adInstance.State);
 #endif
 
                 //if (GetAdState(AdType.Interstitial, adInstance) == AdState.Loading) {
@@ -463,13 +461,13 @@ namespace Virterix.AdMediation
                 }
                 //}
             }
-            adInstance.m_state = AdState.Uncertain;
+            adInstance.State = AdState.Uncertain;
         }
 
         void RequestRewardVideo(AudienceNetworkAdInstanceData adInstance)
         {
             DestroyRewardVideo(adInstance);
-            adInstance.m_state = AdState.Loading;
+            adInstance.State = AdState.Loading;
 
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AudienceNetworkAdapter.RequestRewardVideo()");
@@ -534,7 +532,7 @@ namespace Virterix.AdMediation
                         exp.StackTrace);
                 }
             }
-            adInstance.m_state = AdState.Uncertain;
+            adInstance.State = AdState.Uncertain;
         }
 
         //------------------------------------------------------------------------
@@ -546,7 +544,7 @@ namespace Virterix.AdMediation
             Debug.Log("AudienceNetworkAdapter.BannerAdViewDidLoad() adInstanceName:" + adInstance.Name);
 #endif
 
-            adInstance.m_state = AdState.Received;
+            adInstance.State = AdState.Received;
             if (adInstance.m_bannerVisibled && adInstance.m_adView != null)
             {
                 AudienceNetworkAdInstanceBannerParameters adInstanceParams = adInstance.m_adInstanceParams as AudienceNetworkAdInstanceBannerParameters;
@@ -593,7 +591,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AudienceNetworkAdapter.InterstitialAdDidLoad()");
 #endif
-            adInstance.m_state = AdState.Received;
+            adInstance.State = AdState.Received;
             AddEvent(AdType.Interstitial, AdEvent.Prepared, adInstance);
         }
 
@@ -633,7 +631,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AudienceNetworkAdapter.RewardedVideoAdDidLoad()");
 #endif
-            adInstance.m_state = AdState.Received;
+            adInstance.State = AdState.Received;
             AddEvent(AdType.Incentivized, AdEvent.Prepared, adInstance);
         }
 

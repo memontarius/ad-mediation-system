@@ -122,7 +122,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public bool IsLastNetworkSuccessfullyPrepared
+        public bool WasLastNetworkPreparationSuccessfully
         {
             get { return m_isLastNetworkSuccessfullyPrepared; }
         }
@@ -146,10 +146,13 @@ namespace Virterix.AdMediation
         private int m_lastActiveTierId;
         private int m_lastActiveUnitId;
         private bool m_isBannerTypeAdViewDisplayed = false;
-        private Coroutine m_coroutineWaitNetworkPreparation;
+        private Coroutine m_waitNetworkResponseHandler;
         private Coroutine m_coroutineDeferredFetch;
         private int m_adPreparationFailureCount;
         private int m_nonTimeoutUnitCountAtFirstFailedPreparation;
+
+        private static float m_waitResponseHandlingInterval;
+        private static WaitForSeconds m_waitResponseInstruction;
 
         //===============================================================================
         #region MonoBehavior Methods
@@ -185,6 +188,12 @@ namespace Virterix.AdMediation
         /// </summary>
         public void Initialize(List<AdUnit[]> tiers)
         {
+            if (m_waitResponseInstruction == null)
+            {
+                m_waitResponseHandlingInterval = 0.5f;
+                m_waitResponseInstruction = new WaitForSeconds(m_waitResponseHandlingInterval);
+            }
+
             m_lastActiveUnitId = -1;
             m_tiers = tiers;
             for(int i = 0; i < m_tiers.Count; i++)
@@ -270,7 +279,7 @@ namespace Virterix.AdMediation
         {
             if (m_currUnit != null)
             {
-                m_currUnit.PrepareAd();
+                m_currUnit.Prepare();
             }
         }
 
@@ -279,7 +288,7 @@ namespace Virterix.AdMediation
             if (m_currUnit != null)
             {
                 bool isShowSuccessful = false;
-                if (m_currUnit.AdapterAdType == AdType.Banner)
+                if (m_currUnit.AdType == AdType.Banner)
                 {
                     isShowSuccessful = m_currUnit.ShowAd();
                 }
@@ -307,7 +316,7 @@ namespace Virterix.AdMediation
 
             if (m_currUnit != null)
             {
-                m_currUnit.HideAd();
+                m_currUnit.Hide();
             }
         }
 
@@ -376,43 +385,42 @@ namespace Virterix.AdMediation
             return false;
         }
 
-        private void RequestToPrepare(AdUnit unit)
+        private void RequestPreparation(AdUnit unit)
         {
-            CancelWaitNetworkPreparing();
             float waitingTime = unit.NetworkResponseWaitTime;
-            m_coroutineWaitNetworkPreparation = StartCoroutine(WaitingNetworkPreparation(unit, waitingTime));
-            unit.PrepareAd();
+            CancelWaitNetworkResponseHandling(unit.AdInstance);
+            m_waitNetworkResponseHandler = StartCoroutine(WaitNetworkResponse(unit, waitingTime));        
+            unit.AdInstance.m_waitResponseHandler = m_waitNetworkResponseHandler;
+            unit.Prepare();
         }
 
-        private IEnumerator WaitingNetworkPreparation(AdUnit unit, float waitingTime)
+        private IEnumerator WaitNetworkResponse(AdUnit unit, float waitingTime)
         {
             float passedTime = 0.0f;
-            float passedTimeForCheckAvailability = 0.0f;
-            bool isCheckAvailabilityWhenPreparing = unit.AdNetwork.IsCheckAvailabilityWhenPreparing(unit.AdapterAdType);
-            float interval = 0.4f;
-            WaitForSeconds waitInstruction = new WaitForSeconds(interval);
+            bool isCheckAvailabilityWhenPreparing = unit.AdNetwork.IsCheckAvailabilityWhenPreparing(unit.AdType);
 
             while (true)
             {
-                yield return waitInstruction;
-                passedTime += interval;
-                passedTimeForCheckAvailability += interval;
+                yield return m_waitResponseInstruction;
+                passedTime += m_waitResponseHandlingInterval;
 
                 if (passedTime > waitingTime)
                 {
-                    unit.AdNetwork.NotifyEvent(unit.AdapterAdType, AdEvent.PreparationFailed, unit.AdInstance);
+                    unit.AdNetwork.NotifyEvent(AdEvent.PreparationFailed, unit.AdInstance);
                     break;
                 }
-                else if (isCheckAvailabilityWhenPreparing && passedTimeForCheckAvailability > 2.0f)
+                else if (isCheckAvailabilityWhenPreparing && passedTime > 2.0f)
                 {
                     if (unit.IsReady)
                     {
-                        unit.AdNetwork.NotifyEvent(unit.AdapterAdType, AdEvent.Prepared, unit.AdInstance);
+                        unit.AdNetwork.NotifyEvent(AdEvent.Prepared, unit.AdInstance);
                         break;
                     }
                 }
             }
-            yield return null;
+
+            yield return m_waitResponseInstruction;
+            yield break;
         }
 
         private void StartDeferredFetch(float delay)
@@ -438,12 +446,26 @@ namespace Virterix.AdMediation
             yield break;
         }
 
-        private void CancelWaitNetworkPreparing()
+        private void CancelCurrentWaitNetworkResponseHandling()
         {
-            if (m_coroutineWaitNetworkPreparation != null)
+            if (m_waitNetworkResponseHandler != null)
             {
-                StopCoroutine(m_coroutineWaitNetworkPreparation);
-                m_coroutineWaitNetworkPreparation = null;
+                StopCoroutine(m_waitNetworkResponseHandler);
+                m_waitNetworkResponseHandler = null;
+            }
+        }
+
+        private void CancelWaitNetworkResponseHandling(AdInstance adInstance)
+        {
+            if (adInstance.m_waitResponseHandler != null)
+            {
+                if (m_waitNetworkResponseHandler == adInstance.m_waitResponseHandler)
+                {
+                    m_waitNetworkResponseHandler = null;
+                }
+                StopCoroutine(adInstance.m_waitResponseHandler);
+                adInstance.m_waitResponseHandler = null;
+                Debug.Log("** Cancel Preparetion! ** " + adInstance.NetworkName);
             }
         }
 
@@ -460,9 +482,8 @@ namespace Virterix.AdMediation
 
                 if (m_currUnit.IsPrepareOnExit)
                 {
-                    m_currUnit.PrepareAd();
+                    m_currUnit.Prepare();
                 }
-
                 m_currUnit = null;
             }
         }
@@ -483,15 +504,15 @@ namespace Virterix.AdMediation
                 m_currUnit.AdNetwork.OnEvent += OnCurrentNetworkEvent;
             }
 
-            m_currUnit.AdNetwork.NotifyEvent(m_currUnit.AdapterAdType, AdEvent.Selected, m_currUnit.AdInstance);
+            m_currUnit.AdNetwork.NotifyEvent(AdEvent.Selected, m_currUnit.AdInstance);
 
             if (m_currUnit.IsReady)
             {
-                m_currUnit.AdNetwork.NotifyEvent(m_currUnit.AdapterAdType, AdEvent.Prepared, m_currUnit.AdInstance);
+                m_currUnit.AdNetwork.NotifyEvent(AdEvent.Prepared, m_currUnit.AdInstance);
             }
             else
             {
-                RequestToPrepare(m_currUnit);
+                RequestPreparation(m_currUnit);
             }
         }
 
@@ -521,7 +542,17 @@ namespace Virterix.AdMediation
 
         private void OnCurrentNetworkEvent(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstance adInstance)
         {
-            if (adType != m_currUnit.AdapterAdType)
+            if (adEvent == AdEvent.PreparationFailed)
+            {
+                CancelWaitNetworkResponseHandling(adInstance);
+                adInstance.SaveFailedPreparationTime();
+            }
+            else if (adEvent == AdEvent.Prepared)
+            {
+                CancelWaitNetworkResponseHandling(adInstance);
+            }
+
+            if (adType != m_currUnit.AdType)
             {
                 return;
             }
@@ -533,7 +564,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AdMediationSystem] AdMediator.OnNetworkEvent() Type:" + m_adType + " placementName: " + m_currUnit.PlacementName +
                 "; Ad Instance Name:" + m_currUnit.AdInstanceName +
-                "; Intrnl Type:" + m_currUnit.AdapterAdType + "; Network:" + network.m_networkName + "; Event:" + adEvent);
+                "; Intrnl Type:" + m_currUnit.AdType + "; Network:" + network.m_networkName + "; Event:" + adEvent);
 #endif
 
             string adInstanceName = adInstance != null ? adInstance.Name : "";
@@ -553,8 +584,7 @@ namespace Virterix.AdMediation
             {
                 case AdEvent.PreparationFailed:
                     m_isLastNetworkSuccessfullyPrepared = false;
-                    CancelWaitNetworkPreparing();
-                    adInstance?.SaveFailedLoadingTime();
+                    adInstance?.SaveFailedPreparationTime();
                     if (m_adPreparationFailureCount == 0)
                     {
                         m_nonTimeoutUnitCountAtFirstFailedPreparation = UnitWithoutTimeoutCount;
@@ -576,7 +606,6 @@ namespace Virterix.AdMediation
                     break;
                 case AdEvent.Prepared:
                     m_isLastNetworkSuccessfullyPrepared = true;
-                    CancelWaitNetworkPreparing();
                     m_adPreparationFailureCount = 0;
                     break;
                 case AdEvent.Hiding:

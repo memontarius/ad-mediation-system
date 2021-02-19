@@ -552,7 +552,7 @@ namespace Virterix.AdMediation.Editor
         private void DrawTabs()
         {
             EditorGUILayout.Space();
-            string[] tabs = { "SETTINGS", "BANNERS", "INTERSTITIALS", "REWARDED ADS" };
+            string[] tabs = { "SETTINGS", "BANNERS", "INTERSTITIALS", "INCENTIVIZED" };
             GUIStyle toolbarStyle = EditorStyles.toolbarButton;
             SelectedTab = GUILayout.Toolbar(SelectedTab, tabs, toolbarStyle);
             EditorGUILayout.Space();

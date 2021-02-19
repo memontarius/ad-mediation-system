@@ -581,7 +581,6 @@ namespace Virterix.AdMediation
             string typeInStrategyKey = "type";
             string networkNameInUnitKey = "network";
             string adInstanceNameInUnitKey = "instance";
-            string unitAdTypeKey = "internalAdType";
             string unitAdPrepareOnExitKey = "prepareOnExit";
 
             string networksKey = "networks";
@@ -713,15 +712,6 @@ namespace Virterix.AdMediation
                                 if (networkAdapter == null || !networkAdapter.enabled)
                                 {
                                     continue;
-                                }
-
-                                // Internal ad type
-                                string internalAdTypeName = "";
-                                if (jsonNetworkUnits.Obj.ContainsKey(unitAdTypeKey))
-                                {
-                                    internalAdTypeName = jsonNetworkUnits.Obj.GetString(unitAdTypeKey);
-                                    AdType convertedAdType = AdUtils.StringToAdType(internalAdTypeName);
-                                    unitAdType = convertedAdType != AdType.Unknown ? convertedAdType : unitAdType;
                                 }
 
                                 bool isPrepareOnExit = false;

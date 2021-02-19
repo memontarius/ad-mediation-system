@@ -152,6 +152,15 @@ namespace Virterix.AdMediation
             UpdateEvents();
             StopAllCoroutines();
         }
+
+        private void OnDestroy()
+        {
+            foreach(var adInstance in m_adInstances)
+            {
+                adInstance.Cleanup();
+            }
+        }
+
         #endregion MonoBehavior Methods
 
         //_______________________________________________________________________________
@@ -220,10 +229,6 @@ namespace Virterix.AdMediation
         {
         }
 
-        public virtual void ResetAd(AdInstance adInstance)
-        {
-        }
-
         public virtual bool IsSupported(AdType adType)
         {
             AdParam adSupportParam = GetAdParam(adType);
@@ -246,14 +251,14 @@ namespace Virterix.AdMediation
             m_events.Add(eventParam);
         }
 
-        public void NotifyEvent(AdType adType, AdEvent adEvent, AdInstance adInstance)
+        public virtual void NotifyEvent(AdEvent adEvent, AdInstance adInstance)
         {
             string adInstanceName = adInstance != null ? adInstance.Name : AdInstance.AD_INSTANCE_DEFAULT_NAME;
             if (adInstance != null && (adEvent == AdEvent.PreparationFailed || adEvent == AdEvent.Prepared))
             {
                 adInstance.m_lastAdPrepared = adEvent == AdEvent.Prepared;
             }
-            OnEvent(this, adType, adEvent, adInstance);
+            OnEvent(this, adInstance.m_adType, adEvent, adInstance);
         }
 
         public IAdInstanceParameters GetAdInstanceParams(AdType adType, string adInstanceName)
@@ -368,7 +373,7 @@ namespace Virterix.AdMediation
                 for (int i = 0; i < m_events.Count; i++)
                 {
                     EventParam eventParam = m_events[i];
-                    NotifyEvent(eventParam.m_adType, eventParam.m_adEvent, eventParam.m_adInstance);
+                    NotifyEvent(eventParam.m_adEvent, eventParam.m_adInstance);
                 }
                 m_events.Clear();
             }
@@ -434,7 +439,7 @@ namespace Virterix.AdMediation
         /// </summary>
         protected virtual AdInstance CreateAdInstanceData(JSONValue jsonAdInstance)
         {
-            return new AdInstance();
+            return new AdInstance(this);
         }
 
         private AdParam GetAdParam(AdType adType)

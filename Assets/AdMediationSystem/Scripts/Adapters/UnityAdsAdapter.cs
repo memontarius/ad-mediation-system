@@ -62,7 +62,7 @@ namespace Virterix.AdMediation
 
         protected override AdInstance CreateAdInstanceData(JSONValue jsonAdInstance)
         {
-            AdInstance adInstance = new AdInstance();
+            AdInstance adInstance = new AdInstance(this);
             return adInstance;
         }
 
@@ -71,6 +71,7 @@ namespace Virterix.AdMediation
             AdType adType = adInstance.m_adType;
             if (!IsReady(adInstance))
             {
+                adInstance.State = AdState.Loading;
                 if (adType == AdType.Banner)
                 {
                     if (m_isBannerDisplayed)
@@ -154,6 +155,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
                 Debug.Log("UnityAdsAdapter.OnUnityAdsReady() " + adInstance.m_adId + " m_bannerVisibled:" + adInstance.m_bannerVisibled);
 #endif
+                adInstance.State = AdState.Received;
                 if (adInstance.m_adType == AdType.Banner && adInstance.m_bannerVisibled)
                 {
                     Show(adInstance);
@@ -164,7 +166,9 @@ namespace Virterix.AdMediation
 
         public void OnUnityAdsDidError(string message)
         {
+#if AD_MEDIATION_DEBUG_MODE
             Debug.Log("UnityAdsAdapter.OnUnityAdsDidError() " + message);
+#endif
         }
 
         public void OnUnityAdsDidStart(string adId)

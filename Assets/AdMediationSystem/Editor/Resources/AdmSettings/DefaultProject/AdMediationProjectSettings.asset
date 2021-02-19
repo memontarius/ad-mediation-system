@@ -125,10 +125,10 @@ MonoBehaviour:
     _name: Default
     _continueAfterEndSession: 1
     _fetchOnAdUnitHidden: 1
-    _fetchOnStart: 0
+    _fetchOnStart: 1
     _bannerMinDisplayTime: 30
     _deferredFetchDelay: 90
-    _fetchStrategyType: 1
+    _fetchStrategyType: 0
     _bannerPosition: 0
     _tiers:
     - _units:

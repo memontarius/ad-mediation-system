@@ -171,7 +171,7 @@ namespace Virterix.AdMediation
             bool isReady = false;
             AdType adType = adInstance.m_adType;
 #if UNITY_ANDROID || UNITY_IOS
-            if (adInstance.m_state == AdState.Received)
+            if (adInstance.State == AdState.Received)
             {
                 switch (adType)
                 {
@@ -196,7 +196,7 @@ namespace Virterix.AdMediation
 #if UNITY_ANDROID || UNITY_IOS
             if (!IsReady(adInstance))
             {
-                adInstance.m_state = AdState.Loading;
+                adInstance.State = AdState.Loading;
                 switch (adType)
                 {
                     case AdType.Interstitial:
@@ -249,7 +249,7 @@ namespace Virterix.AdMediation
         {
             // Interstitial ad is ready to be shown. MaxSdk.IsInterstitialReady(adUnitId) will now return 'true'
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            adInstance.m_state = AdState.Received;
+            adInstance.State = AdState.Received;
             AddEvent(AdType.Interstitial, AdEvent.Prepared, adInstance);
         }
 
@@ -261,7 +261,7 @@ namespace Virterix.AdMediation
             // Interstitial ad failed to load 
             // We recommend retrying with exponentially higher delays up to a maximum delay (in this case 64 seconds)
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            adInstance.m_state = AdState.NotAvailable;
+            adInstance.State = AdState.NotAvailable;
             AddEvent(AdType.Interstitial, AdEvent.PreparationFailed, adInstance);
         }
 
@@ -275,7 +275,7 @@ namespace Virterix.AdMediation
         {
             // Interstitial ad failed to display. We recommend loading the next ad  
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            adInstance.m_state = AdState.NotAvailable;
+            adInstance.State = AdState.NotAvailable;
             AddEvent(AdType.Interstitial, AdEvent.Hiding, adInstance);
         }
 
@@ -289,7 +289,7 @@ namespace Virterix.AdMediation
         {
             // Interstitial ad is hidden. Pre-load the next ad
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            adInstance.m_state = AdState.NotAvailable;
+            adInstance.State = AdState.NotAvailable;
             AddEvent(AdType.Interstitial, AdEvent.Hiding, adInstance);
         }
 
@@ -300,7 +300,7 @@ namespace Virterix.AdMediation
         {
             // Rewarded ad is ready to be shown. MaxSdk.IsRewardedAdReady(adUnitId) will now return 'true'
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            adInstance.m_state = AdState.Received;
+            adInstance.State = AdState.Received;
             AddEvent(AdType.Incentivized, AdEvent.Prepared, adInstance);
         }
 
@@ -312,7 +312,7 @@ namespace Virterix.AdMediation
             // Rewarded ad failed to load 
             // We recommend retrying with exponentially higher delays up to a maximum delay (in this case 64 seconds)
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            adInstance.m_state = AdState.NotAvailable;
+            adInstance.State = AdState.NotAvailable;
             AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, adInstance);
         }
 
@@ -320,7 +320,7 @@ namespace Virterix.AdMediation
         {
             // Rewarded ad failed to display. We recommend loading the next ad
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            adInstance.m_state = AdState.NotAvailable;
+            adInstance.State = AdState.NotAvailable;
             AddEvent(AdType.Incentivized, AdEvent.Hiding, adInstance);
         }
 
@@ -340,7 +340,7 @@ namespace Virterix.AdMediation
         {
             // Rewarded ad is hidden. Pre-load the next ad
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            adInstance.m_state = AdState.NotAvailable;
+            adInstance.State = AdState.NotAvailable;
             AddEvent(AdType.Incentivized, AdEvent.Hiding, adInstance);
         }
 

@@ -17,7 +17,7 @@ namespace Virterix.AdMediation
         private float m_startImpressionTime;
         private bool m_isShown;
 
-        public AdType AdapterAdType 
+        public AdType AdType 
         { 
             get { return m_adType; } 
         }
@@ -63,7 +63,7 @@ namespace Virterix.AdMediation
             {
                 if (m_adInstance == null && !m_isAdInstanceSetted)
                 {
-                    m_adInstance = AdNetwork.GetAdInstance(AdapterAdType, AdInstanceName);
+                    m_adInstance = AdNetwork.GetAdInstance(AdType, AdInstanceName);
                     m_isAdInstanceSetted = true;
                 }
                 return m_adInstance;
@@ -87,18 +87,9 @@ namespace Virterix.AdMediation
         }
         int m_impressions;
 
-        public int FetchCount
-        {
-            get { return m_fetchCount; }
-        }
-        int m_fetchCount;
-
         public bool WasLastImpressionSuccessful
         {
-            get 
-            {
-                return m_wasLastImpressionSuccessful; 
-            }
+            get {  return m_wasLastImpressionSuccessful; }
         }
         bool m_wasLastImpressionSuccessful;
 
@@ -168,7 +159,7 @@ namespace Virterix.AdMediation
             Impressions = showed ? Impressions + 1 : Impressions;
             m_wasLastImpressionSuccessful = showed;
 
-            if (AdapterAdType == AdType.Banner)
+            if (AdType == AdType.Banner)
             {
                 if (showed)
                 {
@@ -179,7 +170,7 @@ namespace Virterix.AdMediation
             return showed;
         }
 
-        public void HideAd()
+        public void Hide()
         {
             UpdateDisplayTimeWhenAdHidden();
             m_network.Hide(AdInstance);
@@ -191,14 +182,9 @@ namespace Virterix.AdMediation
             m_network.HideBannerTypeAdWithoutNotify(AdInstance);
         }
 
-        public void PrepareAd()
+        public void Prepare()
         {
             m_network.Prepare(AdInstance, PlacementName);
-        }
-
-        public void ResetAd()
-        {
-            m_network.ResetAd(AdInstance);
         }
 
         public void ResetLastImpressionSuccessfulState()
@@ -208,7 +194,7 @@ namespace Virterix.AdMediation
 
         private void UpdateDisplayTimeWhenAdHidden()
         {
-            if (AdapterAdType == AdType.Banner)
+            if (AdType == AdType.Banner)
             {
                 if (m_isShown)
                 {

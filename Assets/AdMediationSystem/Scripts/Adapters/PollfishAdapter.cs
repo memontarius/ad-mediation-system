@@ -118,7 +118,7 @@ namespace Virterix.AdMediation
                 }
             }
 
-            m_adInstance = AdFactory.CreateAdInstacne(AdType.Incentivized, AdInstance.AD_INSTANCE_DEFAULT_NAME, "", m_timeout);
+            m_adInstance = AdFactory.CreateAdInstacne(this, AdType.Incentivized, AdInstance.AD_INSTANCE_DEFAULT_NAME, "", m_timeout);
             AddAdInstance(m_adInstance);
 
             m_apiKey = apiKey;
@@ -131,7 +131,7 @@ namespace Virterix.AdMediation
             ResetStatus();
 
 #if !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS)
-            m_adInstance.m_state = AdState.Loading;
+            m_adInstance.State = AdState.Loading;
 
             Pollfish.PollfishParams pollfishParams = new Pollfish.PollfishParams();
 
@@ -174,14 +174,17 @@ namespace Virterix.AdMediation
 
         public override void Prepare(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
-            AdType adType = m_adInstance.m_adType;
-            if (m_adInstance.m_state != AdState.Loading)
+            if (!IsReady(adInstance))
             {
-                switch (adType)
+                AdType adType = m_adInstance.m_adType;
+                if (m_adInstance.State != AdState.Loading)
                 {
-                    case AdType.Incentivized:
-                        InitializePollfish();
-                        break;
+                    switch (adType)
+                    {
+                        case AdType.Incentivized:
+                            InitializePollfish();
+                            break;
+                    }
                 }
             }
         }
@@ -310,7 +313,7 @@ namespace Virterix.AdMediation
             while (true)
             {
                 yield return waitInstruction;
-                AdState state = m_adInstance.m_state;
+                AdState state = m_adInstance.State;
                 if (!IsReady(m_adInstance) && state != AdState.Loading)
                 {
                     if (m_autoPrepareIntervalInMinutes > 0)
@@ -328,14 +331,14 @@ namespace Virterix.AdMediation
         }
 
         //------------------------------------------------------------------------
-            #region Pollfish callback
+        #region Pollfish callback
 
         private void surveyCompleted(string surveyInfo)
         {
             m_surveyCompleted = true;
             m_surveyOnDevice = false;
             m_surveyRejected = false;
-            m_adInstance.m_state = AdState.Uncertain;
+            m_adInstance.State = AdState.Uncertain;
 
             string[] surveyCharacteristics = surveyInfo.Split(',');
 
@@ -371,7 +374,7 @@ namespace Virterix.AdMediation
 
             if (m_prepareOnHidden)
             {
-                AdState state = m_adInstance.m_state;
+                AdState state = m_adInstance.State;
                 if (state == AdState.Uncertain || state == AdState.NotAvailable)
                 {
                     StopProcInitializePollfishWithDelay();
@@ -385,7 +388,7 @@ namespace Virterix.AdMediation
             m_surveyCompleted = false;
             m_surveyOnDevice = true;
             m_surveyRejected = false;
-            m_adInstance.m_state = AdState.Received;
+            m_adInstance.State = AdState.Received;
 
             string[] surveyCharacteristics = surveyInfo.Split(',');
 
@@ -423,7 +426,7 @@ namespace Virterix.AdMediation
         private void surveyNotAvailable()
         {
             ResetStatus();
-            m_adInstance.m_state = AdState.NotAvailable;
+            m_adInstance.State = AdState.NotAvailable;
 
             AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, null);
             StartAutoPrepare();
@@ -432,7 +435,7 @@ namespace Virterix.AdMediation
         private void userNotEligible()
         {
             ResetStatus();
-            m_adInstance.m_state = AdState.NotAvailable;
+            m_adInstance.State = AdState.NotAvailable;
 
             AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, null);
         }
@@ -442,7 +445,7 @@ namespace Virterix.AdMediation
             m_surveyCompleted = false;
             m_surveyOnDevice = false;
             m_surveyRejected = true;
-            m_adInstance.m_state = AdState.NotAvailable;
+            m_adInstance.State = AdState.NotAvailable;
 
             AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, null);
         }
