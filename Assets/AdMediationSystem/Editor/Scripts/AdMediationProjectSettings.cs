@@ -28,14 +28,15 @@ namespace Virterix.AdMediation.Editor
     {
         public List<AdUnit> _units;
     }
-
+     
     [System.Serializable]
     public struct AdUnitMediator
     {
         public AdType _adType;
         public string _name;
-        public bool _isContinueAfterEndSession;
-        public bool _isAutoFetchOnHide;
+        public bool _continueAfterEndSession;
+        public bool _fetchOnAdUnitHidden;
+        public bool _fetchOnStart;
         public int _bannerMinDisplayTime;
         public int _deferredFetchDelay;
         public FetchStrategyType _fetchStrategyType;

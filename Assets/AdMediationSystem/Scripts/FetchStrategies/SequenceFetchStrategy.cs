@@ -18,14 +18,17 @@ namespace Virterix.AdMediation
 
         public int UnitIndex => m_currUnitIndex;
 
-        private int m_tierIndex;
-        private int m_unitIndex;
+        private int m_nextTierIndex;
+        private int m_nextUnitIndex;
         private int m_currTierIndex;
         private int m_currUnitIndex;
 
         private int m_maxRecursionFetch;
         private int m_fetchCount;
         private AdUnit m_currUnit;
+
+        private bool m_isIncrementWhenFirstFetch;
+        private bool m_isFirstFetch = true;
 
         public static void SetupParameters(ref BaseFetchStrategyParams strategyParams, Dictionary<string, object> networkParams)
         {
@@ -46,7 +49,7 @@ namespace Virterix.AdMediation
             if (tiers.Count == 0)
             {
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.LogWarning("Tier are empty!");
+                Debug.LogWarning("[AdMediationSystem] Tier are empty!");
 #endif
                 return;
             }
@@ -54,7 +57,7 @@ namespace Virterix.AdMediation
             if (tierIndex >= tiers.Count || tierIndex < 0)
             {
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.LogWarning("Tier index out of range! " + tierIndex);
+                Debug.LogWarning("[AdMediationSystem] Tier index out of range! " + tierIndex);
 #endif
                 tierIndex = 0;
             }
@@ -65,13 +68,13 @@ namespace Virterix.AdMediation
             {
                 unitIndex = 0;
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.LogWarning("Unit index out of range! Unit Index: " + unitIndex);
+                Debug.LogWarning("[AdMediationSystem] Unit index out of range! Unit Index: " + unitIndex);
 #endif
             }
 
             m_currUnit = units.Length == 0 ? null : units[unitIndex];
-            m_tierIndex = tierIndex;
-            m_unitIndex = unitIndex;
+            m_nextTierIndex = tierIndex;
+            m_nextUnitIndex = unitIndex;
 
             AdUnit nextUnit = null;
             SequenceStrategyParams sequenceParams = null;
@@ -83,10 +86,10 @@ namespace Virterix.AdMediation
                 {
                     nextUnit = units[unitIndex];
                     sequenceParams = nextUnit.FetchStrategyParams as SequenceStrategyParams;
-                    if (!sequenceParams.m_replaced || (tierIndex == m_tierIndex && unitIndex == m_unitIndex))
+                    if (!sequenceParams.m_replaced || (tierIndex == m_nextTierIndex && unitIndex == m_nextUnitIndex))
                     {
-                        m_tierIndex = tierIndex;
-                        m_unitIndex = unitIndex;
+                        m_nextTierIndex = tierIndex;
+                        m_nextUnitIndex = unitIndex;
                         break;
                     }
                     else
@@ -95,7 +98,7 @@ namespace Virterix.AdMediation
                     }
                 }
 
-                if (nextUnit != null || (tierIndex == m_tierIndex && unitIndex == m_unitIndex))
+                if (nextUnit != null || (tierIndex == m_nextTierIndex && unitIndex == m_nextUnitIndex))
                 {
                     break;
                 }
@@ -107,8 +110,8 @@ namespace Virterix.AdMediation
             }
 
             m_currUnit = nextUnit == null ? m_currUnit : nextUnit;
-            m_currTierIndex = m_tierIndex;
-            m_currUnitIndex = m_unitIndex;
+            m_currTierIndex = m_nextTierIndex;
+            m_currUnitIndex = m_nextUnitIndex;
         }
 
         public AdUnit Fetch(List<AdUnit[]> tiers)
@@ -116,7 +119,7 @@ namespace Virterix.AdMediation
             if (tiers.Count == 0)
             {
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.LogWarning("Tiers are empty!");
+                Debug.LogWarning("[AdMediationSystem] Tiers are empty!");
 #endif
                 return null;
             }
@@ -130,34 +133,39 @@ namespace Virterix.AdMediation
         {
             AdUnit fetchedUnit = null;
             int tiersCount = tiers.Count;
-  
-            AdUnit[] units = tiers[m_tierIndex];
+
+            m_currTierIndex = m_nextTierIndex;
+            m_currUnitIndex = m_nextUnitIndex;
+
+            AdUnit[] units = tiers[m_currTierIndex];
             m_fetchCount++;
 
             AdUnit currUnit = null;
-            if (m_unitIndex >= 0 && m_unitIndex < units.Length)
+            if (m_currUnitIndex >= 0 && m_currUnitIndex < units.Length)
             {
-                currUnit = units[m_unitIndex];
+                currUnit = units[m_currUnitIndex];
             }
             else
             {
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.LogWarning("Unit are empty!");
+                Debug.LogWarning("[AdMediationSystem] Unit is empty!");
 #endif
             }
             SequenceStrategyParams sequenceParams = currUnit == null ? null : currUnit.FetchStrategyParams as SequenceStrategyParams;
 
-            m_currTierIndex = m_tierIndex;
-            m_currUnitIndex = m_unitIndex;
-
-            m_unitIndex++;
-            if (m_unitIndex >= units.Length)
+            m_nextUnitIndex++;
+            if (m_nextUnitIndex >= units.Length)
             {
-                m_unitIndex = 0;
-                m_tierIndex++;
-                if (m_tierIndex >= tiersCount)
+                m_nextUnitIndex = 0;
+                bool isMovingToNextTier = true;
+                if (isMovingToNextTier)
                 {
-                    m_tierIndex = 0;
+                    m_nextTierIndex++;
+                }
+
+                if (m_nextTierIndex >= tiersCount)
+                {
+                    m_nextTierIndex = 0;
                 }
             }
 
@@ -194,6 +202,25 @@ namespace Virterix.AdMediation
                 }
             }
             return isSkip;
+        }
+
+        private bool ResolveMovingToNextUnit(AdUnit[] units)
+        {
+            bool isMovingToNextTier = true;
+            for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
+            {
+                var unit = units[unitIndex];
+                if (!unit.IsTimeout && (unit.WasLastImpressionSuccessful || unit.IsReady))
+                {
+                    var unitSequenceParams = unit.FetchStrategyParams as SequenceStrategyParams;
+                    if (!unitSequenceParams.m_replaced)
+                    {
+                        isMovingToNextTier = false;
+                        break;
+                    }
+                }
+            }
+            return isMovingToNextTier;
         }
     }
 } // namespace Virterix.AdMediation

@@ -44,7 +44,7 @@ namespace Virterix.AdMediation
         {
             get { return m_isPrepareOnExit; }
         }
-        bool m_isPrepareOnExit;
+        private bool m_isPrepareOnExit;
 
         public string AdInstanceName
         {
@@ -57,7 +57,7 @@ namespace Virterix.AdMediation
             get { return m_fetchStrategyParams; }
         }
 
-        public AdInstanceData AdInstance
+        public AdInstance AdInstance
         {
             get
             {
@@ -69,10 +69,10 @@ namespace Virterix.AdMediation
                 return m_adInstance;
             }
         }
-        private AdInstanceData m_adInstance;
+        private AdInstance m_adInstance;
         private bool m_isAdInstanceSetted;
 
-        public bool IsAdReady
+        public bool IsReady
         {
             get
             {
@@ -131,9 +131,9 @@ namespace Virterix.AdMediation
             }
         }
 
-        private float StartImpressionTime
+        private float StartImpressionTime 
         {
-            get
+            get 
             {
                 return AdInstance == null ? m_startImpressionTime : AdInstance.m_startImpressionTime;
             }

@@ -22,11 +22,12 @@ MonoBehaviour:
   _bannerMediators:
   - _adType: 1
     _name: Default
-    _isContinueAfterEndSession: 1
-    _isAutoFetchOnHide: 1
+    _continueAfterEndSession: 1
+    _fetchOnAdUnitHidden: 1
+    _fetchOnStart: 0
     _bannerMinDisplayTime: 30
     _deferredFetchDelay: 90
-    _fetchStrategyType: 1
+    _fetchStrategyType: 0
     _bannerPosition: 1
     _tiers:
     - _units:
@@ -46,60 +47,11 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 51
-    - _units:
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 100
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 0
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 0
-    - _units:
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 0
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 0
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 0
   - _adType: 1
     _name: Top
-    _isContinueAfterEndSession: 1
-    _isAutoFetchOnHide: 1
+    _continueAfterEndSession: 1
+    _fetchOnAdUnitHidden: 1
+    _fetchOnStart: 0
     _bannerMinDisplayTime: 30
     _deferredFetchDelay: 90
     _fetchStrategyType: 0
@@ -122,45 +74,12 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 0
-  - _adType: 1
-    _name: 
-    _isContinueAfterEndSession: 1
-    _isAutoFetchOnHide: 1
-    _bannerMinDisplayTime: 30
-    _deferredFetchDelay: 90
-    _fetchStrategyType: 1
-    _bannerPosition: 0
-    _tiers:
-    - _units:
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 0
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 51
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 49
   _interstitialMediators:
   - _adType: 2
     _name: Default
-    _isContinueAfterEndSession: 1
-    _isAutoFetchOnHide: 1
+    _continueAfterEndSession: 0
+    _fetchOnAdUnitHidden: 1
+    _fetchOnStart: 0
     _bannerMinDisplayTime: 30
     _deferredFetchDelay: 90
     _fetchStrategyType: 0
@@ -170,24 +89,8 @@ MonoBehaviour:
       - _networkName: AdMob
         _networkIndex: 0
         _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 1
-        _percentage: 100
-      - _networkName: Audience Network
-        _networkIndex: 1
-        _networkIdentifier: audiencenetwork
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 100
-      - _networkName: AppLovin
-        _networkIndex: 3
-        _networkIdentifier: applovin
-        _instanceIndex: 0
-        _instanceName: Default
+        _instanceIndex: 1
+        _instanceName: DefaultHighCPM
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
@@ -199,7 +102,7 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 0
+        _percentage: 100
       - _networkName: Chartboost
         _networkIndex: 4
         _networkIdentifier: chartboost
@@ -220,11 +123,12 @@ MonoBehaviour:
   _incentivizedMediators:
   - _adType: 3
     _name: Default
-    _isContinueAfterEndSession: 1
-    _isAutoFetchOnHide: 1
+    _continueAfterEndSession: 1
+    _fetchOnAdUnitHidden: 1
+    _fetchOnStart: 0
     _bannerMinDisplayTime: 30
     _deferredFetchDelay: 90
-    _fetchStrategyType: 0
+    _fetchStrategyType: 1
     _bannerPosition: 0
     _tiers:
     - _units:
@@ -235,7 +139,7 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 100
+        _percentage: 61
       - _networkName: Audience Network
         _networkIndex: 1
         _networkIdentifier: audiencenetwork
@@ -243,15 +147,7 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 100
-      - _networkName: AppLovin
-        _networkIndex: 3
-        _networkIdentifier: applovin
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 100
+        _percentage: 15
       - _networkName: Unity Ads
         _networkIndex: 2
         _networkIdentifier: unityads
@@ -259,7 +155,15 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 100
+        _percentage: 12
+      - _networkName: AppLovin
+        _networkIndex: 3
+        _networkIdentifier: applovin
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 4
       - _networkName: Chartboost
         _networkIndex: 4
         _networkIdentifier: chartboost
@@ -267,7 +171,7 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 100
+        _percentage: 3
       - _networkName: Pollfish
         _networkIndex: 5
         _networkIdentifier: pollfish
@@ -275,6 +179,6 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 100
+        _percentage: 5
   _isIOS: 1
   _isAndroid: 1

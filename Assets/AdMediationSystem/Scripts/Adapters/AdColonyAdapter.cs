@@ -290,7 +290,7 @@ namespace Virterix.AdMediation
             }
 
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("[AdColonyAdapter] OnOpened");
+            Debug.Log("[AdMediationSystem] AdColonyAdapter.OnOpened()");
 #endif
         }
 

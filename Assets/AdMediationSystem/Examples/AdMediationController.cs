@@ -107,7 +107,7 @@ public class AdMediationController : BaseAdController
         m_adPersonalizedText.text = buttonText;
     }
 
-    void OnAdPollfishNetworkEvent(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstanceData adInstance) {
+    void OnAdPollfishNetworkEvent(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstance adInstance) {
         HandleNetworkEvent(null, network, adType, adEvent, adInstance == null ? "" : adInstance.Name);
     }
 

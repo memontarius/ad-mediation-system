@@ -21,6 +21,7 @@ MonoBehaviour:
   _bannerAdInstances: []
   _interstitialAdInstances: []
   _rewardAdInstances: []
-  _autoPrepareOnHide: 1
+  _prepareOnHidden: 1
   _restoreBanners: 1
   _autoPrepareInterval: 0
+  _timeoutInMediator: 600

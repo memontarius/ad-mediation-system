@@ -32,15 +32,16 @@ namespace Virterix.AdMediation
 
         public AdType m_adType;
         public string m_placementName = AdMediationSystem.PLACEMENT_DEFAULT_NAME;
-        public bool m_isAutoFetchWhenHide;
-        [Tooltip("If a banner type ad is displayed longer than set value, when ad hide then performs the fetch. (In Seconds)")]
-        public float m_minDisplayTimeBannerAdType = 0f;
+        public bool m_fetchOnStart;
+        public bool m_fetchOnAdUnitHidden;
         [Tooltip("Is continue show ad after restart the app from the interrupt place.")]
-        public bool m_isContinueAfterEndSession;
+        public bool m_continueAfterEndSession;
+        [Tooltip("If a banner type ad is displayed longer than set value, when ad hide then performs the fetch. (In Seconds)")]
+        public float m_bannerMinDisplayTime = 0f;
         [Tooltip("When all networks don't fill ad then the fetch will be performed automatically after the delay. " +
             "Negative value is disabled. (In Seconds)")]
         public float m_deferredFetchDelay = -1;
-
+        
         public AdUnit CurrentUnit
         {
             get { return m_currUnit; }
@@ -76,7 +77,7 @@ namespace Virterix.AdMediation
                     AdUnit[] units = m_tiers[tierIndex];
                     for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
                     {
-                        if (units[unitIndex].IsAdReady)
+                        if (units[unitIndex].IsReady)
                         {
                             ready = true;
                             break;
@@ -94,7 +95,7 @@ namespace Virterix.AdMediation
                 bool ready = false;
                 if (CurrentUnit != null)
                 {
-                    ready = CurrentUnit.IsAdReady;
+                    ready = CurrentUnit.IsReady;
                 }
                 return ready;
             }
@@ -158,7 +159,7 @@ namespace Virterix.AdMediation
         {
             if (pause)
             {
-                if (m_isContinueAfterEndSession)
+                if (m_continueAfterEndSession)
                 {
                     SaveLastActiveAdUnit();
                 }
@@ -167,7 +168,7 @@ namespace Virterix.AdMediation
 
         private void OnApplicationQuit()
         {
-            if (m_isContinueAfterEndSession)
+            if (m_continueAfterEndSession)
             {
                 SaveLastActiveAdUnit();
             }
@@ -192,9 +193,14 @@ namespace Virterix.AdMediation
             }
             
             m_fetchStrategy.Init(tiers, m_totalUnits);
-            if (m_isContinueAfterEndSession)
+            if (m_continueAfterEndSession)
             {
                 RestoreLastActiveAdUnit();
+            }
+
+            if (m_fetchOnStart)
+            {
+                Fetch();
             }
         }
 
@@ -279,7 +285,7 @@ namespace Virterix.AdMediation
                 }
                 else
                 {
-                    isShowSuccessful = m_currUnit.IsAdReady ? m_currUnit.ShowAd() : false;
+                    isShowSuccessful = m_currUnit.IsReady ? m_currUnit.ShowAd() : false;
                 }
 
                 if (!isShowSuccessful)
@@ -338,7 +344,7 @@ namespace Virterix.AdMediation
                     }
 
                     readyUnit = units[unitIndex];
-                    if (readyUnit.IsAdReady)
+                    if (readyUnit.IsReady)
                     {
                         readyTierIndex = tierIndex;
                         readyUnitIndex = unitIndex;
@@ -399,7 +405,7 @@ namespace Virterix.AdMediation
                 }
                 else if (isCheckAvailabilityWhenPreparing && passedTimeForCheckAvailability > 2.0f)
                 {
-                    if (unit.IsAdReady)
+                    if (unit.IsReady)
                     {
                         unit.AdNetwork.NotifyEvent(unit.AdapterAdType, AdEvent.Prepared, unit.AdInstance);
                         break;
@@ -474,13 +480,12 @@ namespace Virterix.AdMediation
                 {
                     m_currUnit.HideBannerTypeAdWithoutNotify();
                 }
-
                 m_currUnit.AdNetwork.OnEvent += OnCurrentNetworkEvent;
             }
 
             m_currUnit.AdNetwork.NotifyEvent(m_currUnit.AdapterAdType, AdEvent.Selected, m_currUnit.AdInstance);
 
-            if (m_currUnit.IsAdReady)
+            if (m_currUnit.IsReady)
             {
                 m_currUnit.AdNetwork.NotifyEvent(m_currUnit.AdapterAdType, AdEvent.Prepared, m_currUnit.AdInstance);
             }
@@ -514,7 +519,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        private void OnCurrentNetworkEvent(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstanceData adInstance)
+        private void OnCurrentNetworkEvent(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstance adInstance)
         {
             if (adType != m_currUnit.AdapterAdType)
             {
@@ -526,7 +531,7 @@ namespace Virterix.AdMediation
             }
 
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("AdMediator.OnNetworkEvent() Type:" + m_adType + " placementName: " + m_currUnit.PlacementName +
+            Debug.Log("[AdMediationSystem] AdMediator.OnNetworkEvent() Type:" + m_adType + " placementName: " + m_currUnit.PlacementName +
                 "; Ad Instance Name:" + m_currUnit.AdInstanceName +
                 "; Intrnl Type:" + m_currUnit.AdapterAdType + "; Network:" + network.m_networkName + "; Event:" + adEvent);
 #endif
@@ -577,13 +582,13 @@ namespace Virterix.AdMediation
                 case AdEvent.Hiding:
                     AdUnit currAdUnit = m_currUnit;
 
-                    if (m_isAutoFetchWhenHide)
+                    if (m_fetchOnAdUnitHidden)
                     {
                         bool isPerformFetch = true;
 
-                        if (m_currUnit != null && m_minDisplayTimeBannerAdType > 0.1f)
+                        if (m_currUnit != null && m_bannerMinDisplayTime > 0.1f)
                         {
-                            isPerformFetch = m_currUnit.DisplayTime >= m_minDisplayTimeBannerAdType;
+                            isPerformFetch = m_currUnit.DisplayTime >= m_bannerMinDisplayTime;
                             if (isPerformFetch)
                             {
                                 m_currUnit.ResetDisplayTime();

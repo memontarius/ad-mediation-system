@@ -180,7 +180,7 @@ namespace Virterix.AdMediation.Editor
         {
             if (Settings.IsTotallyAdInstanceUnsupported)
             {
-                return new string[] { AdInstanceData.AD_INSTANCE_DEFAULT_NAME };
+                return new string[] { AdMediation.AdInstance.AD_INSTANCE_DEFAULT_NAME };
             }
 
             string[] instances = null;
@@ -290,7 +290,7 @@ namespace Virterix.AdMediation.Editor
         private void DrawCommonSettigns()
         {
             GUILayout.BeginVertical("box");
-            Utils.DrawPropertyField(_serializedSettings, _responseWaitTimeProp, GUILayout.ExpandWidth(true));
+            EditorGUILayout.PropertyField(_responseWaitTimeProp, GUILayout.ExpandWidth(true));
             GUILayout.EndVertical();
         }
 
@@ -435,7 +435,7 @@ namespace Virterix.AdMediation.Editor
                 property.FindPropertyRelative("_timeout").floatValue = 90;
                 if (list.index == 0)
                 {
-                    property.FindPropertyRelative("_name").stringValue = AdInstanceData.AD_INSTANCE_DEFAULT_NAME;
+                    property.FindPropertyRelative("_name").stringValue = AdMediation.AdInstance.AD_INSTANCE_DEFAULT_NAME;
                 }
                 else
                 {

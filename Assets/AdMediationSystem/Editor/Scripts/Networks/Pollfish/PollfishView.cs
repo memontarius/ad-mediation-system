@@ -8,18 +8,20 @@ namespace Virterix.AdMediation.Editor
 {
     public class PollfishView : BaseAdNetworkView
     {
-        private SerializedProperty _autoPrepareOnHideProp;
+        private SerializedProperty _prepareOnHiddenProp;
         private SerializedProperty _restoreBannersProp;
         private SerializedProperty _autoPrepareIntervalProp;
-
+        private SerializedProperty _timeoutInMediatorProp;
+        
         protected override string SettingsFileName => "AdmPollfishSettings.asset";
 
         public PollfishView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
             base(settingsWindow, name, identifier)
         {
-            _autoPrepareOnHideProp = _serializedSettings.FindProperty("_autoPrepareOnHide");
+            _prepareOnHiddenProp = _serializedSettings.FindProperty("_prepareOnHidden");
             _restoreBannersProp = _serializedSettings.FindProperty("_restoreBanners");
             _autoPrepareIntervalProp = _serializedSettings.FindProperty("_autoPrepareInterval");
+            _timeoutInMediatorProp = _serializedSettings.FindProperty("_timeoutInMediator");
         }
 
         protected override BaseAdNetworkSettings CreateSettingsModel()
@@ -31,9 +33,12 @@ namespace Virterix.AdMediation.Editor
         protected override void DrawSpecificSettings()
         {
             GUILayout.BeginVertical("box");
-            Utils.DrawPropertyField(_serializedSettings, _autoPrepareOnHideProp);
-            Utils.DrawPropertyField(_serializedSettings, _restoreBannersProp);
-            Utils.DrawPropertyField(_serializedSettings, _autoPrepareIntervalProp);
+
+            EditorGUILayout.PropertyField(_prepareOnHiddenProp);
+            EditorGUILayout.PropertyField(_restoreBannersProp);
+            EditorGUILayout.PropertyField(_autoPrepareIntervalProp);
+            EditorGUILayout.PropertyField(_timeoutInMediatorProp);
+
             GUILayout.EndVertical();
         }
     }

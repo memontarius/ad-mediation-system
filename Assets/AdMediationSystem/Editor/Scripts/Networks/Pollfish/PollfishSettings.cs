@@ -6,11 +6,12 @@ namespace Virterix.AdMediation.Editor
 {
     public class PollfishSettings : BaseAdNetworkSettings
     {
-        public bool _autoPrepareOnHide = true;
+        public bool _prepareOnHidden = true;
         [Tooltip("Restore banners on hide survey.")]
         public bool _restoreBanners = true;
         [Tooltip("Time in minutes when the survey will be request after failed received (0 - disabled).")]
         public int _autoPrepareInterval = 0;
+        public int _timeoutInMediator = 600;
 
         public override Type NetworkAdapterType => typeof(PollfishAdapter);
         protected override string AdapterScriptName => "PollfishAdapter";
@@ -36,10 +37,10 @@ namespace Virterix.AdMediation.Editor
         public override void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {
             var pollfishAdapter = networkAdapter as PollfishAdapter;
-            pollfishAdapter.m_autoPrepareOnHide = _autoPrepareOnHide;
+            pollfishAdapter.m_prepareOnHidden = _prepareOnHidden;
             pollfishAdapter.m_restoreBannersOnHideSurvey = _restoreBanners;
             pollfishAdapter.m_autoPrepareIntervalInMinutes = _autoPrepareInterval;
-
+            pollfishAdapter.m_timeout = _timeoutInMediator;
         }
     }
 } // namespace Virterix.AdMediation.Editor

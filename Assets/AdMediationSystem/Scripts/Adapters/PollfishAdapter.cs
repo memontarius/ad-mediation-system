@@ -31,10 +31,11 @@ namespace Virterix.AdMediation
         }
 
         public SurveyPosition m_indicatorPosition = SurveyPosition.BottomRight;
-        public bool m_autoPrepareOnHide = true;
+        public bool m_prepareOnHidden = true;
         public bool m_restoreBannersOnHideSurvey = true;
         [Tooltip("Auto prepere survey by time (0 - disabled).")]
         public int m_autoPrepareIntervalInMinutes = 0;
+        public int m_timeout;
 
         private string m_apiKey = "";
         private bool m_surveyOnDevice = false;    // true if survey was received on device
@@ -46,7 +47,7 @@ namespace Virterix.AdMediation
         private bool[] m_bannerDisplayStates;
         private SurveyInfo m_lastReceivedSurveyInfo;
         private Coroutine m_procAutoPrepereSurvey;
-        private AdInstanceData m_adInstance;
+        private AdInstance m_adInstance;
 
 #if _AMS_POLLFISH
 
@@ -117,7 +118,7 @@ namespace Virterix.AdMediation
                 }
             }
 
-            m_adInstance = AdFactory.CreateAdInstacne(AdType.Incentivized);
+            m_adInstance = AdFactory.CreateAdInstacne(AdType.Incentivized, AdInstance.AD_INSTANCE_DEFAULT_NAME, "", m_timeout);
             AddAdInstance(m_adInstance);
 
             m_apiKey = apiKey;
@@ -171,7 +172,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override void Prepare(AdInstanceData adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        public override void Prepare(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdType adType = m_adInstance.m_adType;
             if (m_adInstance.m_state != AdState.Loading)
@@ -185,7 +186,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool Show(AdInstanceData adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        public override bool Show(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdType adType = m_adInstance.m_adType;
             if (IsReady(m_adInstance))
@@ -203,7 +204,7 @@ namespace Virterix.AdMediation
             return false;
         }
 
-        public override void Hide(AdInstanceData adInstance = null)
+        public override void Hide(AdInstance adInstance = null)
         {
             AdType adType = m_adInstance.m_adType;
             switch (adType)
@@ -216,7 +217,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool IsReady(AdInstanceData adInstance = null)
+        public override bool IsReady(AdInstance adInstance = null)
         {
             AdType adType = m_adInstance.m_adType;
             bool isReady = false;
@@ -368,7 +369,7 @@ namespace Virterix.AdMediation
                 RestoreBanners();
             }
 
-            if (m_autoPrepareOnHide)
+            if (m_prepareOnHidden)
             {
                 AdState state = m_adInstance.m_state;
                 if (state == AdState.Uncertain || state == AdState.NotAvailable)

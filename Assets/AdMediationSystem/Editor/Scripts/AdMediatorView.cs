@@ -22,11 +22,13 @@ namespace Virterix.AdMediation.Editor
 
         private SerializedProperty _mediatorNameProp;
         private SerializedProperty _fetchStrategyProp;
+        private SerializedProperty _fetchOnAdHiddenProp;
+        private SerializedProperty _fetchOnStartProp;
         private SerializedProperty _continueAfterEndSessionProp;
         private SerializedProperty _bannerPositionProp;
         private SerializedProperty _bannerMinDisplayTimeProp;
         private SerializedProperty _deferredFetchDelayProp;
-        private SerializedProperty _autoFetchOnHideProp;
+        
         private List<string> _activeNetworks = new List<string>();
 
         public AdType AdType
@@ -102,16 +104,8 @@ namespace Virterix.AdMediation.Editor
                         ReorderableList.defaultBehaviours.DoAddButton(list);
                         SerializedProperty unitElement = unitReorderableList.serializedProperty.GetArrayElementAtIndex(list.count - 1);
                         FetchStrategyType strategyType = (FetchStrategyType)_fetchStrategyProp.intValue;
-
-                        switch (strategyType)
-                        {
-                            case FetchStrategyType.Sequence:
-                                break;
-                            case FetchStrategyType.Random:
-                                var percentageProp = unitElement.FindPropertyRelative("_percentage");
-                                percentageProp.intValue = unitsProp.arraySize == 1 ? 100 : 0;
-                                break;
-                        }
+                        var percentageProp = unitElement.FindPropertyRelative("_percentage");
+                        percentageProp.intValue = unitsProp.arraySize == 1 ? 100 : 0;
                     };
                     unitReorderableList.onRemoveCallback = (ReorderableList list) =>
                     {
@@ -354,8 +348,9 @@ namespace Virterix.AdMediation.Editor
             _tierListProp = _mediatorProp.FindPropertyRelative("_tiers");
             _mediatorNameProp = _mediatorProp.FindPropertyRelative("_name");
             _fetchStrategyProp = _mediatorProp.FindPropertyRelative("_fetchStrategyType");
-            _continueAfterEndSessionProp = _mediatorProp.FindPropertyRelative("_isContinueAfterEndSession");
-            _autoFetchOnHideProp = _mediatorProp.FindPropertyRelative("_isAutoFetchOnHide");
+            _continueAfterEndSessionProp = _mediatorProp.FindPropertyRelative("_continueAfterEndSession");
+            _fetchOnAdHiddenProp = _mediatorProp.FindPropertyRelative("_fetchOnAdUnitHidden");
+            _fetchOnStartProp = _mediatorProp.FindPropertyRelative("_fetchOnStart");
             _bannerPositionProp = _mediatorProp.FindPropertyRelative("_bannerPosition");
             _bannerMinDisplayTimeProp = _mediatorProp.FindPropertyRelative("_bannerMinDisplayTime");
             _deferredFetchDelayProp = _mediatorProp.FindPropertyRelative("_deferredFetchDelay");
@@ -370,7 +365,8 @@ namespace Virterix.AdMediation.Editor
             _mediatorNameProp.stringValue = _index == 0 ? AdMediationSystem.PLACEMENT_DEFAULT_NAME : "";
             _fetchStrategyProp.intValue = 0;
             _continueAfterEndSessionProp.boolValue = true;
-            _autoFetchOnHideProp.boolValue = true;
+            _fetchOnAdHiddenProp.boolValue = true;
+            _fetchOnStartProp.boolValue = true;
             _bannerPositionProp.intValue = 0;
             _bannerMinDisplayTimeProp.intValue = 30;
             _deferredFetchDelayProp.intValue = 90;
@@ -420,7 +416,9 @@ namespace Virterix.AdMediation.Editor
                 _continueAfterEndSessionProp.boolValue = EditorGUILayout.ToggleLeft("Continue After End Session", 
                     _continueAfterEndSessionProp.boolValue, GUILayout.Width(170));
                 EditorGUILayout.Space(10, false);
-                _autoFetchOnHideProp.boolValue = EditorGUILayout.ToggleLeft("Auto Fetch On Hide", _autoFetchOnHideProp.boolValue, GUILayout.Width(130));
+                _fetchOnAdHiddenProp.boolValue = EditorGUILayout.ToggleLeft("Fetch On Ad Hidden", _fetchOnAdHiddenProp.boolValue, GUILayout.Width(132));
+                EditorGUILayout.Space(10, false);
+                _fetchOnStartProp.boolValue = EditorGUILayout.ToggleLeft("Fetch On Start", _fetchOnStartProp.boolValue, GUILayout.Width(105));
 
                 EditorGUILayout.EndHorizontal();
 
@@ -462,11 +460,18 @@ namespace Virterix.AdMediation.Editor
                 if (_unitListDict.ContainsKey(listKey))
                 {
                     var units = _unitListDict[listKey];
+                    int totalPercentage = 0;
 
                     for (int unitIndex = 0; unitIndex < units.count; unitIndex++)
                     {
                         var unitProp = units.serializedProperty.GetArrayElementAtIndex(unitIndex);
                         int percentage = unitProp.FindPropertyRelative("_percentage").intValue;
+                        totalPercentage += percentage;
+                    }
+                    if (totalPercentage == 0 && units.count > 0)
+                    {
+                        var unitProp = units.serializedProperty.GetArrayElementAtIndex(0);
+                        unitProp.FindPropertyRelative("_percentage").intValue = 100;
                     }
                 }
             }

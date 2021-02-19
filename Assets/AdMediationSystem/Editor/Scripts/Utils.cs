@@ -30,11 +30,6 @@ namespace Virterix.AdMediation.Editor
         public static void DrawPropertyField(SerializedObject serializedObject, string fieldName, params GUILayoutOption[] options)
         {
             SerializedProperty property = serializedObject.FindProperty(fieldName);
-            DrawPropertyField(serializedObject, property, options);
-        }
-
-        public static void DrawPropertyField(SerializedObject serializedObject, SerializedProperty property, params GUILayoutOption[] options)
-        {
             if (options == null)
             {
                 EditorGUILayout.PropertyField(property, true);

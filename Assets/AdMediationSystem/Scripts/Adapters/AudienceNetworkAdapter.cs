@@ -50,12 +50,12 @@ namespace Virterix.AdMediation
         }
 
 #if _AMS_AUDIENCE_NETWORK
-        private class AudienceNetworkAdInstanceData : AdInstanceData
+        private class AudienceNetworkAdInstanceData : AdInstance
         {
             public AudienceNetworkAdInstanceData() : base()
             {
             }
-            public AudienceNetworkAdInstanceData(AdType adType, string adID, string adInstanceName = AdInstanceData.AD_INSTANCE_DEFAULT_NAME) :
+            public AudienceNetworkAdInstanceData(AdType adType, string adID, string adInstanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME) :
                 base(adType, adID, adInstanceName)
             {
             }
@@ -86,7 +86,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        protected override void InitializeAdInstanceData(AdInstanceData adInstance, JSONValue jsonAdInstance)
+        protected override void InitializeAdInstanceData(AdInstance adInstance, JSONValue jsonAdInstance)
         {
             base.InitializeAdInstanceData(adInstance, jsonAdInstance);
 
@@ -102,13 +102,13 @@ namespace Virterix.AdMediation
             }
         }
 
-        protected override AdInstanceData CreateAdInstanceData(JSONValue jsonAdInstance)
+        protected override AdInstance CreateAdInstanceData(JSONValue jsonAdInstance)
         {
-            AdInstanceData adInstance = new AudienceNetworkAdInstanceData();
+            AdInstance adInstance = new AudienceNetworkAdInstanceData();
             return adInstance;
         }
 
-        public override void Prepare(AdInstanceData adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AudienceNetworkAdInstanceData audienceNetworkAdInstance = adInstance as AudienceNetworkAdInstanceData;
             AdType adType = adInstance.m_adType;
@@ -130,7 +130,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool Show(AdInstanceData adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AudienceNetworkAdInstanceData audienceNetworkAdInstance = adInstance == null ? null : adInstance as AudienceNetworkAdInstanceData;
             AdType adType = adInstance.m_adType;
@@ -186,7 +186,7 @@ namespace Virterix.AdMediation
             return isShowSuccessful;
         }
 
-        public override void Hide(AdInstanceData adInstance = null)
+        public override void Hide(AdInstance adInstance = null)
         {
             AudienceNetworkAdInstanceData audienceNetworkAdInstance = adInstance as AudienceNetworkAdInstanceData;
             AdType adType = adInstance.m_adType;
@@ -210,7 +210,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override void HideBannerTypeAdWithoutNotify(AdInstanceData adInstance = null)
+        public override void HideBannerTypeAdWithoutNotify(AdInstance adInstance = null)
         {
             AdType adType = adInstance.m_adType;
             AudienceNetworkAdInstanceData audienceNetworkAdInstance = adInstance as AudienceNetworkAdInstanceData;
@@ -232,7 +232,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool IsReady(AdInstanceData adInstance = null)
+        public override bool IsReady(AdInstance adInstance = null)
         {
             AdType adType = adInstance.m_adType;
             bool isReady = adInstance.m_state == AdState.Received;

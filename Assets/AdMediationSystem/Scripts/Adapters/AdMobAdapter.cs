@@ -78,13 +78,13 @@ namespace Virterix.AdMediation
         }
 
 #if _AMS_ADMOB
-        public class AdMobAdInstanceData : AdInstanceData
+        public class AdMobAdInstanceData : AdInstance
         {
             public AdMobAdInstanceData() : base()
             {
             }
 
-            public AdMobAdInstanceData(AdType adType, string adID, string name = AdInstanceData.AD_INSTANCE_DEFAULT_NAME) :
+            public AdMobAdInstanceData(AdType adType, string adID, string name = AdInstance.AD_INSTANCE_DEFAULT_NAME) :
                 base(adType, adID, name)
             {
             }
@@ -148,7 +148,7 @@ namespace Virterix.AdMediation
             MobileAds.Initialize(OnInitComplete);
         }
 
-        protected override void InitializeAdInstanceData(AdInstanceData adInstance, JSONValue jsonAdInstance)
+        protected override void InitializeAdInstanceData(AdInstance adInstance, JSONValue jsonAdInstance)
         {
             base.InitializeAdInstanceData(adInstance, jsonAdInstance);
             if (adInstance.m_adType == AdType.Incentivized && m_rewardInstance == null)
@@ -157,9 +157,9 @@ namespace Virterix.AdMediation
             }
         }
 
-        protected override AdInstanceData CreateAdInstanceData(JSONValue jsonAdInstance)
+        protected override AdInstance CreateAdInstanceData(JSONValue jsonAdInstance)
         {
-            AdInstanceData adInstance = new AdMobAdInstanceData();
+            AdInstance adInstance = new AdMobAdInstanceData();
             return adInstance;
         }
 
@@ -167,7 +167,7 @@ namespace Virterix.AdMediation
         {
         }
 
-        public override void Prepare(AdInstanceData adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
             AdType adType = adInstance.m_adType;
@@ -189,7 +189,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool Show(AdInstanceData adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
             AdType adType = adInstance.m_adType;
@@ -228,7 +228,7 @@ namespace Virterix.AdMediation
             return isAdAvailable;
         }
 
-        public override void Hide(AdInstanceData adInstance = null)
+        public override void Hide(AdInstance adInstance = null)
         {
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
             AdType adType = adInstance.m_adType;
@@ -248,7 +248,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override void HideBannerTypeAdWithoutNotify(AdInstanceData adInstance = null)
+        public override void HideBannerTypeAdWithoutNotify(AdInstance adInstance = null)
         {
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
             adMobAdInstance.m_bannerVisibled = false;
@@ -266,7 +266,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool IsReady(AdInstanceData adInstance = null)
+        public override bool IsReady(AdInstance adInstance = null)
         {
 #if UNITY_EDITOR
             //return false;

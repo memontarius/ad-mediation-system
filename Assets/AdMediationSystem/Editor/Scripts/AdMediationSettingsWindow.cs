@@ -637,10 +637,11 @@ namespace Virterix.AdMediation.Editor
 
             Utils.DrawPropertyField(_serializedProjectSettings, "_initializeOnStart");
             Utils.DrawPropertyField(_serializedProjectSettings, "_personalizeAdsOnInit");
-            Utils.DrawPropertyField(_serializedProjectSettings, _enableTestModeProp);          
+            EditorGUILayout.PropertyField(_enableTestModeProp);
+
             if (_enableTestModeProp.boolValue)
             {
-                Utils.DrawPropertyField(_serializedProjectSettings, _testDevicesProp);
+                EditorGUILayout.PropertyField(_testDevicesProp);
             }
             GUILayout.EndVertical();
         }

@@ -2,15 +2,15 @@
 
 namespace Virterix.AdMediation
 {
-    public class AdInstanceData
+    public class AdInstance
     {
         public const string AD_INSTANCE_DEFAULT_NAME = "Default";
 
-        public AdInstanceData()
+        public AdInstance()
         {
         }
 
-        public AdInstanceData(AdType adType, string adID, string name = AD_INSTANCE_DEFAULT_NAME)
+        public AdInstance(AdType adType, string adID, string name = AD_INSTANCE_DEFAULT_NAME)
         {
             m_enabledState = true;
             m_adType = adType;
@@ -53,7 +53,7 @@ namespace Virterix.AdMediation
         public float m_startImpressionTime;
         public float m_displayTime;
         public float m_responseWaitTime = 30f;
-        public string m_failedLoadingTimeSaveKey;
+        public bool m_wasLastPreparationFailed;
 
         public void SaveFailedLoadingTime()
         {

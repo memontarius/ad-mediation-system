@@ -40,8 +40,8 @@ namespace Virterix.AdMediation
 
 #if _AMS_CHARTBOOST
 
-        private AdInstanceData m_interstitialInstance;
-        private AdInstanceData m_incentivizedInstance;
+        private AdInstance m_interstitialInstance;
+        private AdInstance m_incentivizedInstance;
 
         private void OnEnable()
         {
@@ -128,7 +128,7 @@ namespace Virterix.AdMediation
             Chartboost.setAutoCacheAds(autocache);
         }
 
-        public override void Prepare(AdInstanceData adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             switch (adInstance.m_adType)
             {
@@ -141,7 +141,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool Show(AdInstanceData adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             if (IsReady(adInstance))
             {
@@ -159,11 +159,11 @@ namespace Virterix.AdMediation
             return false;
         }
 
-        public override void Hide(AdInstanceData adInstance = null)
+        public override void Hide(AdInstance adInstance = null)
         {
         }
 
-        public override bool IsReady(AdInstanceData adInstance = null)
+        public override bool IsReady(AdInstance adInstance = null)
         {
             bool isReady = false;
             switch (adInstance.m_adType)

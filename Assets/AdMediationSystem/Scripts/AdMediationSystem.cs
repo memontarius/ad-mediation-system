@@ -702,7 +702,7 @@ namespace Virterix.AdMediation
                                 JSONValue jsonNetworkUnits = jsonTier.Array[unitIndex];
 
                                 string networkName = jsonNetworkUnits.Obj.GetValue(networkNameInUnitKey).Str;
-                                string adInstanceName = AdInstanceData.AD_INSTANCE_DEFAULT_NAME;
+                                string adInstanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME;
                                 if (jsonNetworkUnits.Obj.ContainsKey(adInstanceNameInUnitKey))
                                 {
                                     adInstanceName = jsonNetworkUnits.Obj.GetValue(adInstanceNameInUnitKey).Str;

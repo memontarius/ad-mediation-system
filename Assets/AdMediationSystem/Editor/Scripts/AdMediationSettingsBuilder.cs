@@ -180,7 +180,7 @@ namespace Virterix.AdMediation.Editor
             JSONObject jsonUnit = new JSONObject();
 
             jsonUnit.Add("network", adUnit._networkIdentifier);
-            if (adUnit._instanceName != AdInstanceData.AD_INSTANCE_DEFAULT_NAME)
+            if (adUnit._instanceName != AdMediation.AdInstance.AD_INSTANCE_DEFAULT_NAME)
             {
                 jsonUnit.Add("instance", adUnit._instanceName);
             }
@@ -274,7 +274,7 @@ namespace Virterix.AdMediation.Editor
             {
                 JSONObject jsonAdInstance = new JSONObject();
                 jsonAdInstance.Add("adType", AdUtils.AdTypeToString(adInstanceHolder._adType));
-                if (adInstanceHolder._adInstance._name != AdInstanceData.AD_INSTANCE_DEFAULT_NAME)
+                if (adInstanceHolder._adInstance._name != AdMediation.AdInstance.AD_INSTANCE_DEFAULT_NAME)
                 {
                     jsonAdInstance.Add("name", adInstanceHolder._adInstance._name);
                 }
@@ -382,9 +382,10 @@ namespace Virterix.AdMediation.Editor
                 AdMediator mediator = mediatorHolder.AddComponent<AdMediator>();
                 mediator.m_adType = model._adType;
                 mediator.m_placementName = model._name;
-                mediator.m_isAutoFetchWhenHide = model._isAutoFetchOnHide;
-                mediator.m_isContinueAfterEndSession = model._isContinueAfterEndSession;
-                mediator.m_minDisplayTimeBannerAdType = model._adType == AdType.Banner ? model._bannerMinDisplayTime : 0;
+                mediator.m_fetchOnAdUnitHidden = model._fetchOnAdUnitHidden;
+                mediator.m_continueAfterEndSession = model._continueAfterEndSession;
+                mediator.m_fetchOnStart = model._fetchOnStart;
+                mediator.m_bannerMinDisplayTime = model._adType == AdType.Banner ? model._bannerMinDisplayTime : 0;
                 mediator.m_deferredFetchDelay = model._adType == AdType.Incentivized ? model._deferredFetchDelay : -1;
             }
         }
