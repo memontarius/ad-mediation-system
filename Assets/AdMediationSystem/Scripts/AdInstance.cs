@@ -67,7 +67,6 @@ namespace Virterix.AdMediation
         public string m_adId;
         public AdNetworkAdapter.TimeoutParams? m_timeout;
         public bool m_bannerVisibled;
-        public bool m_lastAdPrepared;
         public bool m_enabledState;
         public object m_adView;
         public IAdInstanceParameters m_adInstanceParams;
@@ -99,9 +98,16 @@ namespace Virterix.AdMediation
 
         private void OnNetworkEvent(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstance adInstance)
         {
-            if (adInstance == this && adEvent == AdEvent.PreparationFailed)
+            if (adInstance == this)
             {
-                m_wasLastPreparationFailed = true;
+                if (adEvent == AdEvent.PreparationFailed)
+                {
+                    m_wasLastPreparationFailed = true;
+                }
+                else if (adEvent == AdEvent.Prepared)
+                {
+                    m_wasLastPreparationFailed = false;
+                }
             }
         }
     }

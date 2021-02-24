@@ -14,14 +14,16 @@ namespace Virterix.AdMediation
             public bool m_replaced;
         }
 
-        public int TierIndex => m_currTierIndex;
+        public int TierIndex => m_tierIndex;
 
-        public int UnitIndex => m_currUnitIndex;
+        public int UnitIndex => m_unitIndex;
 
-        private int m_nextTierIndex;
-        private int m_nextUnitIndex;
-        private int m_currTierIndex;
-        private int m_currUnitIndex;
+        private bool m_isFirstFetchSinceStartApplication;
+        private int m_tierPassCount;
+        private int m_maxTierPass;
+
+        private int m_tierIndex;
+        private int m_unitIndex;
 
         private int m_maxRecursionFetch;
         private int m_fetchCount;
@@ -39,13 +41,15 @@ namespace Virterix.AdMediation
         public void Init(List<AdUnit[]> tiers, int totalunits)
         {
             m_maxRecursionFetch = totalunits;
-
-            m_passTierCount = 1;
-            m_maxPassTier = 3;
+            m_isFirstFetchSinceStartApplication = true;
+            m_tierPassCount = 1;
+            m_maxTierPass = 2;
         }
 
         public void Reset(List<AdUnit[]> tiers, int tierIndex, int unitIndex)
         {
+            Debug.Log(" ===== RESTORE " + tierIndex + " " + unitIndex);
+
             if (tiers.Count == 0)
             {
 #if AD_MEDIATION_DEBUG_MODE
@@ -73,45 +77,60 @@ namespace Virterix.AdMediation
             }
 
             m_currUnit = units.Length == 0 ? null : units[unitIndex];
-            m_nextTierIndex = tierIndex;
-            m_nextUnitIndex = unitIndex;
+            m_tierIndex = tierIndex;
+            m_unitIndex = unitIndex;
 
-            AdUnit nextUnit = null;
+            AdUnit restoredUnit = null;
             SequenceStrategyParams sequenceParams = null;
             unitIndex++;
-            for (; tierIndex < tiers.Count; tierIndex++)
+            int tierPassCount = 0;
+
+            for (; tierIndex < tiers.Count;)
             {
                 units = tiers[tierIndex];
                 for (; unitIndex < units.Length; unitIndex++)
                 {
-                    nextUnit = units[unitIndex];
-                    sequenceParams = nextUnit.FetchStrategyParams as SequenceStrategyParams;
-                    if (!sequenceParams.m_replaced || (tierIndex == m_nextTierIndex && unitIndex == m_nextUnitIndex))
+                    restoredUnit = units[unitIndex];
+                    sequenceParams = restoredUnit.FetchStrategyParams as SequenceStrategyParams;
+                    if (!sequenceParams.m_replaced || (tierIndex == m_tierIndex && unitIndex == m_unitIndex))
                     {
-                        m_nextTierIndex = tierIndex;
-                        m_nextUnitIndex = unitIndex;
+                        m_tierIndex = tierIndex;
+                        m_unitIndex = unitIndex;
                         break;
                     }
                     else
                     {
-                        nextUnit = null;
+                        restoredUnit = null;
                     }
                 }
 
-                if (nextUnit != null || (tierIndex == m_nextTierIndex && unitIndex == m_nextUnitIndex))
+                if (restoredUnit != null || (tierIndex == m_tierIndex && unitIndex == m_unitIndex))
                 {
                     break;
                 }
                 else
                 {
                     unitIndex = 0;
-                    tierIndex = (tierIndex + 1 == tiers.Count) ? -1 : tierIndex;
+
+                    bool isMovingToNextTier = true;
+                    if (m_maxTierPass > 1)
+                    {
+                        tierPassCount++;
+                        isMovingToNextTier = tierPassCount >= m_maxTierPass;
+                    }
+
+                    if (isMovingToNextTier) 
+                    {
+                        tierIndex = (tierIndex + 1 == tiers.Count) ? 0 : tierIndex + 1;
+                        tierPassCount = 0;
+                    }
                 }
             }
 
-            m_currUnit = nextUnit == null ? m_currUnit : nextUnit;
-            m_currTierIndex = m_nextTierIndex;
-            m_currUnitIndex = m_nextUnitIndex;
+            m_currUnit = restoredUnit == null ? m_currUnit : restoredUnit;
+            
+            Debug.Log(" ----- RESTORED " + m_tierIndex + " " + m_unitIndex);
+
         }
 
         public AdUnit Fetch(List<AdUnit[]> tiers)
@@ -126,10 +145,11 @@ namespace Virterix.AdMediation
 
             m_fetchCount = 0;
             //AdUnit fetchedUnit = InternalFetch(tiers);
-            AdUnit fetchedUnit = NewInternalFetch(tiers);
+            AdUnit fetchedUnit = InternalFetch(tiers);
             return fetchedUnit;
         }
 
+        /*
         private AdUnit InternalFetch(List<AdUnit[]> tiers)
         {
             AdUnit fetchedUnit = null;
@@ -181,16 +201,8 @@ namespace Virterix.AdMediation
 
             return fetchedUnit;
         }
-
-        private bool m_isFirstFetchSinceStartApplication = true;
-        private int m_passTierCount;
-        private int m_maxPassTier;
-
-        private int m_tierIndex;
-        private int m_unitIndex;
-
-
-        private AdUnit NewInternalFetch(List<AdUnit[]> tiers)
+        */
+        private AdUnit InternalFetch(List<AdUnit[]> tiers)
         {
             AdUnit fetchedUnit = null;
             int tiersCount = tiers.Count;
@@ -207,18 +219,16 @@ namespace Virterix.AdMediation
                 if (m_unitIndex >= units.Length)
                 {
                     m_unitIndex = 0;
-                    bool isMovingToNextTier = m_passTierCount < m_maxPassTier ? ResolveMovingToNextTier(units) : true;
-
-                    Debug.LogWarning("isMovingToNextTier: "+ isMovingToNextTier + " " + m_passTierCount);
+                    bool isMovingToNextTier = m_tierPassCount < m_maxTierPass ? ResolveMovingToNextTier(units) : true;
 
                     if (isMovingToNextTier)
                     {
                         m_tierIndex++;
-                        m_passTierCount = 1;
+                        m_tierPassCount = 1;
                     }
                     else
                     {
-                        m_passTierCount++;
+                        m_tierPassCount++;
                     }
 
                     if (m_tierIndex >= tiersCount)
@@ -248,7 +258,7 @@ namespace Virterix.AdMediation
 
             if (isFindNextUnit)
             {
-                fetchedUnit = NewInternalFetch(tiers);
+                fetchedUnit = InternalFetch(tiers);
             }
 
             return fetchedUnit;
@@ -279,17 +289,27 @@ namespace Virterix.AdMediation
 
         private bool ResolveMovingToNextTier(AdUnit[] units)
         {
-            bool isMovingToNextTier = false;
-            int failedCount = 0;
+            int unvalidCount = 0;
+            int replacedCount = 0;
+            SequenceStrategyParams unitSequenceParams;
+
             for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
             {
                 var unit = units[unitIndex];
-                if (unit.IsTimeout || unit.AdInstance.WasLastPreparationFailed)
+                unitSequenceParams = unit.FetchStrategyParams as SequenceStrategyParams;
+                if (unitSequenceParams.m_replaced)
                 {
-                    failedCount++;
+                    replacedCount++;
+                }
+                else
+                {
+                    if (unit.IsTimeout || unit.AdInstance.WasLastPreparationFailed)
+                    {
+                        unvalidCount++;
+                    }
                 }
             }
-            isMovingToNextTier = failedCount == units.Length;
+            bool isMovingToNextTier = unvalidCount == (units.Length - replacedCount);
             return isMovingToNextTier;
         }
     }

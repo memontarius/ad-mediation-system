@@ -68,7 +68,7 @@ namespace Virterix.AdMediation.Editor
                 return isTotallyUnsupported;
             }
         }
-
+        
         protected virtual string AdapterScriptName { get; }
         protected virtual string AdapterDefinePeprocessorKey { get; }
         public virtual string JsonAppIdKey { get { return "appId"; } }

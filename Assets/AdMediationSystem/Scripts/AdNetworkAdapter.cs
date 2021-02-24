@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Boomlagoon.JSON;
 
@@ -138,6 +139,9 @@ namespace Virterix.AdMediation
         private List<AdInstance> m_adInstances = new List<AdInstance>();
         protected IncentivizedReward m_lastReward;
 
+        private static float m_waitResponseHandlingInterval;
+        private static WaitForSeconds m_waitResponseInstruction;
+
         //_______________________________________________________________________________
         #region MonoBehavior Methods
         //-------------------------------------------------------------------------------
@@ -167,8 +171,14 @@ namespace Virterix.AdMediation
         #region Public Methods
         //-------------------------------------------------------------------------------
 
-        public virtual void Initialize(Dictionary<string, string> parameters = null, JSONArray adInstances = null)
+        public void Initialize(Dictionary<string, string> parameters = null, JSONArray adInstances = null)
         {
+            if (m_waitResponseInstruction == null)
+            {
+                m_waitResponseHandlingInterval = 0.5f;
+                m_waitResponseInstruction = new WaitForSeconds(m_waitResponseHandlingInterval);
+            }
+
             if (parameters != null)
             {
                 InitializeParameters(parameters, adInstances);
@@ -253,10 +263,15 @@ namespace Virterix.AdMediation
 
         public virtual void NotifyEvent(AdEvent adEvent, AdInstance adInstance)
         {
-            string adInstanceName = adInstance != null ? adInstance.Name : AdInstance.AD_INSTANCE_DEFAULT_NAME;
-            if (adInstance != null && (adEvent == AdEvent.PreparationFailed || adEvent == AdEvent.Prepared))
+            switch (adEvent)
             {
-                adInstance.m_lastAdPrepared = adEvent == AdEvent.Prepared;
+                case AdEvent.PreparationFailed:
+                    CancelWaitResponseHandling(adInstance);
+                    adInstance.SaveFailedPreparationTime();
+                    break;
+                case AdEvent.Prepared:
+                    CancelWaitResponseHandling(adInstance);
+                    break;
             }
             OnEvent(this, adInstance.m_adType, adEvent, adInstance);
         }
@@ -358,6 +373,21 @@ namespace Virterix.AdMediation
         /// <param name="isPersonalizedAds"></param>
         public virtual void SetPersonalizedAds(bool isPersonalizedAds)
         {
+        }
+
+        public void StartWaitResponseHandling(AdInstance adInstance)
+        {
+            CancelWaitResponseHandling(adInstance);
+            adInstance.m_waitResponseHandler = StartCoroutine(WaitResponse(adInstance));
+        }
+
+        public void CancelWaitResponseHandling(AdInstance adInstance)
+        {
+            if (adInstance.m_waitResponseHandler != null)
+            {
+                StopCoroutine(adInstance.m_waitResponseHandler);
+                adInstance.m_waitResponseHandler = null;
+            }
         }
 
         #endregion Public Methods
@@ -475,7 +505,38 @@ namespace Virterix.AdMediation
                 }
             }
         }
-        #endregion Internal Methods
 
+        private IEnumerator WaitResponse(AdInstance adInstance)
+        {
+            float waitingTime = adInstance.m_responseWaitTime;
+            float passedTime = 0.0f;
+            bool isCheckAvailabilityWhenPreparing = IsCheckAvailabilityWhenPreparing(adInstance.m_adType);
+
+            while (true)
+            {
+                yield return m_waitResponseInstruction;
+                passedTime += m_waitResponseHandlingInterval;
+
+                if (passedTime >= waitingTime)
+                {
+                    NotifyEvent(AdEvent.PreparationFailed, adInstance);
+                    break;
+                }
+                else if (isCheckAvailabilityWhenPreparing && passedTime > 2.0f)
+                {
+                    if (IsReady(adInstance))
+                    {
+                        NotifyEvent(AdEvent.Prepared, adInstance);
+                        break;
+                    }
+                }
+            }
+
+            yield return m_waitResponseInstruction;
+            yield break;
+        }
+
+
+        #endregion Internal Methods
     }
 } // namespace Virterix.AdMediation

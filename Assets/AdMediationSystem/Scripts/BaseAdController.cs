@@ -29,7 +29,7 @@ namespace Virterix.AdMediation
         }
 
         protected virtual void SubscribeEvents()
-        {
+        { 
             AdMediationSystem.OnAdNetworkEvent += OnAdNetworkEvent;
         }
 

@@ -17,15 +17,19 @@ namespace Virterix.AdMediation
             public int m_percentage;
         }
 
-        public int TierIndex => m_currTierIndex;
+        public int TierIndex => m_tierIndex;
         public int UnitIndex => m_unitIndex;
 
         private int m_tierIndex;
-        private int m_currTierIndex;
         private int m_unitIndex;
+
+        private bool m_isFirstFetchSinceStartApplication;
+        private int m_tierPassCount;
+        private int m_maxTierPass;
+
         private int m_maxRecursionFetch;
         private int m_fetchCount;
-        private List<AdUnit> m_fetchedUnits = new List<AdUnit>();
+        private List<AdUnit> m_readyUnits = new List<AdUnit>();
 
         public static void SetupParameters(ref BaseFetchStrategyParams strategyParams, Dictionary<string, object> networkParams)
         {
@@ -35,6 +39,9 @@ namespace Virterix.AdMediation
 
         public void Init(List<AdUnit[]> tiers, int totalunits)
         {
+            m_isFirstFetchSinceStartApplication = true;
+            m_tierPassCount = 1;
+            m_maxTierPass = 1;
             m_maxRecursionFetch = tiers.Count;
         }
 
@@ -42,10 +49,9 @@ namespace Virterix.AdMediation
         {
             if (tiers.Count > 0)
             {
-                tierIndex++;
-                tierIndex = tierIndex >= tiers.Count ? 0 : tierIndex;
-                m_currTierIndex = tierIndex;
-                m_tierIndex = tierIndex;
+                m_tierIndex = Mathf.Clamp(tierIndex, 0, tiers.Count - 1);
+                m_tierIndex = m_maxTierPass > 1 ? m_tierIndex : m_tierIndex + 1;
+                m_tierIndex = m_tierIndex >= tiers.Count ? 0 : m_tierIndex; 
             }
         }
 
@@ -104,18 +110,46 @@ namespace Virterix.AdMediation
 
         private AdUnit InternalFetch(List<AdUnit[]> tiers)
         {
-            m_currTierIndex = m_tierIndex;
-            AdUnit[] units = tiers[m_tierIndex];
             m_fetchCount++;
 
-            m_tierIndex++;
-            m_tierIndex = m_tierIndex >= tiers.Count ? 0 : m_tierIndex;
+            int previousTierIndex = m_tierIndex;
+            AdUnit[] units = tiers[m_tierIndex];
+            FindUnitsForFetch(units, ref m_readyUnits);
 
-            FindUnitsForFetch(units, ref m_fetchedUnits);
-            AdUnit unit = null;
-            if (m_fetchedUnits.Count > 0)
+            if (m_isFirstFetchSinceStartApplication)
             {
-                m_unitIndex = FetchByRandom(m_fetchedUnits);
+                m_isFirstFetchSinceStartApplication = false;
+            }
+            else
+            {
+                bool isMovingToNextTier = m_tierPassCount < m_maxTierPass ? ResolveMovingToNextTier(m_readyUnits.ToArray()) : true;
+
+                if (isMovingToNextTier)
+                {
+                    m_tierIndex++;
+                    m_tierPassCount = 1;
+                }
+                else
+                {
+                    m_tierPassCount++;
+                }
+
+                if (m_tierIndex >= tiers.Count)
+                {
+                    m_tierIndex = 0;
+                }
+
+                if (m_tierIndex != previousTierIndex)
+                {
+                    units = tiers[m_tierIndex];
+                    FindUnitsForFetch(units, ref m_readyUnits);
+                }
+            }
+
+            AdUnit unit = null;
+            if (m_readyUnits.Count > 0)
+            {
+                m_unitIndex = FetchByRandom(m_readyUnits);
                 unit = units[m_unitIndex];
             }
             else
@@ -130,7 +164,7 @@ namespace Virterix.AdMediation
 
         private void FindUnitsForFetch(AdUnit[] units, ref List<AdUnit> foundUnits)
         {
-            m_fetchedUnits.Clear();
+            m_readyUnits.Clear();
             for (int i = 0; i < units.Length; i++)
             {
                 AdUnit unit = units[i];
@@ -139,6 +173,21 @@ namespace Virterix.AdMediation
                     foundUnits.Add(unit);
                 }
             }
+        }
+
+        private bool ResolveMovingToNextTier(AdUnit[] units)
+        {
+            int unvalidCount = 0;
+            for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
+            {
+                var unit = units[unitIndex];           
+                if (unit.IsTimeout || unit.AdInstance.WasLastPreparationFailed)
+                {
+                    unvalidCount++;
+                }
+            }
+            bool isMovingToNextTier = unvalidCount == units.Length;
+            return isMovingToNextTier;
         }
     }
 } // namespace Virterix.AdMediation

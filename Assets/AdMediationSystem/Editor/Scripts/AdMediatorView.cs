@@ -97,6 +97,7 @@ namespace Virterix.AdMediation.Editor
                 {
                     unitReorderableList = new ReorderableList(element.serializedObject, unitsProp);
                     unitReorderableList.elementHeight = unitElementHegiht;
+                    unitReorderableList.headerHeight = 28;
                     _unitListDict[listKey] = unitReorderableList;
 
                     unitReorderableList.onAddCallback = (ReorderableList list) =>
@@ -207,10 +208,19 @@ namespace Virterix.AdMediation.Editor
                                 break;
                         }
                     };
+                    /*
                     unitReorderableList.drawHeaderCallback = (rect) =>
                     {
                         EditorGUI.LabelField(rect, "Tier " + (elementIndex + 1).ToString());
-                    };
+
+                        rect.x += 360;
+                        rect.width = 60;
+                        rect.height = 18;
+                        EditorGUI.LabelField(rect, "Max Pass");
+                        rect.x += 70;
+                        rect.width = 60;
+                        EditorGUI.TextField(rect, "");
+                    };*/
                 }
 
                 // Setup the inner list

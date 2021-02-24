@@ -16,7 +16,7 @@ MonoBehaviour:
   _networkIdentifier: unityads
   _androidAppId: 2917696
   _iosAppId: 2917694
-  _responseWaitTime: 30
+  _responseWaitTime: 5
   _directedTowardsChildren: 0
   _bannerAdInstances: []
   _interstitialAdInstances:

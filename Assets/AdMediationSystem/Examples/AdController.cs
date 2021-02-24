@@ -1,7 +1,8 @@
-﻿using UnityEngine.UI;
+﻿using UnityEngine;
+using UnityEngine.UI;
 using Virterix.AdMediation;
 
-public class AdMediationController : BaseAdController
+public class AdController : BaseAdController
 {
     public Text m_interstitialInfoText;
     public Text m_rewardVideoInfoText;
