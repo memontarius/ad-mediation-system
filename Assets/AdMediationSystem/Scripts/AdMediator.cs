@@ -72,7 +72,7 @@ namespace Virterix.AdMediation
             get
             {
                 bool ready = false;
-                for (int tierIndex = 0; tierIndex < m_tiers.Count; tierIndex++)
+                for (int tierIndex = 0; tierIndex < m_tiers.Length; tierIndex++)
                 {
                     AdUnit[] units = m_tiers[tierIndex];
                     for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
@@ -107,7 +107,7 @@ namespace Virterix.AdMediation
             {
                 int count = 0;
                 AdUnit[] units = null;
-                for (int tierIndex = 0; tierIndex < m_tiers.Count; tierIndex++)
+                for (int tierIndex = 0; tierIndex < m_tiers.Length; tierIndex++)
                 {
                     units = m_tiers[tierIndex];
                     for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
@@ -139,9 +139,9 @@ namespace Virterix.AdMediation
 
         #endregion // Properties
 
-        private List<AdUnit[]> m_tiers;
+        private AdUnit[][] m_tiers;
+        
         private int m_totalUnits;
-
         protected AdUnit m_currUnit;
         private int m_lastActiveTierId;
         private int m_lastActiveUnitId;
@@ -149,7 +149,6 @@ namespace Virterix.AdMediation
         private Coroutine m_coroutineDeferredFetch;
         private int m_failedPreparationCount;
         private int m_nonTimeoutUnitCountSinceFirstFailed;
-
 
         //===============================================================================
         #region MonoBehavior Methods
@@ -183,16 +182,16 @@ namespace Virterix.AdMediation
         /// <summary>
         /// Should be called only once when initialize
         /// </summary>
-        public void Initialize(List<AdUnit[]> tiers)
+        public void Initialize(AdUnit[][] tiers, int[] tierMaxPassages)
         {
             m_lastActiveUnitId = -1;
             m_tiers = tiers;
-            for(int i = 0; i < m_tiers.Count; i++)
+            for (int i = 0; i < m_tiers.Length; i++)
             {
                 m_totalUnits += m_tiers[i].Length;
             }
-            
-            m_fetchStrategy.Init(tiers, m_totalUnits);
+
+            m_fetchStrategy.Init(tiers, m_totalUnits, tierMaxPassages);
             if (m_continueAfterEndSession)
             {
                 RestoreLastActiveAdUnit();
@@ -328,7 +327,7 @@ namespace Virterix.AdMediation
 
             for (int tierIndex = currTierIndex; ; tierIndex++)
             {
-                if (tierIndex >= m_tiers.Count)
+                if (tierIndex >= m_tiers.Length)
                 {
                     tierIndex = 0;
                 }

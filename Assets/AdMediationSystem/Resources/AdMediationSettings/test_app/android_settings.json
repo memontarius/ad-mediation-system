@@ -9,6 +9,7 @@
             "strategy":
 			{
 				"type":"sequence",
+				"maxPass":[1,1,1],
 				"tiers": [
 					[
 						{ "network":"admob", "instance":"BannerHighCpm" },

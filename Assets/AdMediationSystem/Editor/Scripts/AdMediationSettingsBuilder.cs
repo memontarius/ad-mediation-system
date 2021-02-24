@@ -156,8 +156,18 @@ namespace Virterix.AdMediation.Editor
         {
             JSONObject mediationStrategy = new JSONObject();
             mediationStrategy.Add("type", mediator._fetchStrategyType.ToString().ToLower());
+            mediationStrategy.Add("maxPass", CreateTierMaxPassages(mediator));
             mediationStrategy.Add("tiers", CreateTiers(mediator));
             return mediationStrategy;
+        }
+        public static JSONArray CreateTierMaxPassages(AdUnitMediator mediator)
+        {
+            JSONArray jsonMaxPassages = new JSONArray();
+            foreach (var tier in mediator._tiers)
+            {
+                jsonMaxPassages.Add(tier._maxPassages);
+            }
+            return jsonMaxPassages;
         }
 
         public static JSONArray CreateTiers(AdUnitMediator mediator)

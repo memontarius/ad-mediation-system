@@ -17,6 +17,12 @@ namespace Virterix.AdMediation
 
     public class AdMediationSystem : Singleton<AdMediationSystem>
     {
+        private struct MediatorData
+        {
+            public AdUnit[][] tiers;
+            public int[] maxPassages;
+        }
+
         public const string AD_SETTINGS_FOLDER = "AdmSettings";
         public const string PREFAB_NAME = "AdMediationSystem";
         public const string PLACEMENT_DEFAULT_NAME = "Default";
@@ -582,12 +588,14 @@ namespace Virterix.AdMediation
             string networkNameInUnitKey = "network";
             string adInstanceNameInUnitKey = "instance";
             string unitAdPrepareOnExitKey = "prepareOnExit";
+            string tierKey = "tiers";
+            string maxPassKey = "maxPass";
 
             string networksKey = "networks";
             string networkNameKey = "name";
 
             Dictionary<AdNetworkAdapter, NetworkParams> dictNetworks = new Dictionary<AdNetworkAdapter, NetworkParams>();
-            Dictionary<AdMediator, List<AdUnit[]>> initMediators = new Dictionary<AdMediator, List<AdUnit[]>>();
+            Dictionary<AdMediator, MediatorData> initMediators = new Dictionary<AdMediator, MediatorData>();
 
             if (jsonSettings.ContainsKey(networkResponseWaitTimeKey))
             {
@@ -631,14 +639,6 @@ namespace Virterix.AdMediation
 
                     if (networkAdapter != null)
                     {
-                        if (jsonValNetworkParams.Obj.ContainsKey("enabled"))
-                        {
-                            networkAdapter.enabled = jsonValNetworkParams.Obj.GetBoolean("enabled");
-                            if (!networkAdapter.enabled)
-                            { 
-                                continue;
-                            }
-                        }
                         Dictionary<string, string> dictNetworkParams = new Dictionary<string, string>();
 
                         // Parse parameters
@@ -666,7 +666,9 @@ namespace Virterix.AdMediation
                 // Parse mediators
                 JSONArray jsonArrMediators = jsonSettings.GetArray(mediatorsKey);
                 Dictionary<string, object> dictUnitParams = new Dictionary<string, object>();
-                
+                List<int> maxPassages = new List<int>();
+                List<AdUnit[]> tierUnits = new List<AdUnit[]>();
+
                 foreach (JSONValue jsonMediationParams in jsonArrMediators)
                 {
                     string adTypeName = jsonMediationParams.Obj.GetValue(adTypeKey).Str;
@@ -685,16 +687,24 @@ namespace Virterix.AdMediation
                     mediator.FetchStrategy = AdFactory.CreateFetchStrategy(strategyTypeName);
 
                     // Ad Units
-                    List<AdUnit[]> tierUnits = new List<AdUnit[]>();
-                    if (jsonStrategy.ContainsKey("tiers"))
+                    if (jsonStrategy.ContainsKey(tierKey))
                     {
-                        JSONArray jsonArrTiers = jsonStrategy.GetArray("tiers");
+                        JSONArray jsonTiers = jsonStrategy.GetArray(tierKey);
+                        JSONArray jsonTierMaxPassages = jsonStrategy.GetArray(maxPassKey);
 
-                        for (int tierIndex = 0; tierIndex < jsonArrTiers.Length; tierIndex++)
+                        for (int tierIndex = 0; tierIndex < jsonTiers.Length; tierIndex++)
                         {
-                            JSONValue jsonTier = jsonArrTiers[tierIndex];
+                            JSONValue jsonTier = jsonTiers[tierIndex];
                             AdUnit[] arrUnits = new AdUnit[jsonTier.Array.Length];
                             tierUnits.Add(arrUnits);
+                            if (jsonTierMaxPassages != null)
+                            {
+                                maxPassages.Add(System.Convert.ToInt32(jsonTierMaxPassages[tierIndex].Number));
+                            }
+                            else
+                            {
+                                maxPassages.Add(1);
+                            }
 
                             for (int unitIndex = 0; unitIndex < jsonTier.Array.Length; unitIndex++)
                             {
@@ -750,7 +760,13 @@ namespace Virterix.AdMediation
                         }
                     }
 
-                    initMediators.Add(mediator, tierUnits);
+                    MediatorData mediatorData = new MediatorData();
+                    mediatorData.tiers = tierUnits.ToArray();
+                    mediatorData.maxPassages = maxPassages.ToArray();
+                    initMediators.Add(mediator, mediatorData);
+
+                    tierUnits.Clear();
+                    maxPassages.Clear();
                 }
 
                 setupSettingsSuccess = true;
@@ -779,7 +795,8 @@ namespace Virterix.AdMediation
                 foreach (var pair in initMediators)
                 {
                     AdMediator mediator = pair.Key;
-                    mediator.Initialize(initMediators[mediator]);
+                    MediatorData mediatorData = initMediators[mediator];
+                    mediator.Initialize(mediatorData.tiers, mediatorData.maxPassages);
                 }
             }
             else

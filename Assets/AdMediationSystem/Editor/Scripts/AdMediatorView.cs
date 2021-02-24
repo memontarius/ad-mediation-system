@@ -30,6 +30,7 @@ namespace Virterix.AdMediation.Editor
         private SerializedProperty _deferredFetchDelayProp;
         
         private List<string> _activeNetworks = new List<string>();
+        private List<int> _removedTiers = new List<int>();
 
         public AdType AdType
         {
@@ -97,7 +98,6 @@ namespace Virterix.AdMediation.Editor
                 {
                     unitReorderableList = new ReorderableList(element.serializedObject, unitsProp);
                     unitReorderableList.elementHeight = unitElementHegiht;
-                    unitReorderableList.headerHeight = 28;
                     _unitListDict[listKey] = unitReorderableList;
 
                     unitReorderableList.onAddCallback = (ReorderableList list) =>
@@ -208,19 +208,33 @@ namespace Virterix.AdMediation.Editor
                                 break;
                         }
                     };
-                    /*
                     unitReorderableList.drawHeaderCallback = (rect) =>
                     {
                         EditorGUI.LabelField(rect, "Tier " + (elementIndex + 1).ToString());
+                        var maxPassProp = element.FindPropertyRelative("_maxPassages");
 
-                        rect.x += 360;
+                        rect.x += rect.width - 130;
+                        rect.y += 1;
                         rect.width = 60;
-                        rect.height = 18;
-                        EditorGUI.LabelField(rect, "Max Pass");
-                        rect.x += 70;
-                        rect.width = 60;
-                        EditorGUI.TextField(rect, "");
-                    };*/
+                        rect.height = rect.height - 2;
+                        EditorGUI.LabelField(rect, new GUIContent("Max Pass", "Maximum number of tier passes until all networks return unsuccessful preparation."));
+                        rect.x += 65;
+                        rect.width = 35;
+
+                        string maxPassValue = maxPassProp.intValue.ToString();
+                        maxPassValue = EditorGUI.TextField(rect, maxPassValue);
+                        int maxPassages = 1;
+                        var culture = System.Globalization.CultureInfo.InvariantCulture;
+                        int.TryParse(maxPassValue, System.Globalization.NumberStyles.Integer, culture, out maxPassages);
+                        maxPassProp.intValue = Mathf.Clamp(maxPassages, 1, 5);
+           
+                        rect.x += 40;
+                        rect.width = 30;
+                        if (GUI.Button(rect, '\u2573'.ToString()))
+                        {
+                            _removedTiers.Add(elementIndex);
+                        }
+                    };
                 }
 
                 // Setup the inner list
@@ -229,9 +243,16 @@ namespace Virterix.AdMediation.Editor
             };
             _tierReorderableList.elementHeightCallback = (int index) =>
             {
-                var element = _tierListProp.GetArrayElementAtIndex(index);
-                var unitsProp = element.FindPropertyRelative("_units");
-                return Mathf.Clamp((unitsProp.arraySize - 1) * unitElementHegiht + 75, 75, Mathf.Infinity);
+                if (index < _tierListProp.arraySize)
+                {
+                    var element = _tierListProp.GetArrayElementAtIndex(index);
+                    var unitsProp = element.FindPropertyRelative("_units");
+                    return Mathf.Clamp((unitsProp.arraySize - 1) * unitElementHegiht + 75, 75, Mathf.Infinity);
+                }
+                else
+                {
+                    return 0;
+                }
             };
         }
 
@@ -423,7 +444,7 @@ namespace Virterix.AdMediation.Editor
 
                 EditorGUILayout.BeginHorizontal();
 
-                _continueAfterEndSessionProp.boolValue = EditorGUILayout.ToggleLeft("Continue After End Session", 
+                _continueAfterEndSessionProp.boolValue = EditorGUILayout.ToggleLeft("Continue After End Session",
                     _continueAfterEndSessionProp.boolValue, GUILayout.Width(170));
                 EditorGUILayout.Space(10, false);
                 _fetchOnAdHiddenProp.boolValue = EditorGUILayout.ToggleLeft("Fetch On Ad Hidden", _fetchOnAdHiddenProp.boolValue, GUILayout.Width(132));
@@ -458,6 +479,18 @@ namespace Virterix.AdMediation.Editor
             EditorGUILayout.EndFadeGroup();
             EditorGUILayout.EndFoldoutHeaderGroup();
             EditorGUILayout.EndVertical();
+            UpdateDeletedTiers();
+        }
+
+        private void UpdateDeletedTiers()
+        {
+            foreach (var index in _removedTiers)
+            {
+                _tierListProp.DeleteArrayElementAtIndex(index);
+                _tierListProp.serializedObject.ApplyModifiedProperties();
+                _tierListProp.serializedObject.Update();
+            }
+            _removedTiers.Clear();
         }
 
         private void FixRandomStrategyItemPercentageValues()

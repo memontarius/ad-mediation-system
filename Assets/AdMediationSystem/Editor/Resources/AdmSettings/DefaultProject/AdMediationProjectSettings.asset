@@ -30,7 +30,8 @@ MonoBehaviour:
     _fetchStrategyType: 0
     _bannerPosition: 1
     _tiers:
-    - _units:
+    - _maxPassages: 1
+      _units:
       - _networkName: AdMob
         _networkIndex: 0
         _networkIdentifier: admob
@@ -47,6 +48,10 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 51
+    - _maxPassages: 1
+      _units: []
+    - _maxPassages: 1
+      _units: []
   - _adType: 1
     _name: Top
     _continueAfterEndSession: 1
@@ -57,7 +62,8 @@ MonoBehaviour:
     _fetchStrategyType: 0
     _bannerPosition: 0
     _tiers:
-    - _units:
+    - _maxPassages: 1
+      _units:
       - _networkName: AdMob
         _networkIndex: 0
         _networkIdentifier: admob
@@ -77,7 +83,7 @@ MonoBehaviour:
   _interstitialMediators:
   - _adType: 2
     _name: Default
-    _continueAfterEndSession: 1
+    _continueAfterEndSession: 0
     _fetchOnAdUnitHidden: 1
     _fetchOnStart: 0
     _bannerMinDisplayTime: 30
@@ -85,24 +91,18 @@ MonoBehaviour:
     _fetchStrategyType: 0
     _bannerPosition: 0
     _tiers:
-    - _units:
+    - _maxPassages: 1
+      _units:
       - _networkName: AdMob
         _networkIndex: 0
         _networkIdentifier: admob
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0
-        _prepareOnExit: 1
-        _percentage: 100
-    - _units:
-      - _networkName: Audience Network
-        _networkIndex: 1
-        _networkIdentifier: audiencenetwork
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
+    - _maxPassages: 1
+      _units:
       - _networkName: Audience Network
         _networkIndex: 1
         _networkIdentifier: audiencenetwork
@@ -110,16 +110,9 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 0
-      - _networkName: Audience Network
-        _networkIndex: 1
-        _networkIdentifier: audiencenetwork
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 0
-    - _units:
+        _percentage: 100
+    - _maxPassages: 1
+      _units:
       - _networkName: Unity Ads
         _networkIndex: 2
         _networkIdentifier: unityads
@@ -128,7 +121,6 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
-    - _units:
       - _networkName: AppLovin
         _networkIndex: 3
         _networkIdentifier: applovin
@@ -136,7 +128,41 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: Chartboost
+        _networkIndex: 4
+        _networkIdentifier: chartboost
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+    - _maxPassages: 1
+      _units:
+      - _networkName: Audience Network
+        _networkIndex: 1
+        _networkIdentifier: audiencenetwork
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
         _percentage: 100
+      - _networkName: AppLovin
+        _networkIndex: 3
+        _networkIdentifier: applovin
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: AppLovin
+        _networkIndex: 3
+        _networkIdentifier: applovin
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
   _incentivizedMediators:
   - _adType: 3
     _name: Default
@@ -148,7 +174,8 @@ MonoBehaviour:
     _fetchStrategyType: 0
     _bannerPosition: 0
     _tiers:
-    - _units:
+    - _maxPassages: 1
+      _units:
       - _networkName: AdMob
         _networkIndex: 0
         _networkIdentifier: admob

@@ -26,6 +26,7 @@ namespace Virterix.AdMediation.Editor
     [System.Serializable]
     public struct AdTier
     {
+        public int _maxPassages;
         public List<AdUnit> _units;
     }
      

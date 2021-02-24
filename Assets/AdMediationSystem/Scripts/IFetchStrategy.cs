@@ -12,9 +12,9 @@ namespace Virterix.AdMediation
         int TierIndex { get; }
         int UnitIndex { get; }
 
-        void Init(List<AdUnit[]> tiers, int totalunits);
+        void Init(AdUnit[][] tiers, int totalunits, int[] tierMaxPassages);
 
-        void Reset(List<AdUnit[]> tiers, int tierIndex, int unitIndex);
+        void Reset(AdUnit[][] tiers, int tierIndex, int unitIndex);
 
         /// <summary>
         /// Fetches ad unit from list
@@ -22,7 +22,7 @@ namespace Virterix.AdMediation
         /// <param name="tiers">List of ad units</param>
         /// <param name="maxRecursionFetch">Maximum number of fetch when the fetched unit cannot be impression</param>
         /// <returns></returns>
-        AdUnit Fetch(List<AdUnit[]> tiers);
+        AdUnit Fetch(AdUnit[][] tiers);
 
     }
 } // namespace Virterix.AdMediation
