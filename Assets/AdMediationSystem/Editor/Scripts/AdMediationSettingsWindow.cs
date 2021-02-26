@@ -16,6 +16,7 @@ namespace Virterix.AdMediation.Editor
         public const string PROJECT_SETTINGS_FILENAME = "AdMediationProjectSettings.asset";
         public const string PREFIX_SAVEKEY = "adm.";
         public const string PROJECT_NAME_SAVEKEY = "project_name";
+        public const string EXTRA_LOGGING_DEFINE = "AD_MEDIATION_DEBUG_MODE";
 
         private int SelectedTab
         {
@@ -71,6 +72,8 @@ namespace Virterix.AdMediation.Editor
         private SerializedProperty _isAndroidProp;
         private SerializedProperty _isIOSProp;
         private SerializedProperty _enableTestModeProp;
+        private SerializedProperty _enableExtraLoggingProp;
+        private SerializedProperty _directedChildrenProp;
         private SerializedProperty _testDevicesProp;
 
         public bool IsAndroid 
@@ -341,7 +344,21 @@ namespace Virterix.AdMediation.Editor
             _isAndroidProp = _serializedProjectSettings.FindProperty("_isAndroid");
             _isIOSProp = _serializedProjectSettings.FindProperty("_isIOS");
             _enableTestModeProp = _serializedProjectSettings.FindProperty("_enableTestMode");
+            _enableExtraLoggingProp = _serializedProjectSettings.FindProperty("_enableExtraLogging");
+            _directedChildrenProp = _serializedProjectSettings.FindProperty("_directedChildren");
             _testDevicesProp = _serializedProjectSettings.FindProperty("_testDevices");
+
+            bool enableExtraLogging = false;
+            string[] defines = EditorUserBuildSettings.activeScriptCompilationDefines;
+            foreach(var define in defines)
+            {
+                if (define == EXTRA_LOGGING_DEFINE)
+                {
+                    enableExtraLogging = true;
+                    break;
+                }
+            }
+            _enableExtraLoggingProp.boolValue = enableExtraLogging;
 
             InitProjectNames();
         }
@@ -636,8 +653,27 @@ namespace Virterix.AdMediation.Editor
             GUILayout.BeginVertical("box");
 
             Utils.DrawPropertyField(_serializedProjectSettings, "_initializeOnStart");
+
+            GUILayout.BeginHorizontal();
             Utils.DrawPropertyField(_serializedProjectSettings, "_personalizeAdsOnInit");
+            GUILayout.Space(50);
+            EditorGUILayout.PropertyField(_directedChildrenProp);
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
             EditorGUILayout.PropertyField(_enableTestModeProp);
+            GUILayout.Space(50);
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(_enableExtraLoggingProp);
+            if (EditorGUI.EndChangeCheck())
+            {
+                UpdateExtraLoggingInScriptingDefineSymbols(BuildTargetGroup.Android);
+                UpdateExtraLoggingInScriptingDefineSymbols(BuildTargetGroup.iOS);
+                AssetDatabase.Refresh();
+            }
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
 
             if (_enableTestModeProp.boolValue)
             {
@@ -729,6 +765,27 @@ namespace Virterix.AdMediation.Editor
                 }
             }
             AssetDatabase.Refresh();
+        }
+
+        private void UpdateExtraLoggingInScriptingDefineSymbols(BuildTargetGroup buildTarget)
+        {
+            string strDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTarget);
+            List<string> defines = new List<string>(strDefines.Split(';'));
+
+            if (_enableExtraLoggingProp.boolValue)
+            {
+                defines.Add(EXTRA_LOGGING_DEFINE);
+            }
+            else
+            {
+                defines.Remove(EXTRA_LOGGING_DEFINE);
+            }
+            System.Text.StringBuilder definesToField = new System.Text.StringBuilder();
+            foreach (var define in defines)
+            {
+                definesToField.AppendFormat("{0};", define);
+            }
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTarget, definesToField.ToString());
         }
     }
 } // namespace Virterix.AdMediation.Editor

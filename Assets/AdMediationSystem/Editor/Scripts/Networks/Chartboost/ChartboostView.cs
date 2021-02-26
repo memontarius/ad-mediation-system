@@ -7,7 +7,7 @@ namespace Virterix.AdMediation.Editor
     {
         private SerializedProperty _androidAppSignatureProp;
         private SerializedProperty _iosAppSignatureProp;
-
+  
         protected override string SettingsFileName => "AdmChartboostSettings.asset";
 
         protected override bool IsSeparatedPlatformSettings => true;

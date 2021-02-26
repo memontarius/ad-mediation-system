@@ -18,7 +18,9 @@ MonoBehaviour:
   _enableExtraLogging: 0
   _directedChildren: 0
   _testDevices:
+  - d1fd5cf4-8138-4911-8343-38e5f4dc597b
   - 042ba23b-a110-4288-ae66-0996e9ccb93f
+  - eb543d8d-0b6b-499e-bd0e-2f3a4511371f
   _bannerMediators:
   - _adType: 1
     _name: Default
@@ -48,6 +50,10 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 51
+    - _maxPassages: 1
+      _units: []
+    - _maxPassages: 1
+      _units: []
   - _adType: 1
     _name: Top
     _continueAfterEndSession: 1
@@ -79,7 +85,7 @@ MonoBehaviour:
   _interstitialMediators:
   - _adType: 2
     _name: Default
-    _continueAfterEndSession: 1
+    _continueAfterEndSession: 0
     _fetchOnAdUnitHidden: 1
     _fetchOnStart: 0
     _bannerMinDisplayTime: 30
@@ -92,19 +98,21 @@ MonoBehaviour:
       - _networkName: AdMob
         _networkIndex: 0
         _networkIdentifier: admob
-        _instanceIndex: 1
-        _instanceName: DefaultHighCPM
+        _instanceIndex: 0
+        _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
+    - _maxPassages: 1
+      _units:
+      - _networkName: Audience Network
+        _networkIndex: 1
+        _networkIdentifier: audiencenetwork
         _instanceIndex: 0
         _instanceName: Default
-        _replaced: 1
+        _replaced: 0
         _prepareOnExit: 0
-        _percentage: 0
+        _percentage: 100
     - _maxPassages: 1
       _units:
       - _networkName: Unity Ads
@@ -116,7 +124,7 @@ MonoBehaviour:
         _prepareOnExit: 0
         _percentage: 100
       - _networkName: AppLovin
-        _networkIndex: 3
+        _networkIndex: 2
         _networkIdentifier: applovin
         _instanceIndex: 0
         _instanceName: Default
@@ -124,7 +132,7 @@ MonoBehaviour:
         _prepareOnExit: 0
         _percentage: 0
       - _networkName: Chartboost
-        _networkIndex: 4
+        _networkIndex: 3
         _networkIdentifier: chartboost
         _instanceIndex: 0
         _instanceName: Default
@@ -136,17 +144,25 @@ MonoBehaviour:
       - _networkName: Audience Network
         _networkIndex: 1
         _networkIdentifier: audiencenetwork
-        _instanceIndex: 1
-        _instanceName: DefaultHighCPM
+        _instanceIndex: 0
+        _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
-      - _networkName: Audience Network
-        _networkIndex: 1
-        _networkIdentifier: audiencenetwork
+      - _networkName: AppLovin
+        _networkIndex: 2
+        _networkIdentifier: applovin
         _instanceIndex: 0
         _instanceName: Default
-        _replaced: 1
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: AppLovin
+        _networkIndex: 2
+        _networkIdentifier: applovin
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
         _prepareOnExit: 0
         _percentage: 0
   _incentivizedMediators:
@@ -187,7 +203,7 @@ MonoBehaviour:
         _prepareOnExit: 0
         _percentage: 12
       - _networkName: AppLovin
-        _networkIndex: 3
+        _networkIndex: 2
         _networkIdentifier: applovin
         _instanceIndex: 0
         _instanceName: Default
@@ -195,7 +211,7 @@ MonoBehaviour:
         _prepareOnExit: 0
         _percentage: 4
       - _networkName: Chartboost
-        _networkIndex: 4
+        _networkIndex: 3
         _networkIdentifier: chartboost
         _instanceIndex: 0
         _instanceName: Default
@@ -203,7 +219,7 @@ MonoBehaviour:
         _prepareOnExit: 0
         _percentage: 3
       - _networkName: Pollfish
-        _networkIndex: 5
+        _networkIndex: 4
         _networkIdentifier: pollfish
         _instanceIndex: 0
         _instanceName: Default

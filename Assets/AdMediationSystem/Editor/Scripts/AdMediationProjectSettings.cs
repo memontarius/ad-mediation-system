@@ -29,7 +29,7 @@ namespace Virterix.AdMediation.Editor
         public int _maxPassages;
         public List<AdUnit> _units;
     }
-     
+    
     [System.Serializable]
     public struct AdUnitMediator
     {
@@ -50,6 +50,8 @@ namespace Virterix.AdMediation.Editor
         public bool _initializeOnStart = true;
         public bool _personalizeAdsOnInit = true;
         public bool _enableTestMode = false;
+        public bool _enableExtraLogging = false;
+        public bool _directedChildren = false;
         public string[] _testDevices;
         public List<AdUnitMediator> _bannerMediators = new List<AdUnitMediator>();
         public List<AdUnitMediator> _interstitialMediators = new List<AdUnitMediator>();

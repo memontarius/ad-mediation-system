@@ -9,10 +9,11 @@ namespace Virterix.AdMediation.Editor
     {
         public string _androidAppSignature;
         public string _iosAppSignature;
-
+ 
         public override Type NetworkAdapterType => typeof(ChartboostAdapter);
         protected override string AdapterScriptName => "ChartboostAdapter";
         protected override string AdapterDefinePeprocessorKey => "_AMS_CHARTBOOST";
+        public override bool IsCommonTimeroutSupported => true;
 
         public override bool IsAdSupported(AdType adType)
         {
@@ -32,6 +33,8 @@ namespace Virterix.AdMediation.Editor
 
         public override void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {
+            ChartboostAdapter adapter = networkAdapter as ChartboostAdapter;
+            adapter.m_timeout = _timeout;
             ChartboostAdapter.SetupNetworkNativeSettings(_androidAppId, _androidAppSignature, _iosAppId, _iosAppSignature);
             FixChartboostNativeScript();
         }

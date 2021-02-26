@@ -333,6 +333,7 @@ namespace Virterix.AdMediation.Editor
             admSystem.m_personalizeAdsOnInit = commonSettings._personalizeAdsOnInit;
             admSystem.m_testModeEnabled = commonSettings._enableTestMode;
             admSystem.m_testDevices = commonSettings._testDevices;
+            admSystem.m_isChildrenDirected = commonSettings._directedChildren;
 
             GameObject networkAdapterHolder = new GameObject("NetworkAdapters");
             networkAdapterHolder.transform.SetParent(mediationSystemObject.transform);

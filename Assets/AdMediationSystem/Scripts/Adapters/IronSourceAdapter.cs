@@ -5,9 +5,8 @@ using System.Collections;
 
 namespace Virterix.AdMediation
 {
-    public class SupersonicAdapter : AdNetworkAdapter
+    public class IronSourceAdapter : AdNetworkAdapter
     {
-
         public string m_defaultAndroidAppKey = "";
         public string m_defaultIOSAppKey = "";
         public bool m_isValidateIntegrationCall = false;

@@ -61,6 +61,7 @@ namespace Virterix.AdMediation
             if (networkSettings != null)
             {
                 Type settingsType = networkSettings.GetType();
+
                 PropertyInfo prop = settingsType.GetProperty("AdMobAndroidAppId");
                 prop.SetValue(networkSettings, androidAppId);
 
@@ -68,6 +69,9 @@ namespace Virterix.AdMediation
                 prop.SetValue(networkSettings, iOSAppId);
 
                 prop = settingsType.GetProperty("DelayAppMeasurementInit");
+                prop.SetValue(networkSettings, true);
+
+                prop = settingsType.GetProperty("IsAdMobEnabled");
                 prop.SetValue(networkSettings, true);
             }
             else

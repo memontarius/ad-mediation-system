@@ -11,12 +11,12 @@ namespace Virterix.AdMediation.Editor
         public bool _restoreBanners = true;
         [Tooltip("Time in minutes when the survey will be request after failed received (0 - disabled).")]
         public int _autoPrepareInterval = 0;
-        public int _timeoutInMediator = 600;
-
+     
         public override Type NetworkAdapterType => typeof(PollfishAdapter);
         protected override string AdapterScriptName => "PollfishAdapter";
         protected override string AdapterDefinePeprocessorKey => "_AMS_POLLFISH";
-        public override string JsonAppIdKey => "apiKey"; 
+        public override string JsonAppIdKey => "apiKey";
+        public override bool IsCommonTimeroutSupported => true;
 
         public override bool IsAdSupported(AdType adType)
         {
@@ -40,7 +40,7 @@ namespace Virterix.AdMediation.Editor
             pollfishAdapter.m_prepareOnHidden = _prepareOnHidden;
             pollfishAdapter.m_restoreBannersOnHideSurvey = _restoreBanners;
             pollfishAdapter.m_autoPrepareIntervalInMinutes = _autoPrepareInterval;
-            pollfishAdapter.m_timeout = _timeoutInMediator;
+            pollfishAdapter.m_timeout = _timeout;
         }
     }
 } // namespace Virterix.AdMediation.Editor

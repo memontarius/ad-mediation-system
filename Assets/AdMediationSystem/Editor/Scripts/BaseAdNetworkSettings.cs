@@ -41,6 +41,7 @@ namespace Virterix.AdMediation.Editor
         public string _androidAppId;
         public string _iosAppId;
         public int _responseWaitTime;
+        public int _timeout = 120;
         public bool _directedTowardsChildren;
         public List<AdInstance> _bannerAdInstances = new List<AdInstance>();
         public List<AdInstance> _interstitialAdInstances = new List<AdInstance>();
@@ -73,6 +74,7 @@ namespace Virterix.AdMediation.Editor
         protected virtual string AdapterDefinePeprocessorKey { get; }
         public virtual string JsonAppIdKey { get { return "appId"; } }
         public virtual bool IsAppIdSupported { get; } = true;
+        public virtual bool IsCommonTimeroutSupported { get; } = false;
 
         public virtual Dictionary<string, object> GetSpecificNetworkParameters(AppPlatform platform)
         {

@@ -636,7 +636,8 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLWasmStreaming: 0
   scriptingDefineSymbols:
-    7: AD_MEDIATION_DEBUG_MODE
+    4: 
+    7: 
   platformArchitecture: {}
   scriptingBackend:
     Android: 1

@@ -12,6 +12,8 @@ namespace Virterix.AdMediation
 {
     public class ChartboostAdapter : AdNetworkAdapter
     {
+        public int m_timeout;
+
         public static void SetupNetworkNativeSettings(string androidAppId, string androidAppSignatre, string iOSAppId, string iOSAppSignatre)
         {
 #if UNITY_EDITOR && _AMS_CHARTBOOST
@@ -116,9 +118,9 @@ namespace Virterix.AdMediation
                 appSignature = "";
             }
 
-            m_interstitialInstance = AdFactory.CreateAdInstacne(this, AdType.Interstitial);
+            m_interstitialInstance = AdFactory.CreateAdInstacne(this, AdType.Interstitial, AdInstance.AD_INSTANCE_DEFAULT_NAME, "", m_timeout);
             AddAdInstance(m_interstitialInstance);
-            m_incentivizedInstance= AdFactory.CreateAdInstacne(this, AdType.Incentivized);
+            m_incentivizedInstance= AdFactory.CreateAdInstacne(this, AdType.Incentivized, AdInstance.AD_INSTANCE_DEFAULT_NAME, "", m_timeout);
             AddAdInstance(m_incentivizedInstance);
 
             if (appId != null && appSignature != null)

@@ -291,6 +291,10 @@ namespace Virterix.AdMediation.Editor
         {
             GUILayout.BeginVertical("box");
             EditorGUILayout.PropertyField(_responseWaitTimeProp, GUILayout.ExpandWidth(true));
+            if(Settings.IsCommonTimeroutSupported)
+            {
+                Utils.DrawPropertyField(_serializedSettings, "_timeout");
+            }
             GUILayout.EndVertical();
         }
 
@@ -432,7 +436,7 @@ namespace Virterix.AdMediation.Editor
                 ReorderableList.defaultBehaviours.DoAddButton(list);
                 list.elementHeight = CalculateElementHeight(instanceBlock);
                 var property = list.serializedProperty.GetArrayElementAtIndex(list.index);
-                property.FindPropertyRelative("_timeout").floatValue = 90;
+                property.FindPropertyRelative("_timeout").floatValue = 120;
                 if (list.index == 0)
                 {
                     property.FindPropertyRelative("_name").stringValue = AdMediation.AdInstance.AD_INSTANCE_DEFAULT_NAME;
