@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: AdMediationProjectSettings
   m_EditorClassIdentifier: 
   _initializeOnStart: 1
-  _personalizeAdsOnInit: 1
-  _enableTestMode: 1
-  _enableExtraLogging: 0
+  _enableTestMode: 0
+  _enableExtraLogging: 1
   _directedChildren: 0
   _testDevices:
   - 042ba23b-a110-4288-ae66-0996e9ccb93f
@@ -92,21 +91,19 @@ MonoBehaviour:
       - _networkName: AdMob
         _networkIndex: 0
         _networkIdentifier: admob
-        _instanceIndex: 1
-        _instanceName: DefaultHighCPM
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 100
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
         _instanceIndex: 0
         _instanceName: Default
-        _replaced: 1
+        _replaced: 0
         _prepareOnExit: 0
-        _percentage: 0
-    - _maxPassages: 1
-      _units:
+        _percentage: 20
+      - _networkName: Audience Network
+        _networkIndex: 1
+        _networkIdentifier: audiencenetwork
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 20
       - _networkName: Unity Ads
         _networkIndex: 2
         _networkIdentifier: unityads
@@ -114,7 +111,7 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 100
+        _percentage: 20
       - _networkName: AppLovin
         _networkIndex: 3
         _networkIdentifier: applovin
@@ -122,7 +119,7 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 0
+        _percentage: 20
       - _networkName: Chartboost
         _networkIndex: 4
         _networkIdentifier: chartboost
@@ -130,23 +127,13 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 0
-    - _maxPassages: 1
-      _units:
-      - _networkName: Audience Network
-        _networkIndex: 1
-        _networkIdentifier: audiencenetwork
-        _instanceIndex: 1
-        _instanceName: DefaultHighCPM
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 100
-      - _networkName: Audience Network
-        _networkIndex: 1
-        _networkIdentifier: audiencenetwork
+        _percentage: 20
+      - _networkName: Iron Source
+        _networkIndex: 5
+        _networkIdentifier: ironsrc
         _instanceIndex: 0
         _instanceName: Default
-        _replaced: 1
+        _replaced: 0
         _prepareOnExit: 0
         _percentage: 0
   _incentivizedMediators:
@@ -169,7 +156,7 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 61
+        _percentage: 17
       - _networkName: Audience Network
         _networkIndex: 1
         _networkIdentifier: audiencenetwork
@@ -177,7 +164,7 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 15
+        _percentage: 17
       - _networkName: Unity Ads
         _networkIndex: 2
         _networkIdentifier: unityads
@@ -185,7 +172,7 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 12
+        _percentage: 16
       - _networkName: AppLovin
         _networkIndex: 3
         _networkIdentifier: applovin
@@ -193,7 +180,7 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 4
+        _percentage: 17
       - _networkName: Chartboost
         _networkIndex: 4
         _networkIdentifier: chartboost
@@ -201,14 +188,14 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 3
-      - _networkName: Pollfish
+        _percentage: 17
+      - _networkName: Iron Source
         _networkIndex: 5
-        _networkIdentifier: pollfish
+        _networkIdentifier: ironsrc
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 5
+        _percentage: 16
   _isIOS: 1
   _isAndroid: 1

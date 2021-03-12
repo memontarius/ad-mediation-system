@@ -32,8 +32,16 @@ namespace Virterix.AdMediation
             CENTER
         }
 
+        public static string GetSDKVersion()
+        {
+            string version = string.Empty;
+#if UNITY_EDITOR && _AMS_UNITY_ADS
+#endif
+            return version;
+        }
+
 #if _AMS_UNITY_ADS
-        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
+        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
             try
@@ -53,6 +61,7 @@ namespace Virterix.AdMediation
                 }
                 Advertisement.AddListener(this);
             }
+            SetPersonalizedAds(isPersonalizedAds);
         }
 
         protected override void InitializeAdInstanceData(AdInstance adInstance, JSONValue jsonAdInstances)
@@ -131,19 +140,21 @@ namespace Virterix.AdMediation
             return isReady;
         }
 
-        public override void SetPersonalizedAds(bool isPersonalizedAds)
+        protected override void SetPersonalizedAds(bool isPersonalizedAds)
         {
+            // CCPA
             MetaData privacyMetaData = new MetaData("privacy");
             privacyMetaData.Set("consent", isPersonalizedAds ? "true" : "false");
             Advertisement.SetMetaData(privacyMetaData);
 
+            // GDPR
             MetaData gdprMetaData = new MetaData("gdpr");
             gdprMetaData.Set("consent", isPersonalizedAds ? "true" : "false");
             Advertisement.SetMetaData(gdprMetaData);
         }
 
         //===============================================================================
-#region Callback Event Methods
+        #region Callback Event Methods
         //-------------------------------------------------------------------------------
 
         public void OnUnityAdsReady(string adId)

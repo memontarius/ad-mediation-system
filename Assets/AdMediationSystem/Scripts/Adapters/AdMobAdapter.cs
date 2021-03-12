@@ -55,7 +55,12 @@ namespace Virterix.AdMediation
         public static void SetupNetworkNativeSettings(string iOSAppId, string androidAppId)
         {
 #if UNITY_EDITOR && _AMS_ADMOB
-            string path = "Assets/GoogleMobileAds/Resources/GoogleMobileAdsSettings.asset";
+            string path = "";
+            string[] foundAssets = UnityEditor.AssetDatabase.FindAssets("t:GoogleMobileAdsSettings");
+            if (foundAssets.Length == 1)
+            {
+                path = UnityEditor.AssetDatabase.GUIDToAssetPath(foundAssets[0]);
+            }
             ScriptableObject networkSettings = UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
 
             if (networkSettings != null)
@@ -79,6 +84,15 @@ namespace Virterix.AdMediation
                 Debug.LogWarning("AdMob Settings not found!");
             }
 #endif
+        }
+
+        public static string GetSDKVersion()
+        {
+            string version = string.Empty;
+#if UNITY_EDITOR && _AMS_ADMOB
+            version = AdRequest.Version;
+#endif
+            return version;
         }
 
 #if _AMS_ADMOB
@@ -146,7 +160,7 @@ namespace Virterix.AdMediation
 #endif
         }
 
-        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
+        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
             MobileAds.Initialize(OnInitComplete);
@@ -167,7 +181,7 @@ namespace Virterix.AdMediation
             return adInstance;
         }
 
-        public override void SetPersonalizedAds(bool isPersonalizedAds)
+        protected override void SetPersonalizedAds(bool isPersonalizedAds)
         {
         }
 

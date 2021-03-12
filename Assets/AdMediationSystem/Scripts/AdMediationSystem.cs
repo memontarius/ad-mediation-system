@@ -75,7 +75,6 @@ namespace Virterix.AdMediation
         public string m_hashCryptKey;
         public bool m_isChildrenDirected = false;
         public bool m_initializeOnStart = true;
-        public bool m_personalizeAdsOnInit = true;
         public bool m_testModeEnabled = false;
         public string[] m_testDevices;
         // For GDPR Compliance
@@ -369,7 +368,7 @@ namespace Virterix.AdMediation
             }
             else
             {
-                Debug.Log("AdMediationSystem.Fetch() Not found mediator: " + adType.ToString());
+                Debug.Log("[AMS] AdMediationSystem.Fetch() Not found mediator: " + adType.ToString());
             }
         }
 
@@ -382,7 +381,7 @@ namespace Virterix.AdMediation
             }
             else
             {
-                Debug.Log("AdMediationSystem.Fetch() Not found mediator: " + adType.ToString());
+                Debug.Log("[AMS] AdMediationSystem.Fetch() Not found mediator: " + adType.ToString());
             }
         }
 
@@ -395,7 +394,7 @@ namespace Virterix.AdMediation
             }
             else
             {
-                Debug.Log("AdMediationSystem.Hide() Not found mediator " + adType.ToString());
+                Debug.Log("[AMS] AdMediationSystem.Hide() Not found mediator " + adType.ToString());
             }
         }
 
@@ -405,22 +404,12 @@ namespace Virterix.AdMediation
         }
 
         /// <summary>
-        /// Sets personalized ads mode. GDPR Compliance
+        /// GDPR and CCPA Compliance. The changes will take effect after restarting the application
         /// </summary>
-        /// <param name="isPersonalizedAds"></param>
-        /// <param name="isAnalyticsControl"></param>
         public static void SetPersonalizedAds(bool isPersonalizedAds)
         {
             m_isAdsPersonalized = isPersonalizedAds;
             PlayerPrefs.SetInt(PERSONALIZED_ADS_SAVE_KEY, isPersonalizedAds ? 1 : 0);
-
-            if (AdMediationSystem.Instance.m_networkAdapters != null)
-            {
-                foreach (AdNetworkAdapter network in AdMediationSystem.Instance.m_networkAdapters)
-                {
-                    network.SetPersonalizedAds(isPersonalizedAds);
-                }
-            }
         }
 
         #endregion // Mediation ad networks
@@ -543,7 +532,7 @@ namespace Virterix.AdMediation
                 mediationSystem = Instantiate(prefab).GetComponent<AdMediationSystem>();
                 mediationSystem.name = PREFAB_NAME;
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("[AdMediationSystem] Project settings loaded: " + mediationSystem.m_projectName);
+                Debug.Log("[AMS] Project settings loaded: " + mediationSystem.m_projectName);
 #endif
             }
             return mediationSystem;
@@ -659,7 +648,7 @@ namespace Virterix.AdMediation
                     }
                     else
                     {
-                        Debug.LogWarning("AdMediationSystem.SetupNetworkParameters() Initializing networks. Not found Ad network adapter with name: " + networkName);
+                        Debug.LogWarning("[AMS] AdMediationSystem.SetupNetworkParameters() Initializing networks. Not found Ad network adapter with name: " + networkName);
                     }
                 }
 
@@ -742,7 +731,7 @@ namespace Virterix.AdMediation
                                     BaseFetchStrategyParams fetchStrategyParams = AdFactory.CreateFetchStrategyParams(strategyTypeName, dictUnitParams);
                                     if (fetchStrategyParams == null)
                                     {
-                                        Debug.LogWarning("AdMediationSystem.SetupNetworkParameters() Not found fetch strategy parameters");
+                                        Debug.LogWarning("[AMS] AdMediationSystem.SetupNetworkParameters() Not found fetch strategy parameters");
                                     }
 
                                     // Create ad unit
@@ -753,7 +742,7 @@ namespace Virterix.AdMediation
                                 }
                                 else
                                 {
-                                    Debug.LogWarning("AdMediationSystem.SetupNetworkParameters() Not found network adapter: " + networkName);
+                                    Debug.LogWarning("[AMS] AdMediationSystem.SetupNetworkParameters() Not found network adapter: " + networkName);
                                 }
                                 dictUnitParams.Clear();
                             }
@@ -773,7 +762,7 @@ namespace Virterix.AdMediation
             }
             catch (Exception e)
             {
-                Debug.LogWarning("AdMediationSystem.SetupSettings() Parse settings failed! Catch exception when setup settings. Message: " + e.Message + " __StackTrace__: " + e.StackTrace);
+                Debug.LogWarning("[AMS] AdMediationSystem.SetupSettings() Parse settings failed! Catch exception when setup settings. Message: " + e.Message + " __StackTrace__: " + e.StackTrace);
             }
 
             if (setupSettingsSuccess)
@@ -783,12 +772,7 @@ namespace Virterix.AdMediation
                 {
                     AdNetworkAdapter netwrok = pair.Key;
                     Dictionary<string, string> networkParameters = (Dictionary<string, string>)pair.Value.m_parameters;
-                    netwrok.Initialize(networkParameters, pair.Value.m_adInstances);
-
-                    if (m_personalizeAdsOnInit)
-                    {
-                        netwrok.SetPersonalizedAds(IsAdsPersonalized);
-                    }
+                    netwrok.Initialize(networkParameters, pair.Value.m_adInstances, IsAdsPersonalized);
                 }
 
                 // Initialization mediators
@@ -864,7 +848,7 @@ namespace Virterix.AdMediation
                 }
 
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("AdMediationSystem.LoadJsonSettingsFromFile() " + (isLoadedSuccessfully ? " Valid settings" : " Not valid settings"));
+                Debug.Log("[AMS] AdMediationSystem.LoadJsonSettingsFromFile() " + (isLoadedSuccessfully ? " Valid settings" : " Not valid settings"));
 #endif
             }
 
@@ -877,7 +861,7 @@ namespace Virterix.AdMediation
                     settings = JSONObject.Parse(jsonString);
 
 #if AD_MEDIATION_DEBUG_MODE
-                    Debug.Log("AdMediationSystem.LoadJsonSettingsFromFile() Loaded default settings file");
+                    Debug.Log("[AMS] AdMediationSystem.LoadJsonSettingsFromFile() Loaded default settings file");
 #endif
                 }
             }
@@ -891,7 +875,7 @@ namespace Virterix.AdMediation
         private void OnRemoteSettingsReceived(AdRemoteSettingsProvider.LoadingState loadingState, JSONObject remoteJsonSettings)
         {
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("AdMediationSystem.OnRemoteSettingsReceived() Loading remote settings done. loadingState: " + loadingState);
+            Debug.Log("[AMS] AdMediationSystem.OnRemoteSettingsReceived() Loading remote settings done. loadingState: " + loadingState);
 #endif
 
             if (loadingState != AdRemoteSettingsProvider.LoadingState.Failed &&
@@ -926,11 +910,11 @@ namespace Virterix.AdMediation
 
 #if AD_MEDIATION_DEBUG_MODE
                     if (m_settingsCompareMode == AdSettingsCompareMode.Hash)
-                        Debug.Log("AdMediationSystem.OnRemoteSettingsReceived() Compare by hash. Is identically:" + (localHash == remoteHash));
+                        Debug.Log("[AMS] AdMediationSystem.OnRemoteSettingsReceived() Compare by hash. Is identically:" + (localHash == remoteHash));
                     else if (m_settingsCompareMode == AdSettingsCompareMode.Version)
-                        Debug.Log("AdMediationSystem.OnRemoteSettingsReceived() Compare by version local:" + localVersion + " remote:" + remoteVersion);
+                        Debug.Log("[AMS] AdMediationSystem.OnRemoteSettingsReceived() Compare by version local:" + localVersion + " remote:" + remoteVersion);
                     else
-                        Debug.Log("AdMediationSystem.OnRemoteSettingsReceived()");
+                        Debug.Log("[AMS] AdMediationSystem.OnRemoteSettingsReceived()");
 #endif
 
                     if (isRemoteSettingsModified)
@@ -942,7 +926,7 @@ namespace Virterix.AdMediation
                         SaveSettingsHash(remoteHash);
 
 #if AD_MEDIATION_DEBUG_MODE
-                        Debug.Log("AdMediationSystem.OnRemoteSettingsReceived() Save file: " + SettingsFilePath);
+                        Debug.Log("[AMS] AdMediationSystem.OnRemoteSettingsReceived() Save file: " + SettingsFilePath);
 #endif
                         File.WriteAllText(this.SettingsFilePath, remoteJsonSettings.ToString());
                         m_currSettings = remoteJsonSettings;
@@ -951,7 +935,7 @@ namespace Virterix.AdMediation
                 else
                 {
 #if AD_MEDIATION_DEBUG_MODE
-                    Debug.LogWarning("AdMediationSystem.OnRemoteSettingsReceived() Remote settings was received is NULL!");
+                    Debug.LogWarning("[AMS] AdMediationSystem.OnRemoteSettingsReceived() Remote settings was received is NULL!");
 #endif
                 }
             }

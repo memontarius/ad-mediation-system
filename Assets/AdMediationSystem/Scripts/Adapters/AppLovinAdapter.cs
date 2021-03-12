@@ -46,10 +46,19 @@ namespace Virterix.AdMediation
 #endif
         }
 
+        public static string GetSDKVersion()
+        {
+            string version = string.Empty;
+#if UNITY_EDITOR && _AMS_APPLOVIN
+            version = MaxSdk.Version;
+#endif
+            return version;
+        }
+
 #if _AMS_APPLOVIN
         private bool m_isBannerLoaded;
 
-        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonPlacements)
+        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonPlacements, bool isPersonalizedAds = true)
         {
             base.InitializeParameters(parameters, jsonPlacements);
 
@@ -74,6 +83,7 @@ namespace Virterix.AdMediation
                 MaxSdk.SetIsAgeRestrictedUser(AdMediationSystem.Instance.m_isChildrenDirected);
             }
             MaxSdk.SetSdkKey(sdkKey);
+            SetPersonalizedAds(isPersonalizedAds);
             MaxSdk.InitializeSdk();
 #endif
         }
@@ -149,7 +159,7 @@ namespace Virterix.AdMediation
             return convertedPlacement;
         }
 
-        public override void SetPersonalizedAds(bool isPersonalizedAds)
+        protected override void SetPersonalizedAds(bool isPersonalizedAds)
         {
 #if UNITY_ANDROID || UNITY_IOS
             MaxSdk.SetHasUserConsent(isPersonalizedAds ? true : false);
@@ -261,7 +271,7 @@ namespace Virterix.AdMediation
             // Interstitial ad failed to load 
             // We recommend retrying with exponentially higher delays up to a maximum delay (in this case 64 seconds)
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            adInstance.State = AdState.NotAvailable;
+            adInstance.State = AdState.Unavailable;
             AddEvent(AdType.Interstitial, AdEvent.PreparationFailed, adInstance);
         }
 
@@ -275,7 +285,7 @@ namespace Virterix.AdMediation
         {
             // Interstitial ad failed to display. We recommend loading the next ad  
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            adInstance.State = AdState.NotAvailable;
+            adInstance.State = AdState.Unavailable;
             AddEvent(AdType.Interstitial, AdEvent.Hiding, adInstance);
         }
 
@@ -289,7 +299,7 @@ namespace Virterix.AdMediation
         {
             // Interstitial ad is hidden. Pre-load the next ad
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            adInstance.State = AdState.NotAvailable;
+            adInstance.State = AdState.Unavailable;
             AddEvent(AdType.Interstitial, AdEvent.Hiding, adInstance);
         }
 
@@ -312,7 +322,7 @@ namespace Virterix.AdMediation
             // Rewarded ad failed to load 
             // We recommend retrying with exponentially higher delays up to a maximum delay (in this case 64 seconds)
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            adInstance.State = AdState.NotAvailable;
+            adInstance.State = AdState.Unavailable;
             AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, adInstance);
         }
 
@@ -320,7 +330,7 @@ namespace Virterix.AdMediation
         {
             // Rewarded ad failed to display. We recommend loading the next ad
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            adInstance.State = AdState.NotAvailable;
+            adInstance.State = AdState.Unavailable;
             AddEvent(AdType.Incentivized, AdEvent.Hiding, adInstance);
         }
 
@@ -340,7 +350,7 @@ namespace Virterix.AdMediation
         {
             // Rewarded ad is hidden. Pre-load the next ad
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            adInstance.State = AdState.NotAvailable;
+            adInstance.State = AdState.Unavailable;
             AddEvent(AdType.Incentivized, AdEvent.Hiding, adInstance);
         }
 

@@ -87,7 +87,7 @@ namespace Virterix.AdMediation
             Uncertain = 0,
             Loading,
             Received,
-            NotAvailable
+            Unavailable
         }
         #endregion Classes & Structs
 
@@ -170,8 +170,7 @@ namespace Virterix.AdMediation
         //_______________________________________________________________________________
         #region Public Methods
         //-------------------------------------------------------------------------------
-
-        public void Initialize(Dictionary<string, string> parameters = null, JSONArray adInstances = null)
+        public void Initialize(Dictionary<string, string> parameters = null, JSONArray adInstances = null, bool isPersonalizedAds = true)
         {
             if (m_waitResponseInstruction == null)
             {
@@ -184,7 +183,7 @@ namespace Virterix.AdMediation
                 InitializeParameters(parameters, adInstances);
             }
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("AdNetworkAdapter.Initialize() Initialize network adapter: " + m_networkName + " adInstances:" + m_adInstances.Count);
+            Debug.Log("[AMS] AdNetworkAdapter.Initialize() Initialize network adapter: " + m_networkName + " adInstances:" + m_adInstances.Count);
 #endif
         }
 
@@ -195,7 +194,7 @@ namespace Virterix.AdMediation
         {
 
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("AdNetworkAdapter.DisableWhenInitialize() " + m_networkName);
+            Debug.Log("[AMS] AdNetworkAdapter.DisableWhenInitialize() " + m_networkName);
 #endif
 
             this.enabled = false;
@@ -368,10 +367,10 @@ namespace Virterix.AdMediation
         }
 
         /// <summary>
-        /// GDPR Compliance
+        /// GDPR, CCPA Compliance
         /// </summary>
         /// <param name="isPersonalizedAds"></param>
-        public virtual void SetPersonalizedAds(bool isPersonalizedAds)
+        protected virtual void SetPersonalizedAds(bool isPersonalizedAds)
         {
         }
 
@@ -421,7 +420,7 @@ namespace Virterix.AdMediation
             adInstance.m_adInstanceParams = GetAdInstanceParams(adInstance.m_adType, parametersName);
             if (adInstance.m_adType == AdType.Banner && adInstance.m_adInstanceParams == null)
             {
-                Debug.LogWarning("[AdMediationSystem] Ad instance banner " + m_networkName + " parameters in NULL! It needs to be fixed.");
+                Debug.LogWarning("[AMS] Ad instance banner " + m_networkName + " parameters in NULL! It needs to be fixed.");
             }
             if (jsonAdInstance.Obj.ContainsKey("timeout"))
             {
@@ -451,7 +450,7 @@ namespace Virterix.AdMediation
             return saveKey;
         }
 
-        protected virtual void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
+        protected virtual void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
         {
             InitializeAdInstanceParameters();
             if (jsonAdInstances != null)

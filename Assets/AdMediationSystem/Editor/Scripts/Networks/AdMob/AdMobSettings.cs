@@ -12,6 +12,11 @@ namespace Virterix.AdMediation.Editor
         protected override string AdapterScriptName => "AdMobAdapter";
         protected override string AdapterDefinePeprocessorKey => "_AMS_ADMOB";
 
+        public override string GetNetworkSDKVersion()
+        {
+            return AdMobAdapter.GetSDKVersion();
+        }
+
         public override bool IsAdSupported(AdType adType)
         {
             return true;

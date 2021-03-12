@@ -23,5 +23,10 @@ namespace Virterix.AdMediation.Editor
         public override void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {
         }
+
+        public override string GetNetworkSDKVersion()
+        {
+            return UnityAdsAdapter.GetSDKVersion();
+        }
     }
 } // namespace Virterix.AdMediation.Editor

@@ -207,7 +207,7 @@ namespace Virterix.AdMediation
         {
             if (m_fetchStrategy == null)
             {
-                Debug.LogWarning("AdMediator.Fetch() Not strategy of fetch! adType:" + m_adType);
+                Debug.LogWarning("[AMS] AdMediator.Fetch() Not strategy of fetch! adType:" + m_adType);
                 return;
             }
 
@@ -236,7 +236,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             if (unit == null)
             {
-                Debug.Log("AdMediator.Fetch() Not fetched ad unit. Placement: " + m_placementName);
+                Debug.Log("[AMS] AdMediator.Fetch() Not fetched ad unit. Placement: " + m_placementName);
             }
 #endif
         }
@@ -260,7 +260,7 @@ namespace Virterix.AdMediation
                 }
 
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("AdMediator.Show() Not current unit");
+                Debug.Log("[AMS] AdMediator.Show() Not current unit");
 #endif
             }
         }
@@ -488,7 +488,7 @@ namespace Virterix.AdMediation
             }
 
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("[AdMediationSystem] AdMediator.OnNetworkEvent() Type:" + m_adType + " placementName: " + m_currUnit.PlacementName +
+            Debug.Log("[AMS] AdMediator.OnNetworkEvent() Type:" + m_adType + " placementName: " + m_currUnit.PlacementName +
                 "; Ad Instance Name:" + m_currUnit.AdInstanceName +
                 "; Intrnl Type:" + m_currUnit.AdType + "; Network:" + network.m_networkName + "; Event:" + adEvent);
 #endif

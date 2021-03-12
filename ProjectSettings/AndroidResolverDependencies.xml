@@ -9,7 +9,9 @@
     <package>com.google.android.gms:play-services-ads-identifier:16.0.0</package>
     <package>com.google.android.gms:play-services-ads-identifier:17.0.0</package>
     <package>com.google.android.gms:play-services-base:17.3.0</package>
+    <package>com.google.android.gms:play-services-basement:17.2.1</package>
     <package>com.google.games:gpgs-plugin-support:0.10.12</package>
+    <package>com.ironsource.sdk:mediationsdk:7.1.1</package>
   </packages>
   <files>
     <file>Assets/GeneratedLocalRepo/GooglePlayGames/Editor/m2repository/com/google/games/gpgs-plugin-support/0.10.12/gpgs-plugin-support-0.10.12.aar</file>
@@ -17,7 +19,7 @@
   </files>
   <settings>
     <setting name="androidAbis" value="armeabi-v7a" />
-    <setting name="bundleId" value="com.virterix.admediationsystem" />
+    <setting name="bundleId" value="com.miragelab.boomlandfree" />
     <setting name="explodeAars" value="True" />
     <setting name="gradleBuildEnabled" value="True" />
     <setting name="gradlePropertiesTemplateEnabled" value="True" />

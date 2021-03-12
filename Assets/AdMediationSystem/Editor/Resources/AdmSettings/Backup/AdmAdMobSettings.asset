@@ -17,6 +17,7 @@ MonoBehaviour:
   _androidAppId: ca-app-pub-1726624045989422~7998588197
   _iosAppId: ca-app-pub-1726624045989422~1952054590
   _responseWaitTime: 5
+  _timeout: 120
   _directedTowardsChildren: 0
   _bannerAdInstances:
   - _name: Default

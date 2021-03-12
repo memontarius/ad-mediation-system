@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.virterix.admediationsystem" android:installLocation="preferExternal" android:versionCode="1" android:versionName="1.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.miragelab.boomlandfree" android:installLocation="preferExternal" android:versionCode="1" android:versionName="1.0">
   <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:smallScreens="true" android:xlargeScreens="true" />
   <application android:debuggable="false" android:icon="@drawable/app_icon" android:label="@string/app_name" android:theme="@style/UnityThemeSelector" android:name="androidx.multidex.MultiDexApplication">
     <activity android:name="com.unity3d.player.UnityPlayerActivity" android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen" android:label="@string/app_name" android:screenOrientation="landscape">
@@ -12,7 +12,7 @@
     <activity android:name="com.unity3d.player.VideoPlayer" android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen" android:label="@string/app_name" android:screenOrientation="landscape"></activity>
     <activity android:name="com.facebook.ads.AudienceNetworkActivity" android:configChanges="keyboardHidden|orientation|screenSize" />
     <activity android:name="com.facebook.ads.YOG2" android:configChanges="keyboardHidden|orientation|screenSize" />
-    <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+    <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />	
   </application>
   <!-- These permissions are mandatory to run AppLovin SDK -->
   <uses-permission android:name="android.permission.INTERNET" />

@@ -103,7 +103,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
+        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
 
@@ -353,19 +353,19 @@ namespace Virterix.AdMediation
             }
 #endif
 
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, null);
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, m_adInstance);
         }
 
         private void surveyOpened()
         {
-            AddEvent(AdType.Incentivized, AdEvent.Show, null);
+            AddEvent(AdType.Incentivized, AdEvent.Show, m_adInstance);
 
             HideBanners();
         }
 
         private void surveyClosed()
         {
-            AddEvent(AdType.Incentivized, AdEvent.Hiding, null);
+            AddEvent(AdType.Incentivized, AdEvent.Hiding, m_adInstance);
 
             if (m_restoreBannersOnHideSurvey)
             {
@@ -375,7 +375,7 @@ namespace Virterix.AdMediation
             if (m_prepareOnHidden)
             {
                 AdState state = m_adInstance.State;
-                if (state == AdState.Uncertain || state == AdState.NotAvailable)
+                if (state == AdState.Uncertain || state == AdState.Unavailable)
                 {
                     StopProcInitializePollfishWithDelay();
                     m_procInitializePollfishWithDelay = StartCoroutine(InitializePollfishWithDelay(3.0f));
@@ -420,24 +420,24 @@ namespace Virterix.AdMediation
                 m_lastReceivedSurveyInfo.m_surveyTypeName = "offerwall";
             }
 
-            AddEvent(AdType.Incentivized, AdEvent.Prepared, null);
+            AddEvent(AdType.Incentivized, AdEvent.Prepared, m_adInstance);
         }
 
         private void surveyNotAvailable()
         {
             ResetStatus();
-            m_adInstance.State = AdState.NotAvailable;
+            m_adInstance.State = AdState.Unavailable;
 
-            AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, null);
+            AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, m_adInstance);
             StartAutoPrepare();
         }
 
         private void userNotEligible()
         {
             ResetStatus();
-            m_adInstance.State = AdState.NotAvailable;
+            m_adInstance.State = AdState.Unavailable;
 
-            AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, null);
+            AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, m_adInstance);
         }
 
         private void userRejectedSurvey()
@@ -445,9 +445,9 @@ namespace Virterix.AdMediation
             m_surveyCompleted = false;
             m_surveyOnDevice = false;
             m_surveyRejected = true;
-            m_adInstance.State = AdState.NotAvailable;
+            m_adInstance.State = AdState.Unavailable;
 
-            AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, null);
+            AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, m_adInstance);
         }
 
         #endregion // Pollfish callback

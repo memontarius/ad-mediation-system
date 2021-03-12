@@ -76,6 +76,11 @@ namespace Virterix.AdMediation.Editor
         public virtual bool IsAppIdSupported { get; } = true;
         public virtual bool IsCommonTimeroutSupported { get; } = false;
 
+        public virtual string GetNetworkSDKVersion()
+        {
+            return string.Empty;
+        }
+
         public virtual Dictionary<string, object> GetSpecificNetworkParameters(AppPlatform platform)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();

@@ -94,7 +94,7 @@ namespace Virterix.AdMediation
             Chartboost.didCompleteRewardedVideo -= DidCompleteRewardedVideo;
         }
 
-        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
+        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
 
@@ -128,6 +128,7 @@ namespace Virterix.AdMediation
                 Chartboost.CreateWithAppId(appId, appSignature);
             }
             Chartboost.setAutoCacheAds(autocache);
+            SetPersonalizedAds(isPersonalizedAds);
         }
 
         public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
@@ -184,7 +185,7 @@ namespace Virterix.AdMediation
             return isReady;
         }
 
-        public override void SetPersonalizedAds(bool isPersonalizedAds)
+        protected override void SetPersonalizedAds(bool isPersonalizedAds)
         {
             Chartboost.addDataUseConsent(isPersonalizedAds ? CBGDPRDataUseConsent.Behavioral : CBGDPRDataUseConsent.NoBehavioral);
             Chartboost.addDataUseConsent(isPersonalizedAds ? CBCCPADataUseConsent.OptInSale : CBCCPADataUseConsent.OptOutSale);
@@ -202,7 +203,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("ChartboostAdapter.DidFailToLoadInterstitial() error:" + error.ToString());
 #endif
-            m_interstitialInstance.State = AdState.NotAvailable;
+            m_interstitialInstance.State = AdState.Unavailable;
             AddEvent(AdType.Interstitial, AdEvent.PreparationFailed, m_interstitialInstance);
         }
 
@@ -234,7 +235,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("ChartboostAdapter.DidFailToLoadRewardedVideo() error:" + error.ToString());
 #endif
-            m_incentivizedInstance.State = AdState.NotAvailable;
+            m_incentivizedInstance.State = AdState.Unavailable;
             AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, m_incentivizedInstance);
         }
 

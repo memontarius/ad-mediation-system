@@ -24,6 +24,10 @@
 
 */
 
+/*
+  Changed: added CultureInfo.InvariantCulture in follow lines: 190, 811
+*/
+
 #if UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_WII || UNITY_PS3 || UNITY_XBOX360 || UNITY_FLASH
 #define USE_UNITY_DEBUGGING
 #endif
@@ -182,10 +186,8 @@ namespace Boomlagoon.JSON {
 
 				case JSONValueType.Boolean:
 					return Boolean ? "true" : "false";
-
 				case JSONValueType.Number:
-					return Number.ToString(System.Globalization.CultureInfo.InvariantCulture);
-
+					return Number.ToString(CultureInfo.InvariantCulture);
 				case JSONValueType.String:
 					return "\"" + Str + "\"";
 
@@ -806,8 +808,7 @@ namespace Boomlagoon.JSON {
 
 			double result;
 			if (
-				!double.TryParse(str.Substring(startPosition, endPosition - startPosition), System.Globalization.NumberStyles.Float,
-								 System.Globalization.CultureInfo.InvariantCulture, out result)) {
+				!double.TryParse(str.Substring(startPosition, endPosition - startPosition), NumberStyles.Float, CultureInfo.InvariantCulture, out result)) {
 				return double.NaN;
 			}
 			startPosition = endPosition - 1;

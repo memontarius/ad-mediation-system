@@ -6,7 +6,6 @@ public class AdController : BaseAdController
 {
     public Text m_interstitialInfoText;
     public Text m_rewardVideoInfoText;
-    public Text m_nativeInfoText;
     public Text m_bannerInfoText;
     public Text m_bannerTopInfoText;
     public Text m_eventLogText;
@@ -18,9 +17,9 @@ public class AdController : BaseAdController
 
     // Use this for initialization
     void Awake() {
+        AdMediationSystem.OnInitialized += OnMediationSystemInitialized;
         AdMediationSystem.Load("DefaultProject");
         m_adPersonalizedText.rectTransform.parent.GetComponent<Button>().interactable = false;
-        AdMediationSystem.OnInitialized += OnMediationSystemInitialized;
     }
 
     private void OnMediationSystemInitialized() {

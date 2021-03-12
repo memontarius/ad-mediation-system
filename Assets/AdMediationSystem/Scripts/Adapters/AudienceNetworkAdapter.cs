@@ -45,6 +45,15 @@ namespace Virterix.AdMediation
             }
         }
 
+        public static string GetSDKVersion()
+        {
+            string version = string.Empty;
+#if UNITY_EDITOR && _AMS_AUDIENCE_NETWORK
+            version = SdkVersion.Build;
+#endif
+            return version;
+        }
+
 #if _AMS_AUDIENCE_NETWORK
         private class AudienceNetworkAdInstanceData : AdInstance
         {
@@ -72,7 +81,7 @@ namespace Virterix.AdMediation
             public bool m_isServerValidation; // Is S2S validation
         }
 
-        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
+        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
             if (AdMediationSystem.Instance.m_testModeEnabled)

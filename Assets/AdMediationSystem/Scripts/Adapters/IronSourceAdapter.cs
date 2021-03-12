@@ -1,180 +1,166 @@
-﻿//#define _AMS_IRONSOURCE
+#define _AMS_IRONSOURCE
 
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using Boomlagoon.JSON;
 
 namespace Virterix.AdMediation
 {
     public class IronSourceAdapter : AdNetworkAdapter
     {
-        public string m_defaultAndroidAppKey = "";
-        public string m_defaultIOSAppKey = "";
-        public bool m_isValidateIntegrationCall = false;
+        public int m_timeout = 120;
+
+        private AdInstance m_interstitialInstance;
+        private AdInstance m_incentivizedInstance;
+
+        public static string GetSDKVersion()
+        {
+            string version = string.Empty;
+#if UNITY_EDITOR && _AMS_IRONSOURCE
+            version = IronSource.pluginVersion();
+#endif
+            return version;
+        }
 
 #if _AMS_IRONSOURCE
 
-        void SubscribeEvents()
-        {
-            SupersonicEvents.onInterstitialInitSuccessEvent += OnInterstitialInitSuccessEvent;
-            SupersonicEvents.onInterstitialInitFailedEvent += OnInterstitialInitFailEvent;
-            SupersonicEvents.onInterstitialReadyEvent += OnInterstitialReadyEvent;
-            SupersonicEvents.onInterstitialLoadFailedEvent += OnInterstitialLoadFailedEvent;
-            SupersonicEvents.onInterstitialShowSuccessEvent += OnInterstitialShowSuccessEvent;
-            SupersonicEvents.onInterstitialShowFailedEvent += OnInterstitialShowFailEvent;
-            SupersonicEvents.onInterstitialClickEvent += OnInterstitialAdClickedEvent;
-            SupersonicEvents.onInterstitialOpenEvent += OnInterstitialAdOpenedEvent;
-            SupersonicEvents.onInterstitialCloseEvent += OnInterstitialAdClosedEvent;
-
-            SupersonicEvents.onRewardedVideoInitSuccessEvent += OnRewardedVideoInitSuccessEvent;
-            SupersonicEvents.onRewardedVideoInitFailEvent += OnRewardedVideoInitFailEvent;
-            SupersonicEvents.onRewardedVideoAdOpenedEvent += OnRewardedVideoAdOpenedEvent;
-            SupersonicEvents.onRewardedVideoAdRewardedEvent += OnRewardedVideoAdRewardedEvent;
-            SupersonicEvents.onRewardedVideoAdClosedEvent += OnRewardedVideoAdClosedEvent;
-            SupersonicEvents.onVideoAvailabilityChangedEvent += OnVideoAvailabilityChangedEvent;
-            SupersonicEvents.onVideoStartEvent += OnVideoStartEvent;
-            SupersonicEvents.onVideoEndEvent += OnVideoEndEvent;
-        }
-
-        void UnsubscribeEvents()
-        {
-            SupersonicEvents.onInterstitialInitSuccessEvent -= OnInterstitialInitSuccessEvent;
-            SupersonicEvents.onInterstitialInitFailedEvent -= OnInterstitialInitFailEvent;
-            SupersonicEvents.onInterstitialReadyEvent -= OnInterstitialReadyEvent;
-            SupersonicEvents.onInterstitialLoadFailedEvent -= OnInterstitialLoadFailedEvent;
-            SupersonicEvents.onInterstitialShowSuccessEvent -= OnInterstitialShowSuccessEvent;
-            SupersonicEvents.onInterstitialShowFailedEvent -= OnInterstitialShowFailEvent;
-            SupersonicEvents.onInterstitialClickEvent -= OnInterstitialAdClickedEvent;
-            SupersonicEvents.onInterstitialOpenEvent -= OnInterstitialAdOpenedEvent;
-            SupersonicEvents.onInterstitialCloseEvent -= OnInterstitialAdClosedEvent;
-
-            SupersonicEvents.onRewardedVideoInitSuccessEvent -= OnRewardedVideoInitSuccessEvent;
-            SupersonicEvents.onRewardedVideoInitFailEvent -= OnRewardedVideoInitFailEvent;
-            SupersonicEvents.onRewardedVideoAdOpenedEvent -= OnRewardedVideoAdOpenedEvent;
-            SupersonicEvents.onRewardedVideoAdRewardedEvent -= OnRewardedVideoAdRewardedEvent;
-            SupersonicEvents.onRewardedVideoAdClosedEvent -= OnRewardedVideoAdClosedEvent;
-            SupersonicEvents.onVideoAvailabilityChangedEvent -= OnVideoAvailabilityChangedEvent;
-            SupersonicEvents.onVideoStartEvent -= OnVideoStartEvent;
-            SupersonicEvents.onVideoEndEvent -= OnVideoEndEvent;
-        }
-
-        void OnEnable()
+        private void OnEnable()
         {
             SubscribeEvents();
         }
 
-        new void OnDisable()
+        private new void OnDisable()
         {
             base.OnDisable();
             UnsubscribeEvents();
         }
 
-        void OnApplicationPause(bool isPaused)
+        private void OnApplicationPause(bool isPaused)
         {
-
-            if (isPaused)
-            {
-                Supersonic.Agent.onPause();
-            }
-            else
-            {
-                Supersonic.Agent.onResume();
-            }
+            IronSource.Agent.onApplicationPause(isPaused);
         }
 
-        protected override void InitializeParameters(System.Collections.Generic.Dictionary<string, string> parameters)
+        private void SubscribeEvents()
         {
-            base.InitializeParameters(parameters);
+            //Add Rewarded Video Events
+            IronSourceEvents.onRewardedVideoAdOpenedEvent += RewardedVideoAdOpenedEvent;
+            IronSourceEvents.onRewardedVideoAdClosedEvent += RewardedVideoAdClosedEvent;
+            IronSourceEvents.onRewardedVideoAvailabilityChangedEvent += RewardedVideoAvailabilityChangedEvent;
+            IronSourceEvents.onRewardedVideoAdStartedEvent += RewardedVideoAdStartedEvent;
+            IronSourceEvents.onRewardedVideoAdEndedEvent += RewardedVideoAdEndedEvent;
+            IronSourceEvents.onRewardedVideoAdRewardedEvent += RewardedVideoAdRewardedEvent;
+            IronSourceEvents.onRewardedVideoAdShowFailedEvent += RewardedVideoAdShowFailedEvent;
+            IronSourceEvents.onRewardedVideoAdClickedEvent += RewardedVideoAdClickedEvent;
 
-            string isInterstitialInitKey = "isInterstitialInit";
-            string isIncentivizedInitKey = "isIncentivizedInit";
+            // Add Interstitial Events
+            IronSourceEvents.onInterstitialAdReadyEvent += InterstitialAdReadyEvent;
+            IronSourceEvents.onInterstitialAdLoadFailedEvent += InterstitialAdLoadFailedEvent;
+            IronSourceEvents.onInterstitialAdShowSucceededEvent += InterstitialAdShowSucceededEvent;
+            IronSourceEvents.onInterstitialAdShowFailedEvent += InterstitialAdShowFailedEvent;
+            IronSourceEvents.onInterstitialAdClickedEvent += InterstitialAdClickedEvent;
+            IronSourceEvents.onInterstitialAdOpenedEvent += InterstitialAdOpenedEvent;
+            IronSourceEvents.onInterstitialAdClosedEvent += InterstitialAdClosedEvent;
 
-            GameObject go = new GameObject("SupersonicEvents");
-            go.AddComponent<SupersonicEvents>();
-            go.transform.parent = this.transform.parent;
+            // Add Banner Events
+            IronSourceEvents.onBannerAdLoadedEvent += BannerAdLoadedEvent;
+            IronSourceEvents.onBannerAdLoadFailedEvent += BannerAdLoadFailedEvent;
+            IronSourceEvents.onBannerAdClickedEvent += BannerAdClickedEvent;
+            IronSourceEvents.onBannerAdScreenPresentedEvent += BannerAdScreenPresentedEvent;
+            IronSourceEvents.onBannerAdScreenDismissedEvent += BannerAdScreenDismissedEvent;
+            IronSourceEvents.onBannerAdLeftApplicationEvent += BannerAdLeftApplicationEvent;
+
+            //Add ImpressionSuccess Event
+            IronSourceEvents.onImpressionSuccessEvent += ImpressionSuccessEvent;
+        }
+
+        private void UnsubscribeEvents()
+        {
+            //Add Rewarded Video Events
+            IronSourceEvents.onRewardedVideoAdOpenedEvent -= RewardedVideoAdOpenedEvent;
+            IronSourceEvents.onRewardedVideoAdClosedEvent -= RewardedVideoAdClosedEvent;
+            IronSourceEvents.onRewardedVideoAvailabilityChangedEvent -= RewardedVideoAvailabilityChangedEvent;
+            IronSourceEvents.onRewardedVideoAdStartedEvent -= RewardedVideoAdStartedEvent;
+            IronSourceEvents.onRewardedVideoAdEndedEvent -= RewardedVideoAdEndedEvent;
+            IronSourceEvents.onRewardedVideoAdRewardedEvent -= RewardedVideoAdRewardedEvent;
+            IronSourceEvents.onRewardedVideoAdShowFailedEvent -= RewardedVideoAdShowFailedEvent;
+            IronSourceEvents.onRewardedVideoAdClickedEvent -= RewardedVideoAdClickedEvent;
+
+            // Add Interstitial Events
+            IronSourceEvents.onInterstitialAdReadyEvent -= InterstitialAdReadyEvent;
+            IronSourceEvents.onInterstitialAdLoadFailedEvent -= InterstitialAdLoadFailedEvent;
+            IronSourceEvents.onInterstitialAdShowSucceededEvent -= InterstitialAdShowSucceededEvent;
+            IronSourceEvents.onInterstitialAdShowFailedEvent -= InterstitialAdShowFailedEvent;
+            IronSourceEvents.onInterstitialAdClickedEvent -= InterstitialAdClickedEvent;
+            IronSourceEvents.onInterstitialAdOpenedEvent -= InterstitialAdOpenedEvent;
+            IronSourceEvents.onInterstitialAdClosedEvent -= InterstitialAdClosedEvent;
+
+            // Add Banner Events
+            IronSourceEvents.onBannerAdLoadedEvent -= BannerAdLoadedEvent;
+            IronSourceEvents.onBannerAdLoadFailedEvent -= BannerAdLoadFailedEvent;
+            IronSourceEvents.onBannerAdClickedEvent -= BannerAdClickedEvent;
+            IronSourceEvents.onBannerAdScreenPresentedEvent -= BannerAdScreenPresentedEvent;
+            IronSourceEvents.onBannerAdScreenDismissedEvent -= BannerAdScreenDismissedEvent;
+            IronSourceEvents.onBannerAdLeftApplicationEvent -= BannerAdLeftApplicationEvent;
+
+            //Add ImpressionSuccess Event
+            IronSourceEvents.onImpressionSuccessEvent -= ImpressionSuccessEvent;
+        }
+
+        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
+        {
+            base.InitializeParameters(parameters, jsonAdInstances);
 
             string appKey = "";
-            string uniqueUserId = SystemInfo.deviceUniqueIdentifier;
-            bool isInterstitialInit = true;
-            bool isIncentivizedInit = true;
-
             if (parameters != null)
             {
-                appKey = parameters["appKey"];
-
-                if (parameters.ContainsKey(isInterstitialInitKey))
+                if (!parameters.TryGetValue("appId", out appKey))
                 {
-                    try
-                    {
-                        isInterstitialInit = System.Convert.ToBoolean(parameters[isInterstitialInitKey]);
-                    }
-                    catch
-                    {
-                        isInterstitialInit = true;
-                    }
-                }
-                if (parameters.ContainsKey(isIncentivizedInitKey))
-                {
-                    try
-                    {
-                        isIncentivizedInit = System.Convert.ToBoolean(parameters[isIncentivizedInitKey]);
-                    }
-                    catch
-                    {
-                        isIncentivizedInit = true;
-                    }
+                    appKey = "";
                 }
             }
-            else
-            {
-#if UNITY_ANDROID
-                appKey = m_defaultAndroidAppKey;
-#elif UNITY_IOS
-					appKey = m_defaultIOSAppKey;
-#endif
-            }
 
-            Supersonic.Agent.start();
-            if (isInterstitialInit)
-            {
-                Supersonic.Agent.initInterstitial(appKey, uniqueUserId);
-            }
-            if (isIncentivizedInit)
-            {
-                Supersonic.Agent.initRewardedVideo(appKey, uniqueUserId);
-            }
+            m_interstitialInstance = AdFactory.CreateAdInstacne(this, AdType.Interstitial, AdInstance.AD_INSTANCE_DEFAULT_NAME, "", m_timeout);
+            AddAdInstance(m_interstitialInstance);
+            m_incentivizedInstance = AdFactory.CreateAdInstacne(this, AdType.Incentivized, AdInstance.AD_INSTANCE_DEFAULT_NAME, "", m_timeout);
+            AddAdInstance(m_incentivizedInstance);
 
-            if (m_isValidateIntegrationCall)
-            {
-                Supersonic.Agent.validateIntegration();
-            }
+            SetPersonalizedAds(isPersonalizedAds);
+            IronSource.Agent.init(appKey, IronSourceAdUnits.INTERSTITIAL, IronSourceAdUnits.REWARDED_VIDEO, IronSourceAdUnits.BANNER);
+
+            IronSource.Agent.validateIntegration();
         }
 
-        public override void Prepare(AdType adType)
+        public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
-            if (IsSupported(adType))
+            if (!IsReady(adInstance))
             {
-                if (adType == AdType.Interstitial)
+                switch (adInstance.m_adType)
                 {
-                    Supersonic.Agent.loadInterstitial();
-                }
-                else
-                {
-
-                }
-            }
-        }
-
-        public override bool Show(AdType adType)
-        {
-            if (IsReady(adType))
-            {
-                switch (adType)
-                {
+                    case AdType.Banner:
+                        
+                        break;
                     case AdType.Interstitial:
-                        Supersonic.Agent.showInterstitial();
+                        IronSource.Agent.loadInterstitial();
+ 
                         break;
                     case AdType.Incentivized:
-                        Supersonic.Agent.showRewardedVideo();
+                        
+                        break;
+                }
+            }
+        }
+
+        public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        {
+            if (IsReady(adInstance))
+            {
+                switch (adInstance.m_adType)
+                {
+                    case AdType.Interstitial:
+                        IronSource.Agent.showInterstitial();
+                        break;
+                    case AdType.Incentivized:
+                        IronSource.Agent.showRewardedVideo();
                         break;
                 }
                 return true;
@@ -185,110 +171,170 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override void Hide(AdType adType)
+        public override void Hide(AdInstance adInstance = null)
         {
         }
 
-        public override bool IsReady(AdType adType)
+        public override bool IsReady(AdInstance adInstance = null)
         {
-            if (IsSupported(adType))
+            bool isReady = false;
+            switch (adInstance.m_adType)
             {
-                switch (adType)
-                {
-                    case AdType.Interstitial:
-                        return Supersonic.Agent.isInterstitialReady();
-                        break;
-                    case AdType.Incentivized:
-                        return Supersonic.Agent.isRewardedVideoAvailable();
-                        break;
-                }
+                case AdType.Interstitial:
+                    isReady = IronSource.Agent.isInterstitialReady();
+                    break;
+                case AdType.Incentivized:
+                    isReady = IronSource.Agent.isRewardedVideoAvailable();
+                    break;
             }
-            return false;
+            return isReady;
         }
 
+        protected override void SetPersonalizedAds(bool isPersonalizedAds)
+        {
+            IronSource.Agent.setConsent(isPersonalizedAds);
+            IronSource.Agent.setMetaData("do_not_sell", isPersonalizedAds ? "false" : "true");
+        }
 
-        void OnInterstitialInitSuccessEvent()
+        //------------------------------------------------------------------------
+        #region Interstitial callback handlers
+
+        void InterstitialAdReadyEvent()
+        {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] IronSourceAdapter.InterstitialAdReadyEvent()");
+#endif
+            m_interstitialInstance.State = AdState.Received;
+            AddEvent(m_interstitialInstance.m_adType, AdEvent.Prepared, m_interstitialInstance);
+        }
+
+        void InterstitialAdLoadFailedEvent(IronSourceError error)
+        {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] IronSourceAdapter.InterstitialAdLoadFailedEvent() code:" + error.getErrorCode() + " desc:" + error.getDescription());
+#endif
+            m_interstitialInstance.State = AdState.Unavailable;
+            AddEvent(m_interstitialInstance.m_adType, AdEvent.PreparationFailed, m_interstitialInstance);
+        }
+
+        void InterstitialAdShowSucceededEvent()
+        {
+            AddEvent(m_interstitialInstance.m_adType, AdEvent.Show, m_interstitialInstance);
+        }
+
+        void InterstitialAdShowFailedEvent(IronSourceError error)
+        {
+            m_interstitialInstance.State = AdState.Unavailable;
+        }
+
+        void InterstitialAdClickedEvent()
+        {
+            AddEvent(m_interstitialInstance.m_adType, AdEvent.Click, m_interstitialInstance);
+        }
+
+        void InterstitialAdOpenedEvent()
         {
         }
 
-        void OnInterstitialInitFailEvent(SupersonicError error)
+        void InterstitialAdClosedEvent()
         {
-            Debug.Log("[SupersonicAdapter.OnInterstitialInitFailEvent] code: " + error.getCode() + ", description : " + error.getDescription());
+            AddEvent(m_interstitialInstance.m_adType, AdEvent.Hiding, m_interstitialInstance);
         }
 
-        void OnInterstitialReadyEvent()
+        #endregion // Interstitial callback handlers
+
+        //------------------------------------------------------------------------
+        #region Rewarded Video callback handlers
+
+        void RewardedVideoAvailabilityChangedEvent(bool canShowAd)
         {
-            AddEvent(AdType.Interstitial, AdEvent.Prepared);
+            m_incentivizedInstance.State = AdState.Received;
+            AddEvent(m_incentivizedInstance.m_adType, AdEvent.Prepared, m_incentivizedInstance);
         }
 
-        void OnInterstitialLoadFailedEvent(SupersonicError error)
+        void RewardedVideoAdOpenedEvent()
         {
-            Debug.Log("[SupersonicAdapter.OnInterstitialLoadFailedEvent] code: " + error.getCode() + ", description : " + error.getDescription());
-            AddEvent(AdType.Interstitial, AdEvent.PrepareFailure);
+            AddEvent(m_incentivizedInstance.m_adType, AdEvent.Show, m_incentivizedInstance);
         }
 
-        void OnInterstitialShowSuccessEvent()
+        void RewardedVideoAdRewardedEvent(IronSourcePlacement ssp)
         {
+            m_lastReward.label = ssp.getRewardName();
+            m_lastReward.amount = ssp.getRewardAmount();
+            AddEvent(m_incentivizedInstance.m_adType, AdEvent.IncentivizedCompleted, m_incentivizedInstance);
         }
 
-        void OnInterstitialShowFailEvent(SupersonicError error)
+        void RewardedVideoAdClosedEvent()
         {
+            AddEvent(m_incentivizedInstance.m_adType, AdEvent.Hiding, m_incentivizedInstance);
         }
 
-        void OnInterstitialAdClickedEvent()
-        {
-            AddEvent(AdType.Interstitial, AdEvent.Click);
-        }
-
-        void OnInterstitialAdOpenedEvent()
-        {
-            AddEvent(AdType.Interstitial, AdEvent.Show);
-        }
-
-        void OnInterstitialAdClosedEvent()
-        {
-            AddEvent(AdType.Interstitial, AdEvent.Hide);
-        }
-
-        void OnRewardedVideoInitSuccessEvent()
+        void RewardedVideoAdStartedEvent()
         {
         }
 
-        void OnRewardedVideoInitFailEvent(SupersonicError error)
-        {
-            if (error != null)
-            {
-                Debug.Log("[SupersonicAdapter.OnRewardedVideoInitFailEvent] code: " + error.getCode() + ", description : " + error.getDescription());
-            }
-        }
-
-        void OnRewardedVideoAdOpenedEvent()
-        {
-            AddEvent(AdType.Incentivized, AdEvent.Show);
-        }
-
-        void OnRewardedVideoAdRewardedEvent(SupersonicPlacement placement)
-        {
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedComplete);
-        }
-
-        void OnRewardedVideoAdClosedEvent()
-        {
-            AddEvent(AdType.Incentivized, AdEvent.Hide);
-        }
-
-        void OnVideoAvailabilityChangedEvent(bool available)
+        void RewardedVideoAdEndedEvent()
         {
         }
 
-        void OnVideoStartEvent()
+        void RewardedVideoAdShowFailedEvent(IronSourceError error)
         {
+            m_incentivizedInstance.State = AdState.Unavailable;
         }
 
-        void OnVideoEndEvent()
+        void RewardedVideoAdClickedEvent(IronSourcePlacement ssp)
         {
-
+            AddEvent(m_incentivizedInstance.m_adType, AdEvent.Click, m_incentivizedInstance);
         }
+
+        #endregion // Rewarded Video callback handlers
+
+        //------------------------------------------------------------------------
+        #region Banner callback handlers
+
+        void BannerAdLoadedEvent()
+        {
+            Debug.Log("unity-script: I got BannerAdLoadedEvent");
+        }
+
+        void BannerAdLoadFailedEvent(IronSourceError error)
+        {
+            Debug.Log("unity-script: I got BannerAdLoadFailedEvent, code: " + error.getCode() + ", description : " + error.getDescription());
+        }
+
+        void BannerAdClickedEvent()
+        {
+            Debug.Log("unity-script: I got BannerAdClickedEvent");
+        }
+
+        void BannerAdScreenPresentedEvent()
+        {
+            Debug.Log("unity-script: I got BannerAdScreenPresentedEvent");
+        }
+
+        void BannerAdScreenDismissedEvent()
+        {
+            Debug.Log("unity-script: I got BannerAdScreenDismissedEvent");
+        }
+
+        void BannerAdLeftApplicationEvent()
+        {
+            Debug.Log("unity-script: I got BannerAdLeftApplicationEvent");
+        }
+
+
+        #endregion // Banner callback handlers
+
+        //------------------------------------------------------------------------
+        #region ImpressionSuccess callback handler
+
+        void ImpressionSuccessEvent(IronSourceImpressionData impressionData)
+        {
+            Debug.Log("unity - script: I got ImpressionSuccessEvent ToString(): " + impressionData.ToString());
+            Debug.Log("unity - script: I got ImpressionSuccessEvent allData: " + impressionData.allData);
+        }
+
+        #endregion
 
 #endif // _AMS_IRONSOURCE
 

@@ -229,7 +229,7 @@ namespace Virterix.AdMediation.Editor
                         maxPassProp.intValue = Mathf.Clamp(maxPassages, 1, 5);
            
                         rect.x += 40;
-                        rect.width = 30;
+                        rect.width = 28;
                         if (GUI.Button(rect, '\u2573'.ToString()))
                         {
                             _removedTiers.Add(elementIndex);

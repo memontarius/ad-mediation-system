@@ -170,13 +170,13 @@ namespace Virterix.AdMediation.Editor
                     _serializedProjectSettings.ApplyModifiedProperties();
 
                     break;
-                case 1: // Banner mediators
+                case 1:
                     DrawMediators(_bannerMediators, "_bannerMediators");
                     break;
-                case 2: // Interstitial mediators
+                case 2:
                     DrawMediators(_interstitialMediators, "_interstitialMediators");
                     break;
-                case 3: // Incentivized mediators
+                case 3:
                     DrawMediators(_incentivizedMediators, "_incentivizedMediators");
                     break;
             }
@@ -391,6 +391,7 @@ namespace Virterix.AdMediation.Editor
             AddNetwork(new UnityAdsView(this, "Unity Ads", "unityads"));
             AddNetwork(new ApplovinView(this, "AppLovin", "applovin"));
             AddNetwork(new ChartboostView(this, "Chartboost", "chartboost"));
+            AddNetwork(new IronSourceView(this, "Iron Source", "ironsrc"));
             AddNetwork(new PollfishView(this, "Pollfish", "pollfish"));
 
             if (_networkEnabledStates == null)
@@ -655,10 +656,7 @@ namespace Virterix.AdMediation.Editor
             Utils.DrawPropertyField(_serializedProjectSettings, "_initializeOnStart");
 
             GUILayout.BeginHorizontal();
-            Utils.DrawPropertyField(_serializedProjectSettings, "_personalizeAdsOnInit");
-            GUILayout.Space(50);
             EditorGUILayout.PropertyField(_directedChildrenProp);
-            GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();

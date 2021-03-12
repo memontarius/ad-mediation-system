@@ -26,6 +26,11 @@ namespace Virterix.AdMediation.Editor
         {
         }
 
+        public override string GetNetworkSDKVersion()
+        {
+            return AudienceNetworkAdapter.GetSDKVersion();
+        }
+
         protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
         {
             var parameterHolder = AudienceNetworkAdInstanceBannerParameters.CreateParameters(projectName, instanceName);

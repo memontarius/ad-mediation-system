@@ -330,7 +330,6 @@ namespace Virterix.AdMediation.Editor
             admSystem.m_projectName = projectName;
             admSystem.m_isLoadOnlyDefaultSettings = true;
             admSystem.m_initializeOnStart = commonSettings._initializeOnStart;
-            admSystem.m_personalizeAdsOnInit = commonSettings._personalizeAdsOnInit;
             admSystem.m_testModeEnabled = commonSettings._enableTestMode;
             admSystem.m_testDevices = commonSettings._testDevices;
             admSystem.m_isChildrenDirected = commonSettings._directedChildren;

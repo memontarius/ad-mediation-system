@@ -147,8 +147,19 @@ namespace Virterix.AdMediation.Editor
 
             _showSettings.target = Collapsed;
             if (EditorGUILayout.BeginFadeGroup(_showSettings.faded))
-            {       
+            {
                 Enabled = EditorGUILayout.BeginToggleGroup("Enable", Enabled);
+
+                string sdkVersion = Settings.GetNetworkSDKVersion();
+                if (!string.IsNullOrEmpty(sdkVersion))
+                {
+                    Rect lastRect = GUILayoutUtility.GetRect(120, 0);
+                    lastRect.x += 100;
+                    lastRect.y -= 22;
+                    lastRect.height = 20;
+                    EditorGUI.LabelField(lastRect, string.Format("SDK: {0}", Settings.GetNetworkSDKVersion()));
+                }
+
                 if (_enabledProp.boolValue != Enabled)
                 {
                     activationChanged = true;

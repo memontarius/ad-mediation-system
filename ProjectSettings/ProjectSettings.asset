@@ -168,7 +168,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.virterix.admediationsystem
+    Android: com.miragelab.boomlandfree
   buildNumber: {}
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 19
@@ -636,8 +636,8 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLWasmStreaming: 0
   scriptingDefineSymbols:
-    4: 
-    7: 
+    4: AD_MEDIATION_DEBUG_MODE
+    7: AD_MEDIATION_DEBUG_MODE
   platformArchitecture: {}
   scriptingBackend:
     Android: 1

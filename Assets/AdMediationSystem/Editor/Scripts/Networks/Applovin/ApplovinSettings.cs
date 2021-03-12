@@ -15,6 +15,11 @@ namespace Virterix.AdMediation.Editor
         protected override string AdapterScriptName => "AppLovinAdapter";
         protected override string AdapterDefinePeprocessorKey => "_AMS_APPLOVIN";
 
+        public override string GetNetworkSDKVersion()
+        {
+            return AppLovinAdapter.GetSDKVersion();
+        }
+
         public override bool IsAdSupported(AdType adType)
         {
             bool isSupported = adType == AdType.Interstitial || adType == AdType.Incentivized;
