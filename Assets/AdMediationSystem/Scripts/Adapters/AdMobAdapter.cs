@@ -46,10 +46,7 @@ namespace Virterix.AdMediation
  
         protected override string AdInstanceParametersFolder
         {
-            get
-            {
-                return AdMobAdInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER;
-            }
+            get {  return AdMobAdInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER; }
         }
 
         public static void SetupNetworkNativeSettings(string iOSAppId, string androidAppId)
@@ -576,8 +573,7 @@ namespace Virterix.AdMediation
         {
 #if AD_MEDIATION_DEBUG_MODE
             print("AdMobAdapter.HandleAdClosing() " + " adInstance: " + adInstance.Name);
-#endif
-            AddEvent(AdType.Banner, AdEvent.Hiding, adInstance);
+#endif          
         }
 
         public void HandleAdClosed(AdMobAdInstanceData adInstance, object sender, EventArgs args)
@@ -585,6 +581,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             print("AdMobAdapter.HandleAdClosed() " + " adInstance: " + adInstance.Name);
 #endif
+            AddEvent(AdType.Banner, AdEvent.Hiding, adInstance);
         }
 
         public void HandleAdLeftApplication(AdMobAdInstanceData adInstance, object sender, EventArgs args)

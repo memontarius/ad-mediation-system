@@ -126,10 +126,7 @@ namespace Virterix.AdMediation
 
         protected virtual string AdInstanceParametersFolder
         {
-            get
-            {
-                return "";
-            }
+            get { return "";  }
         }
 
         #endregion Properties

@@ -18,7 +18,7 @@ namespace Virterix.AdMediation
 
         public int UnitIndex => m_unitIndex;
 
-        private bool m_isFirstFetchSinceStartApplication;
+        private bool m_disableIncrementInFirstFetch;
         private int m_tierPassCount;
         private int[] m_tierMaxPassages;
 
@@ -41,7 +41,7 @@ namespace Virterix.AdMediation
         public void Init(AdUnit[][] tiers, int totalunits, int[] tierMaxPassages)
         {
             m_maxRecursionFetch = totalunits;
-            m_isFirstFetchSinceStartApplication = true;
+            m_disableIncrementInFirstFetch = true;
             m_tierPassCount = 1;
             m_tierMaxPassages = tierMaxPassages;
         }
@@ -72,11 +72,13 @@ namespace Virterix.AdMediation
                 Debug.LogWarning("[AdMediationSystem] Unit index out of range! Unit Index: " + unitIndex);
 #endif
                 unitIndex = 0;
+                return;
             }
 
             m_currUnit = units.Length == 0 ? null : units[unitIndex];
             m_tierIndex = tierIndex;
             m_unitIndex = unitIndex;
+            m_disableIncrementInFirstFetch = true;
 
             AdUnit restoredUnit = null;
             SequenceStrategyParams sequenceParams = null;
@@ -150,9 +152,9 @@ namespace Virterix.AdMediation
             m_fetchCount++;
             AdUnit[] units = tiers[m_tierIndex];
 
-            if (m_isFirstFetchSinceStartApplication)
+            if (m_disableIncrementInFirstFetch)
             {
-                m_isFirstFetchSinceStartApplication = false;
+                m_disableIncrementInFirstFetch = false;
             }
             else
             {

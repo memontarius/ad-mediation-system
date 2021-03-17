@@ -1,8 +1,9 @@
 fileFormatVersion: 2
-guid: c0cb8bbd8a5654089817b14779749f91
+guid: 6c5904a28fdd143c0b0f1b3e8ac17612
 labels:
 - al_max
 - al_max_export_path-MaxSdk/AppLovin/Plugins/iOS
+- al_max_export_path-MaxSdk\AppLovin\Plugins\iOS
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

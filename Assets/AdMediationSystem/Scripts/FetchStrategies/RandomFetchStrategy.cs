@@ -23,7 +23,7 @@ namespace Virterix.AdMediation
         private int m_tierIndex;
         private int m_unitIndex;
 
-        private bool m_isFirstFetchSinceStartApplication;
+        private bool m_disableIncrementInFirstFetch;
         private int m_tierPassCount;
         private int[] m_tierMaxPassages;
         private int m_maxRecursionFetch;
@@ -38,7 +38,7 @@ namespace Virterix.AdMediation
 
         public void Init(AdUnit[][] tiers, int totalunits, int[] tierMaxPassages)
         {
-            m_isFirstFetchSinceStartApplication = true;
+            m_disableIncrementInFirstFetch = true;
             m_tierPassCount = 1;
             m_tierMaxPassages = tierMaxPassages;
             m_maxRecursionFetch = tiers.Length;
@@ -115,9 +115,9 @@ namespace Virterix.AdMediation
             AdUnit[] units = tiers[m_tierIndex];
             FindUnitsForFetch(units, ref m_readyUnits);
 
-            if (m_isFirstFetchSinceStartApplication)
+            if (m_disableIncrementInFirstFetch)
             {
-                m_isFirstFetchSinceStartApplication = false;
+                m_disableIncrementInFirstFetch = false;
             }
             else
             {

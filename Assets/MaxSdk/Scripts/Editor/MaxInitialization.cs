@@ -54,18 +54,29 @@ namespace AppLovinMax.Scripts.Editor
         static MaxInitialize()
         {
 #if UNITY_IOS
-        // Check that the publisher is targeting iOS 9.0+
-        if (!PlayerSettings.iOS.targetOSVersionString.StartsWith("9.") && !PlayerSettings.iOS.targetOSVersionString.StartsWith("1"))
-        {
-            MaxSdkLogger.UserError("Detected iOS project version less than iOS 9 - The AppLovin MAX SDK WILL NOT WORK ON < iOS9!!!");
-        }
+            // Check that the publisher is targeting iOS 9.0+
+            if (!PlayerSettings.iOS.targetOSVersionString.StartsWith("9.") && !PlayerSettings.iOS.targetOSVersionString.StartsWith("1"))
+            {
+                MaxSdkLogger.UserError("Detected iOS project version less than iOS 9 - The AppLovin MAX SDK WILL NOT WORK ON < iOS9!!!");
+            }
 #endif
 
-            var changesMade = AppLovinIntegrationManager.MovePluginFilesIfNeeded();
             var pluginParentDir = AppLovinIntegrationManager.PluginParentDirectory;
+            var isPluginOutsideAssetsDir = AppLovinIntegrationManager.IsPluginOutsideAssetsDirectory;
+            var changesMade = AppLovinIntegrationManager.MovePluginFilesIfNeeded(pluginParentDir, isPluginOutsideAssetsDir);
+            if (isPluginOutsideAssetsDir)
+            {
+                // If the plugin is not under the assets folder, delete the MaxSdk/Mediation folder in the plugin, so that the adapters are not imported at that location and imported to the default location.
+                var mediationDir = Path.Combine(pluginParentDir, "MaxSdk/Mediation");
+                if (Directory.Exists(mediationDir))
+                {
+                    FileUtil.DeleteFileOrDirectory(mediationDir);
+                    FileUtil.DeleteFileOrDirectory(mediationDir + ".meta");
+                    changesMade = true;
+                }
+            }
 
-            var pluginDir = Path.Combine(pluginParentDir, "MaxSdk");
-            AddLabelsToAssets(pluginDir, pluginParentDir);
+            AppLovinIntegrationManager.AddLabelsToAssetsIfNeeded(pluginParentDir, isPluginOutsideAssetsDir);
 
             // Check if we have legacy adapter CHANGELOGs.
             foreach (var network in Networks)
@@ -111,47 +122,6 @@ namespace AppLovinMax.Scripts.Editor
             }
 
             AppLovinAutoUpdater.Update();
-        }
-
-        /// <summary>
-        /// Adds labels to assets so that they can be easily found.
-        /// </summary>
-        /// <param name="directoryPath">The directory containing the assets for which to add labels. Recursively adds labels to all files and folders under this directory.</param>
-        /// <param name="pluginParentDir">The MAX Unity plugin's parent directory.</param>
-        private static void AddLabelsToAssets(string directoryPath, string pluginParentDir)
-        {
-            var files = Directory.GetFiles(directoryPath);
-            foreach (var file in files)
-            {
-                if (!file.EndsWith(".meta")) continue;
-
-                var lines = File.ReadAllLines(file);
-                var hasLabels = lines.Any(line => line.Contains("labels:"));
-                if (hasLabels) continue;
-
-                var output = new List<string>();
-
-                foreach (var line in lines)
-                {
-                    output.Add(line);
-                    if (line.Contains("guid"))
-                    {
-                        output.Add("labels:");
-                        output.Add("- al_max");
-
-                        var exportPath = file.Replace(pluginParentDir, "").Replace(".meta", "");
-                        output.Add("- al_max_export_path-" + exportPath);
-                    }
-                }
-
-                File.WriteAllLines(file, output);
-            }
-
-            var directories = Directory.GetDirectories(directoryPath);
-            foreach (var directory in directories)
-            {
-                AddLabelsToAssets(directory, pluginParentDir);
-            }
         }
 
         private static bool CheckExistence(string location)

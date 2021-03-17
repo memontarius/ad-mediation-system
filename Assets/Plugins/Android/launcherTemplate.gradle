@@ -3,7 +3,6 @@
 apply plugin: 'com.android.application'
 
 dependencies {
-	implementation 'androidx.multidex:multidex:2.0.1'
     implementation project(':unityLibrary')
     }
 
@@ -29,7 +28,7 @@ android {
     }
 
     aaptOptions {
-        noCompress = ['.unity3d', '.ress', '.resource', '.obb'**STREAMING_ASSETS**]
+        noCompress = ['.ress', '.resource', '.obb'] + unityStreamingAssets.tokenize(', ')
         ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
     }**SIGN**
 
@@ -40,13 +39,11 @@ android {
     buildTypes {
         debug {
             minifyEnabled **MINIFY_DEBUG**
-            useProguard **PROGUARD_DEBUG**
             proguardFiles getDefaultProguardFile('proguard-android.txt')**SIGNCONFIG**
             jniDebuggable true
         }
         release {
             minifyEnabled **MINIFY_RELEASE**
-            useProguard **PROGUARD_RELEASE**
             proguardFiles getDefaultProguardFile('proguard-android.txt')**SIGNCONFIG**
         }
     }**PACKAGING_OPTIONS****SPLITS**

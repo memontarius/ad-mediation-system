@@ -9,6 +9,9 @@ namespace Virterix.AdMediation.Editor
 {
     public abstract class BaseAdNetworkView
     {
+        private const float DEFAULT_INSTANCE_ELEMENT_HEIGHT = 22;
+        private const float DEFAULT_BANNER_INSTANCE_ELEMENT_HEIGHT = 44;
+
         public struct InstanceElementHeight
         {
             public float height;
@@ -49,6 +52,8 @@ namespace Virterix.AdMediation.Editor
         protected virtual string[] BannerTypes { get; set; }
 
         protected virtual bool IsSeparatedPlatformSettings { get; } = false;
+
+        protected virtual bool IsAdInstanceIdsDisplayed { get; } = true;
 
         protected string SettingsFilePath
         {
@@ -99,10 +104,9 @@ namespace Virterix.AdMediation.Editor
             _settingsWindow = settingsWindow;
             Name = name;
             Identifier = identifier;
-            _showSettings = new AnimBool(true);
-            _showSettings.valueChanged.AddListener(settingsWindow.Repaint);
-
             Collapsed = EditorPrefs.GetBool(CollapsedSaveKey, false);
+            _showSettings = new AnimBool(Collapsed);
+            _showSettings.valueChanged.AddListener(settingsWindow.Repaint);
             _settings = GetSettings();
             _settings._networkIdentifier = identifier;
 
@@ -189,7 +193,7 @@ namespace Virterix.AdMediation.Editor
 
         public string[] GetAdInstances(AdType adType)
         {
-            if (Settings.IsTotallyAdInstanceUnsupported)
+            if (!Settings.IsAdInstanceSupported(adType))
             {
                 return new string[] { AdMediation.AdInstance.AD_INSTANCE_DEFAULT_NAME };
             }
@@ -230,8 +234,8 @@ namespace Virterix.AdMediation.Editor
 
         protected float CalculateElementHeight(AdInstanceBlockData blockData)
         {
-            float solvedHeight = 22;
-            if (blockData._instances != null && blockData._instances.count > 0) {
+            float solvedHeight = blockData._adType == AdType.Banner ? DEFAULT_BANNER_INSTANCE_ELEMENT_HEIGHT : DEFAULT_INSTANCE_ELEMENT_HEIGHT;
+            if (blockData._instances != null && blockData._instances.count > 0 && IsAdInstanceIdsDisplayed) {
                 if (_settingsWindow.IsAndroid && _settingsWindow.IsIOS)
                 {
                     solvedHeight = blockData._elementHeight.height;
@@ -338,10 +342,8 @@ namespace Virterix.AdMediation.Editor
             {
                 AdInstanceBlockData blockData = _instanceBlocks[i];
                 EditorGUILayout.Space(2);
-                AnimBool foldAnimation = blockData._foldAnimation;
-
                 //char collapsedSymbol = blockData._isCollapsed ? '\u25B7' : '\u25BD';
-                char collapsedSymbol = blockData._isCollapsed ? '\u21A6' : '\u21A7';
+                char collapsedSymbol = blockData._isCollapsed ? '\u21A7' : '\u21A6';
                 
                 string buttonTitle = string.Format("{0}  {1}", collapsedSymbol, blockData._blockName);
 
@@ -351,8 +353,8 @@ namespace Virterix.AdMediation.Editor
                     EditorPrefs.SetBool(GetInstanceBlockCollapsedKey(Name, blockData._adType), blockData._isCollapsed);
                 }
 
-                foldAnimation.target = !blockData._isCollapsed;
-                if (EditorGUILayout.BeginFadeGroup(foldAnimation.faded))
+                blockData._foldAnimation.target = blockData._isCollapsed;
+                if (EditorGUILayout.BeginFadeGroup(blockData._foldAnimation.faded))
                 {
                     blockData._instances.DoLayoutList();
                 }
@@ -367,7 +369,7 @@ namespace Virterix.AdMediation.Editor
             instanceBlock._blockName = title;
             instanceBlock._instanceProperty = _serializedSettings.FindProperty(propertyName);
             instanceBlock._isCollapsed = EditorPrefs.GetBool(GetInstanceBlockCollapsedKey(Name, adType), true);
-            instanceBlock._foldAnimation = new AnimBool();
+            instanceBlock._foldAnimation = new AnimBool(instanceBlock._isCollapsed);
             instanceBlock._foldAnimation.valueChanged.AddListener(_settingsWindow.Repaint);
             instanceBlock._elementHeight = elementHeight;
             instanceBlock._instances = CreateList(_serializedSettings, instanceBlock);
@@ -411,26 +413,30 @@ namespace Virterix.AdMediation.Editor
                 );
 
                 width = Mathf.Clamp(elementWidth - 80, 315, 2800);
-                if (_settingsWindow.IsAndroid)
+                if (IsAdInstanceIdsDisplayed)
                 {
-                    rect.y += 20;
-                    EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), "Android Id");
-                    EditorGUI.PropertyField(
-                        new Rect(rect.x + 80, rect.y, width, EditorGUIUtility.singleLineHeight),
-                        element.FindPropertyRelative("_androidId"),
-                        GUIContent.none
-                    );
-                }
+                    if (_settingsWindow.IsAndroid)
+                    {
+                        rect.y += 20;
+                        EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), "Android Id");
+                        EditorGUI.PropertyField(
+                            new Rect(rect.x + 80, rect.y, width, EditorGUIUtility.singleLineHeight),
+                            element.FindPropertyRelative("_androidId"),
+                            GUIContent.none
+                        );
+                    }
 
-                if (_settingsWindow.IsIOS)
-                {
-                    rect.y += 20;
-                    EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), "iOS Id");
-                    EditorGUI.PropertyField(
-                        new Rect(rect.x + 80, rect.y, width, EditorGUIUtility.singleLineHeight),
-                        element.FindPropertyRelative("_iosId"),
-                        GUIContent.none
-                    );
+
+                    if (_settingsWindow.IsIOS)
+                    {
+                        rect.y += 20;
+                        EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), "iOS Id");
+                        EditorGUI.PropertyField(
+                            new Rect(rect.x + 80, rect.y, width, EditorGUIUtility.singleLineHeight),
+                            element.FindPropertyRelative("_iosId"),
+                            GUIContent.none
+                        );
+                    }
                 }
 
                 if (instanceBlock._adType == AdType.Banner && BannerTypes != null)

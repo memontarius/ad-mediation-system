@@ -9,6 +9,8 @@ public abstract class MaxSdkBase
     /// <summary>
     /// This enum represents whether or not the consent dialog should be shown for this user.
     /// The state where no such determination could be made is represented by <see cref="ConsentDialogState.Unknown"/>.
+    ///
+    /// NOTE: This version of the iOS consent flow has been deprecated and is only available on UNITY_ANDROID as of MAX Unity Plugin v4.0.0 + iOS SDK v7.0.0, please refer to our documentation for enabling the new consent flow.
     /// </summary>
     public enum ConsentDialogState
     {
@@ -27,7 +29,40 @@ public abstract class MaxSdkBase
         /// </summary>
         DoesNotApply
     }
+    
+#if UNITY_EDITOR || UNITY_IPHONE || UNITY_IOS
+    /// <summary>
+    /// App tracking status values. Primarily used in conjunction with iOS14's AppTrackingTransparency.framework.
+    /// </summary>
+    public enum AppTrackingStatus
+    {
+        /// <summary>
+        /// Device is on < iOS14, AppTrackingTransparency.framework is not available.
+        /// </summary>
+        Unavailable,
 
+        /// <summary>
+        /// The value returned if a user has not yet received an authorization request to authorize access to app-related data that can be used for tracking the user or the device.
+        /// </summary>
+        NotDetermined,
+
+        /// <summary>
+        /// The value returned if authorization to access app-related data that can be used for tracking the user or the device is restricted.
+        /// </summary>
+        Restricted,
+        
+        /// <summary>
+        /// The value returned if the user denies authorization to access app-related data that can be used for tracking the user or the device.
+        /// </summary>
+        Denied,
+        
+        /// <summary>
+        /// The value returned if the user authorizes access to app-related data that can be used for tracking the user or the device.
+        /// </summary>
+        Authorized,
+    }
+#endif
+    
     public enum AdViewPosition
     {
         TopLeft,
@@ -60,14 +95,20 @@ public abstract class MaxSdkBase
         /// Get the consent dialog state for this user. If no such determination could be made, `ALConsentDialogStateUnknown` will be returned.
         /// </summary>
         public ConsentDialogState ConsentDialogState;
+
+#if UNITY_EDITOR || UNITY_IPHONE || UNITY_IOS
+        /// <summary>
+        /// App tracking status values. Primarily used in conjunction with iOS14's AppTrackingTransparency.framework.
+        /// </summary>
+        public AppTrackingStatus AppTrackingStatus;
+#endif
     }
 
     public struct Reward
     {
         public string Label;
         public int Amount;
-
-
+        
         public override string ToString()
         {
             return "Reward: " + Amount + " " + Label;
@@ -92,15 +133,15 @@ public abstract class MaxSdkBase
             string networkName = "";
             string creativeIdentifier = "";
             string placement = "";
-            
+
             // NOTE: Unity Editor creates empty string
             IDictionary<string, string> adInfoObject = MaxSdkUtils.PropsStringToDict(adInfoString);
             adInfoObject.TryGetValue("adUnitId", out adUnitIdentifier);
             adInfoObject.TryGetValue("networkName", out networkName);
             adInfoObject.TryGetValue("creativeId", out creativeIdentifier);
             adInfoObject.TryGetValue("placement", out placement);
-         
-            AdUnitIdentifier = adUnitIdentifier;	
+
+            AdUnitIdentifier = adUnitIdentifier;
             NetworkName = networkName;
             CreativeIdentifier = creativeIdentifier;
             Placement = placement;
@@ -108,7 +149,40 @@ public abstract class MaxSdkBase
 
         public override string ToString()
         {
-            return "[AdInfo adUnitIdentifier: " + AdUnitIdentifier + ", networkName: " + NetworkName  + ", creativeIdentifier: " + CreativeIdentifier + ", placement: " + Placement + "]";
+            return "[AdInfo adUnitIdentifier: " + AdUnitIdentifier + ", networkName: " + NetworkName + ", creativeIdentifier: " + CreativeIdentifier + ", placement: " + Placement + "]";
+        }
+    }
+
+    public class MediatedNetworkInfo 
+    {
+        public string Name { get; private set; }
+        public string AdapterClassName { get; private set; }
+        public string AdapterVersion { get; private set; }
+        public string SdkVersion { get; private set; }
+
+        public MediatedNetworkInfo(string networkInfoString)
+        {
+            var name = "";
+            var adapterClassName = "";
+            var adapterVersion = "";
+            var sdkVersion = "";
+
+            // NOTE: Unity Editor creates empty string
+            var mediatedNetworkObject = MaxSdkUtils.PropsStringToDict(networkInfoString);
+            mediatedNetworkObject.TryGetValue("name", out name);
+            mediatedNetworkObject.TryGetValue("adapterClassName", out adapterClassName);
+            mediatedNetworkObject.TryGetValue("adapterVersion", out adapterVersion);
+            mediatedNetworkObject.TryGetValue("sdkVersion", out sdkVersion);
+
+            Name = name;
+            AdapterClassName = adapterClassName;
+            AdapterVersion = adapterVersion;
+            SdkVersion = sdkVersion;
+        }
+
+        public override string ToString()
+        {
+            return "[MediatedNetworkInfo name: " + Name + ", adapterClassName: " + AdapterClassName + ", adapterVersion: " + AdapterVersion + ", sdkVersion: " + SdkVersion + "]";
         }
     }
 

@@ -75,7 +75,9 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             // Wait for the download to complete or the request to timeout.
             while (!operation.isDone) { }
 
-#if UNITY_2017_2_OR_NEWER
+#if UNITY_2020_1_OR_NEWER
+            if (unityWebRequest.result != UnityWebRequest.Result.Success)
+#elif UNITY_2017_2_OR_NEWER
             if (unityWebRequest.isNetworkError || unityWebRequest.isHttpError)
 #else
             if (webRequest.isError)

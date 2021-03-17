@@ -27,8 +27,8 @@ namespace Virterix.AdMediation
             get { return m_network; } 
         }
 
-        public int Index { get; set; }
-        public int TierIndex { get; set; }
+        public int Index { get; private set; }
+        public int TierIndex { get; private set; }
 
         public string PlacementName
         {
@@ -142,7 +142,7 @@ namespace Virterix.AdMediation
         }
         
         public AdUnit(string placementName, AdType adType, string adInstanceName, AdNetworkAdapter network,
-           BaseFetchStrategyParams strategyParams, bool isPrepareOnExit = false)
+           BaseFetchStrategyParams strategyParams, int tierIndex, int unitIndex, bool isPrepareOnExit = false)
         {
             m_adType = adType;
             m_network = network;
@@ -150,6 +150,8 @@ namespace Virterix.AdMediation
             m_placementName = placementName;
             m_adInstanceName = adInstanceName;
             m_isPrepareOnExit = isPrepareOnExit;
+            TierIndex = tierIndex;
+            Index = unitIndex;          
         }
 
         /// <returns>True when successfully shown ad</returns>

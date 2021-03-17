@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
+using System.IO;
 
 namespace Virterix.AdMediation.Editor
 {
@@ -46,6 +47,15 @@ namespace Virterix.AdMediation.Editor
             Rect rect = EditorGUILayout.GetControlRect(false, height);
             rect.height = height;
             EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
+        }
+
+        public static void DeleteMetaFile(string assetPath)
+        {
+            string metaFilePath = assetPath + ".meta";
+            if (File.Exists(metaFilePath))
+            {
+                File.Delete(metaFilePath);
+            }
         }
     }
 }

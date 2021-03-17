@@ -220,6 +220,87 @@ public class MaxSdkCallbacks : MonoBehaviour
             _onMRecAdCollapsedEvent -= value;
         }
     }
+    
+    
+    // Fired when a cross promo ad is loaded
+    private static Action<string> _onCrossPromoAdLoadedEvent;
+    public static event Action<string> OnCrossPromoAdLoadedEvent
+    {
+        add
+        {
+            LogSubscribedToEvent("OnCrossPromoAdLoadedEvent");
+            _onCrossPromoAdLoadedEvent += value;
+        }
+        remove
+        {
+            LogUnsubscribedToEvent("OnCrossPromoAdLoadedEvent");
+            _onCrossPromoAdLoadedEvent -= value;
+        }
+    }
+
+    // Fired when a cross promo ad has failed to load
+    private static Action<string, int> _onCrossPromoAdLoadFailedEvent;
+    public static event Action<string, int> OnCrossPromoAdLoadFailedEvent
+    {
+        add
+        {
+            LogSubscribedToEvent("OnCrossPromoAdLoadFailedEvent");
+            _onCrossPromoAdLoadFailedEvent += value;
+        }
+        remove
+        {
+            LogUnsubscribedToEvent("OnCrossPromoAdLoadFailedEvent");
+            _onCrossPromoAdLoadFailedEvent -= value;
+        }
+    }
+
+    // Fired when a cross promo ad ad is clicked
+    private static Action<string> _onCrossPromoAdClickedEvent;
+    public static event Action<string> OnCrossPromoAdClickedEvent
+    {
+        add
+        {
+            LogSubscribedToEvent("OnCrossPromoAdClickedEvent");
+            _onCrossPromoAdClickedEvent += value;
+        }
+        remove
+        {
+            LogUnsubscribedToEvent("OnCrossPromoAdClickedEvent");
+            _onCrossPromoAdClickedEvent -= value;
+        }
+    }
+
+    // Fired when a cross promo ad ad expands to encompass a greater portion of the screen
+    private static Action<string> _onCrossPromoAdExpandedEvent;
+    public static event Action<string> OnCrossPromoAdExpandedEvent
+    {
+        add
+        {
+            LogSubscribedToEvent("OnCrossPromoAdExpandedEvent");
+            _onCrossPromoAdExpandedEvent += value;
+        }
+        remove
+        {
+            LogUnsubscribedToEvent("OnCrossPromoAdExpandedEvent");
+            _onCrossPromoAdExpandedEvent -= value;
+        }
+    }
+
+    // Fired when a cross promo ad ad collapses back to its initial size
+    private static Action<string> _onCrossPromoAdCollapsedEvent;
+    public static event Action<string> OnCrossPromoAdCollapsedEvent
+    {
+        add
+        {
+            LogSubscribedToEvent("OnCrossPromoAdCollapsedEvent");
+            _onCrossPromoAdCollapsedEvent += value;
+        }
+        remove
+        {
+            LogUnsubscribedToEvent("OnCrossPromoAdCollapsedEvent");
+            _onCrossPromoAdCollapsedEvent -= value;
+        }
+    }
 
 
     // Fired when an interstitial ad is loaded and ready to be shown
@@ -561,6 +642,10 @@ public class MaxSdkCallbacks : MonoBehaviour
         if (eventName == "OnSdkInitializedEvent")
         {
             var consentDialogStateStr = eventProps["consentDialogState"];
+#if UNITY_IPHONE || UNITY_IOS
+            var appTrackingStatusStr = eventProps["appTrackingStatus"];
+#endif
+
             var sdkConfiguration = new MaxSdkBase.SdkConfiguration();
 
             if ("1".Equals(consentDialogStateStr))
@@ -575,13 +660,36 @@ public class MaxSdkCallbacks : MonoBehaviour
             {
                 sdkConfiguration.ConsentDialogState = MaxSdkBase.ConsentDialogState.Unknown;
             }
+
+#if UNITY_IPHONE || UNITY_IOS
+            if ("-1".Equals(appTrackingStatusStr))
+            {
+                sdkConfiguration.AppTrackingStatus = MaxSdkBase.AppTrackingStatus.Unavailable;
+            }
+            else if ("0".Equals(appTrackingStatusStr))
+            {
+                sdkConfiguration.AppTrackingStatus = MaxSdkBase.AppTrackingStatus.NotDetermined;
+            }
+            else if ("1".Equals(appTrackingStatusStr))
+            {
+                sdkConfiguration.AppTrackingStatus = MaxSdkBase.AppTrackingStatus.Restricted;
+            }
+            else if ("2".Equals(appTrackingStatusStr))
+            {
+                sdkConfiguration.AppTrackingStatus = MaxSdkBase.AppTrackingStatus.Denied;
+            }
+            else // "3" is authorized
+            {
+                sdkConfiguration.AppTrackingStatus = MaxSdkBase.AppTrackingStatus.Authorized;
+            }
+#endif
             InvokeEvent(_onSdkInitializedEvent, sdkConfiguration);
         }
         else if (eventName == "OnVariablesUpdatedEvent")
         {
             InvokeEvent(_onVariablesUpdatedEvent);
         }
-        else if ( eventName == "OnSdkConsentDialogDismissedEvent" )
+        else if (eventName == "OnSdkConsentDialogDismissedEvent")
         {
             InvokeEvent(_onSdkConsentDialogDismissedEvent);
         }
@@ -632,6 +740,28 @@ public class MaxSdkCallbacks : MonoBehaviour
             else if (eventName == "OnMRecAdCollapsedEvent")
             {
                 InvokeEvent(_onMRecAdCollapsedEvent, adUnitIdentifier);
+            }
+            else if (eventName == "OnCrossPromoAdLoadedEvent")
+            {
+                InvokeEvent(_onCrossPromoAdLoadedEvent, adUnitIdentifier);
+            }
+            else if (eventName == "OnCrossPromoAdLoadFailedEvent")
+            {
+                var errorCode = 0;
+                int.TryParse(eventProps["errorCode"], out errorCode);
+                InvokeEvent(_onCrossPromoAdLoadFailedEvent, adUnitIdentifier, errorCode);
+            }
+            else if (eventName == "OnCrossPromoAdClickedEvent")
+            {
+                InvokeEvent(_onCrossPromoAdClickedEvent, adUnitIdentifier);
+            }
+            else if (eventName == "OnCrossPromoAdExpandedEvent")
+            {
+                InvokeEvent(_onCrossPromoAdExpandedEvent, adUnitIdentifier);
+            }
+            else if (eventName == "OnCrossPromoAdCollapsedEvent")
+            {
+                InvokeEvent(_onCrossPromoAdCollapsedEvent, adUnitIdentifier);
             }
             else if (eventName == "OnInterstitialLoadedEvent")
             {
@@ -745,6 +875,7 @@ public class MaxSdkCallbacks : MonoBehaviour
     {
         var sdkConfiguration = new MaxSdkBase.SdkConfiguration();
         sdkConfiguration.ConsentDialogState = MaxSdkBase.ConsentDialogState.Unknown;
+        sdkConfiguration.AppTrackingStatus = MaxSdkBase.AppTrackingStatus.Authorized;
         
         _onSdkInitializedEvent(sdkConfiguration);
     }

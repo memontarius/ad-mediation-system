@@ -16,7 +16,7 @@ public class AdController : BaseAdController
     private PollfishAdapter m_pollfishNetwork;
 
     // Use this for initialization
-    void Awake() {
+    private void Awake() {
         AdMediationSystem.OnInitialized += OnMediationSystemInitialized;
         AdMediationSystem.Load("DefaultProject");
         m_adPersonalizedText.rectTransform.parent.GetComponent<Button>().interactable = false;
@@ -108,17 +108,14 @@ public class AdController : BaseAdController
     }
 
     void OnAdPollfishNetworkEvent(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstance adInstance) {
-        HandleNetworkEvent(null, network, adType, adEvent, adInstance == null ? "" : adInstance.Name);
+        
     }
 
     protected override void HandleNetworkEvent(AdMediator mediator, AdNetworkAdapter network, AdType adType, AdEvent adEvent, string adInstanceName)
     {
         string placementName = mediator == null ? "" : mediator.m_placementName;
 
-        if (network.m_networkName != "pollfish")
-        {
-            UpdateAdInfo(mediator, adType, placementName);
-        }
+        UpdateAdInfo(mediator, adType, placementName);
 
         string log = string.Format("{0} Placement: <color=blue>{1}</color> Instance: <color=blue>{2}</color> <b>{3}</b> {4} \n{5}",
             adType.ToString(), placementName, adInstanceName, network.m_networkName, adEvent.ToString(), m_eventLogText.text);

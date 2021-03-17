@@ -12,23 +12,14 @@ namespace Virterix.AdMediation.Editor
         protected override string AdapterScriptName => "AudienceNetworkAdapter";
         protected override string AdapterDefinePeprocessorKey => "_AMS_AUDIENCE_NETWORK";
 
-        public override bool IsAdSupported(AdType adType)
-        {
-            return true;
-        }
-
-        public override bool IsCheckAvailabilityWhenPreparing(AdType adType)
-        {
-            return true;
-        }
-
+        public override string GetNetworkSDKVersion() => AudienceNetworkAdapter.GetSDKVersion();
+        
+        public override bool IsAdSupported(AdType adType) => true;
+        
+        public override bool IsCheckAvailabilityWhenPreparing(AdType adType) => true;
+        
         public override void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {
-        }
-
-        public override string GetNetworkSDKVersion()
-        {
-            return AudienceNetworkAdapter.GetSDKVersion();
         }
 
         protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)

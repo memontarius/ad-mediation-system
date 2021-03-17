@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AdMediationProjectSettings
   m_EditorClassIdentifier: 
   _initializeOnStart: 1
-  _enableTestMode: 0
+  _enableTestMode: 1
   _enableExtraLogging: 1
   _directedChildren: 0
   _testDevices:
@@ -38,15 +38,15 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 49
-      - _networkName: Audience Network
+        _percentage: 100
+      - _networkName: Iron Source
         _networkIndex: 1
-        _networkIdentifier: audiencenetwork
+        _networkIdentifier: ironsrc
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 51
+        _percentage: 0
   - _adType: 1
     _name: Top
     _continueAfterEndSession: 1
@@ -67,9 +67,9 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
-      - _networkName: Audience Network
+      - _networkName: Iron Source
         _networkIndex: 1
-        _networkIdentifier: audiencenetwork
+        _networkIdentifier: ironsrc
         _instanceIndex: 1
         _instanceName: Top
         _replaced: 0
@@ -95,42 +95,34 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 20
-      - _networkName: Audience Network
-        _networkIndex: 1
-        _networkIdentifier: audiencenetwork
+        _percentage: 0
+      - _networkName: Iron Source
+        _networkIndex: 4
+        _networkIdentifier: ironsrc
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 20
+        _percentage: 0
       - _networkName: Unity Ads
-        _networkIndex: 2
+        _networkIndex: 1
         _networkIdentifier: unityads
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 20
+        _percentage: 0
       - _networkName: AppLovin
-        _networkIndex: 3
+        _networkIndex: 2
         _networkIdentifier: applovin
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 20
+        _percentage: 100
       - _networkName: Chartboost
-        _networkIndex: 4
+        _networkIndex: 3
         _networkIdentifier: chartboost
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 20
-      - _networkName: Iron Source
-        _networkIndex: 5
-        _networkIdentifier: ironsrc
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0
@@ -156,46 +148,46 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 17
-      - _networkName: Audience Network
-        _networkIndex: 1
-        _networkIdentifier: audiencenetwork
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 17
-      - _networkName: Unity Ads
-        _networkIndex: 2
-        _networkIdentifier: unityads
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 16
-      - _networkName: AppLovin
-        _networkIndex: 3
-        _networkIdentifier: applovin
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 17
-      - _networkName: Chartboost
-        _networkIndex: 4
-        _networkIdentifier: chartboost
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 17
+        _percentage: 0
       - _networkName: Iron Source
-        _networkIndex: 5
+        _networkIndex: 4
         _networkIdentifier: ironsrc
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 16
+        _percentage: 0
+      - _networkName: Unity Ads
+        _networkIndex: 1
+        _networkIdentifier: unityads
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: AppLovin
+        _networkIndex: 2
+        _networkIdentifier: applovin
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: Chartboost
+        _networkIndex: 3
+        _networkIdentifier: chartboost
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: Pollfish
+        _networkIndex: 5
+        _networkIdentifier: pollfish
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 100
   _isIOS: 1
   _isAndroid: 1

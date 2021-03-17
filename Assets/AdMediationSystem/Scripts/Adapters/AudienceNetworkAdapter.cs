@@ -1,4 +1,4 @@
-#define _AMS_AUDIENCE_NETWORK
+//#define _AMS_AUDIENCE_NETWORK
 
 using UnityEngine;
 using System;
@@ -201,7 +201,6 @@ namespace Virterix.AdMediation
             switch (adType)
             {
                 case AdType.Banner:
-                    //case AdType.Native:
                     audienceNetworkAdInstance.m_bannerVisibled = false;
 
                     if (adType == AdType.Banner)

@@ -32,6 +32,11 @@ namespace AppLovinMax.Scripts.Editor
 
     public class MaxPostProcessBuildiOS
     {
+#if !UNITY_2019_3_OR_NEWER
+        private const string UnityMainTargetName = "Unity-iPhone";
+#endif
+        private const string TargetUnityIphonePodfileLine = "target 'Unity-iPhone' do";
+
         private static readonly List<string> AtsRequiringNetworks = new List<string>
         {
             "AdColony",
@@ -45,30 +50,80 @@ namespace AppLovinMax.Scripts.Editor
             "Smaato"
         };
 
-        private static readonly List<string> DynamicLibraryPathsToEmbed = new List<string>
+        private static List<string> DynamicLibraryPathsToEmbed
         {
-            Path.Combine("Pods/", "HyprMX/HyprMX.xcframework")
+            get
+            {
+                var dynamicLibraryPathsToEmbed = new List<string>(2);
+                dynamicLibraryPathsToEmbed.Add(Path.Combine("Pods/", "HyprMX/HyprMX.xcframework"));
+                if (ShouldEmbedSnapSdk())
+                {
+                    dynamicLibraryPathsToEmbed.Add(Path.Combine("Pods/", "SAKSDK/SAKSDK.framework"));
+                }
+
+                return dynamicLibraryPathsToEmbed;
+            }
+        }
+
+        private static readonly List<string> SwiftLanguageNetworks = new List<string>
+        {
+            "MoPub"
         };
 
-        [PostProcessBuildAttribute(int.MaxValue)]
-        public static void MaxPostProcessEmbedDynamicLibraries(BuildTarget buildTarget, string path)
+        private static string PluginMediationDirectory
         {
-            var dynamicLibraryPathsPresentInProject = DynamicLibraryPathsToEmbed.Where(dynamicLibraryPath => Directory.Exists(Path.Combine(path, dynamicLibraryPath))).ToList();
-            if (dynamicLibraryPathsPresentInProject.Count <= 0) return;
+            get
+            {
+                var pluginParentDir = AppLovinIntegrationManager.MediationSpecificPluginParentDirectory;
+                return Path.Combine(pluginParentDir, "MaxSdk/Mediation/");
+            }
+        }
 
-            var projectPath = PBXProject.GetPBXProjectPath(path);
+        [PostProcessBuildAttribute(int.MaxValue)]
+        public static void MaxPostProcessPbxProject(BuildTarget buildTarget, string buildPath)
+        {
+            var projectPath = PBXProject.GetPBXProjectPath(buildPath);
             var project = new PBXProject();
             project.ReadFromFile(projectPath);
 
 #if UNITY_2019_3_OR_NEWER
-            var targetGuid = project.GetUnityMainTargetGuid();
+            var unityMainTargetGuid = project.GetUnityMainTargetGuid();
+            var unityFrameworkTargetGuid = project.GetUnityFrameworkTargetGuid();
+#else
+            var unityMainTargetGuid = project.TargetGuidByName(UnityMainTargetName);
+            var unityFrameworkTargetGuid = project.TargetGuidByName(UnityMainTargetName);
+#endif
+            EmbedDynamicLibrariesIfNeeded(buildPath, project, unityMainTargetGuid);
+
+            LocalizeUserTrackingDescriptionIfNeeded(AppLovinSettings.Instance.UserTrackingUsageDescriptionDe, "de", buildPath, project, unityMainTargetGuid);
+            LocalizeUserTrackingDescriptionIfNeeded(AppLovinSettings.Instance.UserTrackingUsageDescriptionEn, "en", buildPath, project, unityMainTargetGuid);
+            LocalizeUserTrackingDescriptionIfNeeded(AppLovinSettings.Instance.UserTrackingUsageDescriptionEs, "es", buildPath, project, unityMainTargetGuid);
+            LocalizeUserTrackingDescriptionIfNeeded(AppLovinSettings.Instance.UserTrackingUsageDescriptionFr, "fr", buildPath, project, unityMainTargetGuid);
+            LocalizeUserTrackingDescriptionIfNeeded(AppLovinSettings.Instance.UserTrackingUsageDescriptionJa, "ja", buildPath, project, unityMainTargetGuid);
+            LocalizeUserTrackingDescriptionIfNeeded(AppLovinSettings.Instance.UserTrackingUsageDescriptionKo, "ko", buildPath, project, unityMainTargetGuid);
+            LocalizeUserTrackingDescriptionIfNeeded(AppLovinSettings.Instance.UserTrackingUsageDescriptionZhHans, "zh-Hans", buildPath, project, unityMainTargetGuid);
+
+            AddSwiftSupportIfNeeded(buildPath, project, unityFrameworkTargetGuid);
+
+            project.WriteToFile(projectPath);
+        }
+
+        private static void EmbedDynamicLibrariesIfNeeded(string buildPath, PBXProject project, string targetGuid)
+        {
+            var dynamicLibraryPathsPresentInProject = DynamicLibraryPathsToEmbed.Where(dynamicLibraryPath => Directory.Exists(Path.Combine(buildPath, dynamicLibraryPath))).ToList();
+            if (dynamicLibraryPathsPresentInProject.Count <= 0) return;
+
+#if UNITY_2019_3_OR_NEWER
+            var containsUnityIphoneTargetInPodfile = ContainsUnityIphoneTargetInPodfile(buildPath);
+            // Embed framework if it is .xcframework or is .framework and the podfile does not contain target `Unity-iPhone`.
             foreach (var dynamicLibraryPath in dynamicLibraryPathsPresentInProject)
             {
+                if (dynamicLibraryPath.EndsWith(".framework") && containsUnityIphoneTargetInPodfile) continue;
+
                 var fileGuid = project.AddFile(dynamicLibraryPath, dynamicLibraryPath);
                 project.AddFileToEmbedFrameworks(targetGuid, fileGuid);
             }
 #else
-            var targetGuid = project.TargetGuidByName("Unity-iPhone");
             string runpathSearchPaths;
 #if UNITY_2018_2_OR_NEWER
             runpathSearchPaths = project.GetBuildPropertyForAnyConfig(targetGuid, "LD_RUNPATH_SEARCH_PATHS");
@@ -84,7 +139,130 @@ namespace AppLovinMax.Scripts.Editor
             project.SetBuildProperty(targetGuid, "LD_RUNPATH_SEARCH_PATHS", runpathSearchPaths);
 #endif
 
-            project.WriteToFile(projectPath);
+            if (ShouldEmbedSnapSdk())
+            {
+                // Needed to build successfully on Xcode 12+, as Snap was build with latest Xcode but not as an xcframework
+                project.AddBuildProperty(targetGuid, "VALIDATE_WORKSPACE", "YES");
+            }
+        }
+
+        private static void LocalizeUserTrackingDescriptionIfNeeded(string localizedUserTrackingDescription, string localeCode, string buildPath, PBXProject project, string targetGuid)
+        {
+            const string resourcesDirectoryName = "Resources";
+            var resourcesDirectoryPath = Path.Combine(buildPath, resourcesDirectoryName);
+            var localeSpecificDirectoryName = localeCode + ".lproj";
+            var localeSpecificDirectoryPath = Path.Combine(resourcesDirectoryPath, localeSpecificDirectoryName);
+            var infoPlistStringsFilePath = Path.Combine(localeSpecificDirectoryPath, "InfoPlist.strings");
+
+            // Check if localization has been disabled between builds, and remove them as needed.
+            var settings = AppLovinSettings.Instance;
+            if (!settings.ConsentFlowEnabled || !settings.UserTrackingUsageLocalizationEnabled || string.IsNullOrEmpty(localizedUserTrackingDescription))
+            {
+                if (!File.Exists(infoPlistStringsFilePath)) return;
+
+                File.Delete(infoPlistStringsFilePath);
+                return;
+            }
+
+            // Create intermediate directories as needed.
+            if (!Directory.Exists(resourcesDirectoryPath))
+            {
+                Directory.CreateDirectory(resourcesDirectoryPath);
+            }
+
+            if (!Directory.Exists(localeSpecificDirectoryPath))
+            {
+                Directory.CreateDirectory(localeSpecificDirectoryPath);
+            }
+
+            var localizedDescriptionLine = "\"NSUserTrackingUsageDescription\" = \"" + localizedUserTrackingDescription + "\";\n";
+            // File already exists, update it in case the value changed between builds.
+            if (File.Exists(infoPlistStringsFilePath))
+            {
+                var output = new List<string>();
+                var lines = File.ReadAllLines(infoPlistStringsFilePath);
+                var keyUpdated = false;
+                foreach (var line in lines)
+                {
+                    if (line.Contains("NSUserTrackingUsageDescription"))
+                    {
+                        output.Add(localizedDescriptionLine);
+                        keyUpdated = true;
+                    }
+                    else
+                    {
+                        output.Add(line);
+                    }
+                }
+
+                if (!keyUpdated)
+                {
+                    output.Add(localizedDescriptionLine);
+                }
+
+                File.WriteAllText(infoPlistStringsFilePath, string.Join("\n", output.ToArray()) + "\n");
+            }
+            // File doesn't exist, create one.
+            else
+            {
+                File.WriteAllText(infoPlistStringsFilePath, "/* Localized versions of Info.plist keys - Generated by AL MAX plugin */\n" + localizedDescriptionLine);
+            }
+
+            var guid = project.AddFolderReference(localeSpecificDirectoryPath, Path.Combine(resourcesDirectoryName, localeSpecificDirectoryName));
+            project.AddFileToBuild(targetGuid, guid);
+        }
+
+        private static void AddSwiftSupportIfNeeded(string buildPath, PBXProject project, string targetGuid)
+        {
+            var swiftFileRelativePath = "Classes/MAXSwiftSupport.swift";
+            var swiftFilePath = Path.Combine(buildPath, swiftFileRelativePath);
+            var maxMediationDirectory = PluginMediationDirectory;
+            var hasSwiftLanguageNetworksInProject = SwiftLanguageNetworks.Any(network => Directory.Exists(Path.Combine(maxMediationDirectory, network)));
+
+            // Remove Swift file if no need to support Swift
+            if (!hasSwiftLanguageNetworksInProject)
+            {
+                if (File.Exists(swiftFilePath))
+                {
+                    MaxSdkLogger.D("Removing Swift file references.");
+
+                    var fileGuid = project.FindFileGuidByRealPath(swiftFilePath, PBXSourceTree.Source);
+                    if (!string.IsNullOrEmpty(fileGuid))
+                    {
+                        project.RemoveFile(fileGuid);
+                        project.RemoveFileFromBuild(targetGuid, fileGuid);
+
+                        FileUtil.DeleteFileOrDirectory(swiftFilePath);
+                    }
+                }
+
+                return;
+            }
+
+            // Add Swift file
+            CreateSwiftFile(swiftFilePath);
+            var swiftFileGuid = project.AddFile(swiftFilePath, swiftFileRelativePath, PBXSourceTree.Source);
+            project.AddFileToBuild(targetGuid, swiftFileGuid);
+
+            // Add Swift build properties
+            project.AddBuildProperty(targetGuid, "SWIFT_VERSION", "5");
+            project.AddBuildProperty(targetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
+            project.AddBuildProperty(targetGuid, "CLANG_ENABLE_MODULES", "YES");
+        }
+
+        private static void CreateSwiftFile(string swiftFilePath)
+        {
+            if (File.Exists(swiftFilePath)) return;
+
+            // Create a file to write to.
+            using (var writer = File.CreateText(swiftFilePath))
+            {
+                writer.WriteLine("//\n//  MAXSwiftSupport.swift\n//");
+                writer.WriteLine("\nimport Foundation\n");
+                writer.WriteLine("// This file ensures the project includes Swift support.");
+                writer.WriteLine("// It is automatically generated by the MAX Unity Plugin.");
+                writer.Close();
+            }
         }
 
         [PostProcessBuildAttribute(int.MaxValue)]
@@ -94,38 +272,65 @@ namespace AppLovinMax.Scripts.Editor
             var plist = new PlistDocument();
             plist.ReadFromFile(plistPath);
 
-//            EnableConsentFlowIfNeeded(plist);
+#if UNITY_2018_2_OR_NEWER
+            EnableVerboseLoggingIfNeeded(plist);
+#endif
+            EnableConsentFlowIfNeeded(plist, path);
             AddSkAdNetworksInfoIfNeeded(plist);
             UpdateAppTransportSecuritySettingsIfNeeded(plist);
 
             plist.WriteToFile(plistPath);
         }
 
-//        private static void EnableConsentFlowIfNeeded(PlistDocument plist)
-//        {
-//            // Check if consent flow is enabled. No need to update info.plist if consent flow is disabled.
-//            var consentFlowEnabled = AppLovinSettings.Instance.ConsentFlowEnabled;
-//            if (!consentFlowEnabled) return;
-//
-//            var userTrackingUsageDescription = AppLovinSettings.Instance.UserTrackingUsageDescription;
-//            var termsOfServiceUrl = AppLovinSettings.Instance.ConsentFlowTermsOfServiceUrl;
-//            var privacyPolicyUrl = AppLovinSettings.Instance.ConsentFlowPrivacyPolicyUrl;
-//            if (string.IsNullOrEmpty(userTrackingUsageDescription) || string.IsNullOrEmpty(termsOfServiceUrl) || string.IsNullOrEmpty(privacyPolicyUrl))
-//            {
-//                AppLovinIntegrationManager.ShowBuildFailureDialog("You cannot use the AppLovin SDK's consent flow without defining a Terms of Service URL, a Privacy Policy URL and the `User Tracking Usage Description` in the AppLovin Integration Manager. \n\n" +
-//                                                                  "All 3 values must be included to enable the SDK's consent flow.");
-//
-//                // No need to update the info.plist here. Default consent flow state will be determined on the SDK side.
-//                return;
-//            }
-//
-//            var consentFlowInfoRoot = plist.root.CreateDict("AppLovinConsentFlowInfo");
-//            consentFlowInfoRoot.SetBoolean("AppLovinConsentFlowEnabled", consentFlowEnabled);
-//            consentFlowInfoRoot.SetString("AppLovinConsentFlowTermsOfService", termsOfServiceUrl);
-//            consentFlowInfoRoot.SetString("AppLovinConsentFlowPrivacyPolicy", privacyPolicyUrl);
-//
-//            plist.root.SetString("NSUserTrackingUsageDescription", userTrackingUsageDescription);
-//        }
+#if UNITY_2018_2_OR_NEWER
+        private static void EnableVerboseLoggingIfNeeded(PlistDocument plist)
+        {
+            if (!EditorPrefs.HasKey(MaxSdkLogger.KeyVerboseLoggingEnabled)) return;
+
+            var enabled = EditorPrefs.GetBool(MaxSdkLogger.KeyVerboseLoggingEnabled);
+            const string AppLovinVerboseLoggingOnKey = "AppLovinVerboseLoggingOn";
+            if (enabled)
+            {
+                plist.root.SetBoolean(AppLovinVerboseLoggingOnKey, enabled);
+            }
+            else
+            {
+                plist.root.values.Remove(AppLovinVerboseLoggingOnKey);
+            }
+        }
+#endif
+
+        private static void EnableConsentFlowIfNeeded(PlistDocument plist, string buildPath)
+        {
+            // Check if consent flow is enabled. No need to update info.plist if consent flow is disabled.
+            var consentFlowEnabled = AppLovinSettings.Instance.ConsentFlowEnabled;
+            if (!consentFlowEnabled) return;
+
+            var userTrackingUsageDescription = AppLovinSettings.Instance.UserTrackingUsageDescriptionEn;
+            var termsOfServiceUrl = AppLovinSettings.Instance.ConsentFlowTermsOfServiceUrl;
+            var privacyPolicyUrl = AppLovinSettings.Instance.ConsentFlowPrivacyPolicyUrl;
+            if (string.IsNullOrEmpty(userTrackingUsageDescription) || string.IsNullOrEmpty(termsOfServiceUrl) || string.IsNullOrEmpty(privacyPolicyUrl))
+            {
+                AppLovinIntegrationManager.ShowBuildFailureDialog("You cannot use the AppLovin SDK's consent flow without defining a Terms of Service URL, a Privacy Policy URL and the `User Tracking Usage Description` in the AppLovin Integration Manager. \n\n" +
+                                                                  "All 3 values must be included to enable the SDK's consent flow.");
+
+                // No need to update the info.plist here. Default consent flow state will be determined on the SDK side.
+                return;
+            }
+
+            // We need to remove the backticks from the default user tracking usage description when adding it to the info.plist. The backticks are only required when adding to InfoPlist.strings.  
+            if (AppLovinSettings.DefaultUserTrackingDescriptionEn.Equals(userTrackingUsageDescription))
+            {
+                userTrackingUsageDescription = userTrackingUsageDescription.Replace("\\", "");
+            }
+
+            var consentFlowInfoRoot = plist.root.CreateDict("AppLovinConsentFlowInfo");
+            consentFlowInfoRoot.SetBoolean("AppLovinConsentFlowEnabled", consentFlowEnabled);
+            consentFlowInfoRoot.SetString("AppLovinConsentFlowTermsOfService", termsOfServiceUrl);
+            consentFlowInfoRoot.SetString("AppLovinConsentFlowPrivacyPolicy", privacyPolicyUrl);
+
+            plist.root.SetString("NSUserTrackingUsageDescription", userTrackingUsageDescription);
+        }
 
         private static void AddSkAdNetworksInfoIfNeeded(PlistDocument plist)
         {
@@ -190,7 +395,7 @@ namespace AppLovinMax.Scripts.Editor
             var uriBuilder = new UriBuilder("https://dash.applovin.com/docs/v1/unity_integration_manager/sk_ad_networks_info");
 
             // Get the list of installed ad networks to be passed up
-            var maxMediationDirectory = Path.Combine(AppLovinIntegrationManager.PluginParentDirectory, "MaxSdk/Mediation/");
+            var maxMediationDirectory = PluginMediationDirectory;
             if (Directory.Exists(maxMediationDirectory))
             {
                 var mediationNetworkDirectories = Directory.GetDirectories(maxMediationDirectory);
@@ -212,7 +417,10 @@ namespace AppLovinMax.Scripts.Editor
             // Wait for the download to complete or the request to timeout.
             while (!operation.isDone) { }
 
-#if UNITY_2017_2_OR_NEWER
+
+#if UNITY_2020_1_OR_NEWER
+            if (unityWebRequest.result != UnityWebRequest.Result.Success)
+#elif UNITY_2017_2_OR_NEWER
             if (unityWebRequest.isNetworkError || unityWebRequest.isHttpError)
 #else
             if (unityWebRequest.isError)
@@ -235,7 +443,7 @@ namespace AppLovinMax.Scripts.Editor
 
         private static void UpdateAppTransportSecuritySettingsIfNeeded(PlistDocument plist)
         {
-            var mediationDir = Path.Combine(AppLovinIntegrationManager.PluginParentDirectory, "MaxSdk/Mediation/");
+            var mediationDir = PluginMediationDirectory;
             var projectHasAtsRequiringNetworks = AtsRequiringNetworks.Any(atsRequiringNetwork => Directory.Exists(Path.Combine(mediationDir, atsRequiringNetwork)));
             if (!projectHasAtsRequiringNetworks) return;
 
@@ -259,6 +467,32 @@ namespace AppLovinMax.Scripts.Editor
                 atsRootDict.Remove("NSAllowsArbitraryLoadsInWebContent");
             }
         }
+
+        private static bool ShouldEmbedSnapSdk()
+        {
+            var snapDependencyPath = Path.Combine(PluginMediationDirectory, "Snap/Editor/Dependencies.xml");
+            if (!File.Exists(snapDependencyPath)) return false;
+
+            // Return true for UNITY_2019_3_OR_NEWER because app will crash on launch unless embedded.
+#if UNITY_2019_3_OR_NEWER
+            return true;
+#else
+            var currentVersion = AppLovinIntegrationManager.GetCurrentVersions(snapDependencyPath);
+            var iosVersionComparison = MaxSdkUtils.CompareVersions(currentVersion.Ios, "1.0.7.2");
+            return iosVersionComparison != MaxSdkUtils.VersionComparisonResult.Lesser;
+#endif
+        }
+
+#if UNITY_2019_3_OR_NEWER
+        private static bool ContainsUnityIphoneTargetInPodfile(string buildPath)
+        {
+            var podfilePath = Path.Combine(buildPath, "Podfile");
+            if (!File.Exists(podfilePath)) return false;
+
+            var lines = File.ReadAllLines(podfilePath);
+            return lines.Any(line => line.Contains(TargetUnityIphonePodfileLine));
+        }
+#endif
     }
 }
 

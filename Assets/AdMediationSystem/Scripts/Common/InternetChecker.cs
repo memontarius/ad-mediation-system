@@ -32,12 +32,8 @@ namespace Virterix.Common
                 UnityWebRequest www = UnityWebRequest.Get(m_urls[i]);
                 yield return www.SendWebRequest();
 
-                if (www.isNetworkError || www.isHttpError)
-                {
-                    continue;
-                }
-                else
-                {
+                if (www.isDone) 
+                { 
                     successfulConnection = true;
                     //byte[] results = www.downloadHandler.data;
                     break;

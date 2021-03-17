@@ -186,11 +186,11 @@ namespace Virterix.AdMediation.Editor
             EditorGUILayout.EndScrollView();
         }
 
-        [MenuItem("Tools/Ad Mediation System")]
+        [MenuItem("Tools/Ad Mediation Settings")]
         public static void ShowWindow()
         {
             EditorWindow editorWindow = GetWindow(typeof(AdMediationSettingsWindow));
-            editorWindow.titleContent = new GUIContent("Ad Mediation System");
+            editorWindow.titleContent = new GUIContent("Ad Mediation Settings");
             editorWindow.Show();
         }
 
@@ -291,7 +291,8 @@ namespace Virterix.AdMediation.Editor
             {
                 string deletedDirectoryPath = string.Format("{0}{1}{2}/{3}", Application.dataPath,
                     SETTINGS_PATH.Replace("Assets", ""), SETTINGS_DIRECTORY_NAME, projectName);
-                Directory.Delete(deletedDirectoryPath, true); 
+                Directory.Delete(deletedDirectoryPath, true);
+                Utils.DeleteMetaFile(deletedDirectoryPath);
             }
 
             string projectBuildPath = AdMediationSettingsBuilder.GetAdProjectSettingsPath(projectName, true);
@@ -300,6 +301,7 @@ namespace Virterix.AdMediation.Editor
                 string deletedDirectoryPath = string.Format("{0}/{1}", Application.dataPath,
                     AdMediationSettingsBuilder.GetAdProjectSettingsPath(projectName, false));
                 Directory.Delete(deletedDirectoryPath, true);
+                Utils.DeleteMetaFile(deletedDirectoryPath);
             }
 
             AssetDatabase.Refresh();
@@ -717,9 +719,11 @@ namespace Virterix.AdMediation.Editor
         {
             string path = AdMediationSettingsBuilder.GetAdProjectSettingsPath(CurrProjectName, true);
             string fullPath = string.Format("{0}/{1}", Application.dataPath, AdMediationSettingsBuilder.GetAdProjectSettingsPath(CurrProjectName, false));
+            
             if (Directory.Exists(fullPath))
             {
                 Directory.Delete(fullPath, true);
+                Utils.DeleteMetaFile(fullPath);
                 AssetDatabase.Refresh();
             }
 
@@ -747,6 +751,7 @@ namespace Virterix.AdMediation.Editor
                 if (File.Exists(androidAdSettingsPath))
                 {
                     File.Delete(androidAdSettingsPath);
+                    Utils.DeleteMetaFile(androidAdSettingsPath);
                 }
             }
 
@@ -760,6 +765,7 @@ namespace Virterix.AdMediation.Editor
                 if (File.Exists(iosAdSettingsPath))
                 {
                     File.Delete(iosAdSettingsPath);
+                    Utils.DeleteMetaFile(iosAdSettingsPath);
                 }
             }
             AssetDatabase.Refresh();

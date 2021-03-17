@@ -1,8 +1,9 @@
 fileFormatVersion: 2
-guid: 476040333393648d69ee6d84e510e265
+guid: 6bb3b8efaffab47b1954f06e05827005
 labels:
 - al_max
 - al_max_export_path-MaxSdk/Scripts
+- al_max_export_path-MaxSdk\Scripts
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

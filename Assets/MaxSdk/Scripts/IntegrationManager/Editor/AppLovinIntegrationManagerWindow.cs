@@ -17,7 +17,9 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
     public class AppLovinIntegrationManagerWindow : EditorWindow
     {
         private const string windowTitle = "AppLovin Integration Manager";
+
         private const string appLovinSdkKeyLink = "https://dash.applovin.com/o/account#keys";
+
         private const string userTrackingUsageDescriptionDocsLink = "https://developer.apple.com/documentation/bundleresources/information_property_list/nsusertrackingusagedescription";
         private const string documentationAdaptersLink = "https://dash.applovin.com/documentation/mediation/unity/mediation-adapters";
         private const string documentationNote = "Please ensure that integration instructions (e.g. permissions, ATS settings, etc) specific to each network are implemented as well. Click the link below for more info:";
@@ -38,7 +40,9 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
         private static float previousWindowWidth = windowMinSize.x;
         private static GUILayoutOption networkWidthOption = GUILayout.Width(networkFieldMinWidth);
         private static GUILayoutOption versionWidthOption = GUILayout.Width(versionFieldMinWidth);
+
         private static GUILayoutOption sdkKeyTextFieldWidthOption = GUILayout.Width(520);
+
         private static GUILayoutOption privacySettingFieldWidthOption = GUILayout.Width(400);
         private static readonly GUILayoutOption fieldWidth = GUILayout.Width(actionFieldWidth);
 
@@ -123,7 +127,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             AppLovinIntegrationManager.downloadPluginProgressCallback = OnDownloadPluginProgress;
 
             // Plugin downloaded and imported. Update current versions for the imported package.
-            AppLovinIntegrationManager.importPackageCompletedCallback = AppLovinIntegrationManager.UpdateCurrentVersions;
+            AppLovinIntegrationManager.importPackageCompletedCallback = OnImportPackageCompleted;
 
             Load();
         }
@@ -145,13 +149,6 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
 
         private void OnGUI()
         {
-            // Immediately after downloading and importing a plugin the entire IDE reloads and current versions can be null in that case. Will just show loading text in that case.
-            if (pluginData == null || pluginData.AppLovinMax.CurrentVersions == null)
-            {
-                DrawEmptyPluginData();
-                return;
-            }
-
             // OnGUI is called on each frame draw, so we don't want to do any unnecessary calculation if we can avoid it. So only calculate it when the width actually changed.
             if (Math.Abs(previousWindowWidth - position.width) > 1)
             {
@@ -174,10 +171,16 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
                 EditorPrefs.SetBool(AppLovinAutoUpdater.KeyAutoUpdateEnabled, autoUpdateEnabled);
                 GUILayout.Space(10);
 
-                var verboseLoggingEnabled = GUILayout.Toggle(EditorPrefs.GetBool(MaxSdkLogger.KeyVerboseLoggingEnabled, false), "  Enable Verbose Logging");
+#if UNITY_2018_2_OR_NEWER
+                const string verboseLoggingText = "  Enable Verbose Logging";
+#else
+                const string verboseLoggingText = "  Enable Build Verbose Logging";
+#endif
+                var verboseLoggingEnabled = GUILayout.Toggle(EditorPrefs.GetBool(MaxSdkLogger.KeyVerboseLoggingEnabled, false), verboseLoggingText);
                 EditorPrefs.SetBool(MaxSdkLogger.KeyVerboseLoggingEnabled, verboseLoggingEnabled);
                 GUILayout.Space(10);
                 GUILayout.EndHorizontal();
+
                 DrawPluginDetails();
 
                 // Draw mediated networks
@@ -188,8 +191,8 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
                 EditorGUILayout.LabelField("AppLovin Quality Service", titleLabelStyle);
                 DrawQualityServiceSettings();
 
-//            EditorGUILayout.LabelField("Privacy Settings", titleLabelStyle);
-//            DrawPrivacySettings();
+                EditorGUILayout.LabelField("Privacy Settings", titleLabelStyle);
+                DrawPrivacySettings();
 
                 // Draw Unity environment details
                 EditorGUILayout.LabelField("Unity Environment Details", titleLabelStyle);
@@ -218,21 +221,38 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
         /// </summary>
         private void DrawEmptyPluginData()
         {
+            GUILayout.Space(5);
+
             // Plugin data failed to load. Show error and retry button.
             if (pluginDataLoadFailed)
             {
-                EditorGUILayout.LabelField("Failed to load plugin data. Please click retry or restart the integration manager.", headerLabelStyle);
+                GUILayout.Space(10);
+                GUILayout.BeginHorizontal();
+                GUILayout.Space(5);
+                EditorGUILayout.LabelField("Failed to load plugin data. Please click retry or restart the integration manager.", titleLabelStyle);
                 if (GUILayout.Button("Retry", fieldWidth))
                 {
                     pluginDataLoadFailed = false;
                     Load();
                 }
+
+                GUILayout.Space(5);
+                GUILayout.EndHorizontal();
+                GUILayout.Space(10);
             }
             // Still loading, show loading label.
             else
             {
-                EditorGUILayout.LabelField("Loading data...", headerLabelStyle);
+                GUILayout.Space(10);
+                GUILayout.BeginHorizontal();
+                GUILayout.FlexibleSpace();
+                EditorGUILayout.LabelField("Loading data...", titleLabelStyle);
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
+                GUILayout.Space(10);
             }
+
+            GUILayout.Space(5);
         }
 
         /// <summary>
@@ -240,35 +260,43 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
         /// </summary>
         private void DrawPluginDetails()
         {
-            var appLovinMax = pluginData.AppLovinMax;
-            // Check if a newer version is available to enable the upgrade button.
-            var upgradeButtonEnabled = appLovinMax.CurrentToLatestVersionComparisonResult == VersionComparisonResult.Lesser;
-
             GUILayout.BeginHorizontal();
             GUILayout.Space(10);
             using (new EditorGUILayout.VerticalScope("box"))
             {
                 // Draw plugin version details
                 DrawHeaders("Platform", false);
-                DrawPluginDetailRow("Unity 3D", appLovinMax.CurrentVersions.Unity, appLovinMax.LatestVersions.Unity);
-                DrawPluginDetailRow("Android", appLovinMax.CurrentVersions.Android, appLovinMax.LatestVersions.Android);
-                DrawPluginDetailRow("iOS", appLovinMax.CurrentVersions.Ios, appLovinMax.LatestVersions.Ios);
 
-                // BeginHorizontal combined with FlexibleSpace makes sure that the button is centered horizontally.
-                GUILayout.BeginHorizontal();
-                GUILayout.FlexibleSpace();
-
-                GUI.enabled = upgradeButtonEnabled;
-                if (GUILayout.Button(new GUIContent("Upgrade"), fieldWidth))
+                // Immediately after downloading and importing a plugin the entire IDE reloads and current versions can be null in that case. Will just show loading text in that case.
+                if (pluginData == null || pluginData.AppLovinMax.CurrentVersions == null)
                 {
-                    AppLovinEditorCoroutine.StartCoroutine(AppLovinIntegrationManager.Instance.DownloadPlugin(appLovinMax));
+                    DrawEmptyPluginData();
                 }
+                else
+                {
+                    var appLovinMax = pluginData.AppLovinMax;
+                    // Check if a newer version is available to enable the upgrade button.
+                    var upgradeButtonEnabled = appLovinMax.CurrentToLatestVersionComparisonResult == VersionComparisonResult.Lesser;
+                    DrawPluginDetailRow("Unity 3D", appLovinMax.CurrentVersions.Unity, appLovinMax.LatestVersions.Unity);
+                    DrawPluginDetailRow("Android", appLovinMax.CurrentVersions.Android, appLovinMax.LatestVersions.Android);
+                    DrawPluginDetailRow("iOS", appLovinMax.CurrentVersions.Ios, appLovinMax.LatestVersions.Ios);
 
-                GUI.enabled = true;
-                GUILayout.Space(5);
-                GUILayout.EndHorizontal();
+                    // BeginHorizontal combined with FlexibleSpace makes sure that the button is centered horizontally.
+                    GUILayout.BeginHorizontal();
+                    GUILayout.FlexibleSpace();
 
-                GUILayout.Space(5);
+                    GUI.enabled = upgradeButtonEnabled;
+                    if (GUILayout.Button(new GUIContent("Upgrade"), fieldWidth))
+                    {
+                        AppLovinEditorCoroutine.StartCoroutine(AppLovinIntegrationManager.Instance.DownloadPlugin(appLovinMax));
+                    }
+
+                    GUI.enabled = true;
+                    GUILayout.Space(5);
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.Space(5);
+                }
             }
 
             GUILayout.Space(5);
@@ -322,18 +350,27 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
         /// </summary>
         private void DrawMediatedNetworks()
         {
-            var networks = pluginData.MediatedNetworks;
             GUILayout.BeginHorizontal();
             GUILayout.Space(10);
             using (new EditorGUILayout.VerticalScope("box"))
             {
                 DrawHeaders("Network", true);
-                foreach (var network in networks)
-                {
-                    DrawNetworkDetailRow(network);
-                }
 
-                GUILayout.Space(5);
+                // Immediately after downloading and importing a plugin the entire IDE reloads and current versions can be null in that case. Will just show loading text in that case.
+                if (pluginData == null || pluginData.AppLovinMax.CurrentVersions == null)
+                {
+                    DrawEmptyPluginData();
+                }
+                else
+                {
+                    var networks = pluginData.MediatedNetworks;
+                    foreach (var network in networks)
+                    {
+                        DrawNetworkDetailRow(network);
+                    }
+
+                    GUILayout.Space(5);
+                }
             }
 
             GUILayout.Space(5);
@@ -412,13 +449,13 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
                 if (GUILayout.Button(new GUIContent {image = uninstallIcon, tooltip = "Uninstall"}, uninstallButtonStyle))
                 {
                     EditorUtility.DisplayProgressBar("Integration Manager", "Deleting " + network.Name + "...", 0.5f);
-                    var pluginRoot = AppLovinIntegrationManager.PluginParentDirectory;
+                    var pluginRoot = AppLovinIntegrationManager.MediationSpecificPluginParentDirectory;
                     foreach (var pluginFilePath in network.PluginFilePaths)
                     {
                         FileUtil.DeleteFileOrDirectory(Path.Combine(pluginRoot, pluginFilePath));
                     }
 
-                    AppLovinIntegrationManager.UpdateCurrentVersions(network);
+                    AppLovinIntegrationManager.UpdateCurrentVersions(network, pluginRoot);
 
                     // Refresh UI
                     AssetDatabase.Refresh();
@@ -529,51 +566,71 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             return text;
         }
 
-//    private void DrawPrivacySettings()
-//    {
-//        GUILayout.BeginHorizontal();
-//        GUILayout.Space(10);
-//        using (new EditorGUILayout.VerticalScope("box"))
-//        {
-//            GUILayout.Space(4);
-//            GUILayout.BeginHorizontal();
-//            GUILayout.Space(4);
-//            AppLovinSettings.Instance.ConsentFlowEnabled = GUILayout.Toggle(AppLovinSettings.Instance.ConsentFlowEnabled, "  Enable Consent Flow (iOS Only)");
-//            GUILayout.EndHorizontal();
-//            GUILayout.Space(4);
-//
-//            GUI.enabled = AppLovinSettings.Instance.ConsentFlowEnabled;
-//            if (!AppLovinSettings.Instance.ConsentFlowEnabled)
-//            {
-//                AppLovinSettings.Instance.ConsentFlowTermsOfServiceUrl = string.Empty;
-//                AppLovinSettings.Instance.ConsentFlowPrivacyPolicyUrl = string.Empty;
-//                AppLovinSettings.Instance.UserTrackingUsageDescription = string.Empty;
-//            }
-//            AppLovinSettings.Instance.ConsentFlowTermsOfServiceUrl = DrawTextField("Terms of Service URL", AppLovinSettings.Instance.ConsentFlowTermsOfServiceUrl, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
-//            AppLovinSettings.Instance.ConsentFlowPrivacyPolicyUrl = DrawTextField("Privacy Policy URL", AppLovinSettings.Instance.ConsentFlowPrivacyPolicyUrl, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
-//            AppLovinSettings.Instance.UserTrackingUsageDescription = DrawTextField("User Tracking Usage Description", AppLovinSettings.Instance.UserTrackingUsageDescription, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
-//            GUI.enabled = true;
-//
-//            GUILayout.Space(4);
-//            GUILayout.BeginHorizontal();
-//            GUILayout.Space(4);
-//            GUILayout.Button("Click the link below for more information about User Tracking Usage Description: ", wrapTextLabelStyle);
-//            GUILayout.Space(4);
-//            GUILayout.EndHorizontal();
-//            GUILayout.BeginHorizontal();
-//            GUILayout.Space(4);
-//            if (GUILayout.Button(new GUIContent(userTrackingUsageDescriptionDocsLink), linkLabelStyle))
-//            {
-//                Application.OpenURL(userTrackingUsageDescriptionDocsLink);
-//            }
-//            GUILayout.Space(4);
-//            GUILayout.EndHorizontal();
-//            GUILayout.Space(4);
-//        }
-//
-//        GUILayout.Space(5);
-//        GUILayout.EndHorizontal();
-//    }
+        private void DrawPrivacySettings()
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.Space(10);
+            using (new EditorGUILayout.VerticalScope("box"))
+            {
+                GUILayout.Space(4);
+                GUILayout.BeginHorizontal();
+                GUILayout.Space(4);
+                AppLovinSettings.Instance.ConsentFlowEnabled = GUILayout.Toggle(AppLovinSettings.Instance.ConsentFlowEnabled, "  Enable Consent Flow (iOS Only)");
+                GUILayout.EndHorizontal();
+                GUILayout.Space(4);
+
+                GUI.enabled = AppLovinSettings.Instance.ConsentFlowEnabled;
+
+                AppLovinSettings.Instance.ConsentFlowTermsOfServiceUrl = DrawTextField("Terms of Service URL", AppLovinSettings.Instance.ConsentFlowTermsOfServiceUrl, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
+                AppLovinSettings.Instance.ConsentFlowPrivacyPolicyUrl = DrawTextField("Privacy Policy URL", AppLovinSettings.Instance.ConsentFlowPrivacyPolicyUrl, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
+                AppLovinSettings.Instance.UserTrackingUsageDescriptionEn = DrawTextField("User Tracking Usage Description", AppLovinSettings.Instance.UserTrackingUsageDescriptionEn, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Space(4);
+                AppLovinSettings.Instance.UserTrackingUsageLocalizationEnabled = GUILayout.Toggle(AppLovinSettings.Instance.UserTrackingUsageLocalizationEnabled, "  Localize User Tracking Usage Description");
+                GUILayout.EndHorizontal();
+                GUILayout.Space(4);
+
+                if (AppLovinSettings.Instance.UserTrackingUsageLocalizationEnabled)
+                {
+                    AppLovinSettings.Instance.UserTrackingUsageDescriptionZhHans = DrawTextField("Chinese (zh-Hans)", AppLovinSettings.Instance.UserTrackingUsageDescriptionZhHans, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
+                    AppLovinSettings.Instance.UserTrackingUsageDescriptionFr = DrawTextField("French (fr)", AppLovinSettings.Instance.UserTrackingUsageDescriptionFr, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
+                    AppLovinSettings.Instance.UserTrackingUsageDescriptionDe = DrawTextField("German (de)", AppLovinSettings.Instance.UserTrackingUsageDescriptionDe, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
+                    AppLovinSettings.Instance.UserTrackingUsageDescriptionJa = DrawTextField("Japanese (ja)", AppLovinSettings.Instance.UserTrackingUsageDescriptionJa, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
+                    AppLovinSettings.Instance.UserTrackingUsageDescriptionKo = DrawTextField("Korean (ko)", AppLovinSettings.Instance.UserTrackingUsageDescriptionKo, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
+                    AppLovinSettings.Instance.UserTrackingUsageDescriptionEs = DrawTextField("Spanish (es)", AppLovinSettings.Instance.UserTrackingUsageDescriptionEs, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
+                    
+                    GUILayout.Space(4);
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Space(4);
+                    EditorGUILayout.HelpBox("If you have your own implementation of InfoPlist.strings localization implementation, please use that instead. Using both at the same time may cause conflicts.", MessageType.Info);
+                    GUILayout.Space(4);
+                    GUILayout.EndHorizontal();
+                }
+
+                GUI.enabled = true;
+
+                GUILayout.Space(4);
+                GUILayout.BeginHorizontal();
+                GUILayout.Space(4);
+                GUILayout.Button("Click the link below for more information about User Tracking Usage Description: ", wrapTextLabelStyle);
+                GUILayout.Space(4);
+                GUILayout.EndHorizontal();
+                GUILayout.BeginHorizontal();
+                GUILayout.Space(4);
+                if (GUILayout.Button(new GUIContent(userTrackingUsageDescriptionDocsLink), linkLabelStyle))
+                {
+                    Application.OpenURL(userTrackingUsageDescriptionDocsLink);
+                }
+
+                GUILayout.Space(4);
+                GUILayout.EndHorizontal();
+                GUILayout.Space(4);
+            }
+
+            GUILayout.Space(5);
+            GUILayout.EndHorizontal();
+        }
 
         private void DrawUnityEnvironmentDetails()
         {
@@ -672,6 +729,12 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
                     EditorUtility.ClearProgressBar();
                 }
             }
+        }
+
+        private static void OnImportPackageCompleted(Network network)
+        {
+            var parentDirectory = network.Name.Equals("APPLOVIN_NETWORK") ? AppLovinIntegrationManager.PluginParentDirectory : AppLovinIntegrationManager.MediationSpecificPluginParentDirectory;
+            AppLovinIntegrationManager.UpdateCurrentVersions(network, parentDirectory);
         }
 
         #endregion

@@ -19,7 +19,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- Allows the SDK to handle video playback when interrupted by a call -->
-
     <application>
         <activity android:name="com.chartboost.sdk.CBImpressionActivity"
                   android:excludeFromRecents="true"

@@ -7,11 +7,6 @@ namespace Virterix.AdMediation.Editor
     {
         protected override string SettingsFileName => "AdmAdMobSettings.asset";
 
-        protected override string[] BannerTypes 
-        {
-            get; set;
-        }
-
         public AdMobView(AdMediationSettingsWindow settingsWindow, string name, string identifier) : 
             base(settingsWindow, name, identifier)
         {

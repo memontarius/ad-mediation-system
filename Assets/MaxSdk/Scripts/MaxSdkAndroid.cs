@@ -87,7 +87,18 @@ public class MaxSdkAndroid : MaxSdkBase
     
     #endregion
 
-    #region Mediation Debugger
+    #region MAX
+
+    /// <summary>
+    /// Returns the list of available mediation networks.
+    ///
+    /// Please call this method after the SDK has initialized.
+    /// </summary>
+    public static List<MaxSdkBase.MediatedNetworkInfo> GetAvailableMediatedNetworks()
+    {
+        var serializedNetworks = MaxUnityPluginClass.CallStatic<string>("getAvailableMediatedNetworks");
+        return MaxSdkUtils.PropsStringsToList<MaxSdkBase.MediatedNetworkInfo>(serializedNetworks);
+    }
 
     /// <summary>
     /// Present the mediation debugger UI.
@@ -112,6 +123,21 @@ public class MaxSdkAndroid : MaxSdkBase
         if (string.IsNullOrEmpty(adInfoString)) return null;
 
         return new MaxSdkBase.AdInfo(adInfoString);
+    }
+
+    /// <summary>
+    /// Returns the arbitrary ad value for a given ad unit identifier with key. Returns null if no ad is loaded.
+    /// </summary>
+    /// <param name="adUnitIdentifier"></param>
+    /// <param name="key">Ad value key</param>
+    /// <returns>Arbitrary ad value for a given key, or null if no ad is loaded.</returns>
+    public static string GetAdValue(string adUnitIdentifier, string key)
+    {
+        string value = MaxUnityPluginClass.CallStatic<string>("getAdValue", adUnitIdentifier, key);
+
+        if (string.IsNullOrEmpty(value)) return null;
+        
+        return value;
     }
 
     #endregion
@@ -309,7 +335,7 @@ public class MaxSdkAndroid : MaxSdkBase
     }
 
     /// <summary>
-    /// Set an extra parameter for the ad.
+    /// Set an extra parameter for the banner ad.
     /// </summary>
     /// <param name="adUnitIdentifier">Ad unit identifier of the banner to set the extra parameter for.</param>
     /// <param name="key">The key for the extra parameter.</param>
@@ -431,6 +457,18 @@ public class MaxSdkAndroid : MaxSdkBase
     }
 
     /// <summary>
+    /// Set an extra parameter for the MREC ad.
+    /// </summary>
+    /// <param name="adUnitIdentifier">Ad unit identifier of the MREC to set the extra parameter for.</param>
+    /// <param name="key">The key for the extra parameter.</param>
+    /// <param name="value">The value for the extra parameter.</param>
+    public static void SetMRecExtraParameter(string adUnitIdentifier, string key, string value)
+    {
+        ValidateAdUnitIdentifier(adUnitIdentifier, "set MREC extra parameter");
+        MaxUnityPluginClass.CallStatic("setMRecExtraParameter", adUnitIdentifier, key, value);
+    }
+    
+    /// <summary>
     /// The MREC position on the screen. When setting the banner position via <see cref="CreateMRec(string, float, float)"/> or <see cref="UpdateMRecPosition(string, float, float)"/>,
     /// the banner is placed within the safe area of the screen. This returns the absolute position of the MREC on screen.
     /// </summary>
@@ -440,6 +478,100 @@ public class MaxSdkAndroid : MaxSdkBase
     {
         ValidateAdUnitIdentifier(adUnitIdentifier, "get MREC layout");
         var positionRect = MaxUnityPluginClass.CallStatic<string>("getMRecLayout", adUnitIdentifier);
+        return GetRectFromString(positionRect);
+    }
+
+    #endregion
+    
+    #region Cross Promo Ads
+
+    /// <summary>
+    /// Create a new cross promo ad with a custom position.
+    /// </summary>
+    /// <param name="adUnitIdentifier">Ad unit identifier of the cross promo ad to create</param>
+    /// <param name="x">The X coordinate (horizontal position) of the cross promo ad relative to the top left corner of the screen.</param>
+    /// <param name="y">The Y coordinate (vertical position) of the cross promo ad relative to the top left corner of the screen.</param>
+    /// <param name="width">The width of the cross promo ad.</param>
+    /// <param name="height">The height of the cross promo ad.</param>
+    /// <param name="rotation">The rotation of the cross promo ad in degrees.</param>
+    /// <seealso cref="GetCrossPromoAdLayout">
+    /// The cross promo is placed within the safe area of the screen. You can use this to get the absolute position Rect of the cross promo ad on screen.
+    /// </seealso>
+    public static void CreateCrossPromoAd(string adUnitIdentifier, float x, float y, float width, float height, float rotation)
+    {
+        ValidateAdUnitIdentifier(adUnitIdentifier, "create cross promo ad");
+        MaxUnityPluginClass.CallStatic("createCrossPromoAd", adUnitIdentifier, x, y, width, height, rotation);
+    }
+
+    /// <summary>
+    /// Set the cross promo ad placement for an ad unit identifier to tie the future ad events to.
+    /// </summary>
+    /// <param name="adUnitIdentifier">Ad unit identifier of the cross promo ad to set the placement for</param>
+    /// <param name="placement">Placement to set</param>
+    public static void SetCrossPromoAdPlacement(string adUnitIdentifier, string placement)
+    {
+        ValidateAdUnitIdentifier(adUnitIdentifier, "set cross promo ad placement");
+        MaxUnityPluginClass.CallStatic("setCrossPromoAdPlacement", adUnitIdentifier, placement);
+    }
+
+    /// <summary>
+    /// Updates the position of the cross promo ad to the new coordinates provided.
+    /// </summary>
+    /// <param name="adUnitIdentifier">The ad unit identifier of the cross promo ad for which to update the position</param>
+    /// <param name="x">The X coordinate (horizontal position) of the cross promo ad relative to the top left corner of the screen.</param>
+    /// <param name="y">The Y coordinate (vertical position) of the cross promo ad relative to the top left corner of the screen.</param>
+    /// <param name="width">The width of the cross promo ad.</param>
+    /// <param name="height">The height of the cross promo ad.</param>
+    /// <param name="rotation">The rotation of the cross promo ad in degrees.</param>
+    /// <seealso cref="GetCrossPromoAdLayout">
+    /// The cross promo ad is placed within the safe area of the screen. You can use this to get the absolute position Rect of the cross promo ad on screen.
+    /// </seealso>
+    public static void UpdateCrossPromoAdPosition(string adUnitIdentifier, float x, float y, float width, float height, float rotation)
+    {
+        ValidateAdUnitIdentifier(adUnitIdentifier, "update cross promo ad position");
+        MaxUnityPluginClass.CallStatic("updateCrossPromoAdPosition", adUnitIdentifier, x, y, width, height, rotation);
+    }
+
+    /// <summary>
+    /// Show cross promo ad at a position determined by the 'CreateCrossPromoAd' call.
+    /// </summary>
+    /// <param name="adUnitIdentifier">Ad unit identifier of the cross promo ad to show</param>
+    public static void ShowCrossPromoAd(string adUnitIdentifier)
+    {
+        ValidateAdUnitIdentifier(adUnitIdentifier, "show cross promo ad");
+        MaxUnityPluginClass.CallStatic("showCrossPromoAd", adUnitIdentifier);
+    }
+
+    /// <summary>
+    /// Remove cross promo ad from the ad view and destroy it.
+    /// </summary>
+    /// <param name="adUnitIdentifier">Ad unit identifier of the cross promo ad to destroy</param>
+    public static void DestroyCrossPromoAd(string adUnitIdentifier)
+    {
+        ValidateAdUnitIdentifier(adUnitIdentifier, "destroy cross promo ad");
+        MaxUnityPluginClass.CallStatic("destroyCrossPromoAd", adUnitIdentifier);
+    }
+
+    /// <summary>
+    /// Hide cross promo ad.
+    /// </summary>
+    /// <param name="adUnitIdentifier">Ad unit identifier of the cross promo ad to hide</param>
+    public static void HideCrossPromoAd(string adUnitIdentifier)
+    {
+        ValidateAdUnitIdentifier(adUnitIdentifier, "hide cross promo ad");
+        MaxUnityPluginClass.CallStatic("hideCrossPromoAd", adUnitIdentifier);
+    }
+
+    /// <summary>
+    /// The cross promo ad position on the screen. When setting the cross promo ad position via <see cref="CreateCrossPromoAd(string, float, float, float, float, float)"/> or <see cref="UpdateCrossPromoAdPosition(string, float, float, float, float, float)"/>,
+    /// the cross promo ad is placed within the safe area of the screen. This returns the absolute position of the cross promo ad on screen.
+    /// </summary>
+    /// <param name="adUnitIdentifier">Ad unit identifier of the cross promo ad for which to get the position on screen.</param>
+    /// <returns>A <see cref="Rect"/> representing the banner position on screen.</returns>
+    public static Rect GetCrossPromoAdLayout(string adUnitIdentifier)
+    {
+        ValidateAdUnitIdentifier(adUnitIdentifier, "get cross promo ad layout");
+        var positionRect = MaxUnityPluginClass.CallStatic<string>("getCrossPromoAdLayout", adUnitIdentifier);
         return GetRectFromString(positionRect);
     }
 
@@ -697,12 +829,12 @@ public class MaxSdkAndroid : MaxSdkBase
     }
 
     /// <summary>
-    /// If enabled, a button will appear over fullscreen ads in development builds. This button will display information about the current ad when pressed.
+    /// Whether the creative debugger will be displayed on fullscreen ads after flipping the device screen down twice. Defaults to true.
     /// </summary>
-    /// <param name="enabled"><c>true</c> if the ad info button should be enabled.</param>
-    public static void SetAdInfoButtonEnabled(bool enabled)
+    /// <param name="enabled"><c>true</c> if the creative debugger should be enabled.</param>
+    public static void SetCreativeDebuggerEnabled(bool enabled)
     {
-        MaxUnityPluginClass.CallStatic("setAdInfoButtonEnabled", enabled);
+        MaxUnityPluginClass.CallStatic("setCreativeDebuggerEnabled", enabled);
     }
 
     /// <summary>

@@ -3,15 +3,36 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Boomlagoon.JSON;
+using System.Linq;
+using System.Collections;
 
 namespace Virterix.AdMediation
 {
     public class IronSourceAdapter : AdNetworkAdapter
     {
+        public enum IrnSrcBannerSize
+        {
+            Banner,
+            Large,
+            Rectangle,
+            Smart
+        }
+
+        public enum IrnSrcBannerPosition
+        {
+            Top,
+            Bottom
+        }
+
         public int m_timeout = 120;
 
         private AdInstance m_interstitialInstance;
         private AdInstance m_incentivizedInstance;
+        //private AdInstance m_bannerInstance;
+
+        private AdInstance m_currBannerInstance;
+        private bool m_bannerVisibled;
+        private AdState m_bannerState;
 
         public static string GetSDKVersion()
         {
@@ -23,7 +44,6 @@ namespace Virterix.AdMediation
         }
 
 #if _AMS_IRONSOURCE
-
         private void OnEnable()
         {
             SubscribeEvents();
@@ -38,6 +58,58 @@ namespace Virterix.AdMediation
         private void OnApplicationPause(bool isPaused)
         {
             IronSource.Agent.onApplicationPause(isPaused);
+        }
+
+        public static IronSourceBannerSize GetBannerSize(AdInstance adInstance)
+        {
+            var bannerParameters = adInstance.m_adInstanceParams as IronSourceAdInstanceBannerParameters;
+            var nativeAdSize = ConvertToAdSize(bannerParameters.m_bannerSize);
+            return nativeAdSize;
+        }
+
+        public static IronSourceBannerPosition GetBannerPosition(AdInstance adInstance, string placement)
+        {
+            IronSourceBannerPosition nativeBannerPosition = IronSourceBannerPosition.BOTTOM;
+            var irnSrcAdInstanceParams = adInstance.m_adInstanceParams as IronSourceAdInstanceBannerParameters;
+            var bannerPosition = irnSrcAdInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
+            nativeBannerPosition = ConvertToAdPosition(bannerPosition.m_bannerPosition);
+            return nativeBannerPosition;
+        }
+
+        public static IronSourceBannerSize ConvertToAdSize(IrnSrcBannerSize bannerSize)
+        {
+            IronSourceBannerSize nativeAdSize = IronSourceBannerSize.SMART;
+            switch (bannerSize)
+            {
+                case IrnSrcBannerSize.Banner:
+                    nativeAdSize = IronSourceBannerSize.BANNER;
+                    break;
+                case IrnSrcBannerSize.Large:
+                    nativeAdSize = IronSourceBannerSize.LARGE;
+                    break;
+                case IrnSrcBannerSize.Rectangle:
+                    nativeAdSize = IronSourceBannerSize.RECTANGLE;
+                    break;
+                case IrnSrcBannerSize.Smart:
+                    nativeAdSize = IronSourceBannerSize.SMART;
+                    break;
+            }
+            return nativeAdSize;
+        }
+
+        public static IronSourceBannerPosition ConvertToAdPosition(IrnSrcBannerPosition bannerPosition)
+        {
+            IronSourceBannerPosition nativeAdPosition = IronSourceBannerPosition.BOTTOM;
+            switch (bannerPosition)
+            {
+                case IrnSrcBannerPosition.Bottom:
+                    nativeAdPosition = IronSourceBannerPosition.BOTTOM;
+                    break;
+                case IrnSrcBannerPosition.Top:
+                    nativeAdPosition = IronSourceBannerPosition.TOP;
+                    break;
+            }
+            return nativeAdPosition;
         }
 
         private void SubscribeEvents()
@@ -106,6 +178,11 @@ namespace Virterix.AdMediation
             IronSourceEvents.onImpressionSuccessEvent -= ImpressionSuccessEvent;
         }
 
+        protected override string AdInstanceParametersFolder
+        {
+            get { return IronSourceAdInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER; }
+        }
+
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
@@ -123,6 +200,8 @@ namespace Virterix.AdMediation
             AddAdInstance(m_interstitialInstance);
             m_incentivizedInstance = AdFactory.CreateAdInstacne(this, AdType.Incentivized, AdInstance.AD_INSTANCE_DEFAULT_NAME, "", m_timeout);
             AddAdInstance(m_incentivizedInstance);
+            //m_bannerInstance = AdFactory.CreateAdInstacne(this, AdType.Banner, AdInstance.AD_INSTANCE_DEFAULT_NAME, "", m_timeout);
+            //AddAdInstance(m_bannerInstance);
 
             SetPersonalizedAds(isPersonalizedAds);
             IronSource.Agent.init(appKey, IronSourceAdUnits.INTERSTITIAL, IronSourceAdUnits.REWARDED_VIDEO, IronSourceAdUnits.BANNER);
@@ -132,35 +211,58 @@ namespace Virterix.AdMediation
 
         public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
-            if (!IsReady(adInstance))
+            switch (adInstance.m_adType)
             {
-                switch (adInstance.m_adType)
-                {
-                    case AdType.Banner:
-                        
-                        break;
-                    case AdType.Interstitial:
-                        IronSource.Agent.loadInterstitial();
- 
-                        break;
-                    case AdType.Incentivized:
-                        
-                        break;
-                }
+                case AdType.Banner:
+                    if (m_bannerState != AdState.Loading)
+                    {
+                        float requestDelay = 0.0f;
+                        if (m_bannerState == AdState.Received)
+                        {
+                            IronSource.Agent.destroyBanner();
+                            requestDelay = 0.5f;
+                        }
+                        m_bannerState = AdState.Loading;
+                        StartCoroutine(RequestBanner(adInstance, placement, requestDelay));
+                    }
+                    break;
+                case AdType.Interstitial:
+                    IronSource.Agent.loadInterstitial();
+                    break;
+                case AdType.Incentivized:
+                    break;
             }
+        }
+
+        private IEnumerator RequestBanner(AdInstance adInstance, string placement, float delay)
+        {
+            yield return new WaitForSecondsRealtime(delay);
+            IronSourceBannerPosition bannerPos = GetBannerPosition(adInstance, placement);
+            IronSourceBannerSize bannerSize = GetBannerSize(adInstance);         
+            m_currBannerInstance = adInstance;
+            IronSource.Agent.loadBanner(bannerSize, bannerPos, placement);
+            yield break;
         }
 
         public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
+            if (adInstance.m_adType == AdType.Banner)
+            {
+                m_bannerVisibled = true;
+            }
+
             if (IsReady(adInstance))
             {
                 switch (adInstance.m_adType)
                 {
+                    case AdType.Banner:
+                        IronSource.Agent.displayBanner();
+                        break;
                     case AdType.Interstitial:
-                        IronSource.Agent.showInterstitial();
+                        IronSource.Agent.showInterstitial(placement);
                         break;
                     case AdType.Incentivized:
-                        IronSource.Agent.showRewardedVideo();
+                        IronSource.Agent.showRewardedVideo(placement);
                         break;
                 }
                 return true;
@@ -173,13 +275,39 @@ namespace Virterix.AdMediation
 
         public override void Hide(AdInstance adInstance = null)
         {
+            if (adInstance.m_adType == AdType.Banner)
+            {
+                m_bannerVisibled = false;
+                IronSource.Agent.hideBanner();
+                NotifyEvent(AdEvent.Hiding, adInstance);
+            }
+        }
+
+        public override void HideBannerTypeAdWithoutNotify(AdInstance adInstance = null)
+        {   
+            switch (adInstance.m_adType)
+            {
+                case AdType.Banner:
+                    m_bannerVisibled = false;
+                    if (m_bannerState == AdState.Received)
+                    {
+                        IronSource.Agent.hideBanner();
+                    }
+                    break;
+            }
         }
 
         public override bool IsReady(AdInstance adInstance = null)
         {
+#if UNITY_EDITOR
+            return false;
+#endif
             bool isReady = false;
             switch (adInstance.m_adType)
             {
+                case AdType.Banner:
+                    isReady = adInstance == m_currBannerInstance && m_bannerState == AdState.Received;
+                    break;
                 case AdType.Interstitial:
                     isReady = IronSource.Agent.isInterstitialReady();
                     break;
@@ -194,6 +322,15 @@ namespace Virterix.AdMediation
         {
             IronSource.Agent.setConsent(isPersonalizedAds);
             IronSource.Agent.setMetaData("do_not_sell", isPersonalizedAds ? "false" : "true");
+        }
+
+        public override void NotifyEvent(AdEvent adEvent, AdInstance adInstance)
+        {
+            if (adInstance.m_adType == AdType.Banner && adEvent == AdEvent.PreparationFailed)
+            {
+                m_bannerState = AdState.Unavailable;
+            }
+            base.NotifyEvent(adEvent, adInstance);
         }
 
         //------------------------------------------------------------------------
@@ -291,37 +428,62 @@ namespace Virterix.AdMediation
 
         //------------------------------------------------------------------------
         #region Banner callback handlers
-
-        void BannerAdLoadedEvent()
+        private void BannerAdLoadedEvent()
         {
-            Debug.Log("unity-script: I got BannerAdLoadedEvent");
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] IronSourceAdapter.BannerAdLoadedEvent()");
+#endif
+
+            m_bannerState = AdState.Received;
+            if (m_bannerVisibled)
+            {
+                IronSource.Agent.displayBanner();
+            }
+            else
+            {
+                IronSource.Agent.hideBanner();
+            }
+            AddEvent(AdType.Banner, AdEvent.Prepared, m_currBannerInstance);
         }
 
-        void BannerAdLoadFailedEvent(IronSourceError error)
+        private void BannerAdLoadFailedEvent(IronSourceError error)
         {
-            Debug.Log("unity-script: I got BannerAdLoadFailedEvent, code: " + error.getCode() + ", description : " + error.getDescription());
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] IronSourceAdapter.BannerAdLoadedEvent() code: " + error.getCode() + ", description: " + error.getDescription());
+#endif
+            m_bannerState = AdState.Unavailable;
+            AddEvent(AdType.Banner, AdEvent.PreparationFailed, m_currBannerInstance);
         }
 
         void BannerAdClickedEvent()
         {
-            Debug.Log("unity-script: I got BannerAdClickedEvent");
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] IronSourceAdapter.BannerAdClickedEvent()");
+#endif
+            AddEvent(AdType.Banner, AdEvent.Click, m_currBannerInstance);
         }
 
         void BannerAdScreenPresentedEvent()
         {
-            Debug.Log("unity-script: I got BannerAdScreenPresentedEvent");
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] IronSourceAdapter.BannerAdScreenPresentedEvent()");
+#endif
+            AddEvent(AdType.Banner, AdEvent.Show, m_currBannerInstance);
         }
 
         void BannerAdScreenDismissedEvent()
         {
-            Debug.Log("unity-script: I got BannerAdScreenDismissedEvent");
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] IronSourceAdapter.BannerAdScreenDismissedEvent()");
+#endif
         }
 
         void BannerAdLeftApplicationEvent()
         {
-            Debug.Log("unity-script: I got BannerAdLeftApplicationEvent");
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] IronSourceAdapter.BannerAdLeftApplicationEvent()");
+#endif
         }
-
 
         #endregion // Banner callback handlers
 
@@ -330,8 +492,11 @@ namespace Virterix.AdMediation
 
         void ImpressionSuccessEvent(IronSourceImpressionData impressionData)
         {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] IronSourceAdapter.ImpressionSuccessEvent()");
             Debug.Log("unity - script: I got ImpressionSuccessEvent ToString(): " + impressionData.ToString());
             Debug.Log("unity - script: I got ImpressionSuccessEvent allData: " + impressionData.allData);
+#endif
         }
 
         #endregion

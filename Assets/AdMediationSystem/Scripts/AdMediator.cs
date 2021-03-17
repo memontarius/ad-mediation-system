@@ -49,7 +49,7 @@ namespace Virterix.AdMediation
 
         public bool IsBannerDisplayed
         {
-            get { return m_isBannerTypeAdViewDisplayed; }
+            get { return m_isBannerDisplayed; }
         }
 
         public string CurrentNetworkName
@@ -112,10 +112,7 @@ namespace Virterix.AdMediation
                     units = m_tiers[tierIndex];
                     for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
                     {
-                        AdUnit unit = units[unitIndex];
-                        unit.TierIndex = tierIndex;
-                        unit.Index = unitIndex;
-                        count += unit.IsTimeout ? 0 : 1;
+                        count += units[unitIndex].IsTimeout ? 0 : 1;
                     }
                 }
                 return count;
@@ -145,7 +142,7 @@ namespace Virterix.AdMediation
         protected AdUnit m_currUnit;
         private int m_lastActiveTierId;
         private int m_lastActiveUnitId;
-        private bool m_isBannerTypeAdViewDisplayed = false;
+        private bool m_isBannerDisplayed = false;
         private Coroutine m_coroutineDeferredFetch;
         private int m_failedPreparationCount;
         private int m_nonTimeoutUnitCountSinceFirstFailed;
@@ -226,7 +223,7 @@ namespace Virterix.AdMediation
                 if (CurrentUnit != null)
                 {
                     CurrentUnit.ResetDisplayTime();
-                    if ((m_adType == AdType.Banner) && m_isBannerTypeAdViewDisplayed)
+                    if ((m_adType == AdType.Banner) && m_isBannerDisplayed)
                     {
                         CurrentUnit.ShowAd();
                     }
@@ -245,7 +242,7 @@ namespace Virterix.AdMediation
         {
             if (m_adType == AdType.Banner)
             {
-                m_isBannerTypeAdViewDisplayed = true;
+                m_isBannerDisplayed = true;
             }
 
             if (m_currUnit != null)
@@ -301,9 +298,8 @@ namespace Virterix.AdMediation
         {
             if (m_adType == AdType.Banner)
             {
-                m_isBannerTypeAdViewDisplayed = false;
+                m_isBannerDisplayed = false;
             }
-
             if (m_currUnit != null)
             {
                 m_currUnit.Hide();
@@ -328,9 +324,7 @@ namespace Virterix.AdMediation
             for (int tierIndex = currTierIndex; ; tierIndex++)
             {
                 if (tierIndex >= m_tiers.Length)
-                {
                     tierIndex = 0;
-                }
 
                 units = m_tiers[tierIndex];
                 bool isEnded = false;
@@ -338,10 +332,8 @@ namespace Virterix.AdMediation
                 for (int unitIndex = currUnitIndex + 1; ; unitIndex++)
                 {
                     if (unitIndex >= units.Length)
-                    {
                         unitIndex = 0;
-                    }
-
+ 
                     readyUnit = units[unitIndex];
                     if (readyUnit.IsReady)
                     {
@@ -361,9 +353,7 @@ namespace Virterix.AdMediation
                 }
 
                 if (isEnded)
-                {
                     break;
-                }
             }
 
             if (readyUnit != null)
@@ -433,7 +423,7 @@ namespace Virterix.AdMediation
                 ResetCurrentUnit(unit);
                 m_currUnit = unit;
 
-                if ((m_adType == AdType.Banner) && !m_isBannerTypeAdViewDisplayed)
+                if ((m_adType == AdType.Banner) && !m_isBannerDisplayed)
                 {
                     m_currUnit.HideBannerTypeAdWithoutNotify();
                 }

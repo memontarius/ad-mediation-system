@@ -63,7 +63,7 @@ namespace Virterix.AdMediation.Editor
             _adType = adType;
             SetProperty(mediatorId, mediatorProp);
             mediatorProp.FindPropertyRelative("_adType").intValue = (int)adType;
-            _showMediator = new AnimBool(true);
+            _showMediator = new AnimBool(false);
             _showMediator.valueChanged.AddListener(repaint);
             _tierReorderableList = new ReorderableList(serializedSettings, _tierListProp);
             _tierReorderableList.headerHeight = 1;
@@ -81,7 +81,7 @@ namespace Virterix.AdMediation.Editor
             {
             };
 
-            float unitElementHegiht = 22;
+            float unitElementHegiht = 21;
 
             _tierReorderableList.drawElementCallback = (elementRect, elementIndex, elementActive, elementFocused) =>
             {
@@ -127,7 +127,7 @@ namespace Virterix.AdMediation.Editor
                         float width = Mathf.Clamp(elementWidth - 120, 130, 180);
 
                         Rect popupRect = unitRect;
-                        popupRect.y += 1f;
+                        popupRect.y += 2f;
                         popupRect.width = width;
                         popupRect.height = 20;
 
@@ -247,7 +247,11 @@ namespace Virterix.AdMediation.Editor
                 {
                     var element = _tierListProp.GetArrayElementAtIndex(index);
                     var unitsProp = element.FindPropertyRelative("_units");
-                    return Mathf.Clamp((unitsProp.arraySize - 1) * unitElementHegiht + 75, 75, Mathf.Infinity);
+                    var elementHeight = unitElementHegiht;
+#if UNITY_2020_1_OR_NEWER
+                    elementHeight += 2;
+#endif
+                    return Mathf.Clamp((unitsProp.arraySize - 1) * elementHeight + 75, 75, Mathf.Infinity);
                 }
                 else
                 {

@@ -245,3 +245,17 @@ The following packages were updated:
   com.unity.purchasing from version 2.2.1 to 2.2.2
   com.unity.test-framework from version 1.1.20 to 1.1.22
   com.unity.timeline from version 1.2.6 to 1.2.18
+
+=== Sat Mar 13 11:10:44 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were added:
+  com.unity.ide.visualstudio@2.0.7
+The following packages were updated:
+  com.unity.collab-proxy from version 1.2.16 to 1.3.9
+  com.unity.ide.rider from version 1.1.4 to 2.0.7
+  com.unity.remote-config from version 1.0.9 to 1.4.0
+  com.unity.textmeshpro from version 2.0.1 to 3.0.1
+  com.unity.timeline from version 1.2.18 to 1.4.6

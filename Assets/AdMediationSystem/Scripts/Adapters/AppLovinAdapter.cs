@@ -27,6 +27,7 @@ namespace Virterix.AdMediation
         {
 #if UNITY_EDITOR && _AMS_APPLOVIN
             AppLovinSettings networkSettings = null;
+
             string[] assets = UnityEditor.AssetDatabase.FindAssets("t:AppLovinSettings");
             if (assets.Length > 0)
             {
@@ -202,6 +203,9 @@ namespace Virterix.AdMediation
 
         public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
+#if UNITY_EDITOR
+            //return;
+#endif
             AdType adType = adInstance.m_adType;
 #if UNITY_ANDROID || UNITY_IOS
             if (!IsReady(adInstance))

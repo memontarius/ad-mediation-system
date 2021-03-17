@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using UnityEditorInternal;
 
 namespace Virterix.AdMediation.Editor
 {
@@ -8,9 +7,12 @@ namespace Virterix.AdMediation.Editor
     {
         protected override string SettingsFileName => "AdmIronSourceSettings.asset";
 
+        protected override bool IsAdInstanceIdsDisplayed => false;
+
         public IronSourceView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
             base(settingsWindow, name, identifier)
         {
+            BannerTypes = Enum.GetNames(typeof(IronSourceAdapter.IrnSrcBannerSize));
         }
 
         protected override BaseAdNetworkSettings CreateSettingsModel()

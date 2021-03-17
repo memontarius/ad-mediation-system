@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73dc68bb976dc1e4dbe409434b8a3539, type: 3}
   m_Name: AdmAudienceNetworkSettings
   m_EditorClassIdentifier: 
-  _enabled: 1
+  _enabled: 0
   _networkIdentifier: audiencenetwork
   _androidAppId: 
   _iosAppId: 

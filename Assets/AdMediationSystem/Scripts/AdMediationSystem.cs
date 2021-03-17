@@ -736,7 +736,7 @@ namespace Virterix.AdMediation
 
                                     // Create ad unit
                                     AdUnit unit = new AdUnit(mediatorPlacementName, unitAdType, adInstanceName, 
-                                        networkAdapter, fetchStrategyParams, isPrepareOnExit);
+                                        networkAdapter, fetchStrategyParams, tierIndex, unitIndex, isPrepareOnExit);
 
                                     arrUnits[unitIndex] = unit;
                                 }

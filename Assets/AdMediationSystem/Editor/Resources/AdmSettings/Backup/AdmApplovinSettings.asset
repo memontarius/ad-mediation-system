@@ -16,7 +16,7 @@ MonoBehaviour:
   _networkIdentifier: applovin
   _androidAppId: 
   _iosAppId: 
-  _responseWaitTime: 5
+  _responseWaitTime: 30
   _timeout: 120
   _directedTowardsChildren: 0
   _bannerAdInstances: []
