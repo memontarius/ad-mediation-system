@@ -1,5 +1,14 @@
 ## Versions
 
+## 4.1.1
+    * Add API to retrieve country code, via `MaxSdk.GetSdkConfiguration().CountryCode`.
+## 4.1.0
+    * Add API to retrieve revenue via `MaxSdk.GetAdInfo(adUnitId).Revenue`.
+    * Add API to retrieve SDK configuration via `MaxSdk.GetSdkConfiguration()`.
+    * Persist fullscreen ad stubs through scene changes in Unity Editor mode.
+## 4.0.1
+    * Remove Terms of Service URL from being a consent flow requirement.
+    * Update Quality Service Plugin maven repository.
 ## 4.0.0
     * Initial support for MAX consent flow. Please see our documentation for instructions on enabling it.
     * Add Cross Promo Advertisement API.

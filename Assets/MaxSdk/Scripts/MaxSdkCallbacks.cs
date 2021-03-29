@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 public class MaxSdkCallbacks : MonoBehaviour
@@ -25,7 +26,6 @@ public class MaxSdkCallbacks : MonoBehaviour
             _onSdkInitializedEvent -= value;
         }
     }
-
 
     // Fire when the MaxVariableService has finished loading the latest set of variables.
     private static Action _onVariablesUpdatedEvent;
@@ -58,7 +58,6 @@ public class MaxSdkCallbacks : MonoBehaviour
             _onSdkConsentDialogDismissedEvent -= value;
         }
     }
-
 
     // Fired when a banner is loaded
     private static Action<string> _onBannerAdLoadedEvent;
@@ -140,7 +139,6 @@ public class MaxSdkCallbacks : MonoBehaviour
         }
     }
 
-
     // Fired when a MREC is loaded
     private static Action<string> _onMRecAdLoadedEvent;
     public static event Action<string> OnMRecAdLoadedEvent
@@ -220,8 +218,7 @@ public class MaxSdkCallbacks : MonoBehaviour
             _onMRecAdCollapsedEvent -= value;
         }
     }
-    
-    
+
     // Fired when a cross promo ad is loaded
     private static Action<string> _onCrossPromoAdLoadedEvent;
     public static event Action<string> OnCrossPromoAdLoadedEvent
@@ -301,7 +298,6 @@ public class MaxSdkCallbacks : MonoBehaviour
             _onCrossPromoAdCollapsedEvent -= value;
         }
     }
-
 
     // Fired when an interstitial ad is loaded and ready to be shown
     private static Action<string> _onInterstitialLoadedEvent;
@@ -398,7 +394,6 @@ public class MaxSdkCallbacks : MonoBehaviour
             _onInterstitialClickedEvent -= value;
         }
     }
-
 
     // Fired when a rewarded ad finishes loading and is ready to be displayed
     private static Action<string> _onRewardedAdLoadedEvent;
@@ -511,7 +506,6 @@ public class MaxSdkCallbacks : MonoBehaviour
             _onRewardedAdReceivedRewardEvent -= value;
         }
     }
-    
 
     // Fired when a rewarded interstitial ad finishes loading and is ready to be displayed
     private static Action<string> _onRewardedInterstitialAdLoadedEvent;
@@ -641,48 +635,7 @@ public class MaxSdkCallbacks : MonoBehaviour
         var eventName = eventProps["name"];
         if (eventName == "OnSdkInitializedEvent")
         {
-            var consentDialogStateStr = eventProps["consentDialogState"];
-#if UNITY_IPHONE || UNITY_IOS
-            var appTrackingStatusStr = eventProps["appTrackingStatus"];
-#endif
-
-            var sdkConfiguration = new MaxSdkBase.SdkConfiguration();
-
-            if ("1".Equals(consentDialogStateStr))
-            {
-                sdkConfiguration.ConsentDialogState = MaxSdkBase.ConsentDialogState.Applies;
-            }
-            else if ("2".Equals(consentDialogStateStr))
-            {
-                sdkConfiguration.ConsentDialogState = MaxSdkBase.ConsentDialogState.DoesNotApply;
-            }
-            else
-            {
-                sdkConfiguration.ConsentDialogState = MaxSdkBase.ConsentDialogState.Unknown;
-            }
-
-#if UNITY_IPHONE || UNITY_IOS
-            if ("-1".Equals(appTrackingStatusStr))
-            {
-                sdkConfiguration.AppTrackingStatus = MaxSdkBase.AppTrackingStatus.Unavailable;
-            }
-            else if ("0".Equals(appTrackingStatusStr))
-            {
-                sdkConfiguration.AppTrackingStatus = MaxSdkBase.AppTrackingStatus.NotDetermined;
-            }
-            else if ("1".Equals(appTrackingStatusStr))
-            {
-                sdkConfiguration.AppTrackingStatus = MaxSdkBase.AppTrackingStatus.Restricted;
-            }
-            else if ("2".Equals(appTrackingStatusStr))
-            {
-                sdkConfiguration.AppTrackingStatus = MaxSdkBase.AppTrackingStatus.Denied;
-            }
-            else // "3" is authorized
-            {
-                sdkConfiguration.AppTrackingStatus = MaxSdkBase.AppTrackingStatus.Authorized;
-            }
-#endif
+            var sdkConfiguration = MaxSdkBase.SdkConfiguration.Create(eventProps);
             InvokeEvent(_onSdkInitializedEvent, sdkConfiguration);
         }
         else if (eventName == "OnVariablesUpdatedEvent")
@@ -876,7 +829,8 @@ public class MaxSdkCallbacks : MonoBehaviour
         var sdkConfiguration = new MaxSdkBase.SdkConfiguration();
         sdkConfiguration.ConsentDialogState = MaxSdkBase.ConsentDialogState.Unknown;
         sdkConfiguration.AppTrackingStatus = MaxSdkBase.AppTrackingStatus.Authorized;
-        
+        sdkConfiguration.CountryCode = RegionInfo.CurrentRegion.TwoLetterISORegionName;
+
         _onSdkInitializedEvent(sdkConfiguration);
     }
 #endif

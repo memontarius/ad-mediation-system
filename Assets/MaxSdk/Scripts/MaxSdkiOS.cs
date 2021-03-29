@@ -50,9 +50,9 @@ public class MaxSdkiOS : MaxSdkBase
     /// OPTIONAL: Set the MAX ad unit ids to be used for this instance of the SDK. 3rd-party SDKs will be initialized with the credentials configured for these ad unit ids.
     /// This should only be used if you have different sets of ad unit ids / credentials for the same package name.</param>
     /// </summary>
-    public static void InitializeSdk(String[] adUnitIds = null)
+    public static void InitializeSdk(string[] adUnitIds = null)
     {
-        String serializedAdUnitIds = (adUnitIds != null) ? String.Join(",", adUnitIds) : "";
+        var serializedAdUnitIds = (adUnitIds != null) ? string.Join(",", adUnitIds) : "";
         _MaxInitializeSdk(serializedAdUnitIds, GenerateMetaData());
     }
 
@@ -138,7 +138,7 @@ public class MaxSdkiOS : MaxSdkBase
     /// <returns>Information about the ad, or null if no ad is loaded.</returns>
     public static MaxSdkBase.AdInfo GetAdInfo(string adUnitIdentifier)
     {
-        string adInfoString = _MaxGetAdInfo(adUnitIdentifier);
+        var adInfoString = _MaxGetAdInfo(adUnitIdentifier);
 
         if (string.IsNullOrEmpty(adInfoString)) return null;
 
@@ -154,9 +154,9 @@ public class MaxSdkiOS : MaxSdkBase
     /// <param name="adUnitIdentifier"></param>
     /// <param name="key">Ad value key</param>
     /// <returns>Arbitrary ad value for a given key, or null if no ad is loaded.</returns>
-    public static String GetAdValue(string adUnitIdentifier, string key)
+    public static string GetAdValue(string adUnitIdentifier, string key)
     {
-        string value = _MaxGetAdValue(adUnitIdentifier, key);
+        var value = _MaxGetAdValue(adUnitIdentifier, key);
 
         if (string.IsNullOrEmpty(value)) return null;
 
@@ -170,11 +170,7 @@ public class MaxSdkiOS : MaxSdkBase
     [DllImport("__Internal")]
     private static extern int _MaxConsentDialogState();
 
-    /// <summary>
-    /// Get the consent dialog state for this user. If no such determination could be made, <see cref="MaxSdkBase.ConsentDialogState.Unknown"/> will be returned.
-    ///
-    /// Note: this method should be called only after SDK has been initialized
-    /// </summary>
+    [System.Obsolete("This method has been deprecated. Please use `GetSdkConfiguration().ConsentDialogState`")]   
     public static ConsentDialogState GetConsentDialogState()
     {
         if (!IsInitialized())
@@ -186,6 +182,21 @@ public class MaxSdkiOS : MaxSdkBase
         return (ConsentDialogState) _MaxConsentDialogState();
     }
 
+    /// <summary>
+    /// Get the SDK configuration for this user.
+    ///
+    /// Note: This method should be called only after SDK has been initialized.
+    /// </summary>
+    [DllImport("__Internal")]
+    private static extern string _MaxGetSdkConfiguration();
+
+    public static SdkConfiguration GetSdkConfiguration()
+    {
+        var sdkConfigurationStr = _MaxGetSdkConfiguration();
+        var sdkConfigurationDict = MaxSdkUtils.PropsStringToDict(sdkConfigurationStr);
+        return SdkConfiguration.Create(sdkConfigurationDict);
+    }
+    
     [DllImport("__Internal")]
     private static extern void _MaxSetHasUserConsent(bool hasUserConsent);
 
@@ -570,7 +581,7 @@ public class MaxSdkiOS : MaxSdkBase
         ValidateAdUnitIdentifier(adUnitIdentifier, "set MREC extra parameter");
         _MaxSetMRecExtraParameter(adUnitIdentifier, key, value);
     }
-    
+
     [DllImport("__Internal")]
     private static extern string _MaxGetMRecLayout(string adUnitIdentifier);
 
@@ -588,7 +599,7 @@ public class MaxSdkiOS : MaxSdkBase
     }
 
     #endregion
-    
+
     #region Cross Promo Ads
 
     [DllImport("__Internal")]

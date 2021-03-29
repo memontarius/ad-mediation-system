@@ -104,15 +104,6 @@ namespace Virterix.AdMediation
             {
             }
 
-            public AdPosition GetBannerPosition(string placement)
-            {
-                AdPosition nativeBannerPosition = AdPosition.Bottom;
-                var adMobAdInstanceParams = m_adInstanceParams as AdMobAdInstanceBannerParameters;
-                var bannerPosition = adMobAdInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
-                nativeBannerPosition = ConvertToAdPosition(bannerPosition.m_bannerPosition);
-                return nativeBannerPosition;
-            }
-
             public EventHandler<EventArgs> onAdLoadedHandler;
             public EventHandler<AdFailedToLoadEventArgs> onAdFailedToLoadHandler;
             public EventHandler<EventArgs> onAdOpeningHandler;
@@ -231,7 +222,7 @@ namespace Virterix.AdMediation
                             bannerView.Hide();
 #endif
                             bannerView.Show();
-                            bannerView.SetPosition(adMobAdInstance.GetBannerPosition(placement));
+                            bannerView.SetPosition(GetBannerPosition(adInstance, placement));
                         }
                         break;
                     case AdType.Interstitial:
@@ -359,15 +350,24 @@ namespace Virterix.AdMediation
             return admobAdPosition;
         }
 
+        public static AdPosition GetBannerPosition(AdInstance adInstance, string placement)
+        {
+            AdPosition nativeBannerPosition = AdPosition.Bottom;
+            var adMobAdInstanceParams = adInstance.m_adInstanceParams as AdMobAdInstanceBannerParameters;
+            var bannerPosition = adMobAdInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
+            nativeBannerPosition = ConvertToAdPosition(bannerPosition.m_bannerPosition);
+            return nativeBannerPosition;
+        }
+
         private void RequestBanner(AdMobAdInstanceData adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             DestroyBanner(adInstance);
 
             adInstance.State = AdState.Loading;
 
-            AdMobAdInstanceBannerParameters bannerParams = adInstance.m_adInstanceParams as AdMobAdInstanceBannerParameters;  
-            AdPosition bannerPosition = adInstance.GetBannerPosition(placement);
-  
+            AdMobAdInstanceBannerParameters bannerParams = adInstance.m_adInstanceParams as AdMobAdInstanceBannerParameters;
+            AdPosition bannerPosition = GetBannerPosition(adInstance, placement);
+            
             BannerView bannerView = new BannerView(adInstance.m_adId, ConvertToAdSize(bannerParams.m_bannerSize), bannerPosition);
             adInstance.m_adView = bannerView;
             bannerView.Hide();

@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Boomlagoon.JSON;
-
+using System.Linq;
 #if _AMS_UNITY_ADS
 using UnityEngine.Advertisements;
 #endif
@@ -23,13 +23,18 @@ namespace Virterix.AdMediation
 
         public enum UnityAdsBannerPosition
         {
-            TOP_LEFT,
-            TOP_CENTER,
-            TOP_RIGHT,
-            BOTTOM_LEFT,
-            BOTTOM_CENTER,
-            BOTTOM_RIGHT,
-            CENTER
+            TopLeft,
+            TopCenter,
+            TopRight,
+            BottomLeft,
+            BottomCenter,
+            BottomRight,
+            Center
+        }
+
+        protected override string AdInstanceParametersFolder
+        {
+            get { return UnityAdsInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER; }
         }
 
         public static string GetSDKVersion()
@@ -99,14 +104,20 @@ namespace Virterix.AdMediation
         public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdType adType = adInstance.m_adType;
+
+            if (adType == AdType.Banner)
+            {
+                Debug.Log("-------------- ready:" + IsReady(adInstance) + " pos:" + GetBannerPosition(adInstance, placement));
+            }
+
             if (IsReady(adInstance))
             {
                 if (adType == AdType.Banner)
                 {
-                    UnityAdInstanceBannerParameters bannerParams = adInstance.m_adInstanceParams as UnityAdInstanceBannerParameters;
+                    UnityAdsInstanceBannerParameters bannerParams = adInstance.m_adInstanceParams as UnityAdsInstanceBannerParameters;
                     if (bannerParams != null)
                     {
-                        Advertisement.Banner.SetPosition((BannerPosition)bannerParams.m_bannerPosition);
+                        Advertisement.Banner.SetPosition(GetBannerPosition(adInstance, placement));
                     }
                     Advertisement.Banner.Show(adInstance.m_adId);
                     m_isBannerDisplayed = true;
@@ -140,17 +151,19 @@ namespace Virterix.AdMediation
             return isReady;
         }
 
-        protected override void SetPersonalizedAds(bool isPersonalizedAds)
+        public static BannerPosition ConvertToAdPosition(UnityAdsBannerPosition bannerPosition)
         {
-            // CCPA
-            MetaData privacyMetaData = new MetaData("privacy");
-            privacyMetaData.Set("consent", isPersonalizedAds ? "true" : "false");
-            Advertisement.SetMetaData(privacyMetaData);
+            BannerPosition nativeBannerPosition = (BannerPosition)bannerPosition;
+            return nativeBannerPosition;
+        }
 
-            // GDPR
-            MetaData gdprMetaData = new MetaData("gdpr");
-            gdprMetaData.Set("consent", isPersonalizedAds ? "true" : "false");
-            Advertisement.SetMetaData(gdprMetaData);
+        public static BannerPosition GetBannerPosition(AdInstance adInstance, string placement)
+        {
+            BannerPosition nativeBannerPosition = BannerPosition.BOTTOM_CENTER;
+            var adMobAdInstanceParams = adInstance.m_adInstanceParams as UnityAdsInstanceBannerParameters;
+            var bannerPosition = adMobAdInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
+            nativeBannerPosition = ConvertToAdPosition(bannerPosition.m_bannerPosition);
+            return nativeBannerPosition;
         }
 
         //===============================================================================
@@ -164,7 +177,7 @@ namespace Virterix.AdMediation
             if (adInstance != null)
             {
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("UnityAdsAdapter.OnUnityAdsReady() " + adInstance.m_adId + " m_bannerVisibled:" + adInstance.m_bannerVisibled);
+                Debug.Log("[AMS] UnityAdsAdapter.OnUnityAdsReady() adId: " + adInstance.m_adId + " bannerVisibled:" + adInstance.m_bannerVisibled);
 #endif
                 adInstance.State = AdState.Received;
                 if (adInstance.m_adType == AdType.Banner && adInstance.m_bannerVisibled)
@@ -178,7 +191,7 @@ namespace Virterix.AdMediation
         public void OnUnityAdsDidError(string message)
         {
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("UnityAdsAdapter.OnUnityAdsDidError() " + message);
+            Debug.Log("[AMS] UnityAdsAdapter.OnUnityAdsDidError() message: " + message);
 #endif
         }
 
@@ -198,7 +211,7 @@ namespace Virterix.AdMediation
             if (adInstance != null)
             {
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("UnityAdsAdapter.OnUnityAdsDidFinish() " + adInstance.m_adId);
+                Debug.Log("[AMS] UnityAdsAdapter.OnUnityAdsDidFinish() adId: " + adInstance.m_adId);
 #endif
 
                 if (adInstance.m_adType == AdType.Incentivized)

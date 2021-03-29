@@ -5,7 +5,7 @@
 
 #import "MAUnityAdManager.h"
 
-#define VERSION @"4.0.0"
+#define VERSION @"4.1.1"
 
 #define KEY_WINDOW [UIApplication sharedApplication].keyWindow
 #define DEVICE_SPECIFIC_ADVIEW_AD_FORMAT ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) ? MAAdFormat.leader : MAAdFormat.banner
@@ -163,6 +163,7 @@ static NSString *ALSerializeKeyValuePairSeparator;
         NSString *appTrackingStatus = @(configuration.appTrackingTransparencyStatus).stringValue; // Deliberately name it `appTrackingStatus` to be a bit more generic (in case Android introduces a similar concept)
         [MAUnityAdManager forwardUnityEventWithArgs: @{@"name" : @"OnSdkInitializedEvent",
                                                        @"consentDialogState" : consentDialogStateStr,
+                                                       @"countryCode" : configuration.countryCode,
                                                        @"appTrackingStatus" : appTrackingStatus}];
     }];
     
@@ -428,8 +429,9 @@ static NSString *ALSerializeKeyValuePairSeparator;
     
     return [MAUnityAdManager propsStrFromDictionary: @{@"adUnitId" : adUnitIdentifier,
                                                        @"networkName" : ad.networkName,
-                                                       @"creativeId" : [ad.creativeIdentifier al_isValidString] ? ad.creativeIdentifier : @"",
-                                                       @"placement" : [ad.placement al_isValidString] ? ad.placement : @""}];
+                                                       @"creativeId" : ad.creativeIdentifier ?: @"",
+                                                       @"placement" : ad.placement ?: @"",
+                                                       @"revenue" : @(ad.revenue).stringValue}];
 }
 
 #pragma mark - Ad Value

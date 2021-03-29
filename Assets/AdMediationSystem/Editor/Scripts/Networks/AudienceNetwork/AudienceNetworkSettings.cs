@@ -27,10 +27,10 @@ namespace Virterix.AdMediation.Editor
             var parameterHolder = AudienceNetworkAdInstanceBannerParameters.CreateParameters(projectName, instanceName);
             parameterHolder.m_bannerSize = (AudienceNetworkAdapter.AudienceNetworkBannerSize)bannerType;
 
-            var specificPositions = new AudienceNetworkAdInstanceBannerParameters.BannerPosition[bannerPositions.Length];
+            var specificPositions = new AudienceNetworkAdInstanceBannerParameters.BannerPositionContainer[bannerPositions.Length];
             for (int i = 0; i < specificPositions.Length; i++)
             {
-                var specificPosition = new AudienceNetworkAdInstanceBannerParameters.BannerPosition();
+                var specificPosition = new AudienceNetworkAdInstanceBannerParameters.BannerPositionContainer();
                 specificPosition.m_placementName = bannerPositions[i].m_placementName;
                 specificPosition.m_bannerPosition = (AudienceNetworkAdapter.AudienceNetworkBannerPosition)ConvertToSpecificBannerPosition(bannerPositions[i].m_bannerPosition);
                 specificPositions[i] = specificPosition;

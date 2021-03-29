@@ -307,12 +307,11 @@ namespace AppLovinMax.Scripts.Editor
             if (!consentFlowEnabled) return;
 
             var userTrackingUsageDescription = AppLovinSettings.Instance.UserTrackingUsageDescriptionEn;
-            var termsOfServiceUrl = AppLovinSettings.Instance.ConsentFlowTermsOfServiceUrl;
             var privacyPolicyUrl = AppLovinSettings.Instance.ConsentFlowPrivacyPolicyUrl;
-            if (string.IsNullOrEmpty(userTrackingUsageDescription) || string.IsNullOrEmpty(termsOfServiceUrl) || string.IsNullOrEmpty(privacyPolicyUrl))
+            if (string.IsNullOrEmpty(userTrackingUsageDescription) || string.IsNullOrEmpty(privacyPolicyUrl))
             {
-                AppLovinIntegrationManager.ShowBuildFailureDialog("You cannot use the AppLovin SDK's consent flow without defining a Terms of Service URL, a Privacy Policy URL and the `User Tracking Usage Description` in the AppLovin Integration Manager. \n\n" +
-                                                                  "All 3 values must be included to enable the SDK's consent flow.");
+                AppLovinIntegrationManager.ShowBuildFailureDialog("You cannot use the AppLovin SDK's consent flow without defining a Privacy Policy URL and the `User Tracking Usage Description` in the AppLovin Integration Manager. \n\n" +
+                                                                  "Both values must be included to enable the SDK's consent flow.");
 
                 // No need to update the info.plist here. Default consent flow state will be determined on the SDK side.
                 return;
@@ -326,7 +325,6 @@ namespace AppLovinMax.Scripts.Editor
 
             var consentFlowInfoRoot = plist.root.CreateDict("AppLovinConsentFlowInfo");
             consentFlowInfoRoot.SetBoolean("AppLovinConsentFlowEnabled", consentFlowEnabled);
-            consentFlowInfoRoot.SetString("AppLovinConsentFlowTermsOfService", termsOfServiceUrl);
             consentFlowInfoRoot.SetString("AppLovinConsentFlowPrivacyPolicy", privacyPolicyUrl);
 
             plist.root.SetString("NSUserTrackingUsageDescription", userTrackingUsageDescription);

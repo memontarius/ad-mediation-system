@@ -579,9 +579,15 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
                 GUILayout.EndHorizontal();
                 GUILayout.Space(4);
 
+                GUILayout.BeginHorizontal();
+                GUILayout.Space(4);
+                EditorGUILayout.HelpBox("Apple has not confirmed the final release date for the ATT prompt requirement. Enabling the consent flow now will cause material drop in revenue in iOS 14.5+ users.", MessageType.Warning);
+                GUILayout.Space(4);
+                GUILayout.EndHorizontal();
+                GUILayout.Space(4);
+
                 GUI.enabled = AppLovinSettings.Instance.ConsentFlowEnabled;
 
-                AppLovinSettings.Instance.ConsentFlowTermsOfServiceUrl = DrawTextField("Terms of Service URL", AppLovinSettings.Instance.ConsentFlowTermsOfServiceUrl, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
                 AppLovinSettings.Instance.ConsentFlowPrivacyPolicyUrl = DrawTextField("Privacy Policy URL", AppLovinSettings.Instance.ConsentFlowPrivacyPolicyUrl, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
                 AppLovinSettings.Instance.UserTrackingUsageDescriptionEn = DrawTextField("User Tracking Usage Description", AppLovinSettings.Instance.UserTrackingUsageDescriptionEn, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
 
@@ -599,7 +605,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
                     AppLovinSettings.Instance.UserTrackingUsageDescriptionJa = DrawTextField("Japanese (ja)", AppLovinSettings.Instance.UserTrackingUsageDescriptionJa, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
                     AppLovinSettings.Instance.UserTrackingUsageDescriptionKo = DrawTextField("Korean (ko)", AppLovinSettings.Instance.UserTrackingUsageDescriptionKo, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
                     AppLovinSettings.Instance.UserTrackingUsageDescriptionEs = DrawTextField("Spanish (es)", AppLovinSettings.Instance.UserTrackingUsageDescriptionEs, GUILayout.Width(privacySettingLabelWidth), privacySettingFieldWidthOption);
-                    
+
                     GUILayout.Space(4);
                     GUILayout.BeginHorizontal();
                     GUILayout.Space(4);

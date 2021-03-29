@@ -195,6 +195,22 @@ extern "C"
             _userSegmentNameToSet = value;
         }
     }
+
+    const char * _MaxGetSdkConfiguration()
+    {
+        if ( !_sdk )
+        {
+            NSLog(@"[%@] Failed to get SDK configuration - please ensure the AppLovin MAX Unity Plugin has been initialized by calling 'MaxSdk.InitializeSdk();'!", TAG);
+            return cStringCopy(@"");
+        }
+        
+        NSString *consentDialogStateStr = @(_sdk.configuration.consentDialogState).stringValue;
+        NSString *appTrackingStatus = @(_sdk.configuration.appTrackingTransparencyStatus).stringValue; // Deliberately name it `appTrackingStatus` to be a bit more generic (in case Android introduces a similar concept)
+
+        return cStringCopy([MAUnityAdManager propsStrFromDictionary: @{@"consentDialogState" : consentDialogStateStr,
+                                                                       @"countryCode" : _sdk.configuration.countryCode,
+                                                                       @"appTrackingStatus" : appTrackingStatus}]);
+    }
     
     void _MaxSetHasUserConsent(bool hasUserConsent)
     {

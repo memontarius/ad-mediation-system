@@ -45,9 +45,9 @@ public class MaxSdkAndroid : MaxSdkBase
     /// OPTIONAL: Set the MAX ad unit ids to be used for this instance of the SDK. 3rd-party SDKs will be initialized with the credentials configured for these ad unit ids.
     /// This should only be used if you have different sets of ad unit ids / credentials for the same package name.</param>
     /// </summary>
-    public static void InitializeSdk(String[] adUnitIds=null)
+    public static void InitializeSdk(string[] adUnitIds = null)
     {
-        String serializedAdUnitIds = (adUnitIds != null) ? String.Join(",", adUnitIds) : "";
+        var serializedAdUnitIds = (adUnitIds != null) ? string.Join(",", adUnitIds) : "";
         MaxUnityPluginClass.CallStatic("initializeSdk", serializedAdUnitIds, GenerateMetaData());
     }
 
@@ -84,7 +84,7 @@ public class MaxSdkAndroid : MaxSdkBase
     {
         get { return SharedUserSegment; }
     }
-    
+
     #endregion
 
     #region MAX
@@ -118,8 +118,8 @@ public class MaxSdkAndroid : MaxSdkBase
     /// <returns>Information about the ad, or null if no ad is loaded.</returns>
     public static MaxSdkBase.AdInfo GetAdInfo(string adUnitIdentifier)
     {
-        string adInfoString = MaxUnityPluginClass.CallStatic<string>("getAdInfo", adUnitIdentifier);
-        
+        var adInfoString = MaxUnityPluginClass.CallStatic<string>("getAdInfo", adUnitIdentifier);
+
         if (string.IsNullOrEmpty(adInfoString)) return null;
 
         return new MaxSdkBase.AdInfo(adInfoString);
@@ -133,10 +133,10 @@ public class MaxSdkAndroid : MaxSdkBase
     /// <returns>Arbitrary ad value for a given key, or null if no ad is loaded.</returns>
     public static string GetAdValue(string adUnitIdentifier, string key)
     {
-        string value = MaxUnityPluginClass.CallStatic<string>("getAdValue", adUnitIdentifier, key);
+        var value = MaxUnityPluginClass.CallStatic<string>("getAdValue", adUnitIdentifier, key);
 
         if (string.IsNullOrEmpty(value)) return null;
-        
+
         return value;
     }
 
@@ -144,11 +144,7 @@ public class MaxSdkAndroid : MaxSdkBase
 
     #region Privacy
 
-    /// <summary>
-    /// Get the consent dialog state for this user. If no such determination could be made, <see cref="MaxSdkBase.ConsentDialogState.Unknown"/> will be returned.
-    ///
-    /// Note: this method should be called only after SDK has been initialized
-    /// </summary>
+    [System.Obsolete("This method has been deprecated. Please use `GetSdkConfiguration().ConsentDialogState`")]   
     public static ConsentDialogState GetConsentDialogState()
     {
         if (!IsInitialized())
@@ -160,6 +156,18 @@ public class MaxSdkAndroid : MaxSdkBase
         return (ConsentDialogState) MaxUnityPluginClass.CallStatic<int>("getConsentDialogState");
     }
 
+    /// <summary>
+    /// Get the SDK configuration for this user.
+    ///
+    /// Note: This method should be called only after SDK has been initialized.
+    /// </summary>
+    public static SdkConfiguration GetSdkConfiguration()
+    {
+        var sdkConfigurationStr = MaxUnityPluginClass.CallStatic<string>("getSdkConfiguration");
+        var sdkConfigurationDict = MaxSdkUtils.PropsStringToDict(sdkConfigurationStr);
+        return SdkConfiguration.Create(sdkConfigurationDict);
+    }
+    
     /// <summary>
     /// Set whether or not user has provided consent for information sharing with AppLovin and other providers.
     /// </summary>
@@ -290,7 +298,7 @@ public class MaxSdkAndroid : MaxSdkBase
         ValidateAdUnitIdentifier(adUnitIdentifier, "set banner width");
         MaxUnityPluginClass.CallStatic("setBannerWidth", adUnitIdentifier, width);
     }
-    
+
     /// <summary>
     /// Show banner at a position determined by the 'CreateBanner' call.
     /// </summary>
@@ -467,7 +475,7 @@ public class MaxSdkAndroid : MaxSdkBase
         ValidateAdUnitIdentifier(adUnitIdentifier, "set MREC extra parameter");
         MaxUnityPluginClass.CallStatic("setMRecExtraParameter", adUnitIdentifier, key, value);
     }
-    
+
     /// <summary>
     /// The MREC position on the screen. When setting the banner position via <see cref="CreateMRec(string, float, float)"/> or <see cref="UpdateMRecPosition(string, float, float)"/>,
     /// the banner is placed within the safe area of the screen. This returns the absolute position of the MREC on screen.
@@ -482,7 +490,7 @@ public class MaxSdkAndroid : MaxSdkBase
     }
 
     #endregion
-    
+
     #region Cross Promo Ads
 
     /// <summary>
@@ -771,7 +779,7 @@ public class MaxSdkAndroid : MaxSdkBase
     }
 
     #endregion
-    
+
     #region Event Tracking
 
     /// <summary>
@@ -845,10 +853,10 @@ public class MaxSdkAndroid : MaxSdkBase
     public static void SetTestDeviceAdvertisingIdentifiers(string[] advertisingIdentifiers)
     {
         // Wrap the string array in an object array, so the compiler does not split into multiple strings.
-        object[] arguments = { advertisingIdentifiers };
+        object[] arguments = {advertisingIdentifiers};
         MaxUnityPluginClass.CallStatic("setTestDeviceAdvertisingIds", arguments);
     }
-    
+
     /// <summary>
     /// Whether or not the native AppLovin SDKs listen to exceptions. Defaults to <c>true</c>.
     /// </summary>
@@ -859,13 +867,13 @@ public class MaxSdkAndroid : MaxSdkBase
     }
 
     #endregion
-    
+
     #region Private
-    
+
     internal static void SetUserSegmentField(string name, string value)
     {
         MaxUnityPluginClass.CallStatic("setUserSegmentField", name, value);
     }
-    
+
     #endregion
 }

@@ -5,7 +5,7 @@ namespace Virterix.AdMediation
     public class IronSourceAdInstanceBannerParameters : AdInstanceParameters
     {
         [Serializable]
-        public struct BannerPosition
+        public struct BannerPositionContainer
         {
             public string m_placementName;
             public IronSourceAdapter.IrnSrcBannerPosition m_bannerPosition;
@@ -15,7 +15,7 @@ namespace Virterix.AdMediation
         public const string _PARAMETERS_FILE_NAME = "IronSource_AdInstanceBanner";
 
         public IronSourceAdapter.IrnSrcBannerSize m_bannerSize;
-        public BannerPosition[] m_bannerPositions;
+        public BannerPositionContainer[] m_bannerPositions;
 
         public override AdType AdvertiseType => AdType.Banner;
 

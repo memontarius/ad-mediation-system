@@ -28,8 +28,7 @@ namespace Virterix.AdMediation
 
         private AdInstance m_interstitialInstance;
         private AdInstance m_incentivizedInstance;
-        //private AdInstance m_bannerInstance;
-
+  
         private AdInstance m_currBannerInstance;
         private bool m_bannerVisibled;
         private AdState m_bannerState;

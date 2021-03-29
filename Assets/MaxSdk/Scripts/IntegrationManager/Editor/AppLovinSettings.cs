@@ -37,7 +37,6 @@ public class AppLovinSettings : ScriptableObject
     [SerializeField] private string sdkKey;
 
     [SerializeField] private bool consentFlowEnabled;
-    [SerializeField] private string consentFlowTermsOfServiceUrl = string.Empty;
     [SerializeField] private string consentFlowPrivacyPolicyUrl = string.Empty;
     [FormerlySerializedAs("userTrackingUsageDescription")] [SerializeField] private string userTrackingUsageDescriptionEn = string.Empty;
     [SerializeField] private bool userTrackingUsageLocalizationEnabled;
@@ -135,21 +134,11 @@ public class AppLovinSettings : ScriptableObject
             }
             else
             {
-                Instance.ConsentFlowTermsOfServiceUrl = string.Empty;
                 Instance.ConsentFlowPrivacyPolicyUrl = string.Empty;
                 Instance.UserTrackingUsageDescriptionEn = string.Empty;
                 Instance.UserTrackingUsageLocalizationEnabled = false;
             }
         }
-    }
-
-    /// <summary>
-    /// A URL pointing to the Terms of Service for the app to be shown when prompting the user for consent. 
-    /// </summary>
-    public string ConsentFlowTermsOfServiceUrl
-    {
-        get { return Instance.consentFlowTermsOfServiceUrl; }
-        set { Instance.consentFlowTermsOfServiceUrl = value; }
     }
 
     /// <summary>
