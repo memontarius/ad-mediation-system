@@ -28,10 +28,10 @@ namespace Virterix.AdMediation.Editor
             AdMobAdInstanceBannerParameters parameterHolder = AdMobAdInstanceBannerParameters.CreateParameters(projectName, instanceName);
             parameterHolder.m_bannerSize = (AdMobAdapter.AdMobBannerSize)bannerType;
 
-            var specificPositions = new AdMobAdInstanceBannerParameters.BannerPosition[bannerPositions.Length];
+            var specificPositions = new AdMobAdInstanceBannerParameters.BannerPositionContainer[bannerPositions.Length];
             for (int i = 0; i < specificPositions.Length; i++)
             {
-                var specificPosition = new AdMobAdInstanceBannerParameters.BannerPosition();
+                var specificPosition = new AdMobAdInstanceBannerParameters.BannerPositionContainer();
                 specificPosition.m_placementName = bannerPositions[i].m_placementName;
                 specificPosition.m_bannerPosition = (AdMobAdapter.AdMobBannerPosition)ConvertToSpecificBannerPosition(bannerPositions[i].m_bannerPosition);
                 specificPositions[i] = specificPosition;

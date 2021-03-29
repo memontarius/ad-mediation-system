@@ -5,7 +5,7 @@ namespace Virterix.AdMediation
     public class AdMobAdInstanceBannerParameters : AdInstanceParameters
     {
         [Serializable]
-        public struct BannerPosition
+        public struct BannerPositionContainer
         {
             public string m_placementName;
             public AdMobAdapter.AdMobBannerPosition m_bannerPosition;
@@ -15,7 +15,7 @@ namespace Virterix.AdMediation
         public const string _PARAMETERS_FILE_NAME = "AdMob_AdInstanceBanner";
 
         public AdMobAdapter.AdMobBannerSize m_bannerSize;
-        public BannerPosition[] m_bannerPositions;
+        public BannerPositionContainer[] m_bannerPositions;
 
         public override AdType AdvertiseType
         {
