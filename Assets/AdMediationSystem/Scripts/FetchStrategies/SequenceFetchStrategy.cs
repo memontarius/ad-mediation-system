@@ -69,7 +69,8 @@ namespace Virterix.AdMediation
             if (unitIndex >= units.Length)
             {
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.LogWarning("[AdMediationSystem] Unit index out of range! Unit Index: " + unitIndex);
+                Debug.LogWarning("[AMS] Unit index out of range! unitIndex: " + unitIndex + 
+                     " tier: " + tierIndex + " unitCount: " + units.Length);
 #endif
                 unitIndex = 0;
                 return;

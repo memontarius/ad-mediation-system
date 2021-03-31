@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Virterix.AdMediation
+﻿namespace Virterix.AdMediation
 {
     public enum AdType
     {

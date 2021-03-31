@@ -46,6 +46,21 @@ namespace Virterix.AdMediation
         }
 
 #if _AMS_UNITY_ADS
+        public static BannerPosition ConvertToAdPosition(UnityAdsBannerPosition bannerPosition)
+        {
+            BannerPosition nativeBannerPosition = (BannerPosition)bannerPosition;
+            return nativeBannerPosition;
+        }
+
+        public static BannerPosition GetBannerPosition(AdInstance adInstance, string placement)
+        {
+            BannerPosition nativeBannerPosition = BannerPosition.BOTTOM_CENTER;
+            var adMobAdInstanceParams = adInstance.m_adInstanceParams as UnityAdsInstanceBannerParameters;
+            var bannerPosition = adMobAdInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
+            nativeBannerPosition = ConvertToAdPosition(bannerPosition.m_bannerPosition);
+            return nativeBannerPosition;
+        }
+
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
@@ -105,11 +120,6 @@ namespace Virterix.AdMediation
         {
             AdType adType = adInstance.m_adType;
 
-            if (adType == AdType.Banner)
-            {
-                Debug.Log("-------------- ready:" + IsReady(adInstance) + " pos:" + GetBannerPosition(adInstance, placement));
-            }
-
             if (IsReady(adInstance))
             {
                 if (adType == AdType.Banner)
@@ -117,6 +127,9 @@ namespace Virterix.AdMediation
                     UnityAdsInstanceBannerParameters bannerParams = adInstance.m_adInstanceParams as UnityAdsInstanceBannerParameters;
                     if (bannerParams != null)
                     {
+#if UNITY_EDITOR
+                        Advertisement.Banner.Hide(true);
+#endif
                         Advertisement.Banner.SetPosition(GetBannerPosition(adInstance, placement));
                     }
                     Advertisement.Banner.Show(adInstance.m_adId);
@@ -141,7 +154,23 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool IsReady(AdInstance adInstance = null)
+        public override void HideBannerTypeAdWithoutNotify(AdInstance adInstance = null)
+        {
+            adInstance.m_bannerVisibled = false;
+            AdType adType = adInstance.m_adType;
+
+            switch (adType)
+            {
+                case AdType.Banner:
+                    if (adInstance.State == AdState.Received)
+                    {
+                        Advertisement.Banner.Hide();
+                    }
+                    break;
+            }
+        }
+
+        public override bool IsReady(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             bool isReady = false;
             if (adInstance != null)
@@ -149,21 +178,6 @@ namespace Virterix.AdMediation
                 isReady = Advertisement.IsReady(adInstance.m_adId);
             }
             return isReady;
-        }
-
-        public static BannerPosition ConvertToAdPosition(UnityAdsBannerPosition bannerPosition)
-        {
-            BannerPosition nativeBannerPosition = (BannerPosition)bannerPosition;
-            return nativeBannerPosition;
-        }
-
-        public static BannerPosition GetBannerPosition(AdInstance adInstance, string placement)
-        {
-            BannerPosition nativeBannerPosition = BannerPosition.BOTTOM_CENTER;
-            var adMobAdInstanceParams = adInstance.m_adInstanceParams as UnityAdsInstanceBannerParameters;
-            var bannerPosition = adMobAdInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
-            nativeBannerPosition = ConvertToAdPosition(bannerPosition.m_bannerPosition);
-            return nativeBannerPosition;
         }
 
         //===============================================================================

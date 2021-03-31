@@ -67,18 +67,48 @@ namespace Virterix.AdMediation
             {
             }
 
-            public Vector2 GetBannerPosition(string placement)
-            {
-                Vector2 nativeBannerCoordinates = Vector2.zero;
-                var adMobAdInstanceParams = m_adInstanceParams as AudienceNetworkAdInstanceBannerParameters;
-                var bannerPosition = adMobAdInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
-                nativeBannerCoordinates = CalculateBannerPosition(this, placement);
-                return nativeBannerCoordinates;
-            }
-
             public Coroutine m_coroutineRefresh;
             public float m_refreshTime;
             public bool m_isServerValidation; // Is S2S validation
+        }
+        
+        private static Vector2 CalculateBannerPosition(AudienceNetworkAdInstanceData adInstance, string placement)
+        {
+#if UNITY_EDITOR
+            return Vector2.zero;
+#endif
+            Vector2 bannerCoordinates = Vector2.zero;
+            float bannerHight = 0;
+            AudienceNetworkAdInstanceBannerParameters adInstanceParams = adInstance.m_adInstanceParams as AudienceNetworkAdInstanceBannerParameters;
+            var bannerPosition = adInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
+
+            switch (adInstanceParams.m_bannerSize)
+            {
+                case AudienceNetworkBannerSize.BannerHeight50:
+                    bannerHight = 50f;
+                    break;
+                case AudienceNetworkBannerSize.BannerHeight90:
+                    bannerHight = 90f;
+                    break;
+                case AudienceNetworkBannerSize.RectangleHeight250:
+                    bannerHight = 250f;
+                    break;
+            }
+
+            switch (bannerPosition.m_bannerPosition)
+            {
+                case AudienceNetworkBannerPosition.Bottom:
+                    bannerCoordinates.x = 0f;
+#if UNITY_IOS || UNITY_ANDROID
+                    bannerCoordinates.y = (float)AudienceNetwork.Utility.AdUtility.Height() - bannerHight;
+#endif
+                    break;
+                case AudienceNetworkBannerPosition.Top:
+                    bannerCoordinates.x = 0f;
+                    bannerCoordinates.y = 0f;
+                    break;
+            }
+            return bannerCoordinates;
         }
 
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
@@ -238,7 +268,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool IsReady(AdInstance adInstance = null)
+        public override bool IsReady(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdType adType = adInstance.m_adType;
             bool isReady = adInstance.State == AdState.Received;
@@ -261,45 +291,6 @@ namespace Virterix.AdMediation
                     break;
             }
             return nativeAdSize;
-        }
-
-        private static Vector2 CalculateBannerPosition(AudienceNetworkAdInstanceData adInstance, string placement)
-        {
-#if UNITY_EDITOR
-            return Vector2.zero;
-#endif
-            Vector2 bannerCoordinates = Vector2.zero;
-            float bannerHight = 0;
-            AudienceNetworkAdInstanceBannerParameters adInstanceParams = adInstance.m_adInstanceParams as AudienceNetworkAdInstanceBannerParameters;
-            var bannerPosition = adInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
-
-            switch (adInstanceParams.m_bannerSize)
-            {
-                case AudienceNetworkBannerSize.BannerHeight50:
-                    bannerHight = 50f;
-                    break;
-                case AudienceNetworkBannerSize.BannerHeight90:
-                    bannerHight = 90f;
-                    break;
-                case AudienceNetworkBannerSize.RectangleHeight250:
-                    bannerHight = 250f;
-                    break;
-            }
-
-            switch (bannerPosition.m_bannerPosition)
-            {
-                case AudienceNetworkBannerPosition.Bottom:
-                    bannerCoordinates.x = 0f;
-#if UNITY_IOS || UNITY_ANDROID
-                    bannerCoordinates.y = (float)AudienceNetwork.Utility.AdUtility.Height() - bannerHight;
-#endif
-                    break;
-                case AudienceNetworkBannerPosition.Top:
-                    bannerCoordinates.x = 0f;
-                    bannerCoordinates.y = 0f;
-                    break;
-            }
-            return bannerCoordinates;
         }
 
         private IEnumerator CoroutineRefreshBanner(AudienceNetworkAdInstanceData adInstance, float refreshTime)

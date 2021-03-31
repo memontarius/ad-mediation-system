@@ -1,7 +1,4 @@
-﻿
-using System.Collections.Generic;
-
-namespace Virterix.AdMediation
+﻿namespace Virterix.AdMediation
 {
     public class BaseFetchStrategyParams
     {
@@ -20,9 +17,7 @@ namespace Virterix.AdMediation
         /// Fetches ad unit from list
         /// </summary>
         /// <param name="tiers">List of ad units</param>
-        /// <param name="maxRecursionFetch">Maximum number of fetch when the fetched unit cannot be impression</param>
         /// <returns></returns>
         AdUnit Fetch(AdUnit[][] tiers);
-
     }
 } // namespace Virterix.AdMediation

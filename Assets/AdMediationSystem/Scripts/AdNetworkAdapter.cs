@@ -197,7 +197,7 @@ namespace Virterix.AdMediation
             this.enabled = false;
         }
 
-        public virtual bool IsReady(AdInstance adInstance) { return false; }
+        public virtual bool IsReady(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME) { return false; }
 
         public virtual void Prepare(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME) { }
 

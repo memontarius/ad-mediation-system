@@ -550,7 +550,7 @@ namespace Virterix.AdMediation.Editor
 
             EditorGUILayout.Space();
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Add Mediator", GUILayout.Height(30)))
+            if (GUILayout.Button("Add Placement", GUILayout.Height(30)))
             {
                 var mediatorsProp = _serializedProjectSettings.FindProperty(propertyName);
                 int insertIndex = mediatorsProp.arraySize;

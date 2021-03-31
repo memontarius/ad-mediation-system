@@ -148,6 +148,72 @@ namespace Virterix.AdMediation
 #endif
         }
 
+
+        public static AdSize ConvertToAdSize(AdMobBannerSize bannerSize)
+        {
+            AdSize admobAdSize = AdSize.Banner;
+
+            switch (bannerSize)
+            {
+                case AdMobBannerSize.Banner:
+                    admobAdSize = AdSize.Banner;
+                    break;
+                case AdMobBannerSize.IABBanner:
+                    admobAdSize = AdSize.IABBanner;
+                    break;
+                case AdMobBannerSize.SmartBanner:
+                    admobAdSize = AdSize.SmartBanner;
+                    break;
+                case AdMobBannerSize.Leaderboard:
+                    admobAdSize = AdSize.Leaderboard;
+                    break;
+                case AdMobBannerSize.MediumRectangle:
+                    admobAdSize = AdSize.MediumRectangle;
+                    break;
+            }
+            return admobAdSize;
+        }
+
+        public static AdPosition ConvertToAdPosition(AdMobBannerPosition bannerPosition)
+        {
+            AdPosition admobAdPosition = AdPosition.Center;
+
+            switch (bannerPosition)
+            {
+                case AdMobBannerPosition.Bottom:
+                    admobAdPosition = AdPosition.Bottom;
+                    break;
+                case AdMobBannerPosition.BottomLeft:
+                    admobAdPosition = AdPosition.BottomLeft;
+                    break;
+                case AdMobBannerPosition.BottomRight:
+                    admobAdPosition = AdPosition.BottomRight;
+                    break;
+                case AdMobBannerPosition.Top:
+                    admobAdPosition = AdPosition.Top;
+                    break;
+                case AdMobBannerPosition.TopLeft:
+                    admobAdPosition = AdPosition.TopLeft;
+                    break;
+                case AdMobBannerPosition.TopRight:
+                    admobAdPosition = AdPosition.TopRight;
+                    break;
+                case AdMobBannerPosition.Center:
+                    admobAdPosition = AdPosition.Center;
+                    break;
+            }
+            return admobAdPosition;
+        }
+
+        public static AdPosition GetBannerPosition(AdInstance adInstance, string placement)
+        {
+            AdPosition nativeBannerPosition = AdPosition.Bottom;
+            var adMobAdInstanceParams = adInstance.m_adInstanceParams as AdMobAdInstanceBannerParameters;
+            var bannerPosition = adMobAdInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
+            nativeBannerPosition = ConvertToAdPosition(bannerPosition.m_bannerPosition);
+            return nativeBannerPosition;
+        }
+
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
@@ -275,7 +341,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool IsReady(AdInstance adInstance = null)
+        public override bool IsReady(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
 #if UNITY_EDITOR
             //return false;
@@ -292,71 +358,6 @@ namespace Virterix.AdMediation
             }
 
             return isReady;
-        }
-
-        public static AdSize ConvertToAdSize(AdMobBannerSize bannerSize)
-        {
-            AdSize admobAdSize = AdSize.Banner;
-
-            switch (bannerSize)
-            {
-                case AdMobBannerSize.Banner:
-                    admobAdSize = AdSize.Banner;
-                    break;
-                case AdMobBannerSize.IABBanner:
-                    admobAdSize = AdSize.IABBanner;
-                    break;
-                case AdMobBannerSize.SmartBanner:
-                    admobAdSize = AdSize.SmartBanner;
-                    break;
-                case AdMobBannerSize.Leaderboard:
-                    admobAdSize = AdSize.Leaderboard;
-                    break;
-                case AdMobBannerSize.MediumRectangle:
-                    admobAdSize = AdSize.MediumRectangle;
-                    break;
-            }
-            return admobAdSize;
-        }
-
-        public static AdPosition ConvertToAdPosition(AdMobBannerPosition bannerPosition)
-        {
-            AdPosition admobAdPosition = AdPosition.Center;
-
-            switch (bannerPosition)
-            {
-                case AdMobBannerPosition.Bottom:
-                    admobAdPosition = AdPosition.Bottom;
-                    break;
-                case AdMobBannerPosition.BottomLeft:
-                    admobAdPosition = AdPosition.BottomLeft;
-                    break;
-                case AdMobBannerPosition.BottomRight:
-                    admobAdPosition = AdPosition.BottomRight;
-                    break;
-                case AdMobBannerPosition.Top:
-                    admobAdPosition = AdPosition.Top;
-                    break;
-                case AdMobBannerPosition.TopLeft:
-                    admobAdPosition = AdPosition.TopLeft;
-                    break;
-                case AdMobBannerPosition.TopRight:
-                    admobAdPosition = AdPosition.TopRight;
-                    break;
-                case AdMobBannerPosition.Center:
-                    admobAdPosition = AdPosition.Center;
-                    break;
-            }
-            return admobAdPosition;
-        }
-
-        public static AdPosition GetBannerPosition(AdInstance adInstance, string placement)
-        {
-            AdPosition nativeBannerPosition = AdPosition.Bottom;
-            var adMobAdInstanceParams = adInstance.m_adInstanceParams as AdMobAdInstanceBannerParameters;
-            var bannerPosition = adMobAdInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
-            nativeBannerPosition = ConvertToAdPosition(bannerPosition.m_bannerPosition);
-            return nativeBannerPosition;
         }
 
         private void RequestBanner(AdMobAdInstanceData adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)

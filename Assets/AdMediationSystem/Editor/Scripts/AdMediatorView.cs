@@ -217,7 +217,7 @@ namespace Virterix.AdMediation.Editor
                         rect.y += 1;
                         rect.width = 60;
                         rect.height = rect.height - 2;
-                        EditorGUI.LabelField(rect, new GUIContent("Max Pass", "Maximum number of tier passes until all networks return unsuccessful preparation."));
+                        EditorGUI.LabelField(rect, new GUIContent("Max Pass", "Maximum number of tier passes until all networks return unsuccessful preparation (excluding replaceable units)."));
                         rect.x += 65;
                         rect.width = 35;
 
@@ -414,7 +414,7 @@ namespace Virterix.AdMediation.Editor
         {
             EditorGUILayout.BeginVertical("helpbox");
             string mediatorNamePostfix = _mediatorNameProp.stringValue == "" ? (_index + 1).ToString() : _mediatorNameProp.stringValue;
-            string mediatorName = string.Format("Mediator {0}", mediatorNamePostfix);
+            string mediatorName = string.Format("Placement {0}", mediatorNamePostfix);
             Collapsed = EditorGUILayout.BeginFoldoutHeaderGroup(Collapsed, mediatorName);
             _showMediator.target = Collapsed;
             wasDeletionPerform = false;

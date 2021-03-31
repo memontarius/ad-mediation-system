@@ -199,9 +199,7 @@ namespace Virterix.AdMediation
             AddAdInstance(m_interstitialInstance);
             m_incentivizedInstance = AdFactory.CreateAdInstacne(this, AdType.Incentivized, AdInstance.AD_INSTANCE_DEFAULT_NAME, "", m_timeout);
             AddAdInstance(m_incentivizedInstance);
-            //m_bannerInstance = AdFactory.CreateAdInstacne(this, AdType.Banner, AdInstance.AD_INSTANCE_DEFAULT_NAME, "", m_timeout);
-            //AddAdInstance(m_bannerInstance);
-
+     
             SetPersonalizedAds(isPersonalizedAds);
             IronSource.Agent.init(appKey, IronSourceAdUnits.INTERSTITIAL, IronSourceAdUnits.REWARDED_VIDEO, IronSourceAdUnits.BANNER);
 
@@ -296,7 +294,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool IsReady(AdInstance adInstance = null)
+        public override bool IsReady(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
 #if UNITY_EDITOR
             return false;

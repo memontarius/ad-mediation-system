@@ -177,7 +177,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool IsReady(AdInstance adInstance = null)
+        public override bool IsReady(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             bool isReady = false;
             AdType adType = adInstance.m_adType;

@@ -139,10 +139,10 @@ namespace Virterix.AdMediation
                 switch (adInstance.m_adType)
                 {
                     case AdType.Interstitial:
-                        Chartboost.cacheInterstitial(CBLocation.Default);
+                        Chartboost.cacheInterstitial(CBLocation.locationFromName(placement));
                         break;
                     case AdType.Incentivized:
-                        Chartboost.cacheRewardedVideo(CBLocation.Default);
+                        Chartboost.cacheRewardedVideo(CBLocation.locationFromName(placement));
                         break;
                 }
             }
@@ -155,10 +155,10 @@ namespace Virterix.AdMediation
                 switch (adInstance.m_adType)
                 {
                     case AdType.Interstitial:
-                        Chartboost.showInterstitial(CBLocation.Default);
+                        Chartboost.showInterstitial(CBLocation.locationFromName(placement));
                         break;
                     case AdType.Incentivized:
-                        Chartboost.showRewardedVideo(CBLocation.Default);
+                        Chartboost.showRewardedVideo(CBLocation.locationFromName(placement));
                         break;
                 }
                 return true;
@@ -170,16 +170,16 @@ namespace Virterix.AdMediation
         {
         }
 
-        public override bool IsReady(AdInstance adInstance = null)
+        public override bool IsReady(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             bool isReady = false;
             switch (adInstance.m_adType)
             {
                 case AdType.Interstitial:
-                    isReady = Chartboost.hasInterstitial(CBLocation.Default);
+                    isReady = Chartboost.hasInterstitial(CBLocation.locationFromName(placement));
                     break;
                 case AdType.Incentivized:
-                    isReady = Chartboost.hasRewardedVideo(CBLocation.Default);
+                    isReady = Chartboost.hasRewardedVideo(CBLocation.locationFromName(placement));
                     break;
             }
             return isReady;
