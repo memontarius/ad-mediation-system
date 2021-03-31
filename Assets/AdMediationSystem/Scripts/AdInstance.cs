@@ -66,7 +66,7 @@ namespace Virterix.AdMediation
         public AdType m_adType;
         public string m_adId;
         public AdNetworkAdapter.TimeoutParams? m_timeout;
-        public bool m_bannerVisibled;
+        public bool m_bannerDisplayed;
         public bool m_enabledState;
         public object m_adView;
         public IAdInstanceParameters m_adInstanceParams;

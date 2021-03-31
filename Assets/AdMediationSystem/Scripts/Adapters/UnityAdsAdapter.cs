@@ -104,9 +104,7 @@ namespace Virterix.AdMediation
                 if (adType == AdType.Banner)
                 {
                     if (m_isBannerDisplayed)
-                    {
                         Hide(adInstance);
-                    }
                     Advertisement.Banner.Load(adInstance.m_adId);
                 }
                 else
@@ -119,6 +117,9 @@ namespace Virterix.AdMediation
         public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdType adType = adInstance.m_adType;
+
+            if (adType == AdType.Banner)
+                m_isBannerDisplayed = true;
 
             if (IsReady(adInstance))
             {
@@ -133,7 +134,6 @@ namespace Virterix.AdMediation
                         Advertisement.Banner.SetPosition(GetBannerPosition(adInstance, placement));
                     }
                     Advertisement.Banner.Show(adInstance.m_adId);
-                    m_isBannerDisplayed = true;
                 }
                 else
                 {
@@ -144,29 +144,13 @@ namespace Virterix.AdMediation
             return false;
         }
 
-        public override void Hide(AdInstance adInstance = null)
+        public override void Hide(AdInstance adInstance = null, string adInstanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME)
         {
-            AdType adType = adInstance.m_adType;
-            if (adType == AdType.Banner)
+            if (adInstance.m_adType == AdType.Banner)
             {
+                adInstance.m_bannerDisplayed = false;
+                m_isBannerDisplayed = false;
                 Advertisement.Banner.Hide();
-                m_isBannerDisplayed = true;
-            }
-        }
-
-        public override void HideBannerTypeAdWithoutNotify(AdInstance adInstance = null)
-        {
-            adInstance.m_bannerVisibled = false;
-            AdType adType = adInstance.m_adType;
-
-            switch (adType)
-            {
-                case AdType.Banner:
-                    if (adInstance.State == AdState.Received)
-                    {
-                        Advertisement.Banner.Hide();
-                    }
-                    break;
             }
         }
 
@@ -191,10 +175,10 @@ namespace Virterix.AdMediation
             if (adInstance != null)
             {
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("[AMS] UnityAdsAdapter.OnUnityAdsReady() adId: " + adInstance.m_adId + " bannerVisibled:" + adInstance.m_bannerVisibled);
+                Debug.Log("[AMS] UnityAdsAdapter.OnUnityAdsReady() adId: " + adInstance.m_adId + " bannerVisibled:" + adInstance.m_bannerDisplayed);
 #endif
                 adInstance.State = AdState.Received;
-                if (adInstance.m_adType == AdType.Banner && adInstance.m_bannerVisibled)
+                if (adInstance.m_adType == AdType.Banner && adInstance.m_bannerDisplayed)
                 {
                     Show(adInstance);
                 }
@@ -241,7 +225,9 @@ namespace Virterix.AdMediation
                             break;
                     }
                 }
-                AddEvent(adInstance.m_adType, AdEvent.Hiding, adInstance);
+
+                if (adInstance.m_adType != AdType.Banner)
+                    AddEvent(adInstance.m_adType, AdEvent.Hiding, adInstance);
             }
         }
 

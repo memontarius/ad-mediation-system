@@ -1,5 +1,6 @@
 #define _AMS_IRONSOURCE
 
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using Boomlagoon.JSON;
@@ -10,6 +11,14 @@ namespace Virterix.AdMediation
 {
     public class IronSourceAdapter : AdNetworkAdapter
     {
+        [Serializable]
+        public struct OverridePlacement
+        {
+            public AdType adType;
+            public string originPlacement;
+            public string overriddenPlacement;
+        }
+
         public enum IrnSrcBannerSize
         {
             Banner,
@@ -25,6 +34,8 @@ namespace Virterix.AdMediation
         }
 
         public int m_timeout = 120;
+        [SerializeField]
+        public OverridePlacement[] m_overiddenPlacements;
 
         private AdInstance m_interstitialInstance;
         private AdInstance m_incentivizedInstance;
@@ -237,29 +248,28 @@ namespace Virterix.AdMediation
             IronSourceBannerPosition bannerPos = GetBannerPosition(adInstance, placement);
             IronSourceBannerSize bannerSize = GetBannerSize(adInstance);         
             m_currBannerInstance = adInstance;
-            IronSource.Agent.loadBanner(bannerSize, bannerPos, placement);
+            IronSource.Agent.loadBanner(bannerSize, bannerPos, GetOverridenPlacement(adInstance.m_adType, placement));
             yield break;
         }
 
         public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             if (adInstance.m_adType == AdType.Banner)
-            {
                 m_bannerVisibled = true;
-            }
 
             if (IsReady(adInstance))
             {
+                string actualPlacementName = GetOverridenPlacement(adInstance.m_adType, placement);
                 switch (adInstance.m_adType)
                 {
                     case AdType.Banner:
                         IronSource.Agent.displayBanner();
                         break;
                     case AdType.Interstitial:
-                        IronSource.Agent.showInterstitial(placement);
+                        IronSource.Agent.showInterstitial(actualPlacementName);
                         break;
                     case AdType.Incentivized:
-                        IronSource.Agent.showRewardedVideo(placement);
+                        IronSource.Agent.showRewardedVideo(actualPlacementName);
                         break;
                 }
                 return true;
@@ -270,27 +280,13 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override void Hide(AdInstance adInstance = null)
+        public override void Hide(AdInstance adInstance = null, string adInstanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME)
         {
             if (adInstance.m_adType == AdType.Banner)
             {
                 m_bannerVisibled = false;
                 IronSource.Agent.hideBanner();
                 NotifyEvent(AdEvent.Hiding, adInstance);
-            }
-        }
-
-        public override void HideBannerTypeAdWithoutNotify(AdInstance adInstance = null)
-        {   
-            switch (adInstance.m_adType)
-            {
-                case AdType.Banner:
-                    m_bannerVisibled = false;
-                    if (m_bannerState == AdState.Received)
-                    {
-                        IronSource.Agent.hideBanner();
-                    }
-                    break;
             }
         }
 
@@ -328,6 +324,19 @@ namespace Virterix.AdMediation
                 m_bannerState = AdState.Unavailable;
             }
             base.NotifyEvent(adEvent, adInstance);
+        }
+
+        private string GetOverridenPlacement(AdType adType, string placementName)
+        {
+            foreach(var overridenPlacement in m_overiddenPlacements)
+            {
+                if (overridenPlacement.adType == adType && overridenPlacement.originPlacement == placementName)
+                {
+                    placementName = overridenPlacement.overriddenPlacement;
+                    break;
+                }
+            }
+            return placementName;
         }
 
         //------------------------------------------------------------------------
@@ -491,8 +500,8 @@ namespace Virterix.AdMediation
         {
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AMS] IronSourceAdapter.ImpressionSuccessEvent()");
-            Debug.Log("unity - script: I got ImpressionSuccessEvent ToString(): " + impressionData.ToString());
-            Debug.Log("unity - script: I got ImpressionSuccessEvent allData: " + impressionData.allData);
+            Debug.Log("[AMS] unity - script: I got ImpressionSuccessEvent ToString(): " + impressionData.ToString());
+            Debug.Log("[AMS] unity - script: I got ImpressionSuccessEvent allData: " + impressionData.allData);
 #endif
         }
 

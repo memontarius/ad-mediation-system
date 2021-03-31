@@ -32,3 +32,13 @@ MonoBehaviour:
     _bannerType: 3
   _interstitialAdInstances: []
   _rewardAdInstances: []
+  _overiddenPlacements:
+  - adType: 0
+    originPlacement: Default
+    overriddenPlacement: DefaultBanner
+  - adType: 1
+    originPlacement: Default
+    overriddenPlacement: DefaultInterstitial
+  - adType: 2
+    originPlacement: Default
+    overriddenPlacement: DefaultRewardedVideo

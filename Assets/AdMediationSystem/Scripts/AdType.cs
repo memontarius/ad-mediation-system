@@ -2,7 +2,7 @@
 {
     public enum AdType
     {
-        Unknown = 0,
+        Unknown,
         Banner,
         Interstitial,
         Incentivized

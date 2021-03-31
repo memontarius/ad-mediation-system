@@ -203,7 +203,7 @@ namespace Virterix.AdMediation
 
         public virtual bool Show(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME) { return false; }
 
-        public virtual void Hide(AdInstance adInstance) { }
+        public virtual void Hide(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME) { }
 
         public bool IsReady(AdType adType, string adInstanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME)
         {
@@ -229,10 +229,6 @@ namespace Virterix.AdMediation
         {
             AdInstance adInstance = GetAdInstance(adType, adInstanceName);
             Hide(adInstance);
-        }
-
-        public virtual void HideBannerTypeAdWithoutNotify(AdInstance adInstance)
-        {
         }
 
         public virtual bool IsSupported(AdType adType)

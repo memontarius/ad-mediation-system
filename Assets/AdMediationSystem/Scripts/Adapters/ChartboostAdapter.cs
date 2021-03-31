@@ -166,7 +166,7 @@ namespace Virterix.AdMediation
             return false;
         }
 
-        public override void Hide(AdInstance adInstance = null)
+        public override void Hide(AdInstance adInstance = null, string adInstanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME)
         {
         }
 
@@ -201,7 +201,7 @@ namespace Virterix.AdMediation
         private void DidFailToLoadInterstitial(CBLocation location, CBImpressionError error)
         {
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("ChartboostAdapter.DidFailToLoadInterstitial() error:" + error.ToString());
+            Debug.Log("[AMS] ChartboostAdapter.DidFailToLoadInterstitial() error:" + error.ToString());
 #endif
             m_interstitialInstance.State = AdState.Unavailable;
             AddEvent(AdType.Interstitial, AdEvent.PreparationFailed, m_interstitialInstance);
@@ -233,7 +233,7 @@ namespace Virterix.AdMediation
         private void DidFailToLoadRewardedVideo(CBLocation location, CBImpressionError error)
         {
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("ChartboostAdapter.DidFailToLoadRewardedVideo() error:" + error.ToString());
+            Debug.Log("[AMS] ChartboostAdapter.DidFailToLoadRewardedVideo() error:" + error.ToString());
 #endif
             m_incentivizedInstance.State = AdState.Unavailable;
             AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, m_incentivizedInstance);

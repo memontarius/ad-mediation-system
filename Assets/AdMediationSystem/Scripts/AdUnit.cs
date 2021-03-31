@@ -12,7 +12,7 @@ namespace Virterix.AdMediation
         private AdNetworkAdapter m_network;
         private BaseFetchStrategyParams m_fetchStrategyParams;
         private float m_startImpressionTime;
-        private bool m_isShown;
+        private bool m_wasImpression;
 
         public AdType AdType 
         { 
@@ -152,7 +152,7 @@ namespace Virterix.AdMediation
         }
 
         /// <returns>True when successfully shown ad</returns>
-        public bool ShowAd()
+        public bool Show()
         {
             bool showed = m_network.Show(AdInstance, PlacementName);
             Impressions = showed ? Impressions + 1 : Impressions;
@@ -162,7 +162,7 @@ namespace Virterix.AdMediation
             {
                 if (showed)
                 {
-                    m_isShown = true;
+                    m_wasImpression = true;
                     StartImpressionTime = Time.unscaledTime;
                 }
             }
@@ -172,13 +172,7 @@ namespace Virterix.AdMediation
         public void Hide()
         {
             UpdateDisplayTimeWhenAdHidden();
-            m_network.Hide(AdInstance);
-        }
-
-        public void HideBannerTypeAdWithoutNotify()
-        {
-            UpdateDisplayTimeWhenAdHidden();
-            m_network.HideBannerTypeAdWithoutNotify(AdInstance);
+            m_network.Hide(AdInstance, PlacementName);
         }
 
         public void Prepare()
@@ -195,9 +189,9 @@ namespace Virterix.AdMediation
         {
             if (AdType == AdType.Banner)
             {
-                if (m_isShown)
+                if (m_wasImpression)
                 {
-                    m_isShown = false;
+                    m_wasImpression = false;
                     float passedTime = Time.unscaledTime - StartImpressionTime;
                     DisplayTime += passedTime;
                 }

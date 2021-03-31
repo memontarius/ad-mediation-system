@@ -10,7 +10,6 @@ namespace Virterix.AdMediation
 {
     public class AppLovinAdapter : AdNetworkAdapter
     {
-
         public enum AppLovinBannerPosition
         {
             Center,
@@ -167,7 +166,7 @@ namespace Virterix.AdMediation
 #endif
         }
 
-        public override void Hide(AdInstance adInstance = null)
+        public override void Hide(AdInstance adInstance = null, string adInstanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME)
         {
             AdType adType = adInstance.m_adType;
             switch (adType)

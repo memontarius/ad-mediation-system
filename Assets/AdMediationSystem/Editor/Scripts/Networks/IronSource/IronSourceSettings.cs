@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Virterix.AdMediation.Editor
 {
     public class IronSourceSettings : BaseAdNetworkSettings
     {
+        public List<IronSourceAdapter.OverridePlacement> _overiddenPlacements;
+
         public override Type NetworkAdapterType => typeof(IronSourceAdapter);
         protected override string AdapterScriptName => "IronSourceAdapter";
         protected override string AdapterDefinePeprocessorKey => "_AMS_IRONSOURCE";

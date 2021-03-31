@@ -223,7 +223,7 @@ namespace Virterix.AdMediation
             return isShowSuccessful;
         }
 
-        public override void Hide(AdInstance adInstance = null)
+        public override void Hide(AdInstance adInstance = null, string adInstanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME)
         {
             AudienceNetworkAdInstanceData audienceNetworkAdInstance = adInstance as AudienceNetworkAdInstanceData;
             AdType adType = adInstance.m_adType;
@@ -242,28 +242,6 @@ namespace Virterix.AdMediation
                         }
                     }
                     NotifyEvent(AdEvent.Hiding, audienceNetworkAdInstance);
-                    break;
-            }
-        }
-
-        public override void HideBannerTypeAdWithoutNotify(AdInstance adInstance = null)
-        {
-            AdType adType = adInstance.m_adType;
-            AudienceNetworkAdInstanceData audienceNetworkAdInstance = adInstance as AudienceNetworkAdInstanceData;
-            if (audienceNetworkAdInstance == null)
-            {
-                return;
-            }
-            audienceNetworkAdInstance.m_bannerVisibled = false;
-
-            switch (adType)
-            {
-                case AdType.Banner:
-                    if (adInstance.State == AdState.Received)
-                    {
-                        AdView bannerView = adInstance.m_adView as AdView;
-                        bannerView.Show(-10000);
-                    }
                     break;
             }
         }

@@ -207,7 +207,7 @@ namespace Virterix.AdMediation
             return false;
         }
 
-        public override void Hide(AdInstance adInstance = null)
+        public override void Hide(AdInstance adInstance = null, string adInstanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME)
         {
             AdType adType = m_adInstance.m_adType;
             switch (adType)

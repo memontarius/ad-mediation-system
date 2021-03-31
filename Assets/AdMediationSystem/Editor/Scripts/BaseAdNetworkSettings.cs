@@ -91,26 +91,6 @@ namespace Virterix.AdMediation.Editor
         {
             var parameters = CreateBannerSpecificAdInstanceParameters(projectName, instanceName, bannerType, bannerPositions);
             parameters.Name = instanceName;
-
-            /*
-            SerializedObject serializedObj = new SerializedObject(parameters);
-
-            serializedObj.FindProperty("m_name").stringValue = instanceName;
-            serializedObj.FindProperty("m_bannerSize").intValue = bannerType;
-            var bannerPositionsProp = serializedObj.FindProperty("m_bannerPositions");
-            bannerPositionsProp.arraySize = bannerPositions.Length;
-
-            for (int i = 0; i < bannerPositions.Length; i++)
-            {
-                var specificPosition = ConvertToSpecificBannerPosition(bannerPositions[i].m_bannerPosition);
-                var item = bannerPositionsProp.GetArrayElementAtIndex(i);
-                item.FindPropertyRelative("m_placementName").stringValue = bannerPositions[i].m_placementName;
-                item.FindPropertyRelative("m_bannerPosition").intValue = specificPosition;
-            }
-
-            serializedObj.ApplyModifiedProperties();
-            */
-
             EditorUtility.SetDirty(parameters);
             AssetDatabase.SaveAssets();
             return parameters;
