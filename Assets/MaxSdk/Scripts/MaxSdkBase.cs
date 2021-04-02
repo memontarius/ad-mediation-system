@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Globalization;
 
 public abstract class MaxSdkBase
 {
@@ -197,7 +198,24 @@ public abstract class MaxSdkBase
             NetworkName = adInfoObject.TryGetValue("networkName", out networkName) ? networkName : "";
             CreativeIdentifier = adInfoObject.TryGetValue("creativeId", out creativeIdentifier) ? creativeIdentifier : "";
             Placement = adInfoObject.TryGetValue("placement", out placement) ? placement : "";
-            Revenue = adInfoObject.TryGetValue("revenue", out revenue) ? Convert.ToDouble(revenue) : 0;
+
+            if (adInfoObject.TryGetValue("revenue", out revenue))
+            {
+                try
+                {
+                    // InvariantCulture guarantees the decimal is used for the separator even in regions that use commas as the separator
+                    Revenue = double.Parse(revenue, NumberStyles.Any, CultureInfo.InvariantCulture);
+                }
+                catch (Exception exception)
+                {
+                    MaxSdkLogger.E("Failed to parse double (" + revenue + ") with exception: " + exception);
+                    Revenue = -1;
+                }
+            }
+            else
+            {
+                Revenue = -1;
+            }
         }
 
         public override string ToString()

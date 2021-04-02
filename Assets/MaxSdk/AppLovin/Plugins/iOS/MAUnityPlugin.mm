@@ -581,7 +581,7 @@ extern "C"
         }
         else
         {
-            _verboseLoggingToSet = [NSNumber numberWithBool: enabled];
+            _verboseLoggingToSet = @(enabled);
         }
     }
     
@@ -627,7 +627,7 @@ extern "C"
         }
         else
         {
-            _creativeDebuggerEnabledToSet = [NSNumber numberWithBool: enabled];
+            _creativeDebuggerEnabledToSet = @(enabled);
         }
     }
     
@@ -640,7 +640,7 @@ extern "C"
         }
         else
         {
-            _exceptionHandlerEnabledToSet = [NSNumber numberWithBool: enabled];
+            _exceptionHandlerEnabledToSet = @(enabled);
         }
     }
 

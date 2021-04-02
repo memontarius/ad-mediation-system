@@ -1,5 +1,9 @@
 ## Versions
 
+## 4.1.2
+    * Add support for embedding the Swift Standard Library (for iOS < 12.2) if a network requires it.
+    * Fix failure to parse doubles when dealing with exponential notation by returning -1.
+    * Fix build when targeting platforms other than Android or iOS.
 ## 4.1.1
     * Add API to retrieve country code, via `MaxSdk.GetSdkConfiguration().CountryCode`.
 ## 4.1.0

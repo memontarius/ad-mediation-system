@@ -89,7 +89,7 @@ namespace Virterix.AdMediation.Editor
             {
                 if (_instanceFoldoutButtonStyle == null)
                 {
-                    _instanceFoldoutButtonStyle = new GUIStyle(GUI.skin.GetStyle("button"));
+                    _instanceFoldoutButtonStyle = new GUIStyle(GUI.skin.GetStyle("Button"));
                     _instanceFoldoutButtonStyle.alignment = TextAnchor.MiddleLeft;
                     _instanceFoldoutButtonStyle.margin = new RectOffset(1, 1, 0, 1);
                     _instanceFoldoutButtonStyle.padding = new RectOffset(6, 6, 3, 3);

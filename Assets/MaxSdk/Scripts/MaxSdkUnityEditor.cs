@@ -193,7 +193,9 @@ public class MaxSdkUnityEditor : MaxSdkBase
     {
         var sdkConfiguration = new SdkConfiguration();
         sdkConfiguration.ConsentDialogState = ConsentDialogState.Unknown;
+#if UNITY_EDITOR
         sdkConfiguration.AppTrackingStatus = AppTrackingStatus.Authorized;
+#endif
         sdkConfiguration.CountryCode = RegionInfo.CurrentRegion.TwoLetterISORegionName;
 
         return sdkConfiguration;

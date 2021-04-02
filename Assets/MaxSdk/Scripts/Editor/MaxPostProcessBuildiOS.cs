@@ -70,6 +70,12 @@ namespace AppLovinMax.Scripts.Editor
             "MoPub"
         };
 
+        private static readonly List<string> EmbedSwiftStandardLibrariesNetworks = new List<string>
+        {
+            "Facebook", 
+            "MoPub"
+        };
+
         private static string PluginMediationDirectory
         {
             get
@@ -104,6 +110,7 @@ namespace AppLovinMax.Scripts.Editor
             LocalizeUserTrackingDescriptionIfNeeded(AppLovinSettings.Instance.UserTrackingUsageDescriptionZhHans, "zh-Hans", buildPath, project, unityMainTargetGuid);
 
             AddSwiftSupportIfNeeded(buildPath, project, unityFrameworkTargetGuid);
+            EmbedSwiftStandardLibrariesIfNeeded(buildPath, project, unityMainTargetGuid);
 
             project.WriteToFile(projectPath);
         }
@@ -246,8 +253,22 @@ namespace AppLovinMax.Scripts.Editor
 
             // Add Swift build properties
             project.AddBuildProperty(targetGuid, "SWIFT_VERSION", "5");
-            project.AddBuildProperty(targetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
             project.AddBuildProperty(targetGuid, "CLANG_ENABLE_MODULES", "YES");
+        }
+
+        /// <summary>
+        /// For Swift 5+ code that uses the standard libraries, the Swift Standard Libraries MUST be embedded for iOS < 12.2
+        /// Swift 5 introduced ABI stability, which allowed iOS to start bundling the standard libraries in the OS starting with iOS 12.2
+        /// Issue Reference: https://github.com/facebook/facebook-sdk-for-unity/issues/506
+	  /// </summary>
+        private static void EmbedSwiftStandardLibrariesIfNeeded(string buildPath, PBXProject project, string mainTargetGuid)
+        {
+            var maxMediationDirectory = PluginMediationDirectory;
+            var hasEmbedSwiftStandardLibrariesNetworksInProject = EmbedSwiftStandardLibrariesNetworks.Any(network => Directory.Exists(Path.Combine(maxMediationDirectory, network)));
+            if (!hasEmbedSwiftStandardLibrariesNetworksInProject) return;
+
+            // This needs to be added the main target. App Store may reject builds if added to UnityFramework (i.e. MoPub in FT).
+            project.AddBuildProperty(mainTargetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
         }
 
         private static void CreateSwiftFile(string swiftFilePath)
