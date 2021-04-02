@@ -41,7 +41,7 @@ namespace Virterix.AdMediation
             }
             else
             {
-                Debug.LogWarning("AppLovin Settings not found!");
+                Debug.LogWarning("[AMS] AppLovin Settings not found!");
             }
 #endif
         }
@@ -203,7 +203,7 @@ namespace Virterix.AdMediation
         public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
 #if UNITY_EDITOR
-            //return;
+            return;
 #endif
             AdType adType = adInstance.m_adType;
 #if UNITY_ANDROID || UNITY_IOS
@@ -252,7 +252,7 @@ namespace Virterix.AdMediation
         private void OnSdkInitializedEvent(MaxSdkBase.SdkConfiguration sdkConfiguration)
         {
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("AppLovinAdapter OnSdkInitializedEvent()");
+            Debug.Log("[AMS] AppLovinAdapter OnSdkInitializedEvent()");
 #endif
         }
 
@@ -269,7 +269,7 @@ namespace Virterix.AdMediation
         private void OnInterstitialFailedEvent(string adUnitId, int errorCode)
         {
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("AppLovinAdapter OnInterstitialFailedEvent() " + adUnitId + " errorCode:" + errorCode);
+            Debug.Log("[AMS] AppLovinAdapter OnInterstitialFailedEvent() " + adUnitId + " errorCode:" + errorCode);
 #endif
             // Interstitial ad failed to load 
             // We recommend retrying with exponentially higher delays up to a maximum delay (in this case 64 seconds)
@@ -320,7 +320,7 @@ namespace Virterix.AdMediation
         private void OnRewardedAdFailedEvent(string adUnitId, int errorCode)
         {
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("AppLovinAdapter OnRewardedAdFailedEvent() " + adUnitId + " errorCode:" + errorCode);
+            Debug.Log("[AMS] AppLovinAdapter OnRewardedAdFailedEvent() " + adUnitId + " errorCode:" + errorCode);
 #endif
             // Rewarded ad failed to load 
             // We recommend retrying with exponentially higher delays up to a maximum delay (in this case 64 seconds)

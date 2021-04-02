@@ -301,9 +301,7 @@ namespace Virterix.AdMediation
             foreach (AdMediator bannerMediator in m_bannerMediators)
             {
                 if (m_bannerDisplayStates[index++])
-                {
                     bannerMediator.Show();
-                }
             }
         }
 

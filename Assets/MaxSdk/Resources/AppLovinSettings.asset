@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc0ba1b5ef6b4a6b9dd53d7eadfea16, type: 3}
   m_Name: AppLovinSettings
   m_EditorClassIdentifier: 
-  qualityServiceEnabled: 0
+  qualityServiceEnabled: 1
   sdkKey: StxIgPTR5H-CHX-VolnxtbADt94m_rWShRlMsIpxan8sJ6M6s72ikCxaM_KLqsoWIXu8rg4PSCGnJcu9lwtS7o
   consentFlowEnabled: 0
-  consentFlowTermsOfServiceUrl: 
   consentFlowPrivacyPolicyUrl: 
   userTrackingUsageDescriptionEn: 
   userTrackingUsageLocalizationEnabled: 0

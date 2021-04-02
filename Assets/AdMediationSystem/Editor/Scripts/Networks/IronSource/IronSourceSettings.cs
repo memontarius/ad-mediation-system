@@ -34,6 +34,12 @@ namespace Virterix.AdMediation.Editor
         {
             IronSourceAdapter adapter = networkAdapter as IronSourceAdapter;
             adapter.m_timeout = _timeout;
+            var overridenPlacements = _overiddenPlacements.ToArray();
+            for(int i = 0; i < overridenPlacements.Length; i++)
+            {
+                overridenPlacements[i].adType = Utils.ConvertEditorAdType((EditorAdType)overridenPlacements[i].adType);
+            }
+            adapter.m_overriddenPlacements = overridenPlacements;
         }
 
         protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)

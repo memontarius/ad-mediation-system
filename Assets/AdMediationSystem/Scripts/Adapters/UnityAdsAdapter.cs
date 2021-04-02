@@ -121,6 +121,8 @@ namespace Virterix.AdMediation
             if (adType == AdType.Banner)
                 m_isBannerDisplayed = true;
 
+            Debug.Log("====== UNITY SHOW: " + adInstance.Name + " - placement:" + placement);
+
             if (IsReady(adInstance))
             {
                 if (adType == AdType.Banner)

@@ -83,7 +83,7 @@ namespace Virterix.AdMediation.Editor
         private SerializedProperty _enabledProp;
         private List<AdInstanceBlockData> _instanceBlocks = new List<AdInstanceBlockData>();
 
-        private GUIStyle InstanceFoldoutButtonStyle
+        protected GUIStyle InstanceFoldoutButtonStyle
         {
             get
             {
@@ -342,9 +342,7 @@ namespace Virterix.AdMediation.Editor
             {
                 AdInstanceBlockData blockData = _instanceBlocks[i];
                 EditorGUILayout.Space(2);
-                //char collapsedSymbol = blockData._isCollapsed ? '\u25B7' : '\u25BD';
-                char collapsedSymbol = blockData._isCollapsed ? '\u21A7' : '\u21A6';
-                
+                char collapsedSymbol = blockData._isCollapsed ? AdMediationSettingsWindow.SYMBOL_LEFT_ARROW : AdMediationSettingsWindow.SYMBOL_BOTTOM_ARROW;
                 string buttonTitle = string.Format("{0}  {1}", collapsedSymbol, blockData._blockName);
 
                 if (GUILayout.Button(buttonTitle, InstanceFoldoutButtonStyle))

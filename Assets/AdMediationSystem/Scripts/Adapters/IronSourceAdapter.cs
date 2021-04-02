@@ -35,12 +35,13 @@ namespace Virterix.AdMediation
 
         public int m_timeout = 120;
         [SerializeField]
-        public OverridePlacement[] m_overiddenPlacements;
+        public OverridePlacement[] m_overriddenPlacements;
 
         private AdInstance m_interstitialInstance;
         private AdInstance m_incentivizedInstance;
   
         private AdInstance m_currBannerInstance;
+        private string m_currBannerPlacement;
         private bool m_bannerVisibled;
         private AdState m_bannerState;
 
@@ -248,6 +249,7 @@ namespace Virterix.AdMediation
             IronSourceBannerPosition bannerPos = GetBannerPosition(adInstance, placement);
             IronSourceBannerSize bannerSize = GetBannerSize(adInstance);         
             m_currBannerInstance = adInstance;
+            m_currBannerPlacement = placement;
             IronSource.Agent.loadBanner(bannerSize, bannerPos, GetOverridenPlacement(adInstance.m_adType, placement));
             yield break;
         }
@@ -263,7 +265,18 @@ namespace Virterix.AdMediation
                 switch (adInstance.m_adType)
                 {
                     case AdType.Banner:
-                        IronSource.Agent.displayBanner();
+                        bool isPreparationRequired = m_currBannerPlacement != placement;
+                        if (!isPreparationRequired)
+                        {
+                            var currBannerParams = m_currBannerInstance.m_adInstanceParams as IronSourceAdInstanceBannerParameters;
+                            var nextBannerParams = adInstance.m_adInstanceParams as IronSourceAdInstanceBannerParameters;
+                            isPreparationRequired = currBannerParams.m_bannerSize != nextBannerParams.m_bannerSize;
+                        }
+
+                        if (isPreparationRequired)
+                            Prepare(adInstance, placement);
+                        else
+                            IronSource.Agent.displayBanner();
                         break;
                     case AdType.Interstitial:
                         IronSource.Agent.showInterstitial(actualPlacementName);
@@ -296,10 +309,11 @@ namespace Virterix.AdMediation
             return false;
 #endif
             bool isReady = false;
+
             switch (adInstance.m_adType)
             {
                 case AdType.Banner:
-                    isReady = adInstance == m_currBannerInstance && m_bannerState == AdState.Received;
+                    isReady = m_bannerState == AdState.Received;
                     break;
                 case AdType.Interstitial:
                     isReady = IronSource.Agent.isInterstitialReady();
@@ -328,7 +342,7 @@ namespace Virterix.AdMediation
 
         private string GetOverridenPlacement(AdType adType, string placementName)
         {
-            foreach(var overridenPlacement in m_overiddenPlacements)
+            foreach(var overridenPlacement in m_overriddenPlacements)
             {
                 if (overridenPlacement.adType == adType && overridenPlacement.originPlacement == placementName)
                 {

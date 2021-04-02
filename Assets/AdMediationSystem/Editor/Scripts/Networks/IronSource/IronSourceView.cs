@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using UnityEditorInternal;
 using UnityEditor;
 using UnityEngine;
+using UnityEditor.AnimatedValues;
 
 namespace Virterix.AdMediation.Editor
 {
     public class IronSourceView : BaseAdNetworkView
     {
-        protected override string SettingsFileName => "AdmIronSourceSettings.asset";
+        private const string OVERRIDDEN_PLACEMENT_LIST_COLLAPSED_SAVEKEY = AdMediationSettingsWindow.PREFIX_SAVEKEY + "irnsrc_plac_collapsed";
 
+        private bool _isOverriddenPlacementUncollapsed;
+        private AnimBool _overriddenPlacementFoldAnimation;
+
+        protected override string SettingsFileName => "AdmIronSourceSettings.asset";
         protected override bool IsAdInstanceIdsDisplayed => false;
 
         private SerializedProperty _overiddenPlacementsProp;
@@ -19,16 +24,15 @@ namespace Virterix.AdMediation.Editor
             base(settingsWindow, name, identifier)
         {
             BannerTypes = Enum.GetNames(typeof(IronSourceAdapter.IrnSrcBannerSize));
-            List<string> adTypes = new List<string>(Enum.GetNames(typeof(AdType)));
-            adTypes.Remove(AdType.Unknown.ToString());
+            string[] adTypes = Enum.GetNames(typeof(EditorAdType));
+
+            _isOverriddenPlacementUncollapsed = EditorPrefs.GetBool(OVERRIDDEN_PLACEMENT_LIST_COLLAPSED_SAVEKEY, false);
+            _overriddenPlacementFoldAnimation = new AnimBool(_isOverriddenPlacementUncollapsed);
+            _overriddenPlacementFoldAnimation.valueChanged.AddListener(settingsWindow.Repaint);
 
             _overiddenPlacementsProp = _serializedSettings.FindProperty("_overiddenPlacements");
-            _overriddenPlacementList = new ReorderableList(_serializedSettings, _overiddenPlacementsProp, false, true, true, true);
+            _overriddenPlacementList = new ReorderableList(_serializedSettings, _overiddenPlacementsProp, false, false, true, true);
             
-            _overriddenPlacementList.drawHeaderCallback = (rect) =>
-            {
-                EditorGUI.LabelField(rect, "Override Placement Names");
-            };
             _overriddenPlacementList.drawElementCallback = (rect, index, active, focused) =>
             {
                 SerializedProperty element = _overriddenPlacementList.serializedProperty.GetArrayElementAtIndex(index);
@@ -38,7 +42,7 @@ namespace Virterix.AdMediation.Editor
 
                 SerializedProperty adTypeProp = element.FindPropertyRelative("adType");
                 adTypeProp.intValue = EditorGUI.Popup(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight),
-                    adTypeProp.intValue, adTypes.ToArray());
+                    adTypeProp.intValue, adTypes);
 
                 rect.x += 100 + 10;
                 EditorGUI.LabelField(new Rect(rect.x, rect.y, 50, EditorGUIUtility.singleLineHeight), "Current");
@@ -69,7 +73,23 @@ namespace Virterix.AdMediation.Editor
         protected override void DrawSpecificSettings()
         {
             GUILayout.BeginVertical("box");
-            _overriddenPlacementList.DoLayoutList();
+ 
+            char collapsedSymbol = _isOverriddenPlacementUncollapsed ? AdMediationSettingsWindow.SYMBOL_LEFT_ARROW : AdMediationSettingsWindow.SYMBOL_BOTTOM_ARROW;
+            string buttonTitle = string.Format("{0} Override Placement Names", collapsedSymbol);
+
+            if (GUILayout.Button(buttonTitle, InstanceFoldoutButtonStyle))
+            {
+                _isOverriddenPlacementUncollapsed = !_isOverriddenPlacementUncollapsed;
+                EditorPrefs.SetBool(OVERRIDDEN_PLACEMENT_LIST_COLLAPSED_SAVEKEY, _isOverriddenPlacementUncollapsed);
+            }
+
+            _overriddenPlacementFoldAnimation.target = _isOverriddenPlacementUncollapsed;
+            if (EditorGUILayout.BeginFadeGroup(_overriddenPlacementFoldAnimation.faded))
+            {
+                _overriddenPlacementList.DoLayoutList();
+            }
+            EditorGUILayout.EndFadeGroup();
+
             GUILayout.EndVertical();
         }
     }

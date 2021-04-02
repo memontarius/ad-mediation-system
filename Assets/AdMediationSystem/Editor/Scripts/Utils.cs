@@ -57,5 +57,23 @@ namespace Virterix.AdMediation.Editor
                 File.Delete(metaFilePath);
             }
         }
+
+        public static AdType ConvertEditorAdType(EditorAdType adType)
+        {
+            AdType result = AdType.Unknown;
+            switch (adType)
+            {
+                case EditorAdType.Banner:
+                    result = AdType.Banner;
+                    break;
+                case EditorAdType.Interstitial:
+                    result = AdType.Interstitial;
+                    break;
+                case EditorAdType.Incentivized:
+                    result = AdType.Incentivized;
+                    break;
+            }
+            return result;
+        }
     }
 }

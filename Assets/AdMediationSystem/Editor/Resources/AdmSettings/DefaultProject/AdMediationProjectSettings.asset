@@ -168,7 +168,7 @@ MonoBehaviour:
     _name: Home_Screen
     _continueAfterEndSession: 1
     _fetchOnAdUnitHidden: 1
-    _fetchOnStart: 1
+    _fetchOnStart: 0
     _bannerMinDisplayTime: 30
     _deferredFetchDelay: 90
     _fetchStrategyType: 0
@@ -184,6 +184,14 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
   _incentivizedMediators:
   - _adType: 3
     _name: Default

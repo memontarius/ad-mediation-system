@@ -9,6 +9,13 @@ using Boomlagoon.JSON;
 
 namespace Virterix.AdMediation.Editor
 {
+    public enum EditorAdType
+    {
+        Banner,
+        Interstitial,
+        Incentivized
+    }
+
     public class AdMediationSettingsWindow : EditorWindow
     {
         public const string SETTINGS_PATH = "Assets/AdMediationSystem/Editor/Resources/";
@@ -17,6 +24,8 @@ namespace Virterix.AdMediation.Editor
         public const string PREFIX_SAVEKEY = "adm.";
         public const string PROJECT_NAME_SAVEKEY = "project_name";
         public const string EXTRA_LOGGING_DEFINE = "AD_MEDIATION_DEBUG_MODE";
+        public const char SYMBOL_LEFT_ARROW = '\u21A7'; // '\u25B7'
+        public const char SYMBOL_BOTTOM_ARROW = '\u21A6'; // '\u25BD'
 
         private int SelectedTab
         {
@@ -262,6 +271,11 @@ namespace Virterix.AdMediation.Editor
                 string key = network.Identifier + adType.ToString();
                 _adInstanceStorage[key] = network.GetAdInstances(adType);
             }
+        }
+
+        public static string AddPrefixToSaveKey(string saveKey)
+        {
+            return string.Format("{0}{1}", PREFIX_SAVEKEY, saveKey);
         }
 
         private void DuplicateSettings(string currProjectSettings, string targetProjectSettings)
