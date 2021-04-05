@@ -303,7 +303,7 @@ namespace Virterix.AdMediation
             return isAdAvailable;
         }
 
-        public override void Hide(AdInstance adInstance = null, string adInstanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME)
+        public override void Hide(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
             AdType adType = adInstance.m_adType;
@@ -486,12 +486,11 @@ namespace Virterix.AdMediation
                     .AddExtra("color_bg", ColorUtility.ToHtmlStringRGB(m_adBackgoundColor));
 
             if (!AdMediationSystem.IsAdsPersonalized)
-            {
                 requestBuilder.AddExtra("npa", "1");
-            }
 
             if (AdMediationSystem.Instance.m_testModeEnabled)
             {
+                requestBuilder.AddTestDevice(AdRequest.TestDeviceSimulator);
                 foreach (string deviceId in AdMediationSystem.Instance.m_testDevices)
                 {
                     requestBuilder.AddTestDevice(deviceId);

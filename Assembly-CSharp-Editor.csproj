@@ -57,48 +57,49 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\BaseAdNetworkView.cs" />
+    <Compile Include="Assets\IronSource\Editor\IronSourceMenu.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AdMob\AdMobView.cs" />
     <Compile Include="Assets\GooglePlayGames\Editor\GPGSUtil.cs" />
     <Compile Include="Assets\Chartboost\Editor\CBSettingEditor.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AudienceNetwork\AudienceNetworkSettings.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\AdMediationSettingsWindow.cs" />
-    <Compile Include="Assets\IronSource\Editor\IronSourceBuildPostprocessor.cs" />
     <Compile Include="Assets\IronSource\Editor\IronSourceMediatedNetworkSettings.cs" />
+    <Compile Include="Assets\IronSource\Editor\IronSourceDependenciesManager.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Pollfish\PollfishSettings.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\UnityAds\UnityAdsSettings.cs" />
     <Compile Include="Assets\GooglePlayGames\Editor\GPGSProjectSettings.cs" />
     <Compile Include="Assets\GooglePlayGames\Editor\GPGSAndroidSetupUI.cs" />
-    <Compile Include="Assets\IronSource\Editor\IronSourceMediatedNetworkSettingsInspector.cs" />
-    <Compile Include="Assets\IronSource\Editor\IronSourceEditorCoroutines.cs" />
+    <Compile Include="Assets\IronSource\Editor\IronSourceBuildPostprocessor.cs" />
+    <Compile Include="Assets\IronSource\Editor\IronSourcePlistProcessor.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\AdMediationProjectSettings.cs" />
     <Compile Include="Assets\Chartboost\Editor\CBCleanup.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Pollfish\PollfishView.cs" />
     <Compile Include="Assets\GooglePlayGames\Editor\NearbyConnectionUI.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Chartboost\ChartboostSettings.cs" />
-    <Compile Include="Assets\IronSource\Editor\IronSourcePlistProcessor.cs" />
-    <Compile Include="Assets\IronSource\Editor\IronSourceMediationSettingsInspector.cs" />
+    <Compile Include="Assets\IronSource\Editor\IronSourceEditorCoroutines.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AdMob\AdMobSettings.cs" />
     <Compile Include="Assets\Chartboost\Editor\CBPostProcess.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\IronSource\IronSourceView.cs" />
+    <Compile Include="Assets\IronSource\Editor\IAdapterSettings.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Applovin\ApplovinView.cs" />
-    <Compile Include="Assets\IronSource\Editor\IronSourceDependenciesManager.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AudienceNetwork\AudienceNetworkView.cs" />
-    <Compile Include="Assets\IronSource\Editor\IronSourceMenu.cs" />
+    <Compile Include="Assets\IronSource\Editor\IronSourceManifestProcessor.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Utils.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\UnityAds\UnityAdsView.cs" />
-    <Compile Include="Assets\IronSource\Editor\IAdapterSettings.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\AdMediationSettingsBuilder.cs" />
-    <Compile Include="Assets\IronSource\Editor\IronSourceManifestProcessor.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\BaseAdNetworkSettings.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\IronSource\IronSourceSettings.cs" />
     <Compile Include="Assets\GooglePlayGames\Editor\GPGSPostBuild.cs" />
+    <Compile Include="Assets\IronSource\Editor\IronSourceMediatedNetworkSettingsInspector.cs" />
     <Compile Include="Assets\GooglePlayGames\Editor\GPGSUpgrader.cs" />
     <Compile Include="Assets\GooglePlayGames\Editor\GPGSDocsUI.cs" />
+    <Compile Include="Assets\IronSource\Editor\IronSourceMediationSettingsInspector.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Chartboost\ChartboostView.cs" />
     <Compile Include="Assets\GooglePlayGames\Editor\GPGSStrings.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\AdMediatorView.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Applovin\ApplovinSettings.cs" />
     <Compile Include="Assets\Chartboost\Editor\CBManifestEditor.cs" />
+    <Compile Include="Assets\AdMediationSystem\Editor\Scripts\EditorAdType.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Chartboost\Editor\ChartboostDependencies.xml" />
@@ -106,7 +107,6 @@
      <None Include="Assets\ExternalDependencyManager\Editor\Google.VersionHandlerImpl_v1.2.162.dll" />
      <None Include="Assets\MaxSdk\AppLovin\Editor\Dependencies.xml" />
      <None Include="Assets\GooglePlayGames\Editor\m2repository\com\google\games\gpgs-plugin-support\maven-metadata.xml" />
-     <None Include="Assets\IronSource\Editor\IronSourceSDKDependencies.xml" />
      <None Include="Assets\GooglePlayGames\Editor\template-GameInfo.txt" />
      <None Include="Assets\ExternalDependencyManager\Editor\Google.IOSResolver_v1.2.162.dll" />
      <None Include="Assets\ExternalDependencyManager\Editor\Google.JarResolver_v1.2.162.dll" />
@@ -118,6 +118,7 @@
      <None Include="Assets\IronSource\Editor\ISFacebookAdapterDependencies.xml" />
      <None Include="Assets\GooglePlayGames\Editor\template-AndroidManifest.txt" />
      <None Include="Assets\GooglePlayGames\Editor\template-Constants.txt" />
+     <None Include="Assets\IronSource\Editor\IronSourceSDKDependencies.xml" />
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.0f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>

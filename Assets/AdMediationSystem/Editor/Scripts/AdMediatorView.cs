@@ -347,7 +347,7 @@ namespace Virterix.AdMediation.Editor
             }
         }
 
-        public void FixPopupSelection()
+        public void UpdateUnitPopupSelections()
         {
             for (int tierIndex = 0; tierIndex < _tierListProp.arraySize; tierIndex++)
             {
@@ -371,6 +371,24 @@ namespace Virterix.AdMediation.Editor
                         networkNameProp.stringValue = activeNetworks[solvedNetworkIndex];
                         networkIdentifierProp.stringValue = _settingsWindow.GetNetworkIndentifier(networkNameProp.stringValue);
                     }
+
+                    string currNetworkName = networkNameProp.stringValue;
+                    string[] adInstanceNames = { };
+                    if (!string.IsNullOrEmpty(currNetworkName))
+                    {
+                        var networkView = _settingsWindow.GetNetworkView(currNetworkName);
+                        adInstanceNames = _settingsWindow.GetAdInstancesFromStorage(networkView.Identifier, _adType);
+                        if (adInstanceNames == null)
+                        {
+                            _settingsWindow.UpdateAdInstanceStorage(_adType);
+                            adInstanceNames = _settingsWindow.GetAdInstancesFromStorage(networkView.Identifier, _adType);
+                        }
+                    }
+
+                    var instanceIndexProp = unit.FindPropertyRelative("_instanceIndex");
+                    var instanceNameProp = unit.FindPropertyRelative("_instanceName");
+                    if (instanceIndexProp.intValue < adInstanceNames.Length)
+                        instanceNameProp.stringValue = adInstanceNames[instanceIndexProp.intValue];
                 }
             }
             _tierListProp.serializedObject.ApplyModifiedProperties();

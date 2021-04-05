@@ -48,7 +48,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-basement:17.2.1' // Assets/IronSource/Editor/IronSourceSDKDependencies.xml:25
     implementation 'com.google.games:gpgs-plugin-support:0.10.12' // Assets/GooglePlayGames/Editor/GooglePlayGamesPluginDependencies.xml:11
     implementation 'com.ironsource.adapters:facebookadapter:4.3.25' // Assets/IronSource/Editor/ISFacebookAdapterDependencies.xml:16
-    implementation 'com.ironsource.sdk:mediationsdk:7.1.2' // Assets/IronSource/Editor/IronSourceSDKDependencies.xml:9
+    implementation 'com.ironsource.sdk:mediationsdk:7.1.4.1' // Assets/IronSource/Editor/IronSourceSDKDependencies.xml:9
 // Android Resolver Dependencies End
 **DEPS**}
 

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -9,6 +9,28 @@ namespace Virterix.AdMediation.Editor
 {
     public static class Utils
     {
+        public static string[] AdTypes
+        {
+            get
+            {
+                if (_adTypes == null)
+                    _adTypes = Enum.GetNames(typeof(AdType));
+                return _adTypes;
+            }
+        }
+        private static string[] _adTypes;
+
+        public static string[] EditorAdTypes
+        {
+            get
+            {
+                if (_editorAdTypes == null)
+                    _editorAdTypes = Enum.GetNames(typeof(EditorAdType));
+                return _editorAdTypes;
+            }
+        }
+        private static string[] _editorAdTypes;
+
         public static T GetOrCreateSettings<T>(string assetPath) where T : ScriptableObject
         {
             T settings = AssetDatabase.LoadAssetAtPath(assetPath, typeof(T)) as T;

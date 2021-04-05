@@ -24,8 +24,7 @@ namespace Virterix.AdMediation.Editor
             base(settingsWindow, name, identifier)
         {
             BannerTypes = Enum.GetNames(typeof(IronSourceAdapter.IrnSrcBannerSize));
-            string[] adTypes = Enum.GetNames(typeof(EditorAdType));
-
+            
             _isOverriddenPlacementUncollapsed = EditorPrefs.GetBool(OVERRIDDEN_PLACEMENT_LIST_COLLAPSED_SAVEKEY, false);
             _overriddenPlacementFoldAnimation = new AnimBool(_isOverriddenPlacementUncollapsed);
             _overriddenPlacementFoldAnimation.valueChanged.AddListener(settingsWindow.Repaint);
@@ -42,7 +41,7 @@ namespace Virterix.AdMediation.Editor
 
                 SerializedProperty adTypeProp = element.FindPropertyRelative("adType");
                 adTypeProp.intValue = EditorGUI.Popup(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight),
-                    adTypeProp.intValue, adTypes);
+                    adTypeProp.intValue, Utils.EditorAdTypes);
 
                 rect.x += 100 + 10;
                 EditorGUI.LabelField(new Rect(rect.x, rect.y, 50, EditorGUIUtility.singleLineHeight), "Current");

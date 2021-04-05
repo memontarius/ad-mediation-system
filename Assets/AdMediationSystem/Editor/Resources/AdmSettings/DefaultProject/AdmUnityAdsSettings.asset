@@ -36,11 +36,6 @@ MonoBehaviour:
     _iosId: interstitial
     _timeout: 90
     _bannerType: 0
-  - _name: DefaultHighCPM
-    _androidId: interstitial_high_cpm
-    _iosId: 
-    _timeout: 120
-    _bannerType: 0
   _rewardAdInstances:
   - _name: Default
     _androidId: rewardedVideo

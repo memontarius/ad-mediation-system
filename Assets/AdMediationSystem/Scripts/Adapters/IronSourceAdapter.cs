@@ -41,9 +41,10 @@ namespace Virterix.AdMediation
         private AdInstance m_incentivizedInstance;
   
         private AdInstance m_currBannerInstance;
-        private string m_currBannerPlacement;
         private bool m_bannerVisibled;
         private AdState m_bannerState;
+
+        public override bool UseSingleBannerInstance => true;
 
         public static string GetSDKVersion()
         {
@@ -257,7 +258,9 @@ namespace Virterix.AdMediation
         public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             if (adInstance.m_adType == AdType.Banner)
+            {
                 m_bannerVisibled = true;
+            }
 
             if (IsReady(adInstance))
             {
@@ -277,6 +280,7 @@ namespace Virterix.AdMediation
                             Prepare(adInstance, placement);
                         else
                             IronSource.Agent.displayBanner();
+                        AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
                         break;
                     case AdType.Interstitial:
                         IronSource.Agent.showInterstitial(actualPlacementName);
@@ -284,7 +288,7 @@ namespace Virterix.AdMediation
                     case AdType.Incentivized:
                         IronSource.Agent.showRewardedVideo(actualPlacementName);
                         break;
-                }
+                }              
                 return true;
             }
             else
@@ -293,7 +297,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override void Hide(AdInstance adInstance = null, string adInstanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME)
+        public override void Hide(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             if (adInstance.m_adType == AdType.Banner)
             {
@@ -334,9 +338,7 @@ namespace Virterix.AdMediation
         public override void NotifyEvent(AdEvent adEvent, AdInstance adInstance)
         {
             if (adInstance.m_adType == AdType.Banner && adEvent == AdEvent.PreparationFailed)
-            {
                 m_bannerState = AdState.Unavailable;
-            }
             base.NotifyEvent(adEvent, adInstance);
         }
 
@@ -453,7 +455,6 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AMS] IronSourceAdapter.BannerAdLoadedEvent()");
 #endif
-
             m_bannerState = AdState.Received;
             if (m_bannerVisibled)
             {

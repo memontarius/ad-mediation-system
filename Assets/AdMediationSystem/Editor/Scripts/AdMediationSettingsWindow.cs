@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
@@ -9,13 +9,6 @@ using Boomlagoon.JSON;
 
 namespace Virterix.AdMediation.Editor
 {
-    public enum EditorAdType
-    {
-        Banner,
-        Interstitial,
-        Incentivized
-    }
-
     public class AdMediationSettingsWindow : EditorWindow
     {
         public const string SETTINGS_PATH = "Assets/AdMediationSystem/Editor/Resources/";
@@ -40,7 +33,7 @@ namespace Virterix.AdMediation.Editor
                     if (adType != AdType.Unknown && !string.IsNullOrEmpty(CurrProjectName))
                     {
                         UpdateAdInstanceStorage(adType);
-                        FixUnitSelectionInMediators(adType);
+                        UpdateUnitSelectionInMediators(adType);
                     }
                 }
             }
@@ -465,7 +458,7 @@ namespace Virterix.AdMediation.Editor
             }
         }
 
-        private void FixUnitSelectionInMediators(AdType adType)
+        private void UpdateUnitSelectionInMediators(AdType adType)
         {
             List<AdMediatorView> mediators = null;
             switch(adType)
@@ -482,19 +475,17 @@ namespace Virterix.AdMediation.Editor
             }
             foreach (var mediator in mediators)
             {
-                mediator.FixPopupSelection();
+                mediator.UpdateUnitPopupSelections();
             }
         }
 
-        private void FixUnitSelectionInAllMediators()
+        private void UpdateUnitSelectionInAllMediators()
         {
-            AdType[] adTypes = System.Enum.GetValues(typeof(AdType)) as AdType[];
+            AdType[] adTypes = Enum.GetValues(typeof(AdType)) as AdType[];
             foreach(var adType in adTypes)
             {
                 if (adType != AdType.Unknown)
-                {
-                    FixUnitSelectionInMediators(adType);
-                }
+                    UpdateUnitSelectionInMediators(adType);
             }
         }
 
@@ -530,8 +521,8 @@ namespace Virterix.AdMediation.Editor
                     mediatorsProp.GetArrayElementAtIndex(i), Repaint, adType);
                 mediatorList.Add(mediatorView);
             }
-            FixUnitSelectionInMediators(adType);
             UpdateAdInstanceStorage(adType);
+            UpdateUnitSelectionInMediators(adType);
         }
 
         private void DrawMediators(List<AdMediatorView> mediatorList, string propertyName)
@@ -709,7 +700,7 @@ namespace Virterix.AdMediation.Editor
                 {
                     _networkEnabledStates[i] = network.Settings._enabled;
                     UpdateActiveNetworks();
-                    FixUnitSelectionInAllMediators();
+                    UpdateUnitSelectionInAllMediators();
                     network.Settings.SetupNetworkAdapterScript();
                     AssetDatabase.Refresh(ImportAssetOptions.Default);
                 }
@@ -744,6 +735,14 @@ namespace Virterix.AdMediation.Editor
             string androidAdSettingsPath = string.Format("{0}/{1}", path, "android_settings.json");
             string iosAdSettingsPath = string.Format("{0}/{1}", path, "ios_settings.json");
             BaseAdNetworkSettings[] networksSettings = NetworkSettings;
+
+            var adTypes = Enum.GetValues(typeof(AdType)) as AdType[];
+            foreach (var adType in adTypes)
+            {
+                if (adType != AdType.Unknown)
+                    UpdateAdInstanceStorage(adType);
+            }
+            UpdateUnitSelectionInAllMediators();
 
             List<AdUnitMediator> mediators = new List<AdUnitMediator>();
             AdMediationSettingsBuilder.FillMediators(ref mediators, _projectSettings._bannerMediators);
@@ -783,6 +782,8 @@ namespace Virterix.AdMediation.Editor
                 }
             }
             AssetDatabase.Refresh();
+
+            Debug.Log("Successful build of settings!");
         }
 
         private void UpdateExtraLoggingInScriptingDefineSymbols(BuildTargetGroup buildTarget)

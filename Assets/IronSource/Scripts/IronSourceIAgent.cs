@@ -112,7 +112,17 @@ public interface IronSourceIAgent
 
 	void showConsentViewWithType(string consentViewType);
 
+	//******************* ILRD API *******************//
+
+	void setAdRevenueData(string  dataSource, Dictionary<string, string> impressionData);
 }
+
+public static class dataSource
+{
+	public static string MOPUB { get { return "MoPub"; } }
+
+}
+
 
 public static class IronSourceAdUnits
 {

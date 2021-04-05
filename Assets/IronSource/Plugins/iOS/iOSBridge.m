@@ -750,6 +750,10 @@ char *const IRONSOURCE_EVENTS = "IronSourceEvents";
     return res;
 }
 
+#pragma mark ILRD API
+- (void)setAdRevenueData:(NSString *)dataSource impressionData:(NSData *)impressionData {
+    [IronSource setAdRevenueDataWithDataSource:dataSource impressionData:impressionData];
+}
 
 #pragma mark - C Section
 
@@ -995,6 +999,15 @@ extern "C" {
     
     const char *CFGetConversionValue(){
         return [[iOSBridge start] getConversionValue];
+    }
+    
+#pragma mark ILRD API
+  void  CFSetAdRevenueData(char* datasource,char* impressiondata){
+        NSData *data=[GetStringParam(impressiondata)dataUsingEncoding:NSUTF8StringEncoding];
+        if (!data) {
+            return;
+        }
+      return [[iOSBridge start] setAdRevenueData:GetStringParam(datasource)impressionData:data];
     }
     
 #ifdef __cplusplus

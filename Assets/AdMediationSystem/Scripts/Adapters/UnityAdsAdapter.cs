@@ -37,6 +37,8 @@ namespace Virterix.AdMediation
             get { return UnityAdsInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER; }
         }
 
+        public override bool UseSingleBannerInstance => true;
+
         public static string GetSDKVersion()
         {
             string version = string.Empty;
@@ -101,6 +103,7 @@ namespace Virterix.AdMediation
             if (!IsReady(adInstance))
             {
                 adInstance.State = AdState.Loading;
+               
                 if (adType == AdType.Banner)
                 {
                     if (m_isBannerDisplayed)
@@ -119,9 +122,10 @@ namespace Virterix.AdMediation
             AdType adType = adInstance.m_adType;
 
             if (adType == AdType.Banner)
+            {
                 m_isBannerDisplayed = true;
-
-            Debug.Log("====== UNITY SHOW: " + adInstance.Name + " - placement:" + placement);
+                m_currBannerPlacement = placement;
+            }
 
             if (IsReady(adInstance))
             {
@@ -134,8 +138,9 @@ namespace Virterix.AdMediation
                         Advertisement.Banner.Hide(true);
 #endif
                         Advertisement.Banner.SetPosition(GetBannerPosition(adInstance, placement));
-                    }
+                    }                
                     Advertisement.Banner.Show(adInstance.m_adId);
+                    AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
                 }
                 else
                 {
@@ -146,13 +151,14 @@ namespace Virterix.AdMediation
             return false;
         }
 
-        public override void Hide(AdInstance adInstance = null, string adInstanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME)
+        public override void Hide(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             if (adInstance.m_adType == AdType.Banner)
             {
                 adInstance.m_bannerDisplayed = false;
                 m_isBannerDisplayed = false;
                 Advertisement.Banner.Hide();
+                NotifyEvent(AdEvent.Hiding, adInstance);
             }
         }
 

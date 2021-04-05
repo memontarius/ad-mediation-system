@@ -161,6 +161,11 @@ public class iOSAgent : IronSourceIAgent
 	[DllImport("__Internal")]
 	private static extern void CFShowConsentViewWithType(string consentViewType);
 
+	//******************* ILRD API *******************//
+
+	[DllImport("__Internal")]
+	private static extern void CFSetAdRevenueData(string dataSource, string impressionData);
+
 	public iOSAgent ()
 	{	
 	}
@@ -435,6 +440,14 @@ public class iOSAgent : IronSourceIAgent
 	public void showConsentViewWithType(string consentViewType)
 	{
 		CFShowConsentViewWithType(consentViewType);
+	}
+
+	//******************* ILRD API *******************//
+
+	public void setAdRevenueData(string dataSource, Dictionary<string, string> impressionData)
+	{
+		string json = IronSourceJSON.Json.Serialize (impressionData);
+		CFSetAdRevenueData(dataSource, json);
 	}
 
 	#endregion

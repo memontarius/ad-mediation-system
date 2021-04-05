@@ -19,14 +19,8 @@ namespace Virterix.AdMediation
 
         public IFetchStrategy FetchStrategy
         {
-            set
-            {
-                m_fetchStrategy = value;
-            }
-            get
-            {
-                return m_fetchStrategy;
-            }
+            set {  m_fetchStrategy = value; }
+            get {  return m_fetchStrategy; }
         }
         IFetchStrategy m_fetchStrategy;
 
@@ -57,13 +51,9 @@ namespace Virterix.AdMediation
             get
             {
                 if (CurrentUnit != null)
-                {
                     return CurrentUnit.AdNetwork.m_networkName;
-                }
                 else
-                {
                     return null;
-                }
             }
         }
 
@@ -94,9 +84,7 @@ namespace Virterix.AdMediation
             {
                 bool ready = false;
                 if (CurrentUnit != null)
-                {
                     ready = CurrentUnit.IsReady;
-                }
                 return ready;
             }
         }
@@ -156,18 +144,14 @@ namespace Virterix.AdMediation
             if (pause)
             {
                 if (m_continueAfterEndSession)
-                {
                     SaveLastActiveAdUnit();
-                }
             }
         }
 
         private void OnApplicationQuit()
         {
             if (m_continueAfterEndSession)
-            {
                 SaveLastActiveAdUnit();
-            }
         }
 
         #endregion // MonoBehavior Methods
@@ -427,7 +411,20 @@ namespace Virterix.AdMediation
                 {
                     int tierIndex = Convert.ToInt32(savedValues[0]);
                     int unitIndex = Convert.ToInt32(savedValues[1]);
+
+                    if (m_adType == AdType.Banner)
+                    {
+                        Debug.Log(m_placementName);
+                        Debug.Log("tierIndex: " + tierIndex + " unitIndex: " + unitIndex);
+                    }
+
                     m_fetchStrategy.Reset(m_tiers, tierIndex, unitIndex);
+
+                    if (m_adType == AdType.Banner)
+                    {
+                       
+                        Debug.Log("RESETED tierIndex: " + m_fetchStrategy.TierIndex + " unitIndex: " + m_fetchStrategy.UnitIndex);
+                    }
                 }
             }
         }
@@ -444,7 +441,6 @@ namespace Virterix.AdMediation
                 "; Ad Instance Name:" + m_currUnit.AdInstanceName +
                 "; Intrnl Type:" + m_currUnit.AdType + "; Network:" + network.m_networkName + "; Event:" + adEvent);
 #endif
-
             string adInstanceName = adInstance != null ? adInstance.Name : "";
             
             AdMediationSystem.NotifyAdNetworkEvent(this, network, m_adType, adEvent, adInstanceName);

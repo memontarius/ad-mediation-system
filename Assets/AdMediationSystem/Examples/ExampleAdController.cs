@@ -119,19 +119,14 @@ public class ExampleAdController : BaseAdController
     {
         string buttonText = "";
         if (AdMediationSystem.IsAdsPersonalized)
-        {
             buttonText = "Change to Non-Personalized Ads";
-        }
         else
-        {
             buttonText = "Change to Personalized Ads ";
-        }
         m_adPersonalizedText.text = buttonText;
     }
 
     void OnAdPollfishNetworkEvent(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstance adInstance)
     {
-
     }
 
     protected override void HandleNetworkEvent(AdMediator mediator, AdNetworkAdapter network, AdType adType, AdEvent adEvent, string adInstanceName)
@@ -140,7 +135,7 @@ public class ExampleAdController : BaseAdController
 
         UpdateAdInfo(mediator, adType, placementName);
 
-        string log = string.Format("{0} Placement: <color=blue>{1}</color> Instance: <color=blue>{2}</color> <b>{3}</b> {4} \n{5}",
+        string log = string.Format("<i>{0}</i> - Placement: <color=blue>{1}</color> Instance: <color=blue>{2}</color> <b>{3}</b> {4} \n{5}",
             adType.ToString(), placementName, adInstanceName, network.m_networkName, adEvent.ToString(), m_eventLogText.text);
 
         m_eventLogText.text = log;
@@ -215,11 +210,15 @@ public class ExampleAdController : BaseAdController
         var bannerMediators = AdMediationSystem.Instance.GetAllMediators(AdType.Banner);
         foreach (AdMediator bannerMediator in bannerMediators)
         {
-            Debug.Log(index + " " + bannerMediator.IsBannerDisplayed);
+            if (bannerMediator.CurrentUnit.AdNetwork.UseSingleBannerInstance)
+            {
+                var placement = bannerMediator.CurrentUnit.AdNetwork.CurrBannerPlacement;
+                BannerDisplayStates[index] = (placement == bannerMediator.m_placementName) ? bannerMediator.IsBannerDisplayed : false;
+            }
+            else
+                BannerDisplayStates[index] = bannerMediator.IsBannerDisplayed;
 
-            BannerDisplayStates[index++] = bannerMediator.IsBannerDisplayed;
-
-     
+            index++;
             bannerMediator.Hide();
         }
     }

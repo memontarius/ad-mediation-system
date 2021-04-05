@@ -276,5 +276,12 @@ public class UnsupportedPlatformAgent : IronSourceIAgent
 		Debug.Log("Unsupported Platform");
 	}
 
+	//******************* ILRD API *******************//
+
+	public void setAdRevenueData(string dataSource, Dictionary<string, string> impressionData)
+	{
+		Debug.Log("Unsupported Platform");
+	}
+
 	#endregion
 }

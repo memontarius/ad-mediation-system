@@ -105,10 +105,12 @@ namespace Virterix.AdMediation
             get { return m_lastReward; }
         }
 
-        public string BannerPlacement
+        public string CurrBannerPlacement
         {
-            set; get;
-        } = null;
+            get { return m_currBannerPlacement; }
+        }
+
+        public virtual bool UseSingleBannerInstance => false;
 
         private string AdInstanceParametersPath
         {
@@ -135,6 +137,7 @@ namespace Virterix.AdMediation
         protected List<IAdInstanceParameters> m_adInstanceParameters = new List<IAdInstanceParameters>();
         private List<AdInstance> m_adInstances = new List<AdInstance>();
         protected IncentivizedReward m_lastReward;
+        protected string m_currBannerPlacement;
 
         private static float m_waitResponseHandlingInterval;
         private static WaitForSeconds m_waitResponseInstruction;

@@ -112,9 +112,9 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
+      - _networkName: Iron Source
+        _networkIndex: 4
+        _networkIdentifier: ironsrc
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 1
@@ -122,14 +122,16 @@ MonoBehaviour:
         _percentage: 0
     - _maxPassages: 1
       _units:
-      - _networkName: Unity Ads
-        _networkIndex: 1
-        _networkIdentifier: unityads
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
         _instanceIndex: 1
         _instanceName: DefaultHighCPM
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
+    - _maxPassages: 1
+      _units:
       - _networkName: Unity Ads
         _networkIndex: 1
         _networkIdentifier: unityads
@@ -138,8 +140,6 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 0
-    - _maxPassages: 1
-      _units:
       - _networkName: Iron Source
         _networkIndex: 4
         _networkIdentifier: ironsrc

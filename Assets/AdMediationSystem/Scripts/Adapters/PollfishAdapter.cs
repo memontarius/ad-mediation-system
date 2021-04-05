@@ -207,7 +207,7 @@ namespace Virterix.AdMediation
             return false;
         }
 
-        public override void Hide(AdInstance adInstance = null, string adInstanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME)
+        public override void Hide(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdType adType = m_adInstance.m_adType;
             switch (adType)
@@ -250,7 +250,6 @@ namespace Virterix.AdMediation
             return m_surveyOnDevice;
         }
 
-
         public bool IsSurveyRejected()
         {
             return m_surveyRejected;
@@ -290,7 +289,14 @@ namespace Virterix.AdMediation
             int index = 0;
             foreach (AdMediator bannerMediator in m_bannerMediators)
             {
-                m_bannerDisplayStates[index++] = bannerMediator.IsBannerDisplayed;
+                if (bannerMediator.CurrentUnit.AdNetwork.UseSingleBannerInstance)
+                {
+                    var placement = bannerMediator.CurrentUnit.AdNetwork.CurrBannerPlacement;
+                    m_bannerDisplayStates[index] = (placement == bannerMediator.m_placementName) ? bannerMediator.IsBannerDisplayed : false;
+                }
+                else
+                    m_bannerDisplayStates[index] = bannerMediator.IsBannerDisplayed;
+                index++;
                 bannerMediator.Hide();
             }
         }

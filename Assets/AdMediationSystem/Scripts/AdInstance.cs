@@ -56,11 +56,11 @@ namespace Virterix.AdMediation
             {
                 m_state = value;
                 if (m_state == AdNetworkAdapter.AdState.Loading)
-                {
                     m_wasLastPreparationFailed = false;
-                }
             }
         }
+
+        public string CurrPlacement { get; set; }
 
         private AdNetworkAdapter.AdState m_state = AdNetworkAdapter.AdState.Uncertain;
         public AdType m_adType;
@@ -91,9 +91,7 @@ namespace Virterix.AdMediation
         public void Cleanup()
         {
             if (m_network != null)
-            {
                 m_network.OnEvent += OnNetworkEvent;
-            }
         }
 
         private void OnNetworkEvent(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstance adInstance)
@@ -101,13 +99,9 @@ namespace Virterix.AdMediation
             if (adInstance == this)
             {
                 if (adEvent == AdEvent.PreparationFailed)
-                {
                     m_wasLastPreparationFailed = true;
-                }
                 else if (adEvent == AdEvent.Prepared)
-                {
                     m_wasLastPreparationFailed = false;
-                }
             }
         }
     }
