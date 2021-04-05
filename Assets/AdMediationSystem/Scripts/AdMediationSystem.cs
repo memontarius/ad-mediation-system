@@ -8,6 +8,13 @@ using Virterix.Common;
 
 namespace Virterix.AdMediation
 {
+    public enum PersonalisationConsent
+    {
+        Undefined = 0,
+        Accepted = 1,
+        Denied = 2
+    }
+
     public enum AppPlatform
     {
         Android,
@@ -56,7 +63,7 @@ namespace Virterix.AdMediation
         //-------------------------------------------------------------------------------
 
         private const string HASH_SAVE_KEY = "adm.settings.hash";
-        private const string PERSONALIZED_ADS_SAVE_KEY = "adm.ads.personalized";
+        private const string PERSONALISATION_CONSENT_SAVE_KEY = "adm.userconsent";
         private const string SETTINGS_VERSION_PARAM_KEY = "adm.settings.version";
 
         #endregion // Configuration variables
@@ -76,8 +83,8 @@ namespace Virterix.AdMediation
         public bool m_initializeOnStart = true;
         public bool m_testModeEnabled = false;
         public string[] m_testDevices;
-        // For GDPR Compliance
-        private static bool m_isAdsPersonalized;
+        // For CCPA GDPR Compliance
+        private static PersonalisationConsent m_userPersonalisationConsent;
 
         public static event Action OnInitialized = delegate { };
         /// <summary>
@@ -92,11 +99,11 @@ namespace Virterix.AdMediation
         private JSONObject m_currSettings;
 
         /// <summary>
-        /// Use a personal data of user. For GDPR Compliance
+        /// Use a personal data of user. To CCPA and GDPR Compliance
         /// </summary>
-        public static bool IsAdsPersonalized
+        public static PersonalisationConsent UserPersonalisationConsent
         {
-            get { return m_isAdsPersonalized; }
+            get { return m_userPersonalisationConsent; }
         }
 
         public static bool IsInitialized
@@ -207,7 +214,7 @@ namespace Virterix.AdMediation
 
         private void Awake()
         {
-            m_isAdsPersonalized = PlayerPrefs.GetInt(PERSONALIZED_ADS_SAVE_KEY, 1) == 1 ? true : false;
+            m_userPersonalisationConsent = (PersonalisationConsent)PlayerPrefs.GetInt(PERSONALISATION_CONSENT_SAVE_KEY, 0);
             if (m_remoteSettingsProvider != null)
             {
                 m_remoteSettingsProvider.OnSettingsReceived += OnRemoteSettingsReceived;
@@ -405,10 +412,10 @@ namespace Virterix.AdMediation
         /// <summary>
         /// GDPR and CCPA Compliance. The changes will take effect after restarting the application
         /// </summary>
-        public static void SetPersonalizedAds(bool isPersonalizedAds)
+        public static void SetUserConsentToPersonalizedAds(PersonalisationConsent consent)
         {
-            m_isAdsPersonalized = isPersonalizedAds;
-            PlayerPrefs.SetInt(PERSONALIZED_ADS_SAVE_KEY, isPersonalizedAds ? 1 : 0);
+            m_userPersonalisationConsent = consent;
+            PlayerPrefs.SetInt(PERSONALISATION_CONSENT_SAVE_KEY, (int)consent);
         }
 
         #endregion // Mediation ad networks
@@ -507,7 +514,7 @@ namespace Virterix.AdMediation
         #region Initialize
         //-------------------------------------------------------------------------------
 
-        public static AdMediationSystem Load(string projectName = "")
+        public static AdMediationSystem Load(string projectName)
         {
             GameObject prefab = null;
 
@@ -771,7 +778,7 @@ namespace Virterix.AdMediation
                 {
                     AdNetworkAdapter netwrok = pair.Key;
                     Dictionary<string, string> networkParameters = (Dictionary<string, string>)pair.Value.m_parameters;
-                    netwrok.Initialize(networkParameters, pair.Value.m_adInstances, IsAdsPersonalized);
+                    netwrok.Initialize(networkParameters, pair.Value.m_adInstances);
                 }
 
                 // Initialization mediators

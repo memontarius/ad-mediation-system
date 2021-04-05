@@ -48,17 +48,17 @@ namespace Virterix.AdMediation
 
         public static string GetSDKVersion()
         {
-            string version = string.Empty;
-#if UNITY_EDITOR && _AMS_APPLOVIN
-            version = MaxSdk.Version;
+#if _AMS_APPLOVIN
+            return MaxSdk.Version;
+#else
+            return string.Empty;
 #endif
-            return version;
         }
 
 #if _AMS_APPLOVIN
         private bool m_isBannerLoaded;
 
-        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonPlacements, bool isPersonalizedAds = true)
+        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonPlacements)
         {
             base.InitializeParameters(parameters, jsonPlacements);
 
@@ -75,15 +75,13 @@ namespace Virterix.AdMediation
             SubscribeEvents();
 #if UNITY_ANDROID || UNITY_IPHONE
             if (AdMediationSystem.Instance.m_testModeEnabled)
-            {
                 MaxSdk.SetTestDeviceAdvertisingIdentifiers(AdMediationSystem.Instance.m_testDevices);
-            }
+ 
             if (AdMediationSystem.Instance.m_isChildrenDirected)
-            {
                 MaxSdk.SetIsAgeRestrictedUser(AdMediationSystem.Instance.m_isChildrenDirected);
-            }
+
             MaxSdk.SetSdkKey(sdkKey);
-            SetPersonalizedAds(isPersonalizedAds);
+            SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
             MaxSdk.InitializeSdk();
 #endif
         }
@@ -157,13 +155,6 @@ namespace Virterix.AdMediation
             }
 
             return convertedPlacement;
-        }
-
-        protected override void SetPersonalizedAds(bool isPersonalizedAds)
-        {
-#if UNITY_ANDROID || UNITY_IOS
-            MaxSdk.SetHasUserConsent(isPersonalizedAds ? true : false);
-#endif
         }
 
         public override void Hide(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
@@ -247,6 +238,16 @@ namespace Virterix.AdMediation
                 success = true;
             }
             return success;
+        }
+
+        protected override void SetUserConsentToPersonalizedAds(PersonalisationConsent consent)
+        {
+            if (consent != PersonalisationConsent.Undefined)
+            {
+#if UNITY_ANDROID || UNITY_IOS
+                MaxSdk.SetHasUserConsent(consent == PersonalisationConsent.Accepted ? true : false);
+#endif
+            }
         }
 
         private void OnSdkInitializedEvent(MaxSdkBase.SdkConfiguration sdkConfiguration)

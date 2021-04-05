@@ -3,8 +3,6 @@ namespace Virterix.AdMediation.Editor
 {
     public class UnityAdsView : BaseAdNetworkView
     {
-        protected override string SettingsFileName => "AdmUnityAdsSettings.asset";
-
         protected override InstanceElementHeight CreateInstanceElementHeight(AdType adType)
         {
             var elementHeight = base.CreateInstanceElementHeight(adType);

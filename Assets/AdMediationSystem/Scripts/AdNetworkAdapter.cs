@@ -18,6 +18,12 @@ namespace Virterix.AdMediation
         IncentivizedUncompleted
     }
 
+    public enum ConsentType
+    {
+        GDPR,
+        CCPA
+    }
+
     public struct IncentivizedReward
     {
         public string label;
@@ -170,7 +176,7 @@ namespace Virterix.AdMediation
         //_______________________________________________________________________________
         #region Public Methods
         //-------------------------------------------------------------------------------
-        public void Initialize(Dictionary<string, string> parameters = null, JSONArray adInstances = null, bool isPersonalizedAds = true)
+        public void Initialize(Dictionary<string, string> parameters = null, JSONArray adInstances = null)
         {
             if (m_waitResponseInstruction == null)
             {
@@ -365,8 +371,7 @@ namespace Virterix.AdMediation
         /// <summary>
         /// GDPR, CCPA Compliance
         /// </summary>
-        /// <param name="isPersonalizedAds"></param>
-        protected virtual void SetPersonalizedAds(bool isPersonalizedAds)
+        protected virtual void SetUserConsentToPersonalizedAds(PersonalisationConsent consent)
         {
         }
 
@@ -446,7 +451,7 @@ namespace Virterix.AdMediation
             return saveKey;
         }
 
-        protected virtual void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
+        protected virtual void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             InitializeAdInstanceParameters();
             if (jsonAdInstances != null)

@@ -1,9 +1,8 @@
-﻿//#define _AMS_ADCOLONY
+#define _AMS_ADCOLONY
 
 using UnityEngine;
 using System.Collections.Generic;
 using Boomlagoon.JSON;
-
 #if _AMS_ADCOLONY
 using AdColony;
 #endif
@@ -12,234 +11,148 @@ namespace Virterix.AdMediation
 {
     public class AdColonyAdapter : AdNetworkAdapter
     {
-        public enum AdColonyOrientationType
-        {
-            All,
-            Landscape,
-            Portrait
-        }
-
-        [System.Serializable]
-        public struct AdColonyParameters
-        {
-            public string m_appId;
-            public string m_interstitialZoneId;
-            public string m_rewardZoneId;
-        }
-
-        public AdColonyOrientationType m_orientation;
-        [SerializeField]
-        public AdColonyParameters m_defaultAndroidParams;
-        [SerializeField]
-        public AdColonyParameters m_defaultIOSParams;
-
         public bool m_useRewardVideoPrePopup;
         public bool m_useRewardVideoPostPopup;
 
 #if _AMS_ADCOLONY
-
-        string m_interstitialZoneId;
-        string m_rewardZoneId;
-        string m_appId;
-        AdOrientationType m_adOrientation;
-
-        InterstitialAd m_videoInterstitial;
-        InterstitialAd m_incentivizedInterstitial;
         bool m_isConfigured = false;
 
-
-        void Awake()
+        private void OnEnable()
         {
             SubscribeAdEvents();
         }
 
-        protected override void InitializeParameters(System.Collections.Generic.Dictionary<string, string> parameters, JSONArray jsonPlacements)
+        private new void OnDisable()
+        {
+            base.OnDisable();
+            UnsubscribeAdEvents();
+        }
+
+        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonPlacements)
         {
             base.InitializeParameters(parameters, jsonPlacements);
-
 #if UNITY_EDITOR
             m_isConfigured = true;
 #endif
+            string appId = parameters == null ? "" : parameters["appId"];
+            ConfigureAds(appId);
+        }
 
-            m_adOrientation = ConvertOrientationType(m_orientation);
+        private void ConfigureAds(string appId)
+        {
+            AppOptions appOptions = new AppOptions();
+            appOptions.UserId = SystemInfo.deviceUniqueIdentifier;
+            appOptions.TestModeEnabled = AdMediationSystem.Instance.m_testModeEnabled;
+            if (AdMediationSystem.Instance.m_isChildrenDirected)
+                appOptions.SetPrivacyFrameworkRequired(AdColony.AppOptions.COPPA, true);
 
-            if (parameters != null)
-            {
-                m_appId = parameters["appId"];
-                m_interstitialZoneId = parameters["interstitialZoneId"];
-                m_rewardZoneId = parameters["rewardZoneId"];
-            }
-            else
-            {
-#if UNITY_ANDROID
-                m_appId = m_defaultAndroidParams.m_appId;
-                m_interstitialZoneId = m_defaultAndroidParams.m_interstitialZoneId;
-                m_rewardZoneId = m_defaultAndroidParams.m_rewardZoneId;
-#elif UNITY_IOS
-                       m_appId = m_defaultIOSParams.m_appId;
-                       m_interstitialZoneId = m_defaultIOSParams.m_interstitialZoneId;
-                       m_rewardZoneId = m_defaultIOSParams.m_rewardZoneId;
+            string[] zoneIDs = new string[0];
+
+#if !UNITY_EDITOR
+            Ads.Configure(appId, appOptions, zoneIDs);
 #endif
-            }
-
-            ConfigureAds();
         }
 
-        AdOrientationType ConvertOrientation(string orientation)
+        public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
-            switch (orientation)
-            {
-                case "all":
-                    return AdOrientationType.AdColonyOrientationAll;
-                case "landscape":
-                    return AdOrientationType.AdColonyOrientationLandscape;
-                case "portrait":
-                    return AdOrientationType.AdColonyOrientationPortrait;
-                default:
-                    return AdOrientationType.AdColonyOrientationAll;
-            }
-        }
-
-        public AdOrientationType ConvertOrientationType(AdColonyOrientationType orientationType)
-        {
-
-            AdOrientationType convertedOrientationType = AdOrientationType.AdColonyOrientationAll;
-            switch (orientationType)
-            {
-                case AdColonyOrientationType.All:
-                    convertedOrientationType = AdOrientationType.AdColonyOrientationAll;
-                    break;
-                case AdColonyOrientationType.Landscape:
-                    convertedOrientationType = AdOrientationType.AdColonyOrientationLandscape;
-                    break;
-                case AdColonyOrientationType.Portrait:
-                    convertedOrientationType = AdOrientationType.AdColonyOrientationPortrait;
-                    break;
-            }
-            return convertedOrientationType;
-        }
-
-        public override void Prepare(AdType adType, PlacementData placementData = null)
-        {
-
             if (!m_isConfigured)
             {
-                AddEvent(adType, AdEvent.PrepareFailure);
+                AddEvent(adInstance.m_adType, AdEvent.PreparationFailed, adInstance);
                 return;
             }
 
-            if (!IsReady(adType))
+            if (!IsReady(adInstance, placement) && adInstance.State != AdState.Loading)
             {
-                switch (adType)
+                switch (adInstance.m_adType)
                 {
                     case AdType.Interstitial:
-                        RequestAd(m_interstitialZoneId);
-                        break;
                     case AdType.Incentivized:
-                        RequestAd(m_rewardZoneId);
+                        RequestAd(adInstance);
                         break;
                 }
             }
         }
 
-        public override bool Show(AdType adType, PlacementData placementData = null)
+        public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
-            if (IsReady(adType))
+            if (IsReady(adInstance.m_adType))
             {
-                switch (adType)
+                switch (adInstance.m_adType)
                 {
                     case AdType.Interstitial:
-                        Ads.ShowAd(m_videoInterstitial);
-                        break;
                     case AdType.Incentivized:
-                        Ads.ShowAd(m_incentivizedInterstitial);
+                        var interstitial = adInstance.m_adView as InterstitialAd;
+                        Ads.ShowAd(interstitial);
                         break;
                 }
                 return true;
             }
             else
-            {
                 return false;
-            }
         }
 
-        public override void Hide(AdType adType, PlacementData placementData = null)
-        {
-        }
-
-        public override bool IsShouldInternetCheckBeforeShowAd(AdType adType)
-        {
-            bool shouldCheck = adType == AdType.Incentivized;
-            return shouldCheck;
-        }
-
-        public override bool IsReady(AdType adType, PlacementData placementData = null)
+        public override bool IsReady(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             bool isReady = false;
-
             if (m_isConfigured)
             {
-                switch (adType)
+                switch (adInstance.m_adType)
                 {
                     case AdType.Interstitial:
-                        isReady = m_videoInterstitial != null ? !m_videoInterstitial.Expired : false;
-                        break;
                     case AdType.Incentivized:
-                        isReady = m_incentivizedInterstitial != null ? !m_incentivizedInterstitial.Expired : false;
+                        if (adInstance.State == AdState.Received)
+                        {
+                            var interstitial = adInstance.m_adView as InterstitialAd;
+                            if (interstitial.Expired)
+                                DestroyAd(adInstance);
+                            else
+                                isReady = true;
+                        }
                         break;
                 }
             }
-
             return isReady;
         }
 
-        public override void ResetAd(AdType adType, PlacementData placementData = null)
+        private void DestroyAd(AdInstance adInstance)
         {
-            switch (adType)
+            if (adInstance.m_adView != null)
             {
-                case AdType.Interstitial:
-                    m_videoInterstitial = null;
-                    break;
-                case AdType.Incentivized:
-                    m_incentivizedInterstitial = null;
-                    break;
+                InterstitialAd interstitial = adInstance.m_adView as InterstitialAd;
+                adInstance.m_adView = null;
+                interstitial.DestroyAd();
             }
+            adInstance.State = AdState.Uncertain;
         }
 
-        void ConfigureAds()
+        private void RequestAd(AdInstance adInstance)
         {
-            AppOptions appOptions = new AppOptions();
-            appOptions.UserId = SystemInfo.deviceUniqueIdentifier;
-            appOptions.AdOrientation = m_adOrientation;
+            DestroyAd(adInstance);
 
-            List<string> zoneIDs = new List<string>();
-            if (m_interstitialZoneId != "")
-            {
-                zoneIDs.Add(m_interstitialZoneId);
-            }
-            if (m_rewardZoneId != "")
-            {
-                zoneIDs.Add(m_rewardZoneId);
-            }
-
-#if !UNITY_EDITOR
-                Ads.Configure(m_appId, appOptions, zoneIDs.ToArray());
-#endif
-        }
-
-        void RequestAd(string zoneId, bool showPrePopup = false, bool showPostPopup = false)
-        {
+            adInstance.State = AdState.Loading;
             AdOptions adOptions = new AdColony.AdOptions();
-            adOptions.ShowPrePopup = showPrePopup;
-            adOptions.ShowPostPopup = showPostPopup;
+
 #if !UNITY_EDITOR
-                Ads.RequestInterstitialAd(zoneId, adOptions);
+            if (adInstance.m_adType == AdType.Banner)
+            {
+                //Ads.RequestAdView(adInstance.m_adId, adOptions);
+            }
+            else
+            {
+                if (adInstance.m_adType == AdType.Incentivized)
+                {
+                    adOptions.ShowPrePopup = m_useRewardVideoPrePopup;
+                    adOptions.ShowPostPopup = m_useRewardVideoPostPopup;
+                }
+                Ads.RequestInterstitialAd(adInstance.m_adId, adOptions);
+            }
 #endif
         }
 
-        void SubscribeAdEvents()
+        private void SubscribeAdEvents()
         {
             Ads.OnConfigurationCompleted += OnConfigurationCompleted;
+            // Interstitial
             Ads.OnOpened += OnOpened;
             Ads.OnClosed += OnClosed;
             Ads.OnRequestInterstitial += OnRequestInterstitial;
@@ -247,11 +160,13 @@ namespace Virterix.AdMediation
             Ads.OnRequestInterstitialFailedWithZone += OnRequestInterstitialFailedWithZone;
             Ads.OnRewardGranted += OnRewardGranted;
             Ads.OnExpiring += OnExpiring;
+            // Banner
         }
 
-        void UnsubscribeAdEvents()
+        private void UnsubscribeAdEvents()
         {
             Ads.OnConfigurationCompleted -= OnConfigurationCompleted;
+            // Interstitial
             Ads.OnOpened -= OnOpened;
             Ads.OnClosed -= OnClosed;
             Ads.OnRequestInterstitial -= OnRequestInterstitial;
@@ -259,135 +174,88 @@ namespace Virterix.AdMediation
             Ads.OnRequestInterstitialFailedWithZone += OnRequestInterstitialFailedWithZone;
             Ads.OnRewardGranted -= OnRewardGranted;
             Ads.OnExpiring += OnExpiring;
+            // Banner
         }
 
-        //===============================================================================
-        #region Callback Event Methods
-        //-------------------------------------------------------------------------------
-
-        void OnConfigurationCompleted(List<Zone> zones)
+        // _____________________________________________ 
+        #region Interstitial Callbacks
+ 
+        private void OnConfigurationCompleted(List<Zone> zones)
         {
-            if (zones == null || zones.Count <= 0)
-            {
-                Debug.Log("[AdColonyAdapter] Configure Failed");
-            }
-            else
-            {
-                Debug.Log("[AdColonyAdapter] Configure Succeeded.");
-                m_isConfigured = true;
-            }
+            m_isConfigured = true;
         }
 
-        void OnOpened(InterstitialAd interstitial)
+        private void OnOpened(InterstitialAd interstitial)
         {
-            if (interstitial.ZoneId == m_interstitialZoneId)
-            {
-                AddEvent(AdType.Interstitial, AdEvent.Show);
-            }
-            else if (interstitial.ZoneId == m_rewardZoneId)
-            {
-                AddEvent(AdType.Incentivized, AdEvent.Show);
-            }
-
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("[AdMediationSystem] AdColonyAdapter.OnOpened()");
+            Debug.Log("[AMS] AdColonyAdapter OnOpened()");
+#endif
+            var adInstance = GetAdInstanceByAdId(interstitial.ZoneId);
+            AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
+        }
+
+        private void OnClosed(InterstitialAd interstitial)
+        {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] AdColonyAdapter OnClosed()");
+#endif
+            var adInstance = GetAdInstanceByAdId(interstitial.ZoneId);
+            DestroyAd(adInstance);
+            AddEvent(adInstance.m_adType, AdEvent.Hiding, adInstance);
+        }
+
+        private void OnRequestInterstitial(InterstitialAd interstitial)
+        {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] AdColonyAdapter OnRequestInterstitial()");
+#endif
+            var adInstance = GetAdInstanceByAdId(interstitial.ZoneId);
+            adInstance.State = AdState.Received;
+            adInstance.m_adView = interstitial;
+            AddEvent(adInstance.m_adType, AdEvent.Prepared, adInstance);
+        }
+
+        private void OnRequestInterstitialFailed()
+        {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] AdColonyAdapter OnRequestInterstitialFailed()");
 #endif
         }
 
-        void OnClosed(InterstitialAd interstitial)
+        private void OnRequestInterstitialFailedWithZone(string zoneId)
         {
-            if (interstitial.ZoneId == m_interstitialZoneId)
-            {
-                m_videoInterstitial = null;
-                AddEvent(AdType.Interstitial, AdEvent.Hide);
-            }
-            else if (interstitial.ZoneId == m_rewardZoneId)
-            {
-                m_incentivizedInterstitial = null;
-                AddEvent(AdType.Incentivized, AdEvent.Hide);
-            }
+            var adInstance = GetAdInstanceByAdId(zoneId);
+            DestroyAd(adInstance);
+            AddEvent(adInstance.m_adType, AdEvent.PreparationFailed, adInstance);
 
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("[AdColonyAdapter] OnClosed");
+            Debug.Log("[AMS] AdColonyAdapter OnRequestInterstitialFailedWithZone() " + zoneId);
 #endif
         }
 
-        void OnRequestInterstitial(InterstitialAd interstitial)
+        private void OnExpiring(InterstitialAd interstitial)
         {
-
-            if (interstitial.ZoneId == m_interstitialZoneId)
-            {
-                m_videoInterstitial = interstitial;
-                AddEvent(AdType.Interstitial, AdEvent.Prepared);
-            }
-            else if (interstitial.ZoneId == m_rewardZoneId)
-            {
-                m_incentivizedInterstitial = interstitial;
-                AddEvent(AdType.Incentivized, AdEvent.Prepared);
-            }
+            var adInstance = GetAdInstanceByAdId(interstitial.ZoneId);
+            DestroyAd(adInstance);
 
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("[AdColonyAdapter] OnRequestInterstitial " + interstitial.ZoneId);
+            Debug.Log("[AMS] AdColonyAdapter OnExpiring() " + interstitial.ZoneId);
 #endif
         }
 
-        void OnRequestInterstitialFailed()
+        private void OnRewardGranted(string zoneId, bool success, string name, int amount)
         {
-#if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("[AdColonyAdapter] OnRequestInterstitialFailed");
-#endif
-        }
-
-        void OnRequestInterstitialFailedWithZone(string zoneId)
-        {
-
-            if (zoneId == m_interstitialZoneId)
+            var adInstance = GetAdInstanceByAdId(zoneId);
+            if (adInstance.m_adType == AdType.Incentivized)
             {
-                m_videoInterstitial = null;
-                AddEvent(AdType.Interstitial, AdEvent.PrepareFailure);
-            }
-            else if (zoneId == m_rewardZoneId)
-            {
-                m_incentivizedInterstitial = null;
-                AddEvent(AdType.Incentivized, AdEvent.PrepareFailure);
-            }
-
-#if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("[AdColonyAdapter] OnRequestInterstitialFailedWithZone: " + zoneId);
-#endif
-        }
-
-        void OnExpiring(InterstitialAd interstitial)
-        {
-            if (interstitial.ZoneId == m_interstitialZoneId)
-            {
-                m_videoInterstitial = null;
-            }
-            else if (interstitial.ZoneId == m_rewardZoneId)
-            {
-                m_incentivizedInterstitial = null;
-            }
-
-#if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("[AdColonyAdapter] OnExpiring: " + interstitial.ZoneId);
-#endif
-        }
-
-        void OnRewardGranted(string zoneId, bool success, string name, int amount)
-        {
-            if (zoneId == m_rewardZoneId)
-            {
-                AdEvent adEvent = success ? AdEvent.IncentivizedComplete : AdEvent.IncentivizedIncomplete;
-                AddEvent(AdType.Incentivized, adEvent);
+                AdEvent adEvent = success ? AdEvent.IncentivizedCompleted : AdEvent.IncentivizedUncompleted;
+                AddEvent(adInstance.m_adType, adEvent, adInstance);
             }
         }
 
-        //===============================================================================
-        #endregion // Callback Event Methods
-        //-------------------------------------------------------------------------------
+        #endregion // Interstitial Callbacks
 
 #endif // _AMS_ADCOLONY
-
     }
 } // namespace Virterix.AdMediation
 

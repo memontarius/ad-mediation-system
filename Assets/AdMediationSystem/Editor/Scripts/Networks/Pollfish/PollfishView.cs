@@ -12,8 +12,6 @@ namespace Virterix.AdMediation.Editor
         private SerializedProperty _restoreBannersProp;
         private SerializedProperty _autoPrepareIntervalProp;
 
-        protected override string SettingsFileName => "AdmPollfishSettings.asset";
-
         public PollfishView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
             base(settingsWindow, name, identifier)
         {

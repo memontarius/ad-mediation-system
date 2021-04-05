@@ -5,8 +5,7 @@ namespace Virterix.AdMediation.Editor
 {
     public class AdMobView : BaseAdNetworkView
     {
-        protected override string SettingsFileName => "AdmAdMobSettings.asset";
-
+        
         public AdMobView(AdMediationSettingsWindow settingsWindow, string name, string identifier) : 
             base(settingsWindow, name, identifier)
         {

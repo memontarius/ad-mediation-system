@@ -7,8 +7,6 @@ namespace Virterix.AdMediation.Editor
     {
         private SerializedProperty _sdkKeyProp;
 
-        protected override string SettingsFileName => "AdmApplovinSettings.asset";
-
         public ApplovinView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
             base(settingsWindow, name, identifier)
         {

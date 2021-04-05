@@ -186,6 +186,20 @@
     <Compile Include="Assets\AudienceNetwork\Library\AdUtility.cs" />
     <Compile Include="Assets\AudienceNetwork\Library\RewardedVideoAd.cs" />
     <Compile Include="Assets\Chartboost\Scripts\CBJSON.cs" />
+    <Compile Include="Assets\AdColony\Scripts\Common\AdColonyUtils.cs" />
+    <Compile Include="Assets\AdColony\Scripts\Common\AdColonyZone.cs" />
+    <Compile Include="Assets\AdColony\Scripts\Android\AdColonyAndroidEventTracker.cs" />
+    <Compile Include="Assets\AdColony\Scripts\iOS\AdColonyIOS.cs" />
+    <Compile Include="Assets\AdColony\Scripts\Common\AdColonyOptions.cs" />
+    <Compile Include="Assets\AdColony\Scripts\Common\AdColonyEventTracker.cs" />
+    <Compile Include="Assets\AdColony\Scripts\AdColony.cs" />
+    <Compile Include="Assets\AdColony\Scripts\Common\AdColonyConstants.cs" />
+    <Compile Include="Assets\AdColony\Scripts\iOS\AdColonyIOSEventTracker.cs" />
+    <Compile Include="Assets\AdColony\Scripts\Common\AdColonyInterstitialAd.cs" />
+    <Compile Include="Assets\AdColony\Scripts\Common\AdColonyAdView.cs" />
+    <Compile Include="Assets\AdColony\Scripts\Common\AdColonyTypes.cs" />
+    <Compile Include="Assets\AdColony\Scripts\Android\AdColonyAndroid.cs" />
+    <Compile Include="Assets\AdColony\Scripts\Common\AdColonyUserMetadata.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\GooglePlayGames\Plugins\Android\GooglePlayGamesManifest.plugin\AndroidManifest.xml" />

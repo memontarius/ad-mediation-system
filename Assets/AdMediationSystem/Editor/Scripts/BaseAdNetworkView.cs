@@ -47,7 +47,10 @@ namespace Virterix.AdMediation.Editor
             get { return _settings; }
         }
 
-        protected abstract string SettingsFileName { get; }
+        protected string SettingsFileName
+        {
+            get { return string.Format("adm_{0}_settings.asset", Identifier); }
+        }
 
         protected virtual string[] BannerTypes { get; set; }
 
@@ -65,9 +68,9 @@ namespace Virterix.AdMediation.Editor
 
         private string CollapsedSaveKey
         {
-            get
-            {
-                return string.Format("{0}{1}.collapsed", AdMediationSettingsWindow.PREFIX_SAVEKEY, Name);
+            get 
+            { 
+                return string.Format("{0}{1}.collapsed", AdMediationSettingsWindow.PREFIX_SAVEKEY, Name); 
             }
         }
 
@@ -351,7 +354,7 @@ namespace Virterix.AdMediation.Editor
                     EditorPrefs.SetBool(GetInstanceBlockCollapsedKey(Name, blockData._adType), blockData._isCollapsed);
                 }
 
-                blockData._foldAnimation.target = blockData._isCollapsed;
+                blockData._foldAnimation.target = !blockData._isCollapsed;
                 if (EditorGUILayout.BeginFadeGroup(blockData._foldAnimation.faded))
                 {
                     blockData._instances.DoLayoutList();
@@ -367,7 +370,7 @@ namespace Virterix.AdMediation.Editor
             instanceBlock._blockName = title;
             instanceBlock._instanceProperty = _serializedSettings.FindProperty(propertyName);
             instanceBlock._isCollapsed = EditorPrefs.GetBool(GetInstanceBlockCollapsedKey(Name, adType), true);
-            instanceBlock._foldAnimation = new AnimBool(instanceBlock._isCollapsed);
+            instanceBlock._foldAnimation = new AnimBool(!instanceBlock._isCollapsed);
             instanceBlock._foldAnimation.valueChanged.AddListener(_settingsWindow.Repaint);
             instanceBlock._elementHeight = elementHeight;
             instanceBlock._instances = CreateList(_serializedSettings, instanceBlock);

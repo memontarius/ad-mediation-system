@@ -103,7 +103,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
+        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
 

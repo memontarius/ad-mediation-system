@@ -62,6 +62,7 @@
     <Compile Include="Assets\Plugins\Pollfish\demo\PollfishDemo.cs" />
   </ItemGroup>
   <ItemGroup>
+     <None Include="Assets\Plugins\Android\AdColony\AndroidManifest.xml" />
      <None Include="Assets\Plugins\Android\GoogleMobileAdsPlugin.androidlib\AndroidManifest.xml" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
      <None Include="Assets\Plugins\Android\AndroidManifest_chartboost.xml" />

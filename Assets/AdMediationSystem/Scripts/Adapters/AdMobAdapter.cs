@@ -43,7 +43,7 @@ namespace Virterix.AdMediation
         }
 
         public Color m_adBackgoundColor = Color.gray;
- 
+
         protected override string AdInstanceParametersFolder
         {
             get {  return AdMobAdInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER; }
@@ -214,7 +214,7 @@ namespace Virterix.AdMediation
             return nativeBannerPosition;
         }
 
-        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
+        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
             MobileAds.Initialize(OnInitComplete);
@@ -233,10 +233,6 @@ namespace Virterix.AdMediation
         {
             AdInstance adInstance = new AdMobAdInstanceData(this);
             return adInstance;
-        }
-
-        protected override void SetPersonalizedAds(bool isPersonalizedAds)
-        {
         }
 
         public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
@@ -454,7 +450,7 @@ namespace Virterix.AdMediation
             interstitial.LoadAd(CreateAdRequest());
         }
 
-        void DestroyInterstitial(AdMobAdInstanceData adInstance)
+        private void DestroyInterstitial(AdMobAdInstanceData adInstance)
         {
             if (adInstance.m_adView != null)
             {
@@ -485,8 +481,11 @@ namespace Virterix.AdMediation
                     .TagForChildDirectedTreatment(AdMediationSystem.Instance.m_isChildrenDirected)
                     .AddExtra("color_bg", ColorUtility.ToHtmlStringRGB(m_adBackgoundColor));
 
-            if (!AdMediationSystem.IsAdsPersonalized)
+            if (AdMediationSystem.UserPersonalisationConsent == PersonalisationConsent.Denied)
+            {
                 requestBuilder.AddExtra("npa", "1");
+                requestBuilder.AddExtra("rdp", "1");
+            }
 
             if (AdMediationSystem.Instance.m_testModeEnabled)
             {

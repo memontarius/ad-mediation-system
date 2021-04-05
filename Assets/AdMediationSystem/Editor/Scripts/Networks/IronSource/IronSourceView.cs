@@ -14,7 +14,6 @@ namespace Virterix.AdMediation.Editor
         private bool _isOverriddenPlacementUncollapsed;
         private AnimBool _overriddenPlacementFoldAnimation;
 
-        protected override string SettingsFileName => "AdmIronSourceSettings.asset";
         protected override bool IsAdInstanceIdsDisplayed => false;
 
         private SerializedProperty _overiddenPlacementsProp;

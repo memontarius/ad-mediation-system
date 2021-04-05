@@ -1,0 +1,257 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 020f93c8651de7646badc5e14f92513d, type: 3}
+  m_Name: adm_project_settings
+  m_EditorClassIdentifier: 
+  _initializeOnStart: 1
+  _enableTestMode: 1
+  _enableExtraLogging: 1
+  _directedChildren: 0
+  _testDevices:
+  - 042ba23b-a110-4288-ae66-0996e9ccb93f
+  _bannerMediators:
+  - _adType: 1
+    _name: Default
+    _continueAfterEndSession: 1
+    _fetchOnAdUnitHidden: 1
+    _fetchOnStart: 0
+    _bannerMinDisplayTime: 30
+    _deferredFetchDelay: 90
+    _fetchStrategyType: 0
+    _bannerPosition: 1
+    _tiers:
+    - _maxPassages: 1
+      _units:
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 100
+      - _networkName: Iron Source
+        _networkIndex: 2
+        _networkIdentifier: ironsrc
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: Unity Ads
+        _networkIndex: 1
+        _networkIdentifier: unityads
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+  - _adType: 1
+    _name: Top
+    _continueAfterEndSession: 1
+    _fetchOnAdUnitHidden: 1
+    _fetchOnStart: 0
+    _bannerMinDisplayTime: 30
+    _deferredFetchDelay: 90
+    _fetchStrategyType: 0
+    _bannerPosition: 0
+    _tiers:
+    - _maxPassages: 1
+      _units:
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 1
+        _instanceName: Top
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 100
+      - _networkName: Iron Source
+        _networkIndex: 2
+        _networkIdentifier: ironsrc
+        _instanceIndex: 1
+        _instanceName: Top
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: Unity Ads
+        _networkIndex: 1
+        _networkIdentifier: unityads
+        _instanceIndex: 1
+        _instanceName: Top
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+  _interstitialMediators:
+  - _adType: 2
+    _name: Default
+    _continueAfterEndSession: 1
+    _fetchOnAdUnitHidden: 1
+    _fetchOnStart: 0
+    _bannerMinDisplayTime: 30
+    _deferredFetchDelay: 90
+    _fetchStrategyType: 0
+    _bannerPosition: 0
+    _tiers:
+    - _maxPassages: 1
+      _units:
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 1
+        _instanceName: DefaultHighCPM
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 100
+      - _networkName: Iron Source
+        _networkIndex: 4
+        _networkIdentifier: ironsrc
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 1
+        _prepareOnExit: 1
+        _percentage: 0
+    - _maxPassages: 1
+      _units:
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 1
+        _instanceName: DefaultHighCPM
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 100
+    - _maxPassages: 1
+      _units:
+      - _networkName: Unity Ads
+        _networkIndex: 1
+        _networkIdentifier: unityads
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: Iron Source
+        _networkIndex: 4
+        _networkIdentifier: ironsrc
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: AppLovin
+        _networkIndex: 2
+        _networkIdentifier: applovin
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 100
+      - _networkName: Chartboost
+        _networkIndex: 3
+        _networkIdentifier: chartboost
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+  - _adType: 2
+    _name: Home_Screen
+    _continueAfterEndSession: 1
+    _fetchOnAdUnitHidden: 1
+    _fetchOnStart: 0
+    _bannerMinDisplayTime: 30
+    _deferredFetchDelay: 90
+    _fetchStrategyType: 0
+    _bannerPosition: 0
+    _tiers:
+    - _maxPassages: 1
+      _units:
+      - _networkName: Iron Source
+        _networkIndex: 4
+        _networkIdentifier: ironsrc
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 100
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+  _incentivizedMediators:
+  - _adType: 3
+    _name: Default
+    _continueAfterEndSession: 1
+    _fetchOnAdUnitHidden: 1
+    _fetchOnStart: 0
+    _bannerMinDisplayTime: 30
+    _deferredFetchDelay: 90
+    _fetchStrategyType: 0
+    _bannerPosition: 0
+    _tiers:
+    - _maxPassages: 1
+      _units:
+      - _networkName: AdMob
+        _networkIndex: 0
+        _networkIdentifier: admob
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: Iron Source
+        _networkIndex: 4
+        _networkIdentifier: ironsrc
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: Chartboost
+        _networkIndex: 3
+        _networkIdentifier: chartboost
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: AppLovin
+        _networkIndex: 2
+        _networkIdentifier: applovin
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: Unity Ads
+        _networkIndex: 1
+        _networkIdentifier: unityads
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
+      - _networkName: Pollfish
+        _networkIndex: 5
+        _networkIdentifier: pollfish
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 100
+  _isIOS: 1
+  _isAndroid: 1

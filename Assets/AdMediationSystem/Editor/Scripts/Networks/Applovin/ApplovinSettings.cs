@@ -9,9 +9,7 @@ namespace Virterix.AdMediation.Editor
         public string _sdkKey;
 
         public override bool IsAppIdSupported => false;
-
         public override Type NetworkAdapterType => typeof(AppLovinAdapter);
-
         protected override string AdapterScriptName => "AppLovinAdapter";
         protected override string AdapterDefinePeprocessorKey => "_AMS_APPLOVIN";
 

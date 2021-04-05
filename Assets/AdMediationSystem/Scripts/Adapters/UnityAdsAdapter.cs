@@ -63,7 +63,7 @@ namespace Virterix.AdMediation
             return nativeBannerPosition;
         }
 
-        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
+        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
             try
@@ -78,12 +78,10 @@ namespace Virterix.AdMediation
             if (Advertisement.isSupported && !Advertisement.isInitialized)
             {
                 if (m_isInitializeWhenStart)
-                {
                     Advertisement.Initialize(m_appId, AdMediationSystem.Instance.m_testModeEnabled);
-                }
                 Advertisement.AddListener(this);
             }
-            SetPersonalizedAds(isPersonalizedAds);
+            SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
         }
 
         protected override void InitializeAdInstanceData(AdInstance adInstance, JSONValue jsonAdInstances)
@@ -170,6 +168,20 @@ namespace Virterix.AdMediation
                 isReady = Advertisement.IsReady(adInstance.m_adId);
             }
             return isReady;
+        }
+
+        protected override void SetUserConsentToPersonalizedAds(PersonalisationConsent consent)
+        {
+            if (consent != PersonalisationConsent.Undefined)
+            {
+                MetaData gdprMetaData = new MetaData("gdpr");
+                gdprMetaData.Set("consent", consent == PersonalisationConsent.Accepted ? "true" : "false");
+                Advertisement.SetMetaData(gdprMetaData);
+
+                MetaData privacyMetaData = new MetaData("privacy");
+                privacyMetaData.Set("consent", consent == PersonalisationConsent.Accepted ? "true" : "false");
+                Advertisement.SetMetaData(privacyMetaData);
+            }
         }
 
         //===============================================================================

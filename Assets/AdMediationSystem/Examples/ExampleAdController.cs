@@ -110,7 +110,9 @@ public class ExampleAdController : BaseAdController
     {
         if (AdMediationSystem.IsInitialized)
         {
-            AdMediationSystem.SetPersonalizedAds(!AdMediationSystem.IsAdsPersonalized);
+            var consent = AdMediationSystem.UserPersonalisationConsent == PersonalisationConsent.Accepted ?
+                PersonalisationConsent.Denied : PersonalisationConsent.Accepted;
+            AdMediationSystem.SetUserConsentToPersonalizedAds(consent);
             UpdatePersonalizedAdsButtonText();
         }
     }
@@ -118,7 +120,8 @@ public class ExampleAdController : BaseAdController
     void UpdatePersonalizedAdsButtonText()
     {
         string buttonText = "";
-        if (AdMediationSystem.IsAdsPersonalized)
+        if (AdMediationSystem.UserPersonalisationConsent == PersonalisationConsent.Accepted ||
+            AdMediationSystem.UserPersonalisationConsent == PersonalisationConsent.Undefined)
             buttonText = "Change to Non-Personalized Ads";
         else
             buttonText = "Change to Personalized Ads ";

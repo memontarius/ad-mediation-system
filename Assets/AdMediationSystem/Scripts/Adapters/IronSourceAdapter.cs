@@ -34,6 +34,8 @@ namespace Virterix.AdMediation
         }
 
         public int m_timeout = 120;
+        public bool m_validateIntegration;
+
         [SerializeField]
         public OverridePlacement[] m_overriddenPlacements;
 
@@ -195,7 +197,7 @@ namespace Virterix.AdMediation
             get { return IronSourceAdInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER; }
         }
 
-        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
+        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
 
@@ -212,11 +214,11 @@ namespace Virterix.AdMediation
             AddAdInstance(m_interstitialInstance);
             m_incentivizedInstance = AdFactory.CreateAdInstacne(this, AdType.Incentivized, AdInstance.AD_INSTANCE_DEFAULT_NAME, "", m_timeout);
             AddAdInstance(m_incentivizedInstance);
-     
-            SetPersonalizedAds(isPersonalizedAds);
-            IronSource.Agent.init(appKey, IronSourceAdUnits.INTERSTITIAL, IronSourceAdUnits.REWARDED_VIDEO, IronSourceAdUnits.BANNER);
 
-            IronSource.Agent.validateIntegration();
+            SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
+            IronSource.Agent.init(appKey, IronSourceAdUnits.INTERSTITIAL, IronSourceAdUnits.REWARDED_VIDEO, IronSourceAdUnits.BANNER);
+            if (m_validateIntegration)
+                IronSource.Agent.validateIntegration();
         }
 
         public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
@@ -329,10 +331,13 @@ namespace Virterix.AdMediation
             return isReady;
         }
 
-        protected override void SetPersonalizedAds(bool isPersonalizedAds)
+        protected override void SetUserConsentToPersonalizedAds(PersonalisationConsent consent)
         {
-            IronSource.Agent.setConsent(isPersonalizedAds);
-            IronSource.Agent.setMetaData("do_not_sell", isPersonalizedAds ? "false" : "true");
+            if (consent != PersonalisationConsent.Undefined)
+            {
+                IronSource.Agent.setConsent(consent == PersonalisationConsent.Accepted);
+                IronSource.Agent.setMetaData("do_not_sell", consent == PersonalisationConsent.Accepted ? "false" : "true");
+            }
         }
 
         public override void NotifyEvent(AdEvent adEvent, AdInstance adInstance)

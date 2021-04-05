@@ -111,7 +111,7 @@ namespace Virterix.AdMediation
             return bannerCoordinates;
         }
 
-        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
+        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
             if (AdMediationSystem.Instance.m_testModeEnabled)

@@ -93,13 +93,20 @@
     <Compile Include="Assets\IronSource\Editor\IronSourceMediatedNetworkSettingsInspector.cs" />
     <Compile Include="Assets\GooglePlayGames\Editor\GPGSUpgrader.cs" />
     <Compile Include="Assets\GooglePlayGames\Editor\GPGSDocsUI.cs" />
+    <Compile Include="Assets\AdMediationSystem\Editor\Scripts\EditorAdType.cs" />
     <Compile Include="Assets\IronSource\Editor\IronSourceMediationSettingsInspector.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Chartboost\ChartboostView.cs" />
     <Compile Include="Assets\GooglePlayGames\Editor\GPGSStrings.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\AdMediatorView.cs" />
     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Applovin\ApplovinSettings.cs" />
     <Compile Include="Assets\Chartboost\Editor\CBManifestEditor.cs" />
-    <Compile Include="Assets\AdMediationSystem\Editor\Scripts\EditorAdType.cs" />
+    <Compile Include="Assets\AdColony\Editor\ADCMenu.cs" />
+    <Compile Include="Assets\AdColony\Editor\ADCPluginInfo.cs" />
+    <Compile Include="Assets\AdColony\Editor\ADCManifestProcessor.cs" />
+    <Compile Include="Assets\AdColony\Editor\ADCDependencies.cs" />
+    <Compile Include="Assets\AdColony\Editor\ADCPostBuildProcessor.cs" />
+    <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AdColony\AdColonySettings.cs" />
+    <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AdColony\AdColonyView.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Chartboost\Editor\ChartboostDependencies.xml" />
@@ -108,6 +115,7 @@
      <None Include="Assets\MaxSdk\AppLovin\Editor\Dependencies.xml" />
      <None Include="Assets\GooglePlayGames\Editor\m2repository\com\google\games\gpgs-plugin-support\maven-metadata.xml" />
      <None Include="Assets\GooglePlayGames\Editor\template-GameInfo.txt" />
+     <None Include="Assets\AdColony\Editor\AndroidManifestTemplate.xml" />
      <None Include="Assets\ExternalDependencyManager\Editor\Google.IOSResolver_v1.2.162.dll" />
      <None Include="Assets\ExternalDependencyManager\Editor\Google.JarResolver_v1.2.162.dll" />
      <None Include="Assets\ExternalDependencyManager\Editor\external-dependency-manager_version-1.2.162_manifest.txt" />

@@ -94,7 +94,7 @@ namespace Virterix.AdMediation
             Chartboost.didCompleteRewardedVideo -= DidCompleteRewardedVideo;
         }
 
-        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances, bool isPersonalizedAds = true)
+        protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
 
@@ -128,7 +128,7 @@ namespace Virterix.AdMediation
                 Chartboost.CreateWithAppId(appId, appSignature);
             }
             Chartboost.setAutoCacheAds(autocache);
-            SetPersonalizedAds(isPersonalizedAds);
+            SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
         }
 
         public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
@@ -185,10 +185,14 @@ namespace Virterix.AdMediation
             return isReady;
         }
 
-        protected override void SetPersonalizedAds(bool isPersonalizedAds)
+        protected override void SetUserConsentToPersonalizedAds(PersonalisationConsent consent)
         {
-            Chartboost.addDataUseConsent(isPersonalizedAds ? CBGDPRDataUseConsent.Behavioral : CBGDPRDataUseConsent.NoBehavioral);
-            Chartboost.addDataUseConsent(isPersonalizedAds ? CBCCPADataUseConsent.OptInSale : CBCCPADataUseConsent.OptOutSale);
+            if (consent != PersonalisationConsent.Undefined)
+            {
+                bool accepted = consent == PersonalisationConsent.Accepted;
+                Chartboost.addDataUseConsent(accepted ? CBCCPADataUseConsent.OptInSale : CBCCPADataUseConsent.OptOutSale);
+                Chartboost.addDataUseConsent(accepted ? CBGDPRDataUseConsent.Behavioral : CBGDPRDataUseConsent.NoBehavioral);
+            }
         }
 
         // Interstitial

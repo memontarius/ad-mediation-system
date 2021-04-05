@@ -13,12 +13,12 @@ namespace Virterix.AdMediation.Editor
     {
         public const string SETTINGS_PATH = "Assets/AdMediationSystem/Editor/Resources/";
         public const string SETTINGS_DIRECTORY_NAME = "AdmSettings";
-        public const string PROJECT_SETTINGS_FILENAME = "AdMediationProjectSettings.asset";
+        public const string PROJECT_SETTINGS_FILENAME = "adm_project_settings.asset";
         public const string PREFIX_SAVEKEY = "adm.";
         public const string PROJECT_NAME_SAVEKEY = "project_name";
         public const string EXTRA_LOGGING_DEFINE = "AD_MEDIATION_DEBUG_MODE";
-        public const char SYMBOL_LEFT_ARROW = '\u21A7'; // '\u25B7'
-        public const char SYMBOL_BOTTOM_ARROW = '\u21A6'; // '\u25BD'
+        public const char SYMBOL_LEFT_ARROW = '\u21A6'; // '\u25B7'
+        public const char SYMBOL_BOTTOM_ARROW = '\u21A7'; // '\u25BD'
 
         private int SelectedTab
         {
@@ -144,9 +144,9 @@ namespace Virterix.AdMediation.Editor
                     EditorPrefs.SetBool(GetNetworkEnabledStateSaveKey(_networks[i]), _networkEnabledStates[i]);
                 }
             }
-            AssetDatabase.SaveAssets();
+            //AssetDatabase.SaveAssets();
         }
-
+        
         private void OnGUI()
         {
             _scrollPositioin = EditorGUILayout.BeginScrollView(_scrollPositioin, false, false);
@@ -401,6 +401,7 @@ namespace Virterix.AdMediation.Editor
             AddNetwork(new ApplovinView(this, "AppLovin", "applovin"));
             AddNetwork(new ChartboostView(this, "Chartboost", "chartboost"));
             AddNetwork(new IronSourceView(this, "Iron Source", "ironsrc"));
+            AddNetwork(new AdColonyView(this, "AdColony", "adcolony"));
             AddNetwork(new PollfishView(this, "Pollfish", "pollfish"));
 
             if (_networkEnabledStates == null)
@@ -417,9 +418,8 @@ namespace Virterix.AdMediation.Editor
                 _networkEnabledStates[i] = _networks[i].Settings._enabled;
             }
             UpdateActiveNetworks();
-            UpdateActiveNetworks();
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
+            //AssetDatabase.SaveAssets();
+            //AssetDatabase.Refresh();
         }
 
         private string GetNetworkEnabledStateSaveKey(BaseAdNetworkView networkView)
