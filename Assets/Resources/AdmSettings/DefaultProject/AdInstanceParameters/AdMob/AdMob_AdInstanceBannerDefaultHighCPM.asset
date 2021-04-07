@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: AdMob_AdInstanceBannerDefaultHighCPM
   m_EditorClassIdentifier: 
   m_name: DefaultHighCPM
-  m_bannerSize: 0
   m_bannerPositions: []
+  m_bannerSize: 0

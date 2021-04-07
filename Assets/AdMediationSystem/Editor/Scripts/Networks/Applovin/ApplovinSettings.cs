@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Virterix.AdMediation.Editor
 {
-    public class AppLovinSettings : BaseAdNetworkSettings
+    public class ApplovinSettings : BaseAdNetworkSettings
     {
         public string _sdkKey;
 
@@ -44,16 +44,7 @@ namespace Virterix.AdMediation.Editor
         protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
         {
             var parameterHolder = AppLovinAdInstanceBannerParameters.CreateParameters(projectName, instanceName);
-
-            var specificPositions = new AppLovinAdInstanceBannerParameters.BannerPositionContainer[bannerPositions.Length];
-            for (int i = 0; i < specificPositions.Length; i++)
-            {
-                var specificPosition = new AppLovinAdInstanceBannerParameters.BannerPositionContainer();
-                specificPosition.m_placementName = bannerPositions[i].m_placementName;
-                specificPosition.m_bannerPosition = (AppLovinAdapter.AppLovinBannerPosition)ConvertToSpecificBannerPosition(bannerPositions[i].m_bannerPosition);
-                specificPositions[i] = specificPosition;
-            }
-            parameterHolder.m_bannerPositions = specificPositions;
+            SetupBannerPositionContainers(parameterHolder, bannerPositions);
             return parameterHolder;
         }
 

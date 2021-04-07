@@ -74,23 +74,7 @@ namespace Virterix.AdMediation
             IronSource.Agent.onApplicationPause(isPaused);
         }
 
-        public static IronSourceBannerSize GetBannerSize(AdInstance adInstance)
-        {
-            var bannerParameters = adInstance.m_adInstanceParams as IronSourceAdInstanceBannerParameters;
-            var nativeAdSize = ConvertToAdSize(bannerParameters.m_bannerSize);
-            return nativeAdSize;
-        }
-
-        public static IronSourceBannerPosition GetBannerPosition(AdInstance adInstance, string placement)
-        {
-            IronSourceBannerPosition nativeBannerPosition = IronSourceBannerPosition.BOTTOM;
-            var irnSrcAdInstanceParams = adInstance.m_adInstanceParams as IronSourceAdInstanceBannerParameters;
-            var bannerPosition = irnSrcAdInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
-            nativeBannerPosition = ConvertToAdPosition(bannerPosition.m_bannerPosition);
-            return nativeBannerPosition;
-        }
-
-        public static IronSourceBannerSize ConvertToAdSize(IrnSrcBannerSize bannerSize)
+        public static IronSourceBannerSize ConvertToNativeBannerSize(IrnSrcBannerSize bannerSize)
         {
             IronSourceBannerSize nativeAdSize = IronSourceBannerSize.SMART;
             switch (bannerSize)
@@ -111,7 +95,7 @@ namespace Virterix.AdMediation
             return nativeAdSize;
         }
 
-        public static IronSourceBannerPosition ConvertToAdPosition(IrnSrcBannerPosition bannerPosition)
+        public static IronSourceBannerPosition ConvertToNativeBannerPosition(IrnSrcBannerPosition bannerPosition)
         {
             IronSourceBannerPosition nativeAdPosition = IronSourceBannerPosition.BOTTOM;
             switch (bannerPosition)
@@ -124,6 +108,13 @@ namespace Virterix.AdMediation
                     break;
             }
             return nativeAdPosition;
+        }
+
+        private static IronSourceBannerSize GetBannerSize(AdInstance adInstance)
+        {
+            var bannerParameters = adInstance.m_adInstanceParams as IronSourceAdInstanceBannerParameters;
+            var nativeAdSize = ConvertToNativeBannerSize(bannerParameters.m_bannerSize);
+            return nativeAdSize;
         }
 
         private void SubscribeEvents()
@@ -330,7 +321,7 @@ namespace Virterix.AdMediation
         private IEnumerator RequestBanner(AdInstance adInstance, string placement, float delay)
         {
             yield return new WaitForSecondsRealtime(delay);
-            IronSourceBannerPosition bannerPos = GetBannerPosition(adInstance, placement);
+            IronSourceBannerPosition bannerPos = ConvertToNativeBannerPosition((IrnSrcBannerPosition)GetBannerPosition(adInstance, placement));
             IronSourceBannerSize bannerSize = GetBannerSize(adInstance);
             m_currBannerInstance = adInstance;
             m_currBannerPlacement = placement;
@@ -469,13 +460,9 @@ namespace Virterix.AdMediation
 #endif
             m_bannerState = AdState.Received;
             if (m_bannerDisplayed)
-            {
                 IronSource.Agent.displayBanner();
-            }
             else
-            {
                 IronSource.Agent.hideBanner();
-            }
             AddEvent(AdType.Banner, AdEvent.Prepared, m_currBannerInstance);
         }
 

@@ -48,18 +48,9 @@ namespace Virterix.AdMediation
         }
 
 #if _AMS_UNITY_ADS
-        public static BannerPosition ConvertToAdPosition(UnityAdsBannerPosition bannerPosition)
+        public static BannerPosition ConvertToNativeBannerPosition(UnityAdsBannerPosition bannerPosition)
         {
             BannerPosition nativeBannerPosition = (BannerPosition)bannerPosition;
-            return nativeBannerPosition;
-        }
-
-        public static BannerPosition GetBannerPosition(AdInstance adInstance, string placement)
-        {
-            BannerPosition nativeBannerPosition = BannerPosition.BOTTOM_CENTER;
-            var adInstanceParams = adInstance.m_adInstanceParams as UnityAdInstanceBannerParameters;
-            var bannerPositionContainer = adInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
-            nativeBannerPosition = ConvertToAdPosition(bannerPositionContainer.m_bannerPosition);
             return nativeBannerPosition;
         }
 
@@ -137,7 +128,8 @@ namespace Virterix.AdMediation
 #if UNITY_EDITOR
                         Advertisement.Banner.Hide(true);
 #endif
-                        Advertisement.Banner.SetPosition(GetBannerPosition(adInstance, placement));
+                        var bannerPosition = ConvertToNativeBannerPosition((UnityAdsBannerPosition)GetBannerPosition(adInstance, placement));
+                        Advertisement.Banner.SetPosition(bannerPosition);
                     }                
                     Advertisement.Banner.Show(adInstance.m_adId);
                     if (!isPreviousBannerDisplayed)
@@ -201,8 +193,13 @@ namespace Virterix.AdMediation
                 Debug.Log("[AMS] UnityAdsAdapter.OnUnityAdsReady() adId: " + adInstance.m_adId + " bannerVisibled:" + adInstance.m_bannerDisplayed);
 #endif
                 adInstance.State = AdState.Received;
-                if (adInstance.m_adType == AdType.Banner && adInstance.m_bannerDisplayed)
-                    Show(adInstance);
+                if (adInstance.m_adType == AdType.Banner)
+                {
+                    if (adInstance.m_bannerDisplayed)
+                        Show(adInstance);
+                    else
+                        Advertisement.Banner.Hide();
+                }
                 AddEvent(adInstance.m_adType, AdEvent.Prepared, adInstance);
             }
         }

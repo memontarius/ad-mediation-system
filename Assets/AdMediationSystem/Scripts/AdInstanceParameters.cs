@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -12,11 +13,20 @@ namespace Virterix.AdMediation
         string Name { get; set; }
     }
 
+    [Serializable]
+    public struct BannerPositionContainer
+    {
+        public string m_placementName;
+        public int m_bannerPosition;
+    }
+
     public class AdInstanceParameters : ScriptableObject, IAdInstanceParameters
     {
         public const string AD_INSTANCE_PARAMETERS_DEFAULT_NAME = "Default";
         [SerializeField]
         private string m_name = AD_INSTANCE_PARAMETERS_DEFAULT_NAME;
+
+        public BannerPositionContainer[] m_bannerPositions;
 
         public virtual AdType AdvertiseType
         {

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Boomlagoon.JSON;
+using System.Linq;
 
 namespace Virterix.AdMediation
 {
@@ -176,6 +177,23 @@ namespace Virterix.AdMediation
         //_______________________________________________________________________________
         #region Public Methods
         //-------------------------------------------------------------------------------
+
+        public static int GetBannerPosition(AdInstance adInstance, string placement, int defaultPosition = 0)
+        {
+            var specificBannerPosition = defaultPosition;
+            var adInstanceParams = adInstance.m_adInstanceParams as AdInstanceParameters;
+            var positions = adInstanceParams.m_bannerPositions;
+            if (positions.Length == 1)
+                specificBannerPosition = positions[0].m_bannerPosition;
+            else if (positions.Length > 0)
+            {
+                var positionContainer = positions.FirstOrDefault(p => p.m_placementName == placement);
+                if (!string.IsNullOrEmpty(positionContainer.m_placementName))
+                    specificBannerPosition = positionContainer.m_bannerPosition;
+            }
+            return specificBannerPosition;
+        }
+
         public void Initialize(Dictionary<string, string> parameters = null, JSONArray adInstances = null)
         {
             if (m_waitResponseInstruction == null)

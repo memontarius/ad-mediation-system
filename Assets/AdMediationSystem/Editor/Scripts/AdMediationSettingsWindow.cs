@@ -145,6 +145,7 @@ namespace Virterix.AdMediation.Editor
                 }
             }
             //AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
         
         private void OnGUI()
@@ -398,7 +399,7 @@ namespace Virterix.AdMediation.Editor
             AddNetwork(new AdMobView(this, "AdMob", "admob"));
             AddNetwork(new AudienceNetworkView(this, "Audience Network", "audiencenetwork"));
             AddNetwork(new UnityAdsView(this, "Unity Ads", "unityads"));
-            AddNetwork(new AppLovinView(this, "AppLovin", "applovin"));
+            AddNetwork(new ApplovinView(this, "AppLovin", "applovin"));
             AddNetwork(new ChartboostView(this, "Chartboost", "chartboost"));
             AddNetwork(new IronSourceView(this, "Iron Source", "ironsrc"));
             AddNetwork(new AdColonyView(this, "AdColony", "adcolony"));
@@ -419,7 +420,7 @@ namespace Virterix.AdMediation.Editor
             }
             UpdateActiveNetworks();
             //AssetDatabase.SaveAssets();
-            //AssetDatabase.Refresh();
+            AssetDatabase.Refresh();
         }
 
         private string GetNetworkEnabledStateSaveKey(BaseAdNetworkView networkView)

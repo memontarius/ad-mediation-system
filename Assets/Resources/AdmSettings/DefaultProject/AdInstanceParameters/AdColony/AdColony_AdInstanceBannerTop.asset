@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c8e0979e99474d41b930f84635a3379, type: 3}
-  m_Name: IronSource_AdInstanceBannerTop
+  m_Script: {fileID: 11500000, guid: 191a84f527733ce4589344dd861550cb, type: 3}
+  m_Name: AdColony_AdInstanceBannerTop
   m_EditorClassIdentifier: 
   m_name: Top
   m_bannerPositions:
   - m_placementName: Top
     m_bannerPosition: 0
-  m_bannerSize: 3
+  m_bannerSize: 1

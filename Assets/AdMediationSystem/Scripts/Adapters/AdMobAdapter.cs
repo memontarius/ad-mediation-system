@@ -148,7 +148,7 @@ namespace Virterix.AdMediation
 #endif
         }
 
-        public static AdSize ConvertToAdSize(AdMobBannerSize bannerSize)
+        public static AdSize ConvertToNativeBannerSize(AdMobBannerSize bannerSize)
         {
             AdSize admobAdSize = AdSize.Banner;
 
@@ -173,7 +173,7 @@ namespace Virterix.AdMediation
             return admobAdSize;
         }
 
-        public static AdPosition ConvertToAdPosition(AdMobBannerPosition bannerPosition)
+        public static AdPosition ConvertToNativeBannerPosition(AdMobBannerPosition bannerPosition)
         {
             AdPosition admobAdPosition = AdPosition.Center;
 
@@ -202,15 +202,6 @@ namespace Virterix.AdMediation
                     break;
             }
             return admobAdPosition;
-        }
-
-        public static AdPosition GetBannerPosition(AdInstance adInstance, string placement)
-        {
-            AdPosition nativeBannerPosition = AdPosition.Bottom;
-            var adMobAdInstanceParams = adInstance.m_adInstanceParams as AdMobAdInstanceBannerParameters;
-            var bannerPosition = adMobAdInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
-            nativeBannerPosition = ConvertToAdPosition(bannerPosition.m_bannerPosition);
-            return nativeBannerPosition;
         }
 
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
@@ -282,7 +273,7 @@ namespace Virterix.AdMediation
                             bannerView.Hide();
 #endif
                             bannerView.Show();
-                            bannerView.SetPosition(GetBannerPosition(adInstance, placement));
+                            bannerView.SetPosition(ConvertToNativeBannerPosition((AdMobBannerPosition)GetBannerPosition(adInstance, placement)));
                         }
 #if UNITY_EDITOR
                         if (!isPreviousBannerDisplayed)
@@ -347,9 +338,9 @@ namespace Virterix.AdMediation
             adInstance.State = AdState.Loading;
 
             AdMobAdInstanceBannerParameters bannerParams = adInstance.m_adInstanceParams as AdMobAdInstanceBannerParameters;
-            AdPosition bannerPosition = GetBannerPosition(adInstance, placement);
+            AdPosition bannerPosition = ConvertToNativeBannerPosition((AdMobBannerPosition)GetBannerPosition(adInstance, placement));
             
-            BannerView bannerView = new BannerView(adInstance.m_adId, ConvertToAdSize(bannerParams.m_bannerSize), bannerPosition);
+            BannerView bannerView = new BannerView(adInstance.m_adId, ConvertToNativeBannerSize(bannerParams.m_bannerSize), bannerPosition);
             adInstance.m_adView = bannerView;
             bannerView.Hide();
 

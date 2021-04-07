@@ -71,7 +71,25 @@ namespace Virterix.AdMediation
             public float m_refreshTime;
             public bool m_isServerValidation; // Is S2S validation
         }
-        
+
+        public static AdSize ConvertToNativeBannerSize(AudienceNetworkBannerSize bannerSize)
+        {
+            AdSize nativeAdSize = AdSize.BANNER_HEIGHT_50;
+            switch (bannerSize)
+            {
+                case AudienceNetworkBannerSize.BannerHeight50:
+                    nativeAdSize = AdSize.BANNER_HEIGHT_50;
+                    break;
+                case AudienceNetworkBannerSize.BannerHeight90:
+                    nativeAdSize = AdSize.BANNER_HEIGHT_90;
+                    break;
+                case AudienceNetworkBannerSize.RectangleHeight250:
+                    nativeAdSize = AdSize.RECTANGLE_HEIGHT_250;
+                    break;
+            }
+            return nativeAdSize;
+        }
+
         private static Vector2 CalculateBannerPosition(AudienceNetworkAdInstanceData adInstance, string placement)
         {
 #if UNITY_EDITOR
@@ -80,7 +98,7 @@ namespace Virterix.AdMediation
             Vector2 bannerCoordinates = Vector2.zero;
             float bannerHight = 0;
             AudienceNetworkAdInstanceBannerParameters adInstanceParams = adInstance.m_adInstanceParams as AudienceNetworkAdInstanceBannerParameters;
-            var bannerPosition = adInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
+            var bannerPosition = (AudienceNetworkBannerPosition)GetBannerPosition(adInstance, placement);
 
             switch (adInstanceParams.m_bannerSize)
             {
@@ -95,7 +113,7 @@ namespace Virterix.AdMediation
                     break;
             }
 
-            switch (bannerPosition.m_bannerPosition)
+            switch (bannerPosition)
             {
                 case AudienceNetworkBannerPosition.Bottom:
                     bannerCoordinates.x = 0f;
@@ -239,24 +257,6 @@ namespace Virterix.AdMediation
             return isReady;
         }
 
-        private AdSize ConvertToAdSize(AudienceNetworkBannerSize bannerSize)
-        {
-            AdSize nativeAdSize = AdSize.BANNER_HEIGHT_50;
-            switch (bannerSize)
-            {
-                case AudienceNetworkBannerSize.BannerHeight50:
-                    nativeAdSize = AdSize.BANNER_HEIGHT_50;
-                    break;
-                case AudienceNetworkBannerSize.BannerHeight90:
-                    nativeAdSize = AdSize.BANNER_HEIGHT_90;
-                    break;
-                case AudienceNetworkBannerSize.RectangleHeight250:
-                    nativeAdSize = AdSize.RECTANGLE_HEIGHT_250;
-                    break;
-            }
-            return nativeAdSize;
-        }
-
         private IEnumerator CoroutineRefreshBanner(AudienceNetworkAdInstanceData adInstance, float refreshTime)
         {
             float lifeTime = 0.0f;
@@ -324,7 +324,7 @@ namespace Virterix.AdMediation
 
 #if UNITY_IOS || UNITY_ANDROID
             AudienceNetworkAdInstanceBannerParameters adInstanceParams = adInstance.m_adInstanceParams as AudienceNetworkAdInstanceBannerParameters;
-            AdView bannerView = new AdView(adInstance.m_adId, ConvertToAdSize(adInstanceParams.m_bannerSize));
+            AdView bannerView = new AdView(adInstance.m_adId, ConvertToNativeBannerSize(adInstanceParams.m_bannerSize));
             adInstance.m_adView = bannerView;
             bannerView.Register(this.gameObject);
 
@@ -515,7 +515,6 @@ namespace Virterix.AdMediation
                 Vector2 bannerPosition = CalculateBannerPosition(adInstance, placement);
                 bool success = bannerView.Show(bannerPosition.x, bannerPosition.y);
             }
-
             AddEvent(AdType.Banner, AdEvent.Prepared, adInstance);
         }
 

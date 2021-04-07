@@ -115,6 +115,14 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 0
+      - _networkName: AdColony
+        _networkIndex: 4
+        _networkIdentifier: adcolony
+        _instanceIndex: 1
+        _instanceName: Top
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
   _interstitialMediators:
   - _adType: 2
     _name: Default

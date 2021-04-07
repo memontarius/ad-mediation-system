@@ -61,18 +61,9 @@ namespace Virterix.AdMediation
         }
 
 #if _AMS_APPLOVIN
-        public static MaxSdk.BannerPosition ConvertToBanerPosition(AppLovinBannerPosition position)
+        public static MaxSdk.BannerPosition ConvertToNativeBanerPosition(AppLovinBannerPosition position)
         {
             return (MaxSdk.BannerPosition)position;
-        }
-
-        public static MaxSdk.BannerPosition GetBannerPosition(AdInstance adInstance, string placement)
-        {
-            var nativeBannerPosition = MaxSdk.BannerPosition.BottomCenter;
-            var adInstanceParams = adInstance.m_adInstanceParams as AppLovinAdInstanceBannerParameters;
-            var bannerPositionContainer = adInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
-            nativeBannerPosition = ConvertToBanerPosition(bannerPositionContainer.m_bannerPosition);
-            return nativeBannerPosition;
         }
 
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonPlacements)
@@ -290,7 +281,8 @@ namespace Virterix.AdMediation
                 DestroyBanner(adInstance);
   
             adInstance.State = AdState.Loading;
-            MaxSdk.CreateBanner(adInstance.m_adId, GetBannerPosition(adInstance, placement));
+            var bannerPosition = ConvertToNativeBanerPosition((AppLovinBannerPosition)GetBannerPosition(adInstance, placement));
+            MaxSdk.CreateBanner(adInstance.m_adId, bannerPosition);
             MaxSdk.SetBannerPlacement(adInstance.m_adId, placement);
         }
 
@@ -308,9 +300,13 @@ namespace Virterix.AdMediation
             var adInstance = GetAdInstanceByAdId(adUnitIdentifier);
             adInstance.State = AdState.Received;
 
-            if (adInstance.m_adType == AdType.Banner && adInstance.m_bannerDisplayed)
-                MaxSdk.ShowBanner(adInstance.m_adId);
-
+            if (adInstance.m_adType == AdType.Banner)
+            {
+                if (adInstance.m_bannerDisplayed)
+                    MaxSdk.ShowBanner(adInstance.m_adId);
+                else
+                    MaxSdk.HideBanner(adInstance.m_adId);
+            }
             AddEvent(adInstance.m_adType, AdEvent.Prepared, adInstance);
         }
 

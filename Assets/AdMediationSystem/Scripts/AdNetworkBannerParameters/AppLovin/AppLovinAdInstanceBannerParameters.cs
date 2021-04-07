@@ -4,17 +4,8 @@ namespace Virterix.AdMediation
 {
     public class AppLovinAdInstanceBannerParameters : AdInstanceParameters
     {
-        [Serializable]
-        public struct BannerPositionContainer
-        {
-            public string m_placementName;
-            public AppLovinAdapter.AppLovinBannerPosition m_bannerPosition;
-        }
-
         public const string _AD_INSTANCE_PARAMETERS_FOLDER = "AppLovin";
         public const string _PARAMETERS_FILE_NAME = "AppLovin_AdInstanceBanner";
-
-        public BannerPositionContainer[] m_bannerPositions;
 
         public override AdType AdvertiseType => AdType.Banner;
 

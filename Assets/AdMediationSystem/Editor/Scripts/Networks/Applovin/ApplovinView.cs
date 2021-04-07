@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace Virterix.AdMediation.Editor
 {
-    public class AppLovinView : BaseAdNetworkView
+    public class ApplovinView : BaseAdNetworkView
     {
         private SerializedProperty _sdkKeyProp;
 
-        public AppLovinView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
+        public ApplovinView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
             base(settingsWindow, name, identifier)
         {
             _sdkKeyProp = _serializedSettings.FindProperty("_sdkKey");
@@ -15,7 +15,7 @@ namespace Virterix.AdMediation.Editor
 
         protected override BaseAdNetworkSettings CreateSettingsModel()
         {
-            var settings = Utils.GetOrCreateSettings<AppLovinSettings>(SettingsFilePath);
+            var settings = Utils.GetOrCreateSettings<ApplovinSettings>(SettingsFilePath);
             return settings;
         }
 

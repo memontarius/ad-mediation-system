@@ -34,12 +34,12 @@ MonoBehaviour:
   - _name: Default
     _androidId: 8246c766b2b82df1
     _iosId: 
-    _timeout: 90
+    _timeout: 120
     _bannerType: 0
   _rewardAdInstances:
   - _name: Default
     _androidId: c249952395e24ff7
     _iosId: 
-    _timeout: 90
+    _timeout: 120
     _bannerType: 0
   _sdkKey: StxIgPTR5H-CHX-VolnxtbADt94m_rWShRlMsIpxan8sJ6M6s72ikCxaM_KLqsoWIXu8rg4PSCGnJcu9lwtS7o

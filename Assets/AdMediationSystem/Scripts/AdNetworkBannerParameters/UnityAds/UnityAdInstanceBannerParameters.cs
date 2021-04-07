@@ -4,17 +4,8 @@ namespace Virterix.AdMediation
 {
     public class UnityAdInstanceBannerParameters : AdInstanceParameters
     {
-        [Serializable]
-        public struct BannerPositionContainer
-        {
-            public string m_placementName;
-            public UnityAdsAdapter.UnityAdsBannerPosition m_bannerPosition;
-        }
-
         public const string _AD_INSTANCE_PARAMETERS_FOLDER = "UnityAds";
         public const string _PARAMETERS_FILE_NAME = "UnityAds_AdInstanceBanner";
-
-        public BannerPositionContainer[] m_bannerPositions;
 
         public override AdType AdvertiseType => AdType.Banner;
 

@@ -25,16 +25,7 @@ namespace Virterix.AdMediation.Editor
         {
             AdColonyAdInstanceBannerParameters parameterHolder = AdColonyAdInstanceBannerParameters.CreateParameters(projectName, instanceName);
             parameterHolder.m_bannerSize = (AdColonyAdapter.AdColonyAdSize)bannerType;
-
-            var specificPositions = new AdColonyAdInstanceBannerParameters.BannerPositionContainer[bannerPositions.Length];
-            for (int i = 0; i < specificPositions.Length; i++)
-            {
-                var specificPosition = new AdColonyAdInstanceBannerParameters.BannerPositionContainer();
-                specificPosition.m_placementName = bannerPositions[i].m_placementName;
-                specificPosition.m_bannerPosition = (AdColonyAdapter.AdColonyAdPosition)ConvertToSpecificBannerPosition(bannerPositions[i].m_bannerPosition);
-                specificPositions[i] = specificPosition;
-            }
-            parameterHolder.m_bannerPositions = specificPositions;
+            SetupBannerPositionContainers(parameterHolder, bannerPositions);
             return parameterHolder;
         }
 

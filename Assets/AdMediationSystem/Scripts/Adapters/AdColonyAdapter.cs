@@ -60,10 +60,22 @@ namespace Virterix.AdMediation
             return nativeAdSize;
         }
 
-        public static AdPosition ConvertToAdPosition(AdColonyAdPosition bannerPosition)
+        public static AdPosition ConvertToNativeBannerPosition(AdColonyAdPosition bannerPosition)
         {
             AdPosition nativeAdPosition = (AdPosition)bannerPosition;
             return nativeAdPosition;
+        }
+
+        private string GetAdViewId(AdInstance adInstance)
+        {
+            string id = "";
+            if (adInstance.m_adView != null)
+            {
+                var adView = adInstance.m_adView as AdColonyAdView;
+                if (adView != null)
+                    id = adView.Id;
+            }
+            return id;
         }
 
 #if _AMS_ADCOLONY
@@ -78,15 +90,6 @@ namespace Virterix.AdMediation
         {
             base.OnDisable();
             UnsubscribeAdEvents();
-        }
-
-        public static AdPosition GetBannerPosition(AdInstance adInstance, string placement)
-        {
-            AdPosition nativeBannerPosition = AdPosition.Bottom;          
-            var adInstanceParams = adInstance.m_adInstanceParams as AdColonyAdInstanceBannerParameters;
-            var bannerPosition = adInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
-            nativeBannerPosition = ConvertToAdPosition(bannerPosition.m_bannerPosition);
-            return nativeBannerPosition;
         }
 
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonPlacements)
@@ -123,9 +126,11 @@ namespace Virterix.AdMediation
             {
                 zoneIDs[i] = m_adInstances[i].m_adId;
             }
-#if !UNITY_EDITOR
-            Ads.Configure(appId, appOptions, zoneIDs);
+
+#if UNITY_EDITOR
+            return;
 #endif
+            Ads.Configure(appId, appOptions, zoneIDs);
         }
 
         public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
@@ -144,6 +149,9 @@ namespace Virterix.AdMediation
 
         public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
+            if (adInstance.m_adType == AdType.Banner)
+                adInstance.m_bannerDisplayed = true;
+
             if (IsReady(adInstance.m_adType))
             {
                 switch (adInstance.m_adType)
@@ -154,7 +162,7 @@ namespace Virterix.AdMediation
                         Ads.ShowAd(interstitial);
                         break;
                     case AdType.Banner:
-                        Ads.ShowAdView(adInstance.m_adId);
+                        Ads.ShowAdView(GetAdViewId(adInstance));
                         break;
                 }
                 return true;
@@ -163,13 +171,30 @@ namespace Virterix.AdMediation
                 return false;
         }
 
+        public override void Hide(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        {
+            if (adInstance.m_adType == AdType.Banner)
+            {
+                if (adInstance.State == AdState.Received)
+                {
+                    Ads.HideAdView(GetAdViewId(adInstance));
+                    if (adInstance.m_bannerDisplayed)
+                        NotifyEvent(AdEvent.Hiding, adInstance);
+                }
+                adInstance.m_bannerDisplayed = false;
+            }
+        }
+
         public override bool IsReady(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             bool isReady = false;
-            if (m_isConfigured)
+            if (m_isConfigured && adInstance.m_adView != null)
             {
                 switch (adInstance.m_adType)
                 {
+                    case AdType.Banner:
+                        isReady = adInstance.State == AdState.Received;
+                        break;
                     case AdType.Interstitial:
                     case AdType.Incentivized:
                         if (adInstance.State == AdState.Received)
@@ -207,15 +232,17 @@ namespace Virterix.AdMediation
 
         private void RequestAd(AdInstance adInstance, string placement)
         {
+#if UNITY_EDITOR
+            return;
+#endif
             DestroyAd(adInstance);
 
             adInstance.State = AdState.Loading;
             AdOptions adOptions = null;
-            
-#if !UNITY_EDITOR
+
             if (adInstance.m_adType == AdType.Banner)
             {
-                AdPosition bannerPosition = GetBannerPosition(adInstance, placement);
+                AdPosition bannerPosition = ConvertToNativeBannerPosition((AdColonyAdPosition)GetBannerPosition(adInstance, placement));
                 var adInstanceParams = adInstance.m_adInstanceParams as AdColonyAdInstanceBannerParameters;
                 AdSize bannerSize = ConvertToAdSize(adInstanceParams.m_bannerSize);
                 Ads.RequestAdView(adInstance.m_adId, bannerSize, bannerPosition, null);
@@ -230,7 +257,6 @@ namespace Virterix.AdMediation
                 }
                 Ads.RequestInterstitialAd(adInstance.m_adId, adOptions);
             }
-#endif
         }
 
         private void SubscribeAdEvents()
@@ -361,11 +387,10 @@ namespace Virterix.AdMediation
             adInstance.State = AdState.Received;
             adInstance.m_adView = adView;
 
-            Debug.Log("----AdColonyAdapter OnAdViewLoaded " + adView.Id + " " + adView.ZoneId);
-
-            if (adInstance.m_adType == AdType.Banner && adInstance.m_bannerDisplayed)
+            if (adInstance.m_bannerDisplayed)
                 Ads.ShowAdView(adView.Id);
-
+            else
+                Ads.HideAdView(adView.Id);
             AddEvent(adInstance.m_adType, AdEvent.Prepared, adInstance);
         }
 
@@ -384,8 +409,6 @@ namespace Virterix.AdMediation
 
         private void OnAdViewClosed(AdColonyAdView adView)
         {
-            var adInstance = GetAdInstanceByAdId(adView.ZoneId);
-            AddEvent(adInstance.m_adType, AdEvent.Hiding, adInstance);
         }
 
         private void OnAdViewClicked(AdColonyAdView adView)

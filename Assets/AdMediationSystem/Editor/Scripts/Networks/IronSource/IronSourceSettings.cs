@@ -46,16 +46,7 @@ namespace Virterix.AdMediation.Editor
         {
             var parameterHolder = IronSourceAdInstanceBannerParameters.CreateParameters(projectName, instanceName);
             parameterHolder.m_bannerSize = (IronSourceAdapter.IrnSrcBannerSize)bannerType;
-
-            var specificPositions = new IronSourceAdInstanceBannerParameters.BannerPositionContainer[bannerPositions.Length];
-            for (int i = 0; i < specificPositions.Length; i++)
-            {
-                var specificPosition = new IronSourceAdInstanceBannerParameters.BannerPositionContainer();
-                specificPosition.m_placementName = bannerPositions[i].m_placementName;
-                specificPosition.m_bannerPosition = (IronSourceAdapter.IrnSrcBannerPosition)ConvertToSpecificBannerPosition(bannerPositions[i].m_bannerPosition);
-                specificPositions[i] = specificPosition;
-            }
-            parameterHolder.m_bannerPositions = specificPositions;
+            SetupBannerPositionContainers(parameterHolder, bannerPositions);
             return parameterHolder;
         }
 

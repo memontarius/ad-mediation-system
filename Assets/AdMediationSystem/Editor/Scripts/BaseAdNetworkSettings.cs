@@ -106,6 +106,19 @@ namespace Virterix.AdMediation.Editor
             throw new NotImplementedException();
         }
 
+        protected void SetupBannerPositionContainers(AdInstanceParameters parameterHolder, BannerPositionContainer[] bannerPositions)
+        {
+            var specificPositions = new AdMediation.BannerPositionContainer[bannerPositions.Length];
+            for (int i = 0; i < specificPositions.Length; i++)
+            {
+                var specificPosition = new AdMediation.BannerPositionContainer();
+                specificPosition.m_placementName = bannerPositions[i].m_placementName;
+                specificPosition.m_bannerPosition = ConvertToSpecificBannerPosition(bannerPositions[i].m_bannerPosition);
+                specificPositions[i] = specificPosition;
+            }
+            parameterHolder.m_bannerPositions = specificPositions;
+        }
+
         public virtual void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {
         }
