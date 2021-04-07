@@ -176,7 +176,7 @@ namespace Virterix.AdMediation
             switch (adType)
             {
                 case AdType.Banner:
-                    audienceNetworkAdInstance.m_bannerVisibled = true;
+                    audienceNetworkAdInstance.m_bannerDisplayed = true;
                     if (adInstance.State == AdState.Received)
                     {
                         AdView bannerView = audienceNetworkAdInstance.m_adView as AdView;
@@ -184,9 +184,7 @@ namespace Virterix.AdMediation
 
                         isShowSuccessful = bannerView.Show(bannerPosition.x, bannerPosition.y);
                         if (isShowSuccessful)
-                        {
                             NotifyEvent(AdEvent.Show, audienceNetworkAdInstance);
-                        }
                     }
                     break;
                 case AdType.Interstitial:
@@ -195,13 +193,9 @@ namespace Virterix.AdMediation
                         InterstitialAd interstitialAd = audienceNetworkAdInstance.m_adView as InterstitialAd;
                         isShowSuccessful = interstitialAd.Show();
                         if (isShowSuccessful)
-                        {
                             NotifyEvent(AdEvent.Show, audienceNetworkAdInstance);
-                        }
                         else
-                        {
                             DestroyInterstitial(audienceNetworkAdInstance);
-                        }
                     }
                     break;
                 case AdType.Incentivized:
@@ -210,13 +204,9 @@ namespace Virterix.AdMediation
                         RewardedVideoAd rewardVideo = audienceNetworkAdInstance.m_adView as RewardedVideoAd;
                         isShowSuccessful = rewardVideo.Show();
                         if (isShowSuccessful)
-                        {
                             NotifyEvent(AdEvent.Show, audienceNetworkAdInstance);
-                        }
                         else
-                        {
                             DestroyRewardVideo(audienceNetworkAdInstance);
-                        }
                     }
                     break;
             }
@@ -231,15 +221,11 @@ namespace Virterix.AdMediation
             switch (adType)
             {
                 case AdType.Banner:
-                    audienceNetworkAdInstance.m_bannerVisibled = false;
-
-                    if (adType == AdType.Banner)
+                    audienceNetworkAdInstance.m_bannerDisplayed = false;
+                    if (adInstance.State == AdState.Received)
                     {
-                        if (adInstance.State == AdState.Received)
-                        {
-                            AdView bannerView = adInstance.m_adView as AdView;
-                            bannerView.Show(-10000);
-                        }
+                        AdView bannerView = adInstance.m_adView as AdView;
+                        bannerView.Show(-10000);
                     }
                     NotifyEvent(AdEvent.Hiding, audienceNetworkAdInstance);
                     break;
@@ -280,7 +266,7 @@ namespace Virterix.AdMediation
             while (true)
             {
                 yield return waitInstruction;
-                if (adInstance.State == AdState.Received && adInstance.m_bannerVisibled)
+                if (adInstance.State == AdState.Received && adInstance.m_bannerDisplayed)
                 {
                     lifeTime += period;
                 }
@@ -522,7 +508,7 @@ namespace Virterix.AdMediation
 #endif
 
             adInstance.State = AdState.Received;
-            if (adInstance.m_bannerVisibled && adInstance.m_adView != null)
+            if (adInstance.m_bannerDisplayed && adInstance.m_adView != null)
             {
                 AudienceNetworkAdInstanceBannerParameters adInstanceParams = adInstance.m_adInstanceParams as AudienceNetworkAdInstanceBannerParameters;
                 AdView bannerView = adInstance.m_adView as AdView;

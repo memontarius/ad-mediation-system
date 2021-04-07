@@ -375,10 +375,10 @@ namespace Virterix.AdMediation
             {
                 bool isNetworkSame = IsSameNetworkUnitContains(unit, m_currUnit);
                 ResetCurrentUnit(unit);
-                m_currUnit = unit;
+                if (!isNetworkSame && m_adType == AdType.Banner && !m_isBannerDisplayed)
+                    unit.Hide();
 
-                if (m_adType == AdType.Banner && !m_isBannerDisplayed)
-                    m_currUnit.Hide();
+                m_currUnit = unit;
 
                 if (!isNetworkSame)
                     m_currUnit.AdNetwork.OnEvent += OnCurrentNetworkEvent;
@@ -471,9 +471,7 @@ namespace Virterix.AdMediation
                             StartDeferredFetch(m_deferredFetchDelay);
                     }
                     else
-                    {
                         StartDeferredFetch(0.5f);
-                    }
                     break;
                 case AdEvent.Prepared:
                     m_isLastNetworkSuccessfullyPrepared = true;
@@ -494,7 +492,7 @@ namespace Virterix.AdMediation
                         }
 
                         if (isPerformFetch)
-                            Fetch();
+                            StartDeferredFetch(0.5f);
                     }
                     break;
             }

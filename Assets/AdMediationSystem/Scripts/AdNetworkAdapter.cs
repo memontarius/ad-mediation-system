@@ -141,7 +141,7 @@ namespace Virterix.AdMediation
 
         private List<EventParam> m_events = new List<EventParam>();
         protected List<IAdInstanceParameters> m_adInstanceParameters = new List<IAdInstanceParameters>();
-        private List<AdInstance> m_adInstances = new List<AdInstance>();
+        protected List<AdInstance> m_adInstances = new List<AdInstance>();
         protected IncentivizedReward m_lastReward;
         protected string m_currBannerPlacement;
 

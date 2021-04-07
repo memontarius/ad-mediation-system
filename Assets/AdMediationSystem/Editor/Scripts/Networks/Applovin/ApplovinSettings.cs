@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Virterix.AdMediation.Editor
 {
-    public class ApplovinSettings : BaseAdNetworkSettings
+    public class AppLovinSettings : BaseAdNetworkSettings
     {
         public string _sdkKey;
 
@@ -20,7 +20,7 @@ namespace Virterix.AdMediation.Editor
 
         public override bool IsAdSupported(AdType adType)
         {
-            bool isSupported = adType == AdType.Interstitial || adType == AdType.Incentivized;
+            bool isSupported = adType == AdType.Interstitial || adType == AdType.Incentivized || adType == AdType.Banner;
             return isSupported;
         }
 
@@ -39,6 +39,37 @@ namespace Virterix.AdMediation.Editor
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("sdkKey", _sdkKey);
             return parameters;
+        }
+
+        protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
+        {
+            var parameterHolder = AppLovinAdInstanceBannerParameters.CreateParameters(projectName, instanceName);
+
+            var specificPositions = new AppLovinAdInstanceBannerParameters.BannerPositionContainer[bannerPositions.Length];
+            for (int i = 0; i < specificPositions.Length; i++)
+            {
+                var specificPosition = new AppLovinAdInstanceBannerParameters.BannerPositionContainer();
+                specificPosition.m_placementName = bannerPositions[i].m_placementName;
+                specificPosition.m_bannerPosition = (AppLovinAdapter.AppLovinBannerPosition)ConvertToSpecificBannerPosition(bannerPositions[i].m_bannerPosition);
+                specificPositions[i] = specificPosition;
+            }
+            parameterHolder.m_bannerPositions = specificPositions;
+            return parameterHolder;
+        }
+
+        protected override int ConvertToSpecificBannerPosition(BannerPosition bannerPosition)
+        {
+            int specificBannerPosition = 0;
+            switch (bannerPosition)
+            {
+                case BannerPosition.Bottom:
+                    specificBannerPosition = (int)AppLovinAdapter.AppLovinBannerPosition.BottomCenter;
+                    break;
+                case BannerPosition.Top:
+                    specificBannerPosition = (int)AppLovinAdapter.AppLovinBannerPosition.TopCenter;
+                    break;
+            }
+            return specificBannerPosition;
         }
     }
 } // namespace Virterix.AdMediation.Editor

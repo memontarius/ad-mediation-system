@@ -12,7 +12,7 @@ namespace Virterix.AdMediation.Editor
  
         public override bool IsAdSupported(AdType adType)
         {
-            bool isSupported = adType == AdType.Interstitial || adType == AdType.Incentivized;
+            bool isSupported = adType == AdType.Interstitial || adType == AdType.Incentivized || adType == AdType.Banner;
             return isSupported;
         }
 
@@ -21,5 +21,36 @@ namespace Virterix.AdMediation.Editor
             return false;
         }
 
+        protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
+        {
+            AdColonyAdInstanceBannerParameters parameterHolder = AdColonyAdInstanceBannerParameters.CreateParameters(projectName, instanceName);
+            parameterHolder.m_bannerSize = (AdColonyAdapter.AdColonyAdSize)bannerType;
+
+            var specificPositions = new AdColonyAdInstanceBannerParameters.BannerPositionContainer[bannerPositions.Length];
+            for (int i = 0; i < specificPositions.Length; i++)
+            {
+                var specificPosition = new AdColonyAdInstanceBannerParameters.BannerPositionContainer();
+                specificPosition.m_placementName = bannerPositions[i].m_placementName;
+                specificPosition.m_bannerPosition = (AdColonyAdapter.AdColonyAdPosition)ConvertToSpecificBannerPosition(bannerPositions[i].m_bannerPosition);
+                specificPositions[i] = specificPosition;
+            }
+            parameterHolder.m_bannerPositions = specificPositions;
+            return parameterHolder;
+        }
+
+        protected override int ConvertToSpecificBannerPosition(BannerPosition bannerPosition)
+        {
+            int specificBannerPosition = 0;
+            switch (bannerPosition)
+            {
+                case BannerPosition.Bottom:
+                    specificBannerPosition = (int)AdColonyAdapter.AdColonyAdPosition.Bottom;
+                    break;
+                case BannerPosition.Top:
+                    specificBannerPosition = (int)AdColonyAdapter.AdColonyAdPosition.Top;
+                    break;
+            }
+            return specificBannerPosition;
+        }
     }
 } // Virterix.AdMediation.Editor

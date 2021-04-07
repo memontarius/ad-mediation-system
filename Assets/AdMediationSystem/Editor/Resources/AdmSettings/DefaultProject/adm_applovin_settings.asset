@@ -19,7 +19,17 @@ MonoBehaviour:
   _responseWaitTime: 30
   _timeout: 120
   _directedTowardsChildren: 0
-  _bannerAdInstances: []
+  _bannerAdInstances:
+  - _name: Default
+    _androidId: 36adc542a991d732
+    _iosId: 
+    _timeout: 120
+    _bannerType: 0
+  - _name: Top
+    _androidId: 2fff88a105b44595
+    _iosId: 
+    _timeout: 120
+    _bannerType: 0
   _interstitialAdInstances:
   - _name: Default
     _androidId: 8246c766b2b82df1

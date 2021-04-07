@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace Virterix.AdMediation.Editor
 {
-    public class ApplovinView : BaseAdNetworkView
+    public class AppLovinView : BaseAdNetworkView
     {
         private SerializedProperty _sdkKeyProp;
 
-        public ApplovinView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
+        public AppLovinView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
             base(settingsWindow, name, identifier)
         {
             _sdkKeyProp = _serializedSettings.FindProperty("_sdkKey");
@@ -15,8 +15,19 @@ namespace Virterix.AdMediation.Editor
 
         protected override BaseAdNetworkSettings CreateSettingsModel()
         {
-            var settings = Utils.GetOrCreateSettings<ApplovinSettings>(SettingsFilePath);
+            var settings = Utils.GetOrCreateSettings<AppLovinSettings>(SettingsFilePath);
             return settings;
+        }
+
+        protected override InstanceElementHeight CreateInstanceElementHeight(AdType adType)
+        {
+            var elementHeight = base.CreateInstanceElementHeight(adType);
+            if (adType == AdType.Banner)
+            {
+                elementHeight.androidHeight = elementHeight.iosHeight -= 22;
+                elementHeight.height -= 22;
+            }
+            return elementHeight;
         }
 
         protected override void DrawSpecificSettings()

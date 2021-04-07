@@ -2,7 +2,7 @@
 
 namespace Virterix.AdMediation
 {
-    public class UnityAdsInstanceBannerParameters : AdInstanceParameters
+    public class UnityAdInstanceBannerParameters : AdInstanceParameters
     {
         [Serializable]
         public struct BannerPositionContainer
@@ -21,13 +21,13 @@ namespace Virterix.AdMediation
 #if UNITY_EDITOR
         public static AdInstanceParameters CreateParameters()
         {
-            var parameters = CreateParameters<UnityAdsInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME);
+            var parameters = CreateParameters<UnityAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME);
             return parameters;
         }
 
-        public static UnityAdsInstanceBannerParameters CreateParameters(string projectName, string postfixName)
+        public static UnityAdInstanceBannerParameters CreateParameters(string projectName, string postfixName)
         {
-            var parameters = CreateParameters<UnityAdsInstanceBannerParameters>(projectName, _AD_INSTANCE_PARAMETERS_FOLDER, 
+            var parameters = CreateParameters<UnityAdInstanceBannerParameters>(projectName, _AD_INSTANCE_PARAMETERS_FOLDER, 
                 _PARAMETERS_FILE_NAME + postfixName);
             return parameters;
         }

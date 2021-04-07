@@ -34,7 +34,7 @@ namespace Virterix.AdMediation
 
         protected override string AdInstanceParametersFolder
         {
-            get { return UnityAdsInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER; }
+            get { return UnityAdInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER; }
         }
 
         public override bool UseSingleBannerInstance => true;
@@ -57,9 +57,9 @@ namespace Virterix.AdMediation
         public static BannerPosition GetBannerPosition(AdInstance adInstance, string placement)
         {
             BannerPosition nativeBannerPosition = BannerPosition.BOTTOM_CENTER;
-            var adMobAdInstanceParams = adInstance.m_adInstanceParams as UnityAdsInstanceBannerParameters;
-            var bannerPosition = adMobAdInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
-            nativeBannerPosition = ConvertToAdPosition(bannerPosition.m_bannerPosition);
+            var adInstanceParams = adInstance.m_adInstanceParams as UnityAdInstanceBannerParameters;
+            var bannerPositionContainer = adInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
+            nativeBannerPosition = ConvertToAdPosition(bannerPositionContainer.m_bannerPosition);
             return nativeBannerPosition;
         }
 
@@ -118,9 +118,11 @@ namespace Virterix.AdMediation
         public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdType adType = adInstance.m_adType;
+            bool isPreviousBannerDisplayed = m_isBannerDisplayed;
 
             if (adType == AdType.Banner)
             {
+                adInstance.m_bannerDisplayed = true;
                 m_isBannerDisplayed = true;
                 m_currBannerPlacement = placement;
             }
@@ -129,7 +131,7 @@ namespace Virterix.AdMediation
             {
                 if (adType == AdType.Banner)
                 {
-                    UnityAdsInstanceBannerParameters bannerParams = adInstance.m_adInstanceParams as UnityAdsInstanceBannerParameters;
+                    UnityAdInstanceBannerParameters bannerParams = adInstance.m_adInstanceParams as UnityAdInstanceBannerParameters;
                     if (bannerParams != null)
                     {
 #if UNITY_EDITOR
@@ -138,7 +140,8 @@ namespace Virterix.AdMediation
                         Advertisement.Banner.SetPosition(GetBannerPosition(adInstance, placement));
                     }                
                     Advertisement.Banner.Show(adInstance.m_adId);
-                    AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
+                    if (!isPreviousBannerDisplayed)
+                        AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
                 }
                 else
                 {
@@ -154,9 +157,10 @@ namespace Virterix.AdMediation
             if (adInstance.m_adType == AdType.Banner)
             {
                 adInstance.m_bannerDisplayed = false;
-                m_isBannerDisplayed = false;
                 Advertisement.Banner.Hide();
-                NotifyEvent(AdEvent.Hiding, adInstance);
+                if (m_isBannerDisplayed)
+                    NotifyEvent(AdEvent.Hiding, adInstance);
+                m_isBannerDisplayed = false;
             }
         }
 
@@ -184,10 +188,9 @@ namespace Virterix.AdMediation
             }
         }
 
-        //===============================================================================
+        //_______________________________________________________________________________
         #region Callback Event Methods
-        //-------------------------------------------------------------------------------
-
+ 
         public void OnUnityAdsReady(string adId)
         {
             AdInstance adInstance = GetAdInstanceByAdId(adId);
@@ -199,9 +202,7 @@ namespace Virterix.AdMediation
 #endif
                 adInstance.State = AdState.Received;
                 if (adInstance.m_adType == AdType.Banner && adInstance.m_bannerDisplayed)
-                {
                     Show(adInstance);
-                }
                 AddEvent(adInstance.m_adType, AdEvent.Prepared, adInstance);
             }
         }

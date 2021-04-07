@@ -1,10 +1,9 @@
 #define _AMS_APPLOVIN
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Boomlagoon.JSON;
+using System.Linq;
 
 namespace Virterix.AdMediation
 {
@@ -12,21 +11,27 @@ namespace Virterix.AdMediation
     {
         public enum AppLovinBannerPosition
         {
-            Center,
-            Top,
-            Bottom,
-            Left,
-            Right
+            TopLeft,
+            TopCenter,
+            TopRight,
+            Centered,
+            CenterLeft,
+            CenterRight,
+            BottomLeft,
+            BottomCenter,
+            BottomRight
         }
 
-        public AppLovinBannerPosition m_bannerPlacementPosX;
-        public AppLovinBannerPosition m_bannerPlacementPosY;
+        protected override string AdInstanceParametersFolder
+        {
+            get { return AppLovinAdInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER; }
+        }
 
         public static void SetupNetworkNativeSettings(string sdkKey)
         {
 #if UNITY_EDITOR && _AMS_APPLOVIN
             AppLovinSettings networkSettings = null;
-
+            
             string[] assets = UnityEditor.AssetDatabase.FindAssets("t:AppLovinSettings");
             if (assets.Length > 0)
             {
@@ -56,7 +61,19 @@ namespace Virterix.AdMediation
         }
 
 #if _AMS_APPLOVIN
-        private bool m_isBannerLoaded;
+        public static MaxSdk.BannerPosition ConvertToBanerPosition(AppLovinBannerPosition position)
+        {
+            return (MaxSdk.BannerPosition)position;
+        }
+
+        public static MaxSdk.BannerPosition GetBannerPosition(AdInstance adInstance, string placement)
+        {
+            var nativeBannerPosition = MaxSdk.BannerPosition.BottomCenter;
+            var adInstanceParams = adInstance.m_adInstanceParams as AppLovinAdInstanceBannerParameters;
+            var bannerPositionContainer = adInstanceParams.m_bannerPositions.FirstOrDefault(p => p.m_placementName == placement);
+            nativeBannerPosition = ConvertToBanerPosition(bannerPositionContainer.m_bannerPosition);
+            return nativeBannerPosition;
+        }
 
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonPlacements)
         {
@@ -86,6 +103,12 @@ namespace Virterix.AdMediation
 #endif
         }
 
+        protected override AdInstance CreateAdInstanceData(JSONValue jsonAdInstance)
+        {
+            AdInstance adInstance = new AdInstance(this);
+            return adInstance;
+        }
+
         private void OnDestroy()
         {
             UnsubscribeEvents();
@@ -94,6 +117,12 @@ namespace Virterix.AdMediation
         private void SubscribeEvents()
         {
             MaxSdkCallbacks.OnSdkInitializedEvent += OnSdkInitializedEvent;
+
+            MaxSdkCallbacks.OnBannerAdClickedEvent += OnBannerAdClickedEvent;
+            MaxSdkCallbacks.OnBannerAdLoadedEvent += OnBannerAdLoadedEvent;
+            MaxSdkCallbacks.OnBannerAdLoadFailedEvent += OnBannerAdLoadFailedEvent;
+            MaxSdkCallbacks.OnBannerAdCollapsedEvent += OnBannerAdCollapsedEvent;
+            MaxSdkCallbacks.OnBannerAdExpandedEvent += OnBannerAdExpandedEvent;
 
             MaxSdkCallbacks.OnInterstitialLoadedEvent += OnInterstitialLoadedEvent;
             MaxSdkCallbacks.OnInterstitialLoadFailedEvent += OnInterstitialFailedEvent;
@@ -115,6 +144,12 @@ namespace Virterix.AdMediation
         {
             MaxSdkCallbacks.OnSdkInitializedEvent -= OnSdkInitializedEvent;
 
+            MaxSdkCallbacks.OnBannerAdClickedEvent -= OnBannerAdClickedEvent;
+            MaxSdkCallbacks.OnBannerAdLoadedEvent -= OnBannerAdLoadedEvent;
+            MaxSdkCallbacks.OnBannerAdLoadFailedEvent -= OnBannerAdLoadFailedEvent;
+            MaxSdkCallbacks.OnBannerAdCollapsedEvent -= OnBannerAdCollapsedEvent;
+            MaxSdkCallbacks.OnBannerAdExpandedEvent -= OnBannerAdExpandedEvent;
+
             MaxSdkCallbacks.OnInterstitialLoadedEvent -= OnInterstitialLoadedEvent;
             MaxSdkCallbacks.OnInterstitialLoadFailedEvent -= OnInterstitialFailedEvent;
             MaxSdkCallbacks.OnInterstitialAdFailedToDisplayEvent -= InterstitialFailedToDisplayEvent;
@@ -131,30 +166,34 @@ namespace Virterix.AdMediation
             MaxSdkCallbacks.OnRewardedAdReceivedRewardEvent -= OnRewardedAdReceivedRewardEvent;
         }
 
-        float ConvertBanerPosition(AppLovinBannerPosition placement)
+        public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
-            float convertedPlacement = 0;
+            AdType adType = adInstance.m_adType;
+            bool success = false;
+            bool isPrevousBannerDisplayed = adInstance.m_bannerDisplayed;
 
-            switch (placement)
+            if (adInstance.m_adType == AdType.Banner)
+                adInstance.m_bannerDisplayed = true;
+ 
+            if (IsReady(adInstance))
             {
-                case AppLovinBannerPosition.Bottom:
-                    //convertedPlacement = AppLovin.AD_POSITION_BOTTOM;
-                    break;
-                case AppLovinBannerPosition.Center:
-                    //convertedPlacement = AppLovin.AD_POSITION_CENTER;
-                    break;
-                case AppLovinBannerPosition.Left:
-                    //convertedPlacement = AppLovin.AD_POSITION_LEFT;
-                    break;
-                case AppLovinBannerPosition.Right:
-                    //convertedPlacement = AppLovin.AD_POSITION_RIGHT;
-                    break;
-                case AppLovinBannerPosition.Top:
-                    //convertedPlacement = AppLovin.AD_POSITION_TOP;
-                    break;
+                switch (adType)
+                {
+                    case AdType.Banner:
+                        MaxSdk.ShowBanner(adInstance.m_adId);
+                        if (!isPrevousBannerDisplayed)
+                            AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
+                        break;
+                    case AdType.Interstitial:
+                        MaxSdk.ShowInterstitial(adInstance.m_adId, placement);
+                        break;
+                    case AdType.Incentivized:
+                        MaxSdk.ShowRewardedAd(adInstance.m_adId, placement);
+                        break;
+                }
+                success = true;
             }
-
-            return convertedPlacement;
+            return success;
         }
 
         public override void Hide(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
@@ -163,6 +202,11 @@ namespace Virterix.AdMediation
             switch (adType)
             {
                 case AdType.Banner:
+                    
+                    MaxSdk.HideBanner(adInstance.m_adId);
+                    if (adInstance.m_bannerDisplayed)
+                        NotifyEvent(AdEvent.Hiding, adInstance);
+                    adInstance.m_bannerDisplayed = false;
                     break;
             }
         }
@@ -183,7 +227,7 @@ namespace Virterix.AdMediation
                         isReady = MaxSdk.IsRewardedAdReady(adInstance.m_adId);
                         break;
                     case AdType.Banner:
-                        isReady = m_isBannerLoaded;
+                        isReady = adInstance.State == AdState.Received;
                         break;
                 }
             }   
@@ -210,34 +254,11 @@ namespace Virterix.AdMediation
                         MaxSdk.LoadRewardedAd(adInstance.m_adId);
                         break;
                     case AdType.Banner:
+                        RequestBanner(adInstance, placement);
                         break;
                 }
             }
 #endif
-        }
-
-        public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
-        {
-            AdType adType = adInstance.m_adType;
-            bool success = false;
-            if (IsReady(adInstance))
-            {
-                switch (adType)
-                {
-                    case AdType.Banner:
-                        float posX = ConvertBanerPosition(m_bannerPlacementPosX);
-                        float posY = ConvertBanerPosition(m_bannerPlacementPosY);
-                        break;
-                    case AdType.Interstitial:
-                        MaxSdk.ShowInterstitial(adInstance.m_adId);
-                        break;
-                    case AdType.Incentivized:
-                        MaxSdk.ShowRewardedAd(adInstance.m_adId);
-                        break;
-                }
-                success = true;
-            }
-            return success;
         }
 
         protected override void SetUserConsentToPersonalizedAds(PersonalisationConsent consent)
@@ -257,8 +278,62 @@ namespace Virterix.AdMediation
 #endif
         }
 
-        // _____________________________________________
-        // INTERSTITIAL
+        private void DestroyBanner(AdInstance adInstance)
+        {
+            MaxSdk.DestroyBanner(adInstance.m_adId);
+            adInstance.State = AdState.Unavailable;
+        }
+
+        private void RequestBanner(AdInstance adInstance, string placement)
+        {
+            if (adInstance.State == AdState.Loading || adInstance.State == AdState.Received)
+                DestroyBanner(adInstance);
+  
+            adInstance.State = AdState.Loading;
+            MaxSdk.CreateBanner(adInstance.m_adId, GetBannerPosition(adInstance, placement));
+            MaxSdk.SetBannerPlacement(adInstance.m_adId, placement);
+        }
+
+        //_______________________________________________________________________________
+        #region Banner Callbacks
+
+        private void OnBannerAdClickedEvent(string adUnitIdentifier)
+        {
+            var adInstance = GetAdInstanceByAdId(adUnitIdentifier);
+            AddEvent(adInstance.m_adType, AdEvent.Click, adInstance);
+        }
+
+        private void OnBannerAdLoadedEvent(string adUnitIdentifier)
+        {
+            var adInstance = GetAdInstanceByAdId(adUnitIdentifier);
+            adInstance.State = AdState.Received;
+
+            if (adInstance.m_adType == AdType.Banner && adInstance.m_bannerDisplayed)
+                MaxSdk.ShowBanner(adInstance.m_adId);
+
+            AddEvent(adInstance.m_adType, AdEvent.Prepared, adInstance);
+        }
+
+        private void OnBannerAdLoadFailedEvent(string adUnitIdentifier, int errorCOde)
+        {
+            var adInstance = GetAdInstanceByAdId(adUnitIdentifier);
+            DestroyBanner(adInstance);
+            AddEvent(adInstance.m_adType, AdEvent.PreparationFailed, adInstance);
+        }
+
+        private void OnBannerAdCollapsedEvent(string adUnitIdentifier)
+        {
+        }
+
+        private void OnBannerAdExpandedEvent(string adUnitIdentifier)
+        {
+        }
+
+        #endregion // Banner Callbacks
+
+        //_______________________________________________________________________________
+        #region Interstitial Callbacks
+
         private void OnInterstitialLoadedEvent(string adUnitId)
         {
             // Interstitial ad is ready to be shown. MaxSdk.IsInterstitialReady(adUnitId) will now return 'true'
@@ -307,8 +382,10 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Interstitial, AdEvent.Hiding, adInstance);
         }
 
-        // _____________________________________________
-        // REWARDED
+        #endregion // Interstitial Callbacks
+
+        //_______________________________________________________________________________
+        #region Rewarded Callbacks
 
         private void OnRewardedAdLoadedEvent(string adUnitId)
         {
@@ -366,6 +443,8 @@ namespace Virterix.AdMediation
             m_lastReward.amount = reward.Amount;
             AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, adInstance);
         }
+
+        #endregion // Rewarded Callbacks
 
 #endif // _AMS_APPLOVIN
 

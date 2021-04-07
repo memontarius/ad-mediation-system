@@ -9,9 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxSdk.Scripts", "MaxSdk.Scripts.csproj", "{C1404E18-58CE-F1C4-9054-1D7F77ABCA36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleMobileAds.Editor", "GoogleMobileAds.Editor.csproj", "{B404DD60-2049-5BD8-A20D-4287F474BF9B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{FA3E862A-21DE-9A89-AD6F-519D2A08EBB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleMobileAds.Editor", "GoogleMobileAds.Editor.csproj", "{B404DD60-2049-5BD8-A20D-4287F474BF9B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxSdk.Scripts.IntegrationManager.Editor", "MaxSdk.Scripts.IntegrationManager.Editor.csproj", "{CF26368A-7964-B725-6BF3-D1805741595B}"
 EndProject
@@ -39,14 +39,14 @@ Global
 		{C1404E18-58CE-F1C4-9054-1D7F77ABCA36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1404E18-58CE-F1C4-9054-1D7F77ABCA36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1404E18-58CE-F1C4-9054-1D7F77ABCA36}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B404DD60-2049-5BD8-A20D-4287F474BF9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B404DD60-2049-5BD8-A20D-4287F474BF9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B404DD60-2049-5BD8-A20D-4287F474BF9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B404DD60-2049-5BD8-A20D-4287F474BF9B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FA3E862A-21DE-9A89-AD6F-519D2A08EBB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FA3E862A-21DE-9A89-AD6F-519D2A08EBB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA3E862A-21DE-9A89-AD6F-519D2A08EBB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA3E862A-21DE-9A89-AD6F-519D2A08EBB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B404DD60-2049-5BD8-A20D-4287F474BF9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B404DD60-2049-5BD8-A20D-4287F474BF9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B404DD60-2049-5BD8-A20D-4287F474BF9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B404DD60-2049-5BD8-A20D-4287F474BF9B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CF26368A-7964-B725-6BF3-D1805741595B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF26368A-7964-B725-6BF3-D1805741595B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF26368A-7964-B725-6BF3-D1805741595B}.Release|Any CPU.ActiveCfg = Release|Any CPU

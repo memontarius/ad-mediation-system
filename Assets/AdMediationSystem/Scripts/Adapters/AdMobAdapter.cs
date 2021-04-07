@@ -148,7 +148,6 @@ namespace Virterix.AdMediation
 #endif
         }
 
-
         public static AdSize ConvertToAdSize(AdMobBannerSize bannerSize)
         {
             AdSize admobAdSize = AdSize.Banner;
@@ -265,11 +264,10 @@ namespace Virterix.AdMediation
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
             AdType adType = adInstance.m_adType;
             bool isAdAvailable = adInstance.State == AdState.Received;
+            bool isPreviousBannerDisplayed = adMobAdInstance.m_bannerDisplayed;
 
             if (adType == AdType.Banner)
-            {
                 adMobAdInstance.m_bannerDisplayed = true;
-            }
 
             if (isAdAvailable)
             {
@@ -286,6 +284,10 @@ namespace Virterix.AdMediation
                             bannerView.Show();
                             bannerView.SetPosition(GetBannerPosition(adInstance, placement));
                         }
+#if UNITY_EDITOR
+                        if (!isPreviousBannerDisplayed)
+                            AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
+#endif
                         break;
                     case AdType.Interstitial:
                         InterstitialAd interstitial = adInstance.m_adView as InterstitialAd;
@@ -307,14 +309,14 @@ namespace Virterix.AdMediation
             switch (adType)
             {
                 case AdType.Banner:
-                    adMobAdInstance.m_bannerDisplayed = false;
-
                     if (adInstance.State == AdState.Received)
                     {
                         BannerView bannerView = adInstance.m_adView as BannerView;
                         bannerView.Hide();
+                        if (adMobAdInstance.m_bannerDisplayed)
+                            NotifyEvent(AdEvent.Hiding, adInstance);
                     }
-                    AddEvent(AdType.Banner, AdEvent.Hiding, adInstance);
+                    adMobAdInstance.m_bannerDisplayed = false;
                     break;
             }
         }
@@ -388,8 +390,6 @@ namespace Virterix.AdMediation
 
         void DestroyBanner(AdMobAdInstanceData adInstance)
         {
-            //m_isBannerLoaded = false;
-
             if (adInstance.m_adView != null)
             {
                 BannerView bannerView = adInstance.m_adView as BannerView;
@@ -402,7 +402,7 @@ namespace Virterix.AdMediation
                 bannerView.OnAdLeavingApplication -= adInstance.onAdLeavingApplicationHandler;
 
                 bannerView.Destroy();
-                adInstance.State = AdState.Uncertain;
+                adInstance.State = AdState.Unavailable;
             }
         }
 

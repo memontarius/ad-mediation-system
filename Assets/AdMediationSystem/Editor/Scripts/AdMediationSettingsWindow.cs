@@ -398,7 +398,7 @@ namespace Virterix.AdMediation.Editor
             AddNetwork(new AdMobView(this, "AdMob", "admob"));
             AddNetwork(new AudienceNetworkView(this, "Audience Network", "audiencenetwork"));
             AddNetwork(new UnityAdsView(this, "Unity Ads", "unityads"));
-            AddNetwork(new ApplovinView(this, "AppLovin", "applovin"));
+            AddNetwork(new AppLovinView(this, "AppLovin", "applovin"));
             AddNetwork(new ChartboostView(this, "Chartboost", "chartboost"));
             AddNetwork(new IronSourceView(this, "Iron Source", "ironsrc"));
             AddNetwork(new AdColonyView(this, "AdColony", "adcolony"));
@@ -448,13 +448,9 @@ namespace Virterix.AdMediation.Editor
             foreach (var network in _networks)
             {
                 if (network.Enabled)
-                {
                     _activeNetworks.Add(network.Name);
-                }
                 else
-                {
                     _activeNetworks.Remove(network.Name);
-                }
             }
         }
 

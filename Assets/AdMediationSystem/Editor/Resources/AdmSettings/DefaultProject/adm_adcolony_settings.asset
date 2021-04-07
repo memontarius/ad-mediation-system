@@ -14,21 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enabled: 1
   _networkIdentifier: adcolony
-  _androidAppId: app3ec0118270c042cfbf
+  _androidAppId: appdbd9228f9f17411889
   _iosAppId: appb6bc9be8acd94274af
   _responseWaitTime: 30
   _timeout: 120
   _directedTowardsChildren: 0
-  _bannerAdInstances: []
+  _bannerAdInstances:
+  - _name: Default
+    _androidId: vz9065a548c6b54f30a2
+    _iosId: 
+    _timeout: 120
+    _bannerType: 0
   _interstitialAdInstances:
   - _name: Default
-    _androidId: vzbb036f9a6bfc4e219e
+    _androidId: vzcabbcd0fae4a4dbea3
     _iosId: 
     _timeout: 120
     _bannerType: 0
   _rewardAdInstances:
   - _name: Default
-    _androidId: vz32f8c6fa99134f1cb5
+    _androidId: vzcffaca46c3e349f091
     _iosId: 
     _timeout: 120
     _bannerType: 0

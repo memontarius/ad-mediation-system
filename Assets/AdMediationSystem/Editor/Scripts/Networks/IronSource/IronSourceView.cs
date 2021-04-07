@@ -72,7 +72,7 @@ namespace Virterix.AdMediation.Editor
         {
             GUILayout.BeginVertical("box");
  
-            char collapsedSymbol = _isOverriddenPlacementUncollapsed ? AdMediationSettingsWindow.SYMBOL_LEFT_ARROW : AdMediationSettingsWindow.SYMBOL_BOTTOM_ARROW;
+            char collapsedSymbol = _isOverriddenPlacementUncollapsed ? AdMediationSettingsWindow.SYMBOL_BOTTOM_ARROW : AdMediationSettingsWindow.SYMBOL_LEFT_ARROW;
             string buttonTitle = string.Format("{0}  {1}", collapsedSymbol, "Override Placement Names");
 
             if (GUILayout.Button(buttonTitle, InstanceFoldoutButtonStyle))

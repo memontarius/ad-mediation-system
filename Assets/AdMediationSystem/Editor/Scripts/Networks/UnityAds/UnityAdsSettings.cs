@@ -31,12 +31,12 @@ namespace Virterix.AdMediation.Editor
 
         protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
         {
-            var parameterHolder = UnityAdsInstanceBannerParameters.CreateParameters(projectName, instanceName);
+            var parameterHolder = UnityAdInstanceBannerParameters.CreateParameters(projectName, instanceName);
            
-            var specificPositions = new UnityAdsInstanceBannerParameters.BannerPositionContainer[bannerPositions.Length];
+            var specificPositions = new UnityAdInstanceBannerParameters.BannerPositionContainer[bannerPositions.Length];
             for (int i = 0; i < specificPositions.Length; i++)
             {
-                var specificPosition = new UnityAdsInstanceBannerParameters.BannerPositionContainer();
+                var specificPosition = new UnityAdInstanceBannerParameters.BannerPositionContainer();
                 specificPosition.m_placementName = bannerPositions[i].m_placementName;
                 specificPosition.m_bannerPosition = (UnityAdsAdapter.UnityAdsBannerPosition)ConvertToSpecificBannerPosition(bannerPositions[i].m_bannerPosition);
                 specificPositions[i] = specificPosition;

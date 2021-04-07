@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace Virterix.AdMediation.Editor
         public AdColonyView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
             base(settingsWindow, name, identifier)
         {
+            BannerTypes = Enum.GetNames(typeof(AdColonyAdapter.AdColonyAdSize));
         }
 
         protected override BaseAdNetworkSettings CreateSettingsModel()
