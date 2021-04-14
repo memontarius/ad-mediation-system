@@ -703,7 +703,6 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoStarted()");
 #endif
-            AddEvent(AdType.Incentivized, AdEvent.Show, adInstance);
         }
 
         public void HandleRewardVideoClosed(AdMobAdInstanceData adInstance, object sender, EventArgs args)

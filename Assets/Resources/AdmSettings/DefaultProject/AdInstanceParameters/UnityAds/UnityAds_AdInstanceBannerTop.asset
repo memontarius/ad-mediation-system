@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c58e16f95fc96f44eb968221bbfa559b, type: 3}
   m_Name: UnityAds_AdInstanceBannerTop
   m_EditorClassIdentifier: 
-  m_name: Default
-  m_bannerPositions: []
+  m_name: Top
+  m_bannerPositions:
+  - m_placementName: Top
+    m_bannerPosition: 1

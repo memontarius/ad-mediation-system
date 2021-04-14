@@ -50,7 +50,28 @@ namespace Virterix.AdMediation
 #if _AMS_UNITY_ADS
         public static BannerPosition ConvertToNativeBannerPosition(UnityAdsBannerPosition bannerPosition)
         {
-            BannerPosition nativeBannerPosition = (BannerPosition)bannerPosition;
+            BannerPosition nativeBannerPosition = BannerPosition.BOTTOM_CENTER;
+            switch(bannerPosition)
+            {
+                case UnityAdsBannerPosition.BottomCenter:
+                    nativeBannerPosition = BannerPosition.BOTTOM_CENTER;
+                    break;
+                case UnityAdsBannerPosition.BottomLeft:
+                    nativeBannerPosition = BannerPosition.BOTTOM_LEFT;
+                    break;
+                case UnityAdsBannerPosition.BottomRight:
+                    nativeBannerPosition = BannerPosition.BOTTOM_RIGHT;
+                    break;
+                case UnityAdsBannerPosition.TopCenter:
+                    nativeBannerPosition = BannerPosition.TOP_CENTER;
+                    break;
+                case UnityAdsBannerPosition.TopLeft:
+                    nativeBannerPosition = BannerPosition.TOP_LEFT;
+                    break;
+                case UnityAdsBannerPosition.TopRight:
+                    nativeBannerPosition = BannerPosition.TOP_RIGHT;
+                    break;
+            } 
             return nativeBannerPosition;
         }
 
@@ -130,7 +151,7 @@ namespace Virterix.AdMediation
 #endif
                         var bannerPosition = ConvertToNativeBannerPosition((UnityAdsBannerPosition)GetBannerPosition(adInstance, placement));
                         Advertisement.Banner.SetPosition(bannerPosition);
-                    }                
+                    }
                     Advertisement.Banner.Show(adInstance.m_adId);
                     if (!isPreviousBannerDisplayed)
                         AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
@@ -160,9 +181,7 @@ namespace Virterix.AdMediation
         {
             bool isReady = false;
             if (adInstance != null)
-            {
                 isReady = Advertisement.IsReady(adInstance.m_adId);
-            }
             return isReady;
         }
 
@@ -196,7 +215,14 @@ namespace Virterix.AdMediation
                 if (adInstance.m_adType == AdType.Banner)
                 {
                     if (adInstance.m_bannerDisplayed)
-                        Show(adInstance);
+                    {
+                        if (!string.IsNullOrEmpty(m_currBannerPlacement))
+                        {
+                            var pos = ConvertToNativeBannerPosition((UnityAdsBannerPosition)GetBannerPosition(adInstance, m_currBannerPlacement));
+                            Advertisement.Banner.SetPosition(pos);
+                        }
+                        Advertisement.Banner.Show(adInstance.m_adId);
+                    }
                     else
                         Advertisement.Banner.Hide();
                 }
@@ -229,7 +255,6 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
                 Debug.Log("[AMS] UnityAdsAdapter.OnUnityAdsDidFinish() adId: " + adInstance.m_adId);
 #endif
-
                 if (adInstance.m_adType == AdType.Incentivized)
                 {
                     switch (showResult)

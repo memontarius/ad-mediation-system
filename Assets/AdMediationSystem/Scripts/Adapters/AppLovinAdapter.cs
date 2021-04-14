@@ -63,7 +63,32 @@ namespace Virterix.AdMediation
 #if _AMS_APPLOVIN
         public static MaxSdk.BannerPosition ConvertToNativeBanerPosition(AppLovinBannerPosition position)
         {
-            return (MaxSdk.BannerPosition)position;
+            MaxSdk.BannerPosition nativePosition = MaxSdkBase.BannerPosition.BottomCenter;
+            switch (position)
+            {
+                case AppLovinBannerPosition.BottomCenter:
+                    nativePosition = MaxSdk.BannerPosition.BottomCenter;
+                    break;
+                case AppLovinBannerPosition.BottomLeft:
+                    nativePosition = MaxSdk.BannerPosition.BottomLeft;
+                    break;
+                case AppLovinBannerPosition.BottomRight:
+                    nativePosition = MaxSdk.BannerPosition.BottomRight;
+                    break;
+                case AppLovinBannerPosition.TopCenter:
+                    nativePosition = MaxSdk.BannerPosition.TopCenter;
+                    break;
+                case AppLovinBannerPosition.TopLeft:
+                    nativePosition = MaxSdk.BannerPosition.TopLeft;
+                    break;
+                case AppLovinBannerPosition.TopRight:
+                    nativePosition = MaxSdk.BannerPosition.TopRight;
+                    break;
+                case AppLovinBannerPosition.Centered:
+                    nativePosition = MaxSdk.BannerPosition.Centered;
+                    break;
+            }
+            return nativePosition;
         }
 
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonPlacements)

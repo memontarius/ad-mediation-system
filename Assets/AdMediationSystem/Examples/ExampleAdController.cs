@@ -110,8 +110,11 @@ public class ExampleAdController : BaseAdController
     {
         if (AdMediationSystem.IsInitialized)
         {
-            var consent = AdMediationSystem.UserPersonalisationConsent == PersonalisationConsent.Accepted ?
-                PersonalisationConsent.Denied : PersonalisationConsent.Accepted;
+            PersonalisationConsent consent = AdMediationSystem.UserPersonalisationConsent;
+            if (consent == PersonalisationConsent.Accepted || consent == PersonalisationConsent.Undefined)
+                consent = PersonalisationConsent.Denied;
+            else
+                consent = PersonalisationConsent.Accepted;
             AdMediationSystem.SetUserConsentToPersonalizedAds(consent);
             UpdatePersonalizedAdsButtonText();
         }

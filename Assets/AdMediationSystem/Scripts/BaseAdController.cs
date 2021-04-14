@@ -31,11 +31,22 @@ namespace Virterix.AdMediation
         protected virtual void SubscribeEvents()
         { 
             AdMediationSystem.OnAdNetworkEvent += OnAdNetworkEvent;
+            AdMediationSystem.OnInitialized += OnAdMediationSystemInitialized;
         }
 
         protected virtual void UnsubscribeEvents()
         {
             AdMediationSystem.OnAdNetworkEvent -= OnAdNetworkEvent;
+            AdMediationSystem.OnInitialized -= OnAdMediationSystemInitialized;
+        }
+
+        public T GetAdController<T>() where T : BaseAdController
+        {
+            if (m_inheritor == null)
+            {
+                m_inheritor = FindObjectOfType<T>();
+            }
+            return m_inheritor as T;
         }
 
         private void OnAdNetworkEvent(AdMediator mediator, AdNetworkAdapter network, AdType adType, AdEvent adEvent, string adInstanceName)
@@ -53,19 +64,14 @@ namespace Virterix.AdMediation
                             AudioListener.volume = 0.0f;
 #endif
                         if (m_isTimeScaleControl)
-                        {
                             m_lastTimeScale = Time.timeScale;
-                        }
-
                         break;
                     case AdEvent.Hiding:
 #if UNITY_IOS
                             AudioListener.volume = 1.0f;
 #endif
                         if (m_isTimeScaleControl)
-                        {
                             Time.timeScale = m_lastTimeScale;
-                        }
                         break;
                 }
             }
@@ -76,15 +82,10 @@ namespace Virterix.AdMediation
         {
         }
 
-        public T GetAdController<T>() where T : BaseAdController
+        private void OnAdMediationSystemInitialized()
         {
-            if (m_inheritor == null)
-            {
-                m_inheritor = FindObjectOfType<T>();
-            }
-            return m_inheritor as T;
+            
         }
-
     }
 } // namespace Virterix.AdMediation
 

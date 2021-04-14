@@ -46,7 +46,8 @@ namespace Virterix.AdMediation.Editor
             }
         }
 
-        private static BannerPositionContainer[] FindBannerPositions(AdInstanceGenerateDataContainer adInstanceContainer, AdUnitMediator[] mediators)
+        private static BannerPositionContainer[] GetBannerPositions(BaseAdNetworkSettings networkSettings, 
+            AdInstanceGenerateDataContainer adInstanceContainer, AdUnitMediator[] mediators)
         {
             List<BannerPositionContainer> positions = new List<BannerPositionContainer>();
             foreach (var mediator in mediators)
@@ -56,7 +57,8 @@ namespace Virterix.AdMediation.Editor
                 {
                     foreach (var unit in tier._units)
                     {
-                        if (unit._instanceName == adInstanceContainer._adInstance._name)
+                        if (networkSettings._networkIdentifier == unit._networkIdentifier && 
+                            unit._instanceName == adInstanceContainer._adInstance._name)
                         {
                             BannerPositionContainer position = new BannerPositionContainer();
                             position.m_placementName = mediator._name;
@@ -67,9 +69,7 @@ namespace Virterix.AdMediation.Editor
                         }
                     }
                     if (isJumpNextMediator)
-                    {
                         break;
-                    }
                 }
             }
             return positions.ToArray();
@@ -114,7 +114,7 @@ namespace Virterix.AdMediation.Editor
                         {
                             string instanceName = adInstanceDataHolder._adInstance._name;
                             int bannerType = adInstanceDataHolder._adInstance._bannerType;
-                            var bannerPositions = FindBannerPositions(adInstanceDataHolder, mediators);
+                            var bannerPositions = GetBannerPositions(network, adInstanceDataHolder, mediators);
                             network.CreateBannerAdInstanceParameters(projectName, instanceName, bannerType, bannerPositions);
                         }
                     }

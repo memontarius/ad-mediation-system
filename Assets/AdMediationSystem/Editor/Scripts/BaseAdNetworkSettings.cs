@@ -9,7 +9,11 @@ namespace Virterix.AdMediation.Editor
     public enum BannerPosition
     {
         Top,
-        Bottom
+        TopLeft,
+        TopRight,
+        Bottom,
+        BottomLeft,
+        BottomRight
     }
 
     public struct BannerPositionContainer
@@ -91,9 +95,9 @@ namespace Virterix.AdMediation.Editor
         {
             var parameters = CreateBannerSpecificAdInstanceParameters(projectName, instanceName, bannerType, bannerPositions);
             parameters.Name = instanceName;
-            //EditorUtility.SetDirty(parameters);
+            EditorUtility.SetDirty(parameters);
             AssetDatabase.Refresh();
-            //AssetDatabase.SaveAssets();
+            AssetDatabase.SaveAssets();
             return parameters;
         }
 

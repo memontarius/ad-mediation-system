@@ -144,8 +144,8 @@ namespace Virterix.AdMediation.Editor
                     EditorPrefs.SetBool(GetNetworkEnabledStateSaveKey(_networks[i]), _networkEnabledStates[i]);
                 }
             }
-            //AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
         }
         
         private void OnGUI()
@@ -419,8 +419,8 @@ namespace Virterix.AdMediation.Editor
                 _networkEnabledStates[i] = _networks[i].Settings._enabled;
             }
             UpdateActiveNetworks();
-            //AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
         }
 
         private string GetNetworkEnabledStateSaveKey(BaseAdNetworkView networkView)

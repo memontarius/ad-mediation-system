@@ -527,9 +527,7 @@ namespace Virterix.AdMediation
             {
                 AdMediationSystem[] preafbs = Resources.LoadAll<AdMediationSystem>(AD_SETTINGS_FOLDER);
                 if (preafbs.Length > 0)
-                {
                     prefab = preafbs[0].gameObject;
-                }
             }
 
             AdMediationSystem mediationSystem = null;

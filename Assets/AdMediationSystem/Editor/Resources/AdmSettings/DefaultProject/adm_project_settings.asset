@@ -28,7 +28,7 @@ MonoBehaviour:
     _bannerMinDisplayTime: 30
     _deferredFetchDelay: 90
     _fetchStrategyType: 0
-    _bannerPosition: 1
+    _bannerPosition: 3
     _tiers:
     - _maxPassages: 1
       _units:
@@ -39,23 +39,7 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 7
-      - _networkName: Iron Source
-        _networkIndex: 3
-        _networkIdentifier: ironsrc
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 31
-      - _networkName: Unity Ads
-        _networkIndex: 1
-        _networkIdentifier: unityads
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 31
+        _percentage: 0
       - _networkName: AppLovin
         _networkIndex: 2
         _networkIdentifier: applovin
@@ -63,7 +47,23 @@ MonoBehaviour:
         _instanceName: Default
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 31
+        _percentage: 34
+      - _networkName: Iron Source
+        _networkIndex: 3
+        _networkIdentifier: ironsrc
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 33
+      - _networkName: Unity Ads
+        _networkIndex: 1
+        _networkIdentifier: unityads
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 33
   - _adType: 1
     _name: Top
     _continueAfterEndSession: 1
@@ -83,7 +83,7 @@ MonoBehaviour:
         _instanceName: Top
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 100
+        _percentage: 0
       - _networkName: Iron Source
         _networkIndex: 3
         _networkIdentifier: ironsrc
@@ -91,7 +91,7 @@ MonoBehaviour:
         _instanceName: Top
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 0
+        _percentage: 34
       - _networkName: Unity Ads
         _networkIndex: 1
         _networkIdentifier: unityads
@@ -99,7 +99,7 @@ MonoBehaviour:
         _instanceName: Top
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 0
+        _percentage: 33
       - _networkName: AppLovin
         _networkIndex: 2
         _networkIdentifier: applovin
@@ -107,7 +107,7 @@ MonoBehaviour:
         _instanceName: Top
         _replaced: 0
         _prepareOnExit: 0
-        _percentage: 0
+        _percentage: 33
   _interstitialMediators:
   - _adType: 2
     _name: Default
