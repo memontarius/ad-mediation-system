@@ -45,7 +45,8 @@ namespace Virterix.AdMediation.Editor
         {
             T settings = ScriptableObject.CreateInstance<T>();
             AssetDatabase.CreateAsset(settings, assetPath);
-            AssetDatabase.SaveAssets();
+            AssetDatabase.ImportAsset(assetPath);
+            //AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             return settings;
         }

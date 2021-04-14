@@ -91,8 +91,9 @@ namespace Virterix.AdMediation.Editor
         {
             var parameters = CreateBannerSpecificAdInstanceParameters(projectName, instanceName, bannerType, bannerPositions);
             parameters.Name = instanceName;
-            EditorUtility.SetDirty(parameters);
-            AssetDatabase.SaveAssets();
+            //EditorUtility.SetDirty(parameters);
+            AssetDatabase.Refresh();
+            //AssetDatabase.SaveAssets();
             return parameters;
         }
 

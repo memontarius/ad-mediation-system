@@ -136,7 +136,7 @@ namespace Virterix.AdMediation
             if (tiers.Length == 0)
             {
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.LogWarning("[AdMediationSystem] Tiers are empty!");
+                Debug.LogWarning("[AMS] Tiers are empty!");
 #endif
                 return null;
             }

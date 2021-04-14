@@ -52,3 +52,8 @@ MonoBehaviour:
     _iosId: ca-app-pub-1726624045989422/2765846565
     _timeout: 90
     _bannerType: 0
+  - _name: HighCPM
+    _androidId: ca-app-pub-1726624045989422/6747098297
+    _iosId: 
+    _timeout: 120
+    _bannerType: 0

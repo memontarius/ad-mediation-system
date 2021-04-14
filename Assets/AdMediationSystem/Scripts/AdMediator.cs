@@ -67,7 +67,7 @@ namespace Virterix.AdMediation
                     AdUnit[] units = m_tiers[tierIndex];
                     for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
                     {
-                        if (units[unitIndex].IsReady)
+                        if ( units[unitIndex].IsReady)
                         {
                             ready = true;
                             break;

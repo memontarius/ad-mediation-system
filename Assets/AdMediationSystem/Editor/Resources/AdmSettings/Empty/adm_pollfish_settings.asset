@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39548355439e33e4fad8b0ba79d0b17f, type: 3}
+  m_Name: adm_pollfish_settings
+  m_EditorClassIdentifier: 
+  _enabled: 0
+  _networkIdentifier: pollfish
+  _androidAppId: 
+  _iosAppId: 
+  _responseWaitTime: 30
+  _timeout: 120
+  _directedTowardsChildren: 0
+  _bannerAdInstances: []
+  _interstitialAdInstances: []
+  _rewardAdInstances: []
+  _prepareOnHidden: 1
+  _restoreBanners: 1
+  _autoPrepareInterval: 0

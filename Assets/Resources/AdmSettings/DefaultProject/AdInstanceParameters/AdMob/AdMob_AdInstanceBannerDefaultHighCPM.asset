@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e13d8dc32e2c0941a669685f602cf0a, type: 3}
   m_Name: AdMob_AdInstanceBannerDefaultHighCPM
   m_EditorClassIdentifier: 
-  m_name: DefaultHighCPM
+  m_name: Default
   m_bannerPositions: []
   m_bannerSize: 0

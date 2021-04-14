@@ -12,7 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 781ee331ef7fb9b4aaecb0047634aee9, type: 3}
   m_Name: AppLovin_AdInstanceBannerTop
   m_EditorClassIdentifier: 
-  m_name: Top
-  m_bannerPositions:
-  - m_placementName: Top
-    m_bannerPosition: 1
+  m_name: Default
+  m_bannerPositions: []

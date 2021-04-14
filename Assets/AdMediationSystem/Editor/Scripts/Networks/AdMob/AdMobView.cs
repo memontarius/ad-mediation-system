@@ -20,6 +20,7 @@ namespace Virterix.AdMediation.Editor
 
         protected override void SetupReorderableList(ReorderableList list, AdType adType)
         {
+            /*
             if (adType == AdType.Incentivized)
             {
                 list.onCanRemoveCallback = (ReorderableList l) =>
@@ -30,7 +31,7 @@ namespace Virterix.AdMediation.Editor
                 {
                     return list.count < 1;
                 };           
-            }
+            }*/
         }
 
         protected override void DrawSpecificSettings()

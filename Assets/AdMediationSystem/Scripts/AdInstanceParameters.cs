@@ -55,7 +55,8 @@ namespace Virterix.AdMediation
 
             T asset = ScriptableObject.CreateInstance<T>();
             AssetDatabase.CreateAsset(asset, path);
-            AssetDatabase.SaveAssets();
+            AssetDatabase.ImportAsset(path);
+            //AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             return asset;
         }

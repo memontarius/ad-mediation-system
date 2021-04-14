@@ -13,7 +13,5 @@ MonoBehaviour:
   m_Name: AdMob_AdInstanceBannerDefault
   m_EditorClassIdentifier: 
   m_name: Default
-  m_bannerPositions:
-  - m_placementName: Default
-    m_bannerPosition: 4
+  m_bannerPositions: []
   m_bannerSize: 0

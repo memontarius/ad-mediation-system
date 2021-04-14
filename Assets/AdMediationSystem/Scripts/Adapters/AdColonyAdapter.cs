@@ -1,4 +1,4 @@
-#define _AMS_ADCOLONY
+//#define _AMS_ADCOLONY
 
 using UnityEngine;
 using System.Collections.Generic;
@@ -34,11 +34,14 @@ namespace Virterix.AdMediation
         public bool m_useRewardVideoPrePopup;
         public bool m_useRewardVideoPostPopup;
 
+		private bool m_isConfigured = false;
+
         protected override string AdInstanceParametersFolder
         {
             get { return AdColonyAdInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER; }
         }
-
+		
+#if _AMS_ADCOLONY
         public static AdSize ConvertToAdSize(AdColonyAdSize bannerSize)
         {
             AdSize nativeAdSize = AdSize.Banner;
@@ -77,9 +80,6 @@ namespace Virterix.AdMediation
             }
             return id;
         }
-
-#if _AMS_ADCOLONY
-        bool m_isConfigured = false;
 
         private void OnEnable()
         {

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db0c64a44268c4b48bca4a8902b48e3e, type: 3}
   m_Name: adm_adcolony_settings
   m_EditorClassIdentifier: 
-  _enabled: 1
+  _enabled: 0
   _networkIdentifier: adcolony
   _androidAppId: appdbd9228f9f17411889
   _iosAppId: appb6bc9be8acd94274af
