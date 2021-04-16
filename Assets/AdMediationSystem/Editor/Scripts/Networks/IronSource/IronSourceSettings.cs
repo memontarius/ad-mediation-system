@@ -52,7 +52,7 @@ namespace Virterix.AdMediation.Editor
 
         protected override int ConvertToSpecificBannerPosition(BannerPosition bannerPosition)
         {
-            int specificBannerPosition = 0;
+            int specificBannerPosition = (int)IronSourceAdapter.IrnSrcBannerPosition.Bottom;
             switch (bannerPosition)
             {
                 case BannerPosition.Bottom:

@@ -34,8 +34,20 @@ namespace Virterix.AdMediation.Editor
                 case BannerPosition.Bottom:
                     specificBannerPosition = (int)AdColonyAdapter.AdColonyAdPosition.Bottom;
                     break;
+                case BannerPosition.BottomLeft:
+                    specificBannerPosition = (int)AdColonyAdapter.AdColonyAdPosition.BottomLeft;
+                    break;
+                case BannerPosition.BottomRight:
+                    specificBannerPosition = (int)AdColonyAdapter.AdColonyAdPosition.BottomRight;
+                    break;
                 case BannerPosition.Top:
                     specificBannerPosition = (int)AdColonyAdapter.AdColonyAdPosition.Top;
+                    break;
+                case BannerPosition.TopLeft:
+                    specificBannerPosition = (int)AdColonyAdapter.AdColonyAdPosition.TopLeft;
+                    break;
+                case BannerPosition.TopRight:
+                    specificBannerPosition = (int)AdColonyAdapter.AdColonyAdPosition.TopRight;
                     break;
             }
             return specificBannerPosition;

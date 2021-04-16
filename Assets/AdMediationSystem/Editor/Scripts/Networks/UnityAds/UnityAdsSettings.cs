@@ -35,14 +35,26 @@ namespace Virterix.AdMediation.Editor
 
         protected override int ConvertToSpecificBannerPosition(BannerPosition bannerPosition)
         {
-            int specificBannerPosition = 0;
+            int specificBannerPosition = (int)UnityAdsAdapter.UnityAdsBannerPosition.BottomCenter;
             switch (bannerPosition)
             {
                 case BannerPosition.Bottom:
                     specificBannerPosition = (int)UnityAdsAdapter.UnityAdsBannerPosition.BottomCenter;
                     break;
+                case BannerPosition.BottomLeft:
+                    specificBannerPosition = (int)UnityAdsAdapter.UnityAdsBannerPosition.BottomLeft;
+                    break;
+                case BannerPosition.BottomRight:
+                    specificBannerPosition = (int)UnityAdsAdapter.UnityAdsBannerPosition.BottomRight;
+                    break;
                 case BannerPosition.Top:
                     specificBannerPosition = (int)UnityAdsAdapter.UnityAdsBannerPosition.TopCenter;
+                    break;
+                case BannerPosition.TopLeft:
+                    specificBannerPosition = (int)UnityAdsAdapter.UnityAdsBannerPosition.TopLeft;
+                    break;
+                case BannerPosition.TopRight:
+                    specificBannerPosition = (int)UnityAdsAdapter.UnityAdsBannerPosition.TopRight;
                     break;
             }
             return specificBannerPosition;

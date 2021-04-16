@@ -166,9 +166,7 @@ namespace Virterix.AdMediation
             {
                 AdUnit unit = units[i];
                 if (!unit.IsTimeout)
-                {
                     foundUnits.Add(unit);
-                }
             }
         }
 

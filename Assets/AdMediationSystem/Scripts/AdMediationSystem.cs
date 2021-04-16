@@ -103,8 +103,16 @@ namespace Virterix.AdMediation
         /// </summary>
         public static PersonalisationConsent UserPersonalisationConsent
         {
-            get { return m_userPersonalisationConsent; }
+            get {
+                if (!m_wasUserConsentRestored)
+                {
+                    m_wasUserConsentRestored = true;
+                    m_userPersonalisationConsent = (PersonalisationConsent)PlayerPrefs.GetInt(PERSONALISATION_CONSENT_SAVE_KEY, 0);
+                }
+                return m_userPersonalisationConsent;            
+            }
         }
+        private static bool m_wasUserConsentRestored;
 
         public static bool IsInitialized
         {
@@ -214,7 +222,7 @@ namespace Virterix.AdMediation
 
         private void Awake()
         {
-            m_userPersonalisationConsent = (PersonalisationConsent)PlayerPrefs.GetInt(PERSONALISATION_CONSENT_SAVE_KEY, 0);
+            m_userPersonalisationConsent = UserPersonalisationConsent;
             if (m_remoteSettingsProvider != null)
             {
                 m_remoteSettingsProvider.OnSettingsReceived += OnRemoteSettingsReceived;

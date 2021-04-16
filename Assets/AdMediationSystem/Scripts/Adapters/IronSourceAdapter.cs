@@ -352,7 +352,9 @@ namespace Virterix.AdMediation
         public override void NotifyEvent(AdEvent adEvent, AdInstance adInstance)
         {
             if (adInstance.m_adType == AdType.Banner && adEvent == AdEvent.PreparationFailed)
+            {
                 m_bannerState = AdState.Unavailable;
+            }
             base.NotifyEvent(adEvent, adInstance);
         }
 

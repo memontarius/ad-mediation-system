@@ -9,7 +9,6 @@ using System.Linq;
 using System.Reflection;
 #endif
 #if _AMS_ADMOB
-using GoogleMobileAds;
 using GoogleMobileAds.Api;
 #endif
 
@@ -44,10 +43,11 @@ namespace Virterix.AdMediation
 
         public Color m_adBackgoundColor = Color.gray;
 
-        public event Action OnWillInitialising = delegate { };
-        public event Action OnWasInitialising = delegate { };
+        public event Action OnWillInitialize = delegate { };
+        public event Action OnDidInitialize = delegate { };
+
 #if _AMS_ADMOB
-        public event Action<InitializationStatus> OnInitializeComplete = delegate { };
+        public event Action<InitializationStatus> OnInitializationComplete = delegate { };
 #endif
 
         protected override string AdInstanceParametersFolder
@@ -187,9 +187,9 @@ namespace Virterix.AdMediation
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
-            OnWillInitialising();
+            OnWillInitialize();
             MobileAds.Initialize(OnInitComplete);
-            OnWasInitialising();
+            OnDidInitialize();
         }
 
         protected override AdInstance CreateAdInstanceData(JSONValue jsonAdInstance)
@@ -540,7 +540,7 @@ namespace Virterix.AdMediation
         // AdMob Callbacks
         private void OnInitComplete(InitializationStatus initStatus)
         {
-            OnInitializeComplete(initStatus);     
+            OnInitializationComplete(initStatus);     
         }
 
         //------------------------------------------------------------------------
