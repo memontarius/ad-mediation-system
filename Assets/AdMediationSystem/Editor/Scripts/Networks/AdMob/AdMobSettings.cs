@@ -10,6 +10,7 @@ namespace Virterix.AdMediation.Editor
         public override Type NetworkAdapterType => typeof(AdMobAdapter);
 
         protected override string AdapterScriptName => "AdMobAdapter";
+
         protected override string AdapterDefinePeprocessorKey => "_AMS_ADMOB";
 
         public override string GetNetworkSDKVersion() => AdMobAdapter.GetSDKVersion();
@@ -17,7 +18,7 @@ namespace Virterix.AdMediation.Editor
         public override bool IsAdSupported(AdType adType) => true;
         
         public override bool IsCheckAvailabilityWhenPreparing(AdType adType) => false;
-       
+        
         public override void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {
             AdMobAdapter.SetupNetworkNativeSettings(_iosAppId, _androidAppId);

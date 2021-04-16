@@ -3,7 +3,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Boomlagoon.JSON;
-using System.Linq;
 
 namespace Virterix.AdMediation
 {
@@ -189,8 +188,11 @@ namespace Virterix.AdMediation
             bool isPrevousBannerDisplayed = adInstance.m_bannerDisplayed;
 
             if (adInstance.m_adType == AdType.Banner)
+            {
                 adInstance.m_bannerDisplayed = true;
- 
+                adInstance.CurrPlacement = placement;
+            }
+            
             if (IsReady(adInstance))
             {
                 switch (adType)
@@ -306,6 +308,7 @@ namespace Virterix.AdMediation
                 DestroyBanner(adInstance);
   
             adInstance.State = AdState.Loading;
+            adInstance.CurrPlacement = placement;
             var bannerPosition = ConvertToNativeBanerPosition((AppLovinBannerPosition)GetBannerPosition(adInstance, placement));
             MaxSdk.CreateBanner(adInstance.m_adId, bannerPosition);
             MaxSdk.SetBannerPlacement(adInstance.m_adId, placement);

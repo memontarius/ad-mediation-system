@@ -1,4 +1,4 @@
-//#define _AMS_ADCOLONY
+#define _AMS_ADCOLONY
 
 using UnityEngine;
 using System.Collections.Generic;
@@ -35,6 +35,7 @@ namespace Virterix.AdMediation
         public bool m_useRewardVideoPostPopup;
 
 		private bool m_isConfigured = false;
+        private string m_appId;
 
         protected override string AdInstanceParametersFolder
         {
@@ -65,7 +66,28 @@ namespace Virterix.AdMediation
 
         public static AdPosition ConvertToNativeBannerPosition(AdColonyAdPosition bannerPosition)
         {
-            AdPosition nativeAdPosition = (AdPosition)bannerPosition;
+            AdPosition nativeAdPosition = AdPosition.Bottom;
+            switch(bannerPosition)
+            {
+                case AdColonyAdPosition.Bottom:
+                    nativeAdPosition = AdPosition.Bottom;
+                    break;
+                case AdColonyAdPosition.BottomLeft:
+                    nativeAdPosition = AdPosition.BottomLeft;
+                    break;
+                case AdColonyAdPosition.BottomRight:
+                    nativeAdPosition = AdPosition.BottomRight;
+                    break;
+                case AdColonyAdPosition.Top:
+                    nativeAdPosition = AdPosition.Top;
+                    break;
+                case AdColonyAdPosition.TopLeft:
+                    nativeAdPosition = AdPosition.TopLeft;
+                    break;
+                case AdColonyAdPosition.TopRight:
+                    nativeAdPosition = AdPosition.TopRight;
+                    break;
+            }
             return nativeAdPosition;
         }
 
@@ -98,8 +120,8 @@ namespace Virterix.AdMediation
 #if UNITY_EDITOR
             m_isConfigured = true;
 #endif
-            string appId = parameters == null ? "" : parameters["appId"];
-            Configure(appId);
+            m_appId = parameters == null ? "" : parameters["appId"];
+            Configure(m_appId);
         }
 
         private void Configure(string appId)
@@ -123,9 +145,7 @@ namespace Virterix.AdMediation
 
             string[] zoneIDs = new string[m_adInstances.Count];
             for(int i = 0; i < m_adInstances.Count; i++)
-            {
                 zoneIDs[i] = m_adInstances[i].m_adId;
-            }
 
 #if UNITY_EDITOR
             return;
@@ -149,8 +169,12 @@ namespace Virterix.AdMediation
 
         public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
+            bool isPreviousBannerDisplayed = adInstance.m_bannerDisplayed;
             if (adInstance.m_adType == AdType.Banner)
+            {
                 adInstance.m_bannerDisplayed = true;
+                adInstance.CurrPlacement = placement;
+            }
 
             if (IsReady(adInstance.m_adType))
             {
@@ -163,6 +187,8 @@ namespace Virterix.AdMediation
                         break;
                     case AdType.Banner:
                         Ads.ShowAdView(GetAdViewId(adInstance));
+                        if (!isPreviousBannerDisplayed)
+                            AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
                         break;
                 }
                 return true;
@@ -193,11 +219,11 @@ namespace Virterix.AdMediation
                 switch (adInstance.m_adType)
                 {
                     case AdType.Banner:
-                        isReady = adInstance.State == AdState.Received;
+                        isReady = adInstance.State == AdState.Received && adInstance.m_adView != null;
                         break;
                     case AdType.Interstitial:
                     case AdType.Incentivized:
-                        if (adInstance.State == AdState.Received)
+                        if (adInstance.State == AdState.Received && adInstance.m_adView != null)
                         {
                             var interstitial = adInstance.m_adView as InterstitialAd;
                             if (interstitial.Expired)
@@ -239,6 +265,7 @@ namespace Virterix.AdMediation
 
             adInstance.State = AdState.Loading;
             AdOptions adOptions = null;
+            adInstance.CurrPlacement = placement;
 
             if (adInstance.m_adType == AdType.Banner)
             {
@@ -257,6 +284,13 @@ namespace Virterix.AdMediation
                 }
                 Ads.RequestInterstitialAd(adInstance.m_adId, adOptions);
             }
+        }
+
+        public override void NotifyEvent(AdEvent adEvent, AdInstance adInstance)
+        {
+            base.NotifyEvent(adEvent, adInstance);
+            if (adInstance.State == AdState.Loading)
+                adInstance.State = AdState.Unavailable;
         }
 
         private void SubscribeAdEvents()
@@ -396,15 +430,16 @@ namespace Virterix.AdMediation
 
         private void OnAdViewFailedToLoad(AdColonyAdView adView)
         {
-            var adInstance = GetAdInstanceByAdId(adView.ZoneId);
-            DestroyAd(adInstance);
-            AddEvent(adInstance.m_adType, AdEvent.PreparationFailed, adInstance);
+            if (adView != null)
+            {
+                var adInstance = GetAdInstanceByAdId(adView.ZoneId);
+                DestroyAd(adInstance);
+                AddEvent(adInstance.m_adType, AdEvent.PreparationFailed, adInstance);
+            }
         }
 
         private void OnAdViewOpened(AdColonyAdView adView)
         {
-            var adInstance = GetAdInstanceByAdId(adView.ZoneId);
-            AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
         }
 
         private void OnAdViewClosed(AdColonyAdView adView)

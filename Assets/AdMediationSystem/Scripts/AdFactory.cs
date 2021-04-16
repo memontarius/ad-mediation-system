@@ -64,7 +64,6 @@ namespace Virterix.AdMediation
                 timeoutParameters.m_adType = adInstance.m_adType;
                 adInstance.m_timeout = timeoutParameters;
             }
-            adInstance.m_responseWaitTime = AdMediationSystem.Instance.DefaultNetworkResponseWaitTime;
             return adInstance;
         }
     }

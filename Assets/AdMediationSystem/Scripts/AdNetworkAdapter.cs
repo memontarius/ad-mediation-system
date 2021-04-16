@@ -102,6 +102,7 @@ namespace Virterix.AdMediation
 
         public string m_networkName;
         public AdParam[] m_adSupportParams;
+        public float m_responseWaitTime = 30f;
 
         //_______________________________________________________________________________
         #region Properties
@@ -192,6 +193,17 @@ namespace Virterix.AdMediation
                     specificBannerPosition = positionContainer.m_bannerPosition;
             }
             return specificBannerPosition;
+        }
+
+        /// <summary>
+        /// Compare banner positions
+        /// </summary>
+        /// <returns>Returns true if banner positions are identical, false otherwise</returns>
+        public static bool CompareBannerPosition(AdInstance adInstance, string placement, AdInstance otherAdInstance, string otherPlacement)
+        {
+            var onePosition = GetBannerPosition(adInstance, placement);
+            var otherPosition = GetBannerPosition(otherAdInstance, otherPlacement);
+            return onePosition == otherPosition;
         }
 
         public void Initialize(Dictionary<string, string> parameters = null, JSONArray adInstances = null)
@@ -322,9 +334,8 @@ namespace Virterix.AdMediation
                 foreach (AdInstance data in m_adInstances)
                 {
                     if (data.m_adType != adType)
-                    {
                         continue;
-                    }
+
                     if (data.Name == adInstanceName)
                     {
                         foundData = data;
@@ -448,17 +459,6 @@ namespace Virterix.AdMediation
                 timeoutParameters.m_adType = adInstance.m_adType;
                 adInstance.m_timeout = timeoutParameters;
             }
-
-            string responseWaitTimeKey = "responseWaitTime";
-            if (jsonAdInstance.Obj.ContainsKey(responseWaitTimeKey))
-            {
-                adInstance.m_responseWaitTime = (float)jsonAdInstance.Obj.GetNumber(responseWaitTimeKey);
-            }
-            else
-            {
-                adInstance.m_responseWaitTime = AdMediationSystem.Instance.DefaultNetworkResponseWaitTime;
-            }
-
             m_adInstances.Add(adInstance);
         }
 
@@ -471,6 +471,12 @@ namespace Virterix.AdMediation
 
         protected virtual void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
+            string responseWaitTimeKey = "responseWaitTime";
+            if (parameters.ContainsKey(responseWaitTimeKey))
+                m_responseWaitTime = (float)Convert.ToDouble(parameters[responseWaitTimeKey]);
+            else
+                m_responseWaitTime = AdMediationSystem.Instance.DefaultNetworkResponseWaitTime;
+
             InitializeAdInstanceParameters();
             if (jsonAdInstances != null)
             {
@@ -526,7 +532,6 @@ namespace Virterix.AdMediation
 
         private IEnumerator WaitResponse(AdInstance adInstance)
         {
-            float waitingTime = adInstance.m_responseWaitTime;
             float passedTime = 0.0f;
             bool isCheckAvailabilityWhenPreparing = IsCheckAvailabilityWhenPreparing(adInstance.m_adType);
 
@@ -535,7 +540,7 @@ namespace Virterix.AdMediation
                 yield return m_waitResponseInstruction;
                 passedTime += m_waitResponseHandlingInterval;
 
-                if (passedTime >= waitingTime)
+                if (passedTime >= m_responseWaitTime)
                 {
                     NotifyEvent(AdEvent.PreparationFailed, adInstance);
                     break;
@@ -549,7 +554,6 @@ namespace Virterix.AdMediation
                     }
                 }
             }
-
             yield return m_waitResponseInstruction;
             yield break;
         }

@@ -321,7 +321,6 @@ namespace Virterix.AdMediation
 
         private void RequestPreparation(AdUnit unit)
         {
-            float waitingTime = unit.NetworkResponseWaitTime;
             unit.AdNetwork.StartWaitResponseHandling(unit.AdInstance);
             unit.Prepare();
         }
@@ -411,20 +410,7 @@ namespace Virterix.AdMediation
                 {
                     int tierIndex = Convert.ToInt32(savedValues[0]);
                     int unitIndex = Convert.ToInt32(savedValues[1]);
-
-                    if (m_adType == AdType.Banner)
-                    {
-                        Debug.Log(m_placementName);
-                        Debug.Log("tierIndex: " + tierIndex + " unitIndex: " + unitIndex);
-                    }
-
                     m_fetchStrategy.Reset(m_tiers, tierIndex, unitIndex);
-
-                    if (m_adType == AdType.Banner)
-                    {
-                       
-                        Debug.Log("RESETED tierIndex: " + m_fetchStrategy.TierIndex + " unitIndex: " + m_fetchStrategy.UnitIndex);
-                    }
                 }
             }
         }
@@ -433,9 +419,16 @@ namespace Virterix.AdMediation
         {
             if (m_currUnit == null || adType != m_currUnit.AdType)
                 return;
-            else if (adInstance != null && m_currUnit.AdInstance != adInstance)
-                return;
-
+            else if (adInstance != null)
+            {
+                if (m_currUnit.AdInstance != adInstance)
+                    return;
+                if (!string.IsNullOrEmpty(m_currUnit.AdInstance.CurrPlacement) && m_currUnit.AdInstance.CurrPlacement != m_placementName)
+                {
+                    return;
+                }
+            }
+ 
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AMS] AdMediator.OnNetworkEvent() Type:" + m_adType + " placementName: " + m_currUnit.PlacementName +
                 "; Ad Instance Name:" + m_currUnit.AdInstanceName +

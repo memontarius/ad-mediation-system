@@ -240,7 +240,10 @@ namespace Virterix.AdMediation.Editor
                         }
                         jsonNetwork.Add(settings.JsonAppIdKey, appId);
                     }
-                    
+
+                    if (settings._responseWaitTime != AdMediationSystem.DEFAULT_NETWORK_RESPONSE_WAIT_TIME)
+                        jsonNetwork.Add("responseWaitTime", settings._responseWaitTime);
+ 
                     // Insert specifiec paramters
                     Dictionary<string, object> specificParameters = settings.GetSpecificNetworkParameters(platform);
                     foreach (KeyValuePair<string, object> parametersPair in specificParameters)
@@ -294,7 +297,7 @@ namespace Virterix.AdMediation.Editor
                 }
                 if (networkSettings._responseWaitTime != AdMediationSystem.DEFAULT_NETWORK_RESPONSE_WAIT_TIME)
                 {
-                    jsonAdInstance.Add("responseWaitTime", networkSettings._responseWaitTime);
+                    //jsonAdInstance.Add("responseWaitTime", networkSettings._responseWaitTime);
                 }
 
                 string adUnitId = "";

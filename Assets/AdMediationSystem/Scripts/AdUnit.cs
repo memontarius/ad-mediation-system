@@ -32,11 +32,6 @@ namespace Virterix.AdMediation
             get { return m_placementName; }
         }
 
-        public float NetworkResponseWaitTime
-        {
-            get { return AdInstance.m_responseWaitTime; }
-        }
-        
         public bool IsPrepareOnExit
         {
             get { return m_isPrepareOnExit; }

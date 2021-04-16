@@ -71,8 +71,7 @@ namespace Virterix.AdMediation
         public object m_adView;
         public IAdInstanceParameters m_adInstanceParams;
         public float m_startImpressionTime;
-        public float m_displayTime;
-        public float m_responseWaitTime = 30f;
+        public float m_displayTime; 
         public Coroutine m_waitResponseHandler;
 
         private bool m_wasLastPreparationFailed;

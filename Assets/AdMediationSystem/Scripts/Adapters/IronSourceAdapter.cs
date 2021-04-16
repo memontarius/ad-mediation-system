@@ -219,14 +219,7 @@ namespace Virterix.AdMediation
                 case AdType.Banner:
                     if (m_bannerState != AdState.Loading)
                     {
-                        float requestDelay = 0.0f;
-                        if (m_bannerState == AdState.Received)
-                        {
-                            IronSource.Agent.destroyBanner();
-                            requestDelay = 0.5f;
-                        }
-                        m_bannerState = AdState.Loading;
-                        StartCoroutine(RequestBanner(adInstance, placement, requestDelay));
+                        RequestBanner(adInstance, placement);
                     }
                     break;
                 case AdType.Interstitial:
@@ -237,6 +230,18 @@ namespace Virterix.AdMediation
             }
         }
 
+        private void RequestBanner(AdInstance adInstance, string placement)
+        {
+            float requestDelay = 0.0f;
+            if (m_bannerState == AdState.Received)
+            {
+                IronSource.Agent.destroyBanner();
+                requestDelay = 0.5f;
+            }
+            m_bannerState = AdState.Loading;
+            StartCoroutine(DeferredRequestBanner(adInstance, placement, requestDelay));
+        }
+
         public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             bool isPreviousBannerDisplayed = m_bannerDisplayed;
@@ -245,6 +250,7 @@ namespace Virterix.AdMediation
             {
                 adInstance.m_bannerDisplayed = true;
                 m_bannerDisplayed = true;
+                adInstance.CurrPlacement = placement;
             }
 
             if (IsReady(adInstance))
@@ -253,16 +259,20 @@ namespace Virterix.AdMediation
                 switch (adInstance.m_adType)
                 {
                     case AdType.Banner:
-                        bool isPreparationRequired = m_currBannerPlacement != placement;
-                        if (!isPreparationRequired)
+                        bool isPreparationRequired = false;
+                        if (m_currBannerInstance != null)
                         {
-                            var currBannerParams = m_currBannerInstance.m_adInstanceParams as IronSourceAdInstanceBannerParameters;
-                            var nextBannerParams = adInstance.m_adInstanceParams as IronSourceAdInstanceBannerParameters;
-                            isPreparationRequired = currBannerParams.m_bannerSize != nextBannerParams.m_bannerSize;
+                            isPreparationRequired = !CompareBannerPosition(m_currBannerInstance, m_currBannerPlacement, adInstance, placement);
+                            if (!isPreparationRequired)
+                            {
+                                var currBannerParams = m_currBannerInstance.m_adInstanceParams as IronSourceAdInstanceBannerParameters;
+                                var nextBannerParams = adInstance.m_adInstanceParams as IronSourceAdInstanceBannerParameters;
+                                isPreparationRequired = currBannerParams.m_bannerSize != nextBannerParams.m_bannerSize;
+                            }
                         }
 
                         if (isPreparationRequired)
-                            Prepare(adInstance, placement);
+                            RequestBanner(adInstance, placement);
                         else
                             IronSource.Agent.displayBanner();
 
@@ -318,13 +328,14 @@ namespace Virterix.AdMediation
             return isReady;
         }
 
-        private IEnumerator RequestBanner(AdInstance adInstance, string placement, float delay)
+        private IEnumerator DeferredRequestBanner(AdInstance adInstance, string placement, float delay)
         {
-            yield return new WaitForSecondsRealtime(delay);
-            IronSourceBannerPosition bannerPos = ConvertToNativeBannerPosition((IrnSrcBannerPosition)GetBannerPosition(adInstance, placement));
-            IronSourceBannerSize bannerSize = GetBannerSize(adInstance);
+            adInstance.CurrPlacement = placement;
             m_currBannerInstance = adInstance;
             m_currBannerPlacement = placement;
+            yield return new WaitForSecondsRealtime(delay);
+            IronSourceBannerPosition bannerPos = ConvertToNativeBannerPosition((IrnSrcBannerPosition)GetBannerPosition(adInstance, placement));
+            IronSourceBannerSize bannerSize = GetBannerSize(adInstance);         
             IronSource.Agent.loadBanner(bannerSize, bannerPos, GetOverridenPlacement(adInstance.m_adType, placement));
             yield break;
         }
@@ -475,7 +486,7 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Banner, AdEvent.PreparationFailed, m_currBannerInstance);
         }
 
-        void BannerAdClickedEvent()
+        private void BannerAdClickedEvent()
         {
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AMS] IronSourceAdapter.BannerAdClickedEvent()");
@@ -483,7 +494,7 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Banner, AdEvent.Click, m_currBannerInstance);
         }
 
-        void BannerAdScreenPresentedEvent()
+        private void BannerAdScreenPresentedEvent()
         {
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AMS] IronSourceAdapter.BannerAdScreenPresentedEvent()");
@@ -491,14 +502,14 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Banner, AdEvent.Show, m_currBannerInstance);
         }
 
-        void BannerAdScreenDismissedEvent()
+        private void BannerAdScreenDismissedEvent()
         {
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AMS] IronSourceAdapter.BannerAdScreenDismissedEvent()");
 #endif
         }
 
-        void BannerAdLeftApplicationEvent()
+        private void BannerAdLeftApplicationEvent()
         {
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AMS] IronSourceAdapter.BannerAdLeftApplicationEvent()");

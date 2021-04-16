@@ -190,6 +190,12 @@ namespace Virterix.AdMediation
             AudienceNetworkAdInstanceData audienceNetworkAdInstance = adInstance == null ? null : adInstance as AudienceNetworkAdInstanceData;
             AdType adType = adInstance.m_adType;
 
+            if (adType == AdType.Banner)
+            {
+                audienceNetworkAdInstance.m_bannerDisplayed = true;
+                audienceNetworkAdInstance.CurrPlacement = placement;
+            }
+            
             bool isShowSuccessful = false;
             switch (adType)
             {
@@ -308,6 +314,7 @@ namespace Virterix.AdMediation
         {
             DestroyBanner(adInstance);
             adInstance.State = AdState.Loading;
+            adInstance.CurrPlacement = placement;
 
             //StartRefreshBannerProcess(adInstance);
 

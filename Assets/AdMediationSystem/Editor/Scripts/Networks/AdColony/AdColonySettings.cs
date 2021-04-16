@@ -16,10 +16,7 @@ namespace Virterix.AdMediation.Editor
             return isSupported;
         }
 
-        public override bool IsCheckAvailabilityWhenPreparing(AdType adType)
-        {
-            return false;
-        }
+        public override bool IsCheckAvailabilityWhenPreparing(AdType adType) => true;
 
         protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
         {

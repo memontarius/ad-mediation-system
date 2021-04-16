@@ -16,4 +16,6 @@ MonoBehaviour:
   m_bannerPositions:
   - m_placementName: Default
     m_bannerPosition: 1
+  - m_placementName: Top
+    m_bannerPosition: 0
   m_bannerSize: 3

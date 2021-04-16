@@ -403,6 +403,7 @@ namespace Virterix.AdMediation.Editor
             AddNetwork(new ChartboostView(this, "Chartboost", "chartboost"));
             AddNetwork(new IronSourceView(this, "Iron Source", "ironsrc"));
             AddNetwork(new AdColonyView(this, "AdColony", "adcolony"));
+            AddNetwork(new VungleView(this, "Vungle", "vungle"));
             AddNetwork(new PollfishView(this, "Pollfish", "pollfish"));
 
             if (_networkEnabledStates == null)

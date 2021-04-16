@@ -231,7 +231,10 @@ namespace Virterix.AdMediation
             bool isPreviousBannerDisplayed = adMobAdInstance.m_bannerDisplayed;
 
             if (adType == AdType.Banner)
+            {
                 adMobAdInstance.m_bannerDisplayed = true;
+                adMobAdInstance.CurrPlacement = placement;
+            }
 
             if (isAdAvailable)
             {
@@ -248,10 +251,8 @@ namespace Virterix.AdMediation
                             bannerView.Show();
                             bannerView.SetPosition(ConvertToNativeBannerPosition((AdMobBannerPosition)GetBannerPosition(adInstance, placement)));
                         }
-#if UNITY_EDITOR
                         if (!isPreviousBannerDisplayed)
                             AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
-#endif
                         break;
                     case AdType.Interstitial:
                         InterstitialAd interstitial = adInstance.m_adView as InterstitialAd;
@@ -314,6 +315,7 @@ namespace Virterix.AdMediation
             DestroyBanner(adInstance);
 
             adInstance.State = AdState.Loading;
+            adInstance.CurrPlacement = placement;
 
             AdMobAdInstanceBannerParameters bannerParams = adInstance.m_adInstanceParams as AdMobAdInstanceBannerParameters;
             AdPosition bannerPosition = ConvertToNativeBannerPosition((AdMobBannerPosition)GetBannerPosition(adInstance, placement));
@@ -580,7 +582,6 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             print("[AMS] AdMobAdapter.HandleAdOpened() " + " adInstance: " + adInstance.Name);
 #endif
-            AddEvent(AdType.Banner, AdEvent.Show, adInstance);
         }
 
         void HandleAdClosing(AdMobAdInstanceData adInstance, object sender, EventArgs args)

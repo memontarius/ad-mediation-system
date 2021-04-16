@@ -78,14 +78,9 @@ namespace Virterix.AdMediation
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
-            try
-            {
-                m_appId = parameters["appId"];
-            }
-            catch
-            {
+
+            if (!parameters.TryGetValue("appId", out m_appId))
                 m_appId = "";
-            }
 
             if (Advertisement.isSupported && !Advertisement.isInitialized)
             {
@@ -116,8 +111,8 @@ namespace Virterix.AdMediation
                
                 if (adType == AdType.Banner)
                 {
-                    if (m_isBannerDisplayed)
-                        Hide(adInstance);
+                    adInstance.CurrPlacement = placement;
+                    Advertisement.Banner.Hide(true);
                     Advertisement.Banner.Load(adInstance.m_adId);
                 }
                 else
@@ -137,6 +132,7 @@ namespace Virterix.AdMediation
                 adInstance.m_bannerDisplayed = true;
                 m_isBannerDisplayed = true;
                 m_currBannerPlacement = placement;
+                adInstance.CurrPlacement = placement;
             }
 
             if (IsReady(adInstance))
@@ -153,6 +149,7 @@ namespace Virterix.AdMediation
                         Advertisement.Banner.SetPosition(bannerPosition);
                     }
                     Advertisement.Banner.Show(adInstance.m_adId);
+
                     if (!isPreviousBannerDisplayed)
                         AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
                 }

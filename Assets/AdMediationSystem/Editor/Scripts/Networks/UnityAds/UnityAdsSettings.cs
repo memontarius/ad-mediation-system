@@ -15,10 +15,7 @@ namespace Virterix.AdMediation.Editor
             return isSupported;
         }
 
-        public override bool IsCheckAvailabilityWhenPreparing(AdType adType)
-        {
-            return true;
-        }
+        public override bool IsCheckAvailabilityWhenPreparing(AdType adType) => true;
 
         public override void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {
