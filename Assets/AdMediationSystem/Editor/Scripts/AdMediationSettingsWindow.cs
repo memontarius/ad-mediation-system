@@ -369,7 +369,7 @@ namespace Virterix.AdMediation.Editor
                 }
             }
             _enableExtraLoggingProp.boolValue = enableExtraLogging;
-
+            _enableExtraLoggingProp.serializedObject.ApplyModifiedProperties();
             InitProjectNames();
         }
 
@@ -791,7 +791,8 @@ namespace Virterix.AdMediation.Editor
 
             if (_enableExtraLoggingProp.boolValue)
             {
-                defines.Add(EXTRA_LOGGING_DEFINE);
+                if (!defines.Contains(EXTRA_LOGGING_DEFINE))
+                    defines.Add(EXTRA_LOGGING_DEFINE);
             }
             else
             {
