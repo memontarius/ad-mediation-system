@@ -1,4 +1,4 @@
-#define _AMS_APPLOVIN
+//#define _AMS_APPLOVIN
 
 using System.Collections.Generic;
 using UnityEngine;

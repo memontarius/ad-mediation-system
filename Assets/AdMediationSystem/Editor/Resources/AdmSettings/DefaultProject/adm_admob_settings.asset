@@ -57,3 +57,4 @@ MonoBehaviour:
     _iosId: 
     _timeout: 120
     _bannerType: 0
+  _useMediation: 0

@@ -22,3 +22,4 @@ MonoBehaviour:
   _bannerAdInstances: []
   _interstitialAdInstances: []
   _rewardAdInstances: []
+  _useMediation: 0

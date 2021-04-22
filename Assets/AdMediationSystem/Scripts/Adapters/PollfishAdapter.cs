@@ -1,4 +1,4 @@
-#define _AMS_POLLFISH
+//#define _AMS_POLLFISH
 
 using UnityEngine;
 using System.Collections;

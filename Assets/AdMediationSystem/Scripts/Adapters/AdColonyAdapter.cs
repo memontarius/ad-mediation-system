@@ -1,4 +1,4 @@
-#define _AMS_ADCOLONY
+//#define _AMS_ADCOLONY
 
 using UnityEngine;
 using System.Collections.Generic;

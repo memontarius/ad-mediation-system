@@ -1,4 +1,4 @@
-#define _AMS_CHARTBOOST
+//#define _AMS_CHARTBOOST
 
 using UnityEngine;
 using System.Collections;

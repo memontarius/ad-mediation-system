@@ -7,6 +7,8 @@ namespace Virterix.AdMediation.Editor
     [Serializable]
     public class AdMobSettings : BaseAdNetworkSettings
     {
+        public bool _useMediation;
+
         public override Type NetworkAdapterType => typeof(AdMobAdapter);
 
         protected override string AdapterScriptName => "AdMobAdapter";
@@ -22,6 +24,8 @@ namespace Virterix.AdMediation.Editor
         public override void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {
             AdMobAdapter.SetupNetworkNativeSettings(_iosAppId, _androidAppId);
+            if (_useMediation)
+                networkAdapter.transform.parent.gameObject.AddComponent<AdMobMediationBehavior>();
         }
 
         protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)

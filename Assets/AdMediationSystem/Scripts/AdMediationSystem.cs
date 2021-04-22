@@ -92,6 +92,7 @@ namespace Virterix.AdMediation
         /// 5th parameter is the ad instance name
         /// </summary>
         public static event Action<AdMediator, AdNetworkAdapter, AdType, AdEvent, string> OnAdNetworkEvent = delegate { };
+        public static event Action OnUserConsentToPersonalizedAdsChanged = delegate { };
 
         private Hashtable m_userParameters = new Hashtable();
         private AdNetworkAdapter[] m_networkAdapters;
@@ -422,8 +423,13 @@ namespace Virterix.AdMediation
         /// </summary>
         public static void SetUserConsentToPersonalizedAds(PersonalisationConsent consent)
         {
+            var previousUserConsent = m_userPersonalisationConsent;
             m_userPersonalisationConsent = consent;
             PlayerPrefs.SetInt(PERSONALISATION_CONSENT_SAVE_KEY, (int)consent);
+
+            // Notify
+            if (previousUserConsent != m_userPersonalisationConsent)
+                OnUserConsentToPersonalizedAdsChanged();
         }
 
         #endregion // Mediation ad networks
