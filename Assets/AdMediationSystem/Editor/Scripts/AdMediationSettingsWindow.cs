@@ -144,8 +144,6 @@ namespace Virterix.AdMediation.Editor
                     EditorPrefs.SetBool(GetNetworkEnabledStateSaveKey(_networks[i]), _networkEnabledStates[i]);
                 }
             }
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
         }
         
         private void OnGUI()
