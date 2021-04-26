@@ -121,7 +121,7 @@ namespace Virterix.AdMediation.Editor
 
         private string ProjectNameSaveKey
         {
-            get { return string.Format("{0}{1}", PREFIX_SAVEKEY, PROJECT_NAME_SAVEKEY);  }
+            get { return string.Format("{0}{1}{2}", PREFIX_SAVEKEY, Application.productName, PROJECT_NAME_SAVEKEY);  }
         }
 
         public static string CommonAdSettingsFolderPath
@@ -161,15 +161,14 @@ namespace Virterix.AdMediation.Editor
             switch (SelectedTab)
             {
                 case 0: // Settings
-                    _serializedProjectSettings.Update();
+                    _serializedProjectSettings?.Update();
                     DrawProjectName();
                     if (IsProjectValid)
                     {
                         DrawProjectSettings();
                         DrawAdNetworks();
                     }
-                    _serializedProjectSettings.ApplyModifiedProperties();
-
+                    _serializedProjectSettings?.ApplyModifiedProperties();
                     break;
                 case 1:
                     DrawMediators(_bannerMediators, "_bannerMediators");
@@ -418,7 +417,7 @@ namespace Virterix.AdMediation.Editor
                 _networkEnabledStates[i] = _networks[i].Settings._enabled;
             }
             UpdateActiveNetworks();
-            AssetDatabase.SaveAssets();
+            //AssetDatabase.SaveAssets();
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
         }
 

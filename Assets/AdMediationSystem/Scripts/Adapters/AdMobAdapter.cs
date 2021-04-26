@@ -84,7 +84,8 @@ namespace Virterix.AdMediation
             }
             else
             {
-                Debug.LogWarning("AdMob Settings not found!");
+                GoogleMobileAds.Editor.GoogleMobileAdsSettingsEditor.OpenInspector();
+                Debug.LogWarning("AdMob Settings not found! Try again!");
             }
 #endif
         }

@@ -108,7 +108,7 @@ public class ExampleAdController : BaseAdController
 
     public void ToggleChangePersonalizedAds()
     {
-        if (AdMediationSystem.IsInitialized)
+        if (AdMediationSystem.InitStatus == InitializedStatus.Initialized)
         {
             PersonalisationConsent consent = AdMediationSystem.UserPersonalisationConsent;
             if (consent == PersonalisationConsent.Accepted || consent == PersonalisationConsent.Undefined)

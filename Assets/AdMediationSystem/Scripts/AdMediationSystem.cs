@@ -21,6 +21,13 @@ namespace Virterix.AdMediation
         iOS
     }
 
+    public enum InitializedStatus
+    {
+        None,
+        Initializing,
+        Initialized
+    }
+
     public class AdMediationSystem : Singleton<AdMediationSystem>
     {
         private struct MediatorData
@@ -98,7 +105,7 @@ namespace Virterix.AdMediation
         private AdNetworkAdapter[] m_networkAdapters;
         private List<AdMediator> m_mediators = new List<AdMediator>();
         private JSONObject m_currSettings;
-
+ 
         /// <summary>
         /// Use a personal data of user. To CCPA and GDPR Compliance
         /// </summary>
@@ -115,12 +122,11 @@ namespace Virterix.AdMediation
         }
         private static bool m_wasUserConsentRestored;
 
-        public static bool IsInitialized
+        public static InitializedStatus InitStatus
         {
-            get { return m_isInitialized; }
+            get; private set;
         }
-        private static bool m_isInitialized;
-
+           
         public JSONObject CurrSettings
         {
             get { return m_currSettings; }
@@ -518,7 +524,7 @@ namespace Virterix.AdMediation
 
         private void NotifyInitializeCompleted()
         {
-            m_isInitialized = true;
+            InitStatus = InitializedStatus.Initialized;
             OnInitialized();
         }
 
@@ -558,6 +564,7 @@ namespace Virterix.AdMediation
 
         public void Initialize()
         {
+            InitStatus = InitializedStatus.Initializing;
             m_networkAdapters = GetComponentsInChildren<AdNetworkAdapter>(true);
             AdMediator[] mediators = GetComponentsInChildren<AdMediator>(true);
             m_mediators.AddRange(mediators);
