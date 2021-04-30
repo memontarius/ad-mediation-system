@@ -289,13 +289,15 @@ namespace Virterix.AdMediation
             int index = 0;
             foreach (AdMediator bannerMediator in m_bannerMediators)
             {
-                if (bannerMediator.CurrentUnit.AdNetwork.UseSingleBannerInstance)
+                if (bannerMediator.CurrentUnit != null && bannerMediator.CurrentUnit.AdNetwork.UseSingleBannerInstance)
                 {
                     var placement = bannerMediator.CurrentUnit.AdNetwork.CurrBannerPlacement;
                     m_bannerDisplayStates[index] = (placement == bannerMediator.m_placementName) ? bannerMediator.IsBannerDisplayed : false;
                 }
                 else
+                {
                     m_bannerDisplayStates[index] = bannerMediator.IsBannerDisplayed;
+                }
                 index++;
                 bannerMediator.Hide();
             }
