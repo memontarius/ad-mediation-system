@@ -42,6 +42,7 @@ namespace Virterix.AdMediation
             {
                 networkSettings.QualityServiceEnabled = true;
                 networkSettings.SdkKey = sdkKey;
+                UnityEditor.EditorUtility.SetDirty(networkSettings);
             }
             else
             {

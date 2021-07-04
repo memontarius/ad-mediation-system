@@ -386,6 +386,8 @@ namespace Virterix.AdMediation.Editor
                     settings.SetupNetworkAdapter(commonSettings, adapter);
                 }
             }
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
 
         private static void FillMediatorHolder(GameObject mediatorHolder, List<AdUnitMediator> mediators)

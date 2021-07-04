@@ -39,6 +39,7 @@ namespace Virterix.AdMediation
         public const string AD_SETTINGS_FOLDER = "AdmSettings";
         public const string PREFAB_NAME = "AdMediationSystem";
         public const string PLACEMENT_DEFAULT_NAME = "Default";
+        public const string PREFIX = "adm.";
 
         public const string AD_INSTANCE_PARAMETERS_ROOT_FOLDER = "AdInstanceParameters";
         public const string AD_INSTANCE_PARAMETERS_FILE_EXTENSION = ".asset";
@@ -69,9 +70,9 @@ namespace Virterix.AdMediation
         #region Configuration variables
         //-------------------------------------------------------------------------------
 
-        private const string HASH_SAVE_KEY = "adm.settings.hash";
-        private const string PERSONALISATION_CONSENT_SAVE_KEY = "adm.userconsent";
-        private const string SETTINGS_VERSION_PARAM_KEY = "adm.settings.version";
+        private const string HASH_SAVE_KEY = PREFIX + ".settings.hash";
+        private const string PERSONALISATION_CONSENT_SAVE_KEY = PREFIX + "userconsent";
+        private const string SETTINGS_VERSION_PARAM_KEY = PREFIX + "settings.version";
 
         #endregion // Configuration variables
 

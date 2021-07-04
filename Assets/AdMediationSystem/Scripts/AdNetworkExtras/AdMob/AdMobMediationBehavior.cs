@@ -12,12 +12,9 @@ using GoogleMobileAds.Api.Mediation.AdColony;
 using GoogleMobileAds.Api.Mediation.UnityAds;
 #endif
 
-namespace Virterix.AdMediation
-{
-    public class AdMobMediationBehavior : MonoBehaviour
-    {
-        private void Awake()
-        {
+namespace Virterix.AdMediation {
+    public class AdMobMediationBehavior : MonoBehaviour {
+        private void Awake() {
             var adMob = AdMediationSystem.Instance.GetComponentInChildren<AdMobAdapter>();
             adMob.OnWillInitialize += OnAdMobWillInitialize;
 #if _ADMOB_MEDIATION
@@ -26,8 +23,7 @@ namespace Virterix.AdMediation
             AdMediationSystem.OnUserConsentToPersonalizedAdsChanged += OnUserConsentToPersonalizedAdsChanged;
         }
 
-        private void UpdateUserPersonalizedAdsConsent()
-        {
+        private void UpdateUserPersonalizedAdsConsent() {
 #if _ADMOB_MEDIATION
             if (AdMediationSystem.UserPersonalisationConsent != PersonalisationConsent.Undefined)
             {
@@ -38,13 +34,15 @@ namespace Virterix.AdMediation
                 AdColonyAppOptions.SetGDPRRequired(userAccepts);
                 AdColonyAppOptions.SetGDPRConsentString(userAccepts ? "1" : "0");
                 UnityAds.SetGDPRConsentMetaData(userAccepts);
+#if UNITY_IOS && !UNITY_EDITOR
+                AudienceNetworkMediationUtils.AdSettings.SetAdvertiserTrackingEnabled(userAccepts);
+#endif
             }
             AppLovin.SetIsAgeRestrictedUser(AdMediationSystem.Instance.m_isChildrenDirected);
 #endif
         }
 
-        private void OnAdMobWillInitialize()
-        {
+        private void OnAdMobWillInitialize() {
             UpdateUserPersonalizedAdsConsent();
         }
 
@@ -73,8 +71,7 @@ namespace Virterix.AdMediation
         }
 #endif
 
-        private void OnUserConsentToPersonalizedAdsChanged()
-        {
+        private void OnUserConsentToPersonalizedAdsChanged() {
             UpdateUserPersonalizedAdsConsent();
         }
     }

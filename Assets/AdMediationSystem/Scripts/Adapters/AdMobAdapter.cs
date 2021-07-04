@@ -41,10 +41,36 @@ namespace Virterix.AdMediation
             BottomRight
         }
 
-        public Color m_adBackgoundColor = Color.gray;
+        public enum AdMobTagForUnderAgeOfConsent 
+        {
+            Unspecified = 0,
+            False,
+            True
+        }
+
+        public enum AdMobMaxAdContentRating
+        {
+            Unspecified = 0,
+            G,
+            MA,
+            PG,
+            T
+        }
 
         public event Action OnWillInitialize = delegate { };
         public event Action OnDidInitialize = delegate { };
+
+        private const string UnderAgeOfConsentSaveKey = AdMediationSystem.PREFIX + "abmob.uac";
+        private const string MaxContentRatingSaveKey = AdMediationSystem.PREFIX + "abmob.mcr";
+
+        /// <summary>
+        /// Should be assigned before initialization
+        /// </summary>
+        public AdMobTagForUnderAgeOfConsent UnderAgeOfConsent { get; set; }
+        /// <summary>
+        /// Should be assigned before initialization
+        /// </summary>
+        public AdMobMaxAdContentRating MaxContentRating { get; set; }
 
 #if _AMS_ADMOB
         public event Action<InitializationStatus> OnInitializationComplete = delegate { };
@@ -64,23 +90,22 @@ namespace Virterix.AdMediation
             {
                 path = UnityEditor.AssetDatabase.GUIDToAssetPath(foundAssets[0]);
             }
-            ScriptableObject networkSettings = UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
-
-            if (networkSettings != null)
+            ScriptableObject adMobSettings = UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
+            
+            if (adMobSettings != null)
             {
-                Type settingsType = networkSettings.GetType();
+                Type settingsType = adMobSettings.GetType();
+                
+                PropertyInfo prop = settingsType.GetProperty("GoogleMobileAdsAndroidAppId");
+                prop.SetValue(adMobSettings, androidAppId);
 
-                PropertyInfo prop = settingsType.GetProperty("AdMobAndroidAppId");
-                prop.SetValue(networkSettings, androidAppId);
-
-                prop = settingsType.GetProperty("AdMobIOSAppId");
-                prop.SetValue(networkSettings, iOSAppId);
+                prop = settingsType.GetProperty("GoogleMobileAdsIOSAppId");
+                prop.SetValue(adMobSettings, iOSAppId);
 
                 prop = settingsType.GetProperty("DelayAppMeasurementInit");
-                prop.SetValue(networkSettings, true);
+                prop.SetValue(adMobSettings, true);
 
-                prop = settingsType.GetProperty("IsAdMobEnabled");
-                prop.SetValue(networkSettings, true);
+                UnityEditor.EditorUtility.SetDirty(adMobSettings);
             }
             else
             {
@@ -116,8 +141,7 @@ namespace Virterix.AdMediation
             public EventHandler<EventArgs> onAdOpeningHandler;
             public EventHandler<AdErrorEventArgs> onAdRewardVideoFailedToShowHandler;
             public EventHandler<EventArgs> onAdClosedHandler;
-            public EventHandler<EventArgs> onAdLeavingApplicationHandler;
-            public EventHandler<AdErrorEventArgs> onAdRewardVideoFailedToLoadHandler;
+            public EventHandler<AdFailedToLoadEventArgs> onAdRewardVideoFailedToLoadHandler;
             public EventHandler<Reward> onAdRewardVideoEarnedHandler;
             public EventHandler<AdValueEventArgs> onAdRewardVideoPaidHandler;
         }
@@ -188,6 +212,9 @@ namespace Virterix.AdMediation
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
+
+            ConfigureAdMob();
+
             OnWillInitialize();
             MobileAds.Initialize(OnInitComplete);
             OnDidInitialize();
@@ -197,6 +224,58 @@ namespace Virterix.AdMediation
         {
             AdInstance adInstance = new AdMobAdInstanceData(this);
             return adInstance;
+        }
+
+        private void ConfigureAdMob()
+        {
+            RequestConfiguration.Builder builder = new RequestConfiguration.Builder();
+
+            if (AdMediationSystem.Instance.m_isChildrenDirected)
+                builder.SetTagForChildDirectedTreatment(TagForChildDirectedTreatment.True);
+            if (AdMediationSystem.Instance.m_testModeEnabled)
+                builder.SetTestDeviceIds(new List<string>(AdMediationSystem.Instance.m_testDevices));
+
+            if (UnderAgeOfConsent != AdMobTagForUnderAgeOfConsent.Unspecified)
+            {
+                var tagConsent = UnderAgeOfConsent == AdMobTagForUnderAgeOfConsent.True ? TagForUnderAgeOfConsent.True : TagForUnderAgeOfConsent.False;
+                builder.SetTagForUnderAgeOfConsent(tagConsent);
+            }
+
+            if (MaxContentRating != AdMobMaxAdContentRating.Unspecified)
+            {
+                MaxAdContentRating maxAdContentRating = MaxAdContentRating.Unspecified;
+                switch(MaxContentRating)
+                {
+                    case AdMobMaxAdContentRating.G:
+                        maxAdContentRating = MaxAdContentRating.G;
+                        break;
+                    case AdMobMaxAdContentRating.MA:
+                        maxAdContentRating = MaxAdContentRating.MA;
+                        break;
+                    case AdMobMaxAdContentRating.PG:
+                        maxAdContentRating = MaxAdContentRating.PG;
+                        break;
+                    case AdMobMaxAdContentRating.T:
+                        maxAdContentRating = MaxAdContentRating.T;
+                        break;
+                }
+                builder.SetMaxAdContentRating(MaxAdContentRating.G);
+            }
+
+            RequestConfiguration requestConfiguration = builder.build();
+            MobileAds.SetRequestConfiguration(requestConfiguration);
+        }
+
+        public void SaveContentConfig()
+        {
+            PlayerPrefs.SetInt(UnderAgeOfConsentSaveKey, (int)UnderAgeOfConsent);
+            PlayerPrefs.SetInt(MaxContentRatingSaveKey, (int)MaxContentRating);
+        }
+        
+        public void RestoreContentConfig()
+        {
+            UnderAgeOfConsent = (AdMobTagForUnderAgeOfConsent)PlayerPrefs.GetInt(UnderAgeOfConsentSaveKey, (int)AdMobTagForUnderAgeOfConsent.Unspecified);
+            MaxContentRating = (AdMobMaxAdContentRating)PlayerPrefs.GetInt(MaxContentRatingSaveKey, (int)AdMobMaxAdContentRating.Unspecified);
         }
 
         public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
@@ -350,12 +429,6 @@ namespace Virterix.AdMediation
             };
             bannerView.OnAdClosed += adInstance.onAdClosedHandler;
 
-            adInstance.onAdLeavingApplicationHandler = delegate (object sender, EventArgs args)
-            {
-                HandleAdLeftApplication(adInstance, sender, args);
-            };
-            bannerView.OnAdLeavingApplication += adInstance.onAdLeavingApplicationHandler;
-
             // Load a banner ad.
             bannerView.LoadAd(CreateAdRequest());
         }
@@ -371,7 +444,6 @@ namespace Virterix.AdMediation
                 bannerView.OnAdFailedToLoad -= adInstance.onAdFailedToLoadHandler;
                 bannerView.OnAdOpening -= adInstance.onAdOpeningHandler;
                 bannerView.OnAdClosed -= adInstance.onAdClosedHandler;
-                bannerView.OnAdLeavingApplication -= adInstance.onAdLeavingApplicationHandler;
 
                 bannerView.Destroy();
                 adInstance.State = AdState.Unavailable;
@@ -413,12 +485,6 @@ namespace Virterix.AdMediation
             };
             interstitial.OnAdClosed += adInstance.onAdClosedHandler;
 
-            adInstance.onAdLeavingApplicationHandler = delegate (object sender, EventArgs args)
-            {
-                HandleInterstitialLeftApplication(adInstance, sender, args);
-            };
-            interstitial.OnAdLeavingApplication += adInstance.onAdLeavingApplicationHandler;
-
             interstitial.LoadAd(CreateAdRequest());
         }
 
@@ -433,7 +499,6 @@ namespace Virterix.AdMediation
                 interstitial.OnAdFailedToLoad -= adInstance.onAdFailedToLoadHandler;
                 interstitial.OnAdOpening -= adInstance.onAdOpeningHandler;
                 interstitial.OnAdClosed -= adInstance.onAdClosedHandler;
-                interstitial.OnAdLeavingApplication -= adInstance.onAdLeavingApplicationHandler;
 
                 interstitial.Destroy();
                 adInstance.State = AdState.Uncertain;
@@ -454,7 +519,7 @@ namespace Virterix.AdMediation
             };
             rewardedAd.OnAdLoaded += adInstance.onAdLoadedHandler;
 
-            adInstance.onAdRewardVideoFailedToLoadHandler = delegate (object sender, AdErrorEventArgs args)
+            adInstance.onAdRewardVideoFailedToLoadHandler = delegate (object sender, AdFailedToLoadEventArgs args)
             {
                 HandleRewardVideoFailedToLoad(adInstance, sender, args);
             };
@@ -514,23 +579,12 @@ namespace Virterix.AdMediation
         // Returns an ad request with custom ad targeting.
         private AdRequest CreateAdRequest()
         {
-            AdRequest.Builder requestBuilder = new AdRequest.Builder()
-                    .TagForChildDirectedTreatment(AdMediationSystem.Instance.m_isChildrenDirected)
-                    .AddExtra("color_bg", ColorUtility.ToHtmlStringRGB(m_adBackgoundColor));
+            AdRequest.Builder requestBuilder = new AdRequest.Builder();
 
             if (AdMediationSystem.UserPersonalisationConsent == PersonalisationConsent.Denied)
             {
                 requestBuilder.AddExtra("npa", "1");
                 requestBuilder.AddExtra("rdp", "1");
-            }
-
-            if (AdMediationSystem.Instance.m_testModeEnabled)
-            {
-                requestBuilder.AddTestDevice(AdRequest.TestDeviceSimulator);
-                foreach (string deviceId in AdMediationSystem.Instance.m_testDevices)
-                {
-                    requestBuilder.AddTestDevice(deviceId);
-                }
             }
 
             AdRequest request = requestBuilder.Build();
@@ -572,7 +626,7 @@ namespace Virterix.AdMediation
         {
 #if AD_MEDIATION_DEBUG_MODE
             print("[AMS] AdMobAdapter.HandleAdFailedToLoad() " + " adInstance: " + adInstance.Name +
-                " message: " + args.Message);
+                " message: " + args.LoadAdError.GetMessage());
 #endif
             DestroyBanner(adInstance);
             AddEvent(AdType.Banner, AdEvent.PreparationFailed, adInstance);
@@ -599,13 +653,6 @@ namespace Virterix.AdMediation
 #endif
         }
 
-        public void HandleAdLeftApplication(AdMobAdInstanceData adInstance, object sender, EventArgs args)
-        {
-#if AD_MEDIATION_DEBUG_MODE
-            print("[AMS] AdMobAdapter.HandleAdLeftApplication() " + " adInstance: " + adInstance.Name);
-#endif
-        }
-
         #endregion // Banner callback handlers
 
         //------------------------------------------------------------------------
@@ -623,7 +670,7 @@ namespace Virterix.AdMediation
         public void HandleInterstitialFailedToLoad(AdMobAdInstanceData adInstance, object sender, AdFailedToLoadEventArgs args)
         {
 #if AD_MEDIATION_DEBUG_MODE
-            print("[AMS] AdMobAdapter.HandleInterstitialFailedToLoad() message: " + args.Message);
+            print("[AMS] AdMobAdapter.HandleInterstitialFailedToLoad() message: " + args.LoadAdError.GetMessage());
 #endif
             DestroyInterstitial(adInstance);
             AddEvent(AdType.Interstitial, AdEvent.PreparationFailed, adInstance);
@@ -653,13 +700,6 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Interstitial, AdEvent.Hiding, adInstance);
         }
 
-        public void HandleInterstitialLeftApplication(AdMobAdInstanceData adInstance, object sender, EventArgs args)
-        {
-#if AD_MEDIATION_DEBUG_MODE
-            print("[AMS] AdMobAdapter.HandleInterstitialLeftApplication()");
-#endif
-        }
-
         #endregion // Interstitial callback handlers
 
         //------------------------------------------------------------------------
@@ -674,10 +714,10 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Incentivized, AdEvent.Prepared, adInstance);
         }
 
-        public void HandleRewardVideoFailedToLoad(AdMobAdInstanceData adInstance, object sender, AdErrorEventArgs args)
+        public void HandleRewardVideoFailedToLoad(AdMobAdInstanceData adInstance, object sender, AdFailedToLoadEventArgs args)
         {
 #if AD_MEDIATION_DEBUG_MODE
-            MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoFailedToLoad() message: " + args.Message);
+            MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoFailedToLoad() message: " + args.LoadAdError.GetMessage());
 #endif
             adInstance.State = AdState.Uncertain;
             AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, adInstance);
@@ -730,13 +770,6 @@ namespace Virterix.AdMediation
         {
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoPaidEvent()");
-#endif
-        }
-
-        public void HandleRewardVideoLeftApplication(AdMobAdInstanceData adInstance, object sender, EventArgs args)
-        {
-#if AD_MEDIATION_DEBUG_MODE
-            MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardBasedVideoLeftApplication()");
 #endif
         }
 
