@@ -141,7 +141,7 @@ namespace Virterix.AdMediation.Editor
             }
         }
 
-        public bool DrawUI()
+        public virtual bool DrawUI()
         {
             bool previousCollapsed = Collapsed;
             bool activationChanged = false;

@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEditor;
+using System.Reflection;
 
 namespace Virterix.AdMediation.Editor
 {
@@ -8,6 +9,7 @@ namespace Virterix.AdMediation.Editor
     public class AdMobSettings : BaseAdNetworkSettings
     {
         public bool _useMediation;
+        public int _mediationNetworkFlags;
 
         public override Type NetworkAdapterType => typeof(AdMobAdapter);
 
@@ -24,8 +26,7 @@ namespace Virterix.AdMediation.Editor
         public override void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {
             AdMobAdapter.SetupNetworkNativeSettings(_iosAppId, _androidAppId);
-            if (_useMediation)
-                networkAdapter.transform.parent.gameObject.AddComponent<AdMobMediationBehavior>();
+            ((AdMobAdapter)networkAdapter).m_useMediation = _useMediation;
         }
 
         protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)

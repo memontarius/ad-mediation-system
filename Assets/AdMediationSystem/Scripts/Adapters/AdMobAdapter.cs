@@ -57,11 +57,34 @@ namespace Virterix.AdMediation
             T
         }
 
+        public struct AdRequestBuilderContainer {
+#if _AMS_ADMOB
+            public AdRequestBuilderContainer(AdRequest.Builder builder) {
+                _builder = builder;
+            }
+            public readonly AdRequest.Builder _builder;
+#endif
+        }
+
+        public struct InitializationStatusContainer {
+#if _AMS_ADMOB
+            public InitializationStatusContainer(InitializationStatus status) {
+                _status = status;
+            }
+            public readonly InitializationStatus _status;
+#endif
+        }
+
         public event Action OnWillInitialize = delegate { };
         public event Action OnDidInitialize = delegate { };
 
+        public event Action<AdType, AdRequestBuilderContainer> OnAdRequest = delegate { };
+        public event Action<InitializationStatusContainer> OnInitializationComplete = delegate { };
+
         private const string UnderAgeOfConsentSaveKey = AdMediationSystem.PREFIX + "abmob.uac";
         private const string MaxContentRatingSaveKey = AdMediationSystem.PREFIX + "abmob.mcr";
+
+        public bool m_useMediation;
 
         /// <summary>
         /// Should be assigned before initialization
@@ -71,10 +94,6 @@ namespace Virterix.AdMediation
         /// Should be assigned before initialization
         /// </summary>
         public AdMobMaxAdContentRating MaxContentRating { get; set; }
-
-#if _AMS_ADMOB
-        public event Action<InitializationStatus> OnInitializationComplete = delegate { };
-#endif
 
         protected override string AdInstanceParametersFolder
         {
@@ -226,9 +245,14 @@ namespace Virterix.AdMediation
             return adInstance;
         }
 
+        private AdMobMediationBehavior _adMobMediationBehavior;
+
         private void ConfigureAdMob()
         {
             RequestConfiguration.Builder builder = new RequestConfiguration.Builder();
+            if (m_useMediation) {
+                _adMobMediationBehavior = new AdMobMediationBehavior(this);
+            }
 
             if (AdMediationSystem.Instance.m_isChildrenDirected)
                 builder.SetTagForChildDirectedTreatment(TagForChildDirectedTreatment.True);
@@ -430,7 +454,7 @@ namespace Virterix.AdMediation
             bannerView.OnAdClosed += adInstance.onAdClosedHandler;
 
             // Load a banner ad.
-            bannerView.LoadAd(CreateAdRequest());
+            bannerView.LoadAd(CreateAdRequest(AdType.Banner));
         }
 
         void DestroyBanner(AdMobAdInstanceData adInstance)
@@ -485,7 +509,7 @@ namespace Virterix.AdMediation
             };
             interstitial.OnAdClosed += adInstance.onAdClosedHandler;
 
-            interstitial.LoadAd(CreateAdRequest());
+            interstitial.LoadAd(CreateAdRequest(AdType.Interstitial));
         }
 
         private void DestroyInterstitial(AdMobAdInstanceData adInstance)
@@ -555,7 +579,7 @@ namespace Virterix.AdMediation
             };
             rewardedAd.OnPaidEvent += adInstance.onAdRewardVideoPaidHandler;
 
-            rewardedAd.LoadAd(CreateAdRequest());
+            rewardedAd.LoadAd(CreateAdRequest(AdType.Incentivized));
         }
 
         private void DestroyRewardVideo(AdMobAdInstanceData adInstance)
@@ -577,7 +601,7 @@ namespace Virterix.AdMediation
         }
 
         // Returns an ad request with custom ad targeting.
-        private AdRequest CreateAdRequest()
+        private AdRequest CreateAdRequest(AdType adType)
         {
             AdRequest.Builder requestBuilder = new AdRequest.Builder();
 
@@ -587,6 +611,8 @@ namespace Virterix.AdMediation
                 requestBuilder.AddExtra("rdp", "1");
             }
 
+            OnAdRequest(adType, new AdRequestBuilderContainer(requestBuilder));
+
             AdRequest request = requestBuilder.Build();
             return request;
         }
@@ -595,11 +621,11 @@ namespace Virterix.AdMediation
         // AdMob Callbacks
         private void OnInitComplete(InitializationStatus initStatus)
         {
-            OnInitializationComplete(initStatus);     
+            OnInitializationComplete(new InitializationStatusContainer(initStatus));     
         }
 
         //------------------------------------------------------------------------
-        #region Banner callback handlers
+#region Banner callback handlers
 
         public void HandleAdLoaded(AdMobAdInstanceData adInstance, object sender, EventArgs args)
         {
@@ -643,7 +669,7 @@ namespace Virterix.AdMediation
         {
 #if AD_MEDIATION_DEBUG_MODE
             print("[AMS] AdMobAdapter.HandleAdClosing() " + " adInstance: " + adInstance.Name);
-#endif          
+#endif
         }
 
         public void HandleAdClosed(AdMobAdInstanceData adInstance, object sender, EventArgs args)
@@ -653,10 +679,10 @@ namespace Virterix.AdMediation
 #endif
         }
 
-        #endregion // Banner callback handlers
+#endregion // Banner callback handlers
 
         //------------------------------------------------------------------------
-        #region Interstitial callback handlers
+#region Interstitial callback handlers
 
         public void HandleInterstitialLoaded(AdMobAdInstanceData adInstance, object sender, EventArgs args)
         {
@@ -700,10 +726,10 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Interstitial, AdEvent.Hiding, adInstance);
         }
 
-        #endregion // Interstitial callback handlers
+#endregion // Interstitial callback handlers
 
         //------------------------------------------------------------------------
-        #region Reward Video callback handlers
+#region Reward Video callback handlers
 
         public void HandleRewardVideoLoaded(AdMobAdInstanceData adInstance, object sender, EventArgs args)
         {
@@ -760,7 +786,7 @@ namespace Virterix.AdMediation
         {
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoEarned() " + reward.Amount.ToString() + " " + reward.Type);
-#endif        
+#endif
             m_lastReward.label = reward.Type;
             m_lastReward.amount = reward.Amount;
             AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, adInstance);
@@ -773,7 +799,7 @@ namespace Virterix.AdMediation
 #endif
         }
 
-        #endregion // Reward Video callback handlers
+#endregion // Reward Video callback handlers
 
 #endif // _AMS_ADMOB
     }

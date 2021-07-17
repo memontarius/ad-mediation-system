@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45039d89696f84f44a6fb73830ab8b71, type: 3}
   m_Name: adm_applovin_settings
   m_EditorClassIdentifier: 
-  _enabled: 1
+  _enabled: 0
   _networkIdentifier: applovin
   _androidAppId: 
   _iosAppId: 

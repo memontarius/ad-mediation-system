@@ -814,7 +814,7 @@ namespace Virterix.AdMediation
                 m_userParameters = new Hashtable();
                 foreach (AdMediator mediator in m_mediators)
                 {
-                    mediator.FetchStrategy = new EmptyFetchStrategy();
+                    mediator.FetchStrategy = new DummyFetchStrategy();
                 }
             }
 
