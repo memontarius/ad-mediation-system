@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace Virterix.AdMediation
 {
-    namespace AdMobMediationUtils
+    namespace AudienceNetworkMediationUtils
     {
         public static class AdSettings
         {

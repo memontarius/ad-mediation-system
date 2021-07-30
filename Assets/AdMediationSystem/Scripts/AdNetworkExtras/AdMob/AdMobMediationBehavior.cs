@@ -80,7 +80,7 @@ namespace Virterix.AdMediation
 #endif
 
 #if UNITY_IOS && !UNITY_EDITOR && _ADMOB_MEDIATION_FAN
-                AdMobMediationUtils.AdSettings.SetAdvertiserTrackingEnabled(userAccepts);
+                AudienceNetworkMediationUtils.AdSettings.SetAdvertiserTrackingEnabled(userAccepts);
 #endif
             }
 
