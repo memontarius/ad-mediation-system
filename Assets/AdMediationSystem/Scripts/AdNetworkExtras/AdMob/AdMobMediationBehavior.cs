@@ -5,9 +5,10 @@
 //#define _ADMOB_MEDIATION_CHARTBOOST
 //#define _ADMOB_MEDIATION_ADCOLONY
 
+using System;
+using System.Globalization;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 #if _ADMOB_USE_MEDIATION
 using GoogleMobileAds.Api;
@@ -36,6 +37,7 @@ namespace Virterix.AdMediation
         private AdColonyMediationExtras _adColonyExtras;
 #endif
 #endif
+        private bool _isIOSAppTrackingSupported;
 
         public AdMobMediationBehavior(AdMobAdapter adMob)
         {
@@ -51,6 +53,17 @@ namespace Virterix.AdMediation
 #endif
 #endif
             AdMediationSystem.OnUserConsentToPersonalizedAdsChanged += OnUserConsentToPersonalizedAdsChanged;
+
+#if UNITY_IOS && !UNITY_EDITOR
+            float numericSystemVersion = 0;
+            string systemVersion = UnityEngine.iOS.Device.systemVersion;
+            var numberStyles = NumberStyles.Any;
+            var culture = CultureInfo.InvariantCulture;
+            if (float.TryParse(systemVersion, numberStyles, culture, out numericSystemVersion))
+            {
+                _isIOSAppTrackingSupported = numericSystemVersion >= 14f;
+            }
+#endif
         }
 
         private void UpdateUserPersonalizedAdsConsent()
@@ -80,7 +93,8 @@ namespace Virterix.AdMediation
 #endif
 
 #if UNITY_IOS && !UNITY_EDITOR && _ADMOB_MEDIATION_FAN
-                AudienceNetworkMediationUtils.AdSettings.SetAdvertiserTrackingEnabled(userAccepts);
+                if (_isIOSAppTrackingSupported)
+                    AudienceNetworkMediationUtils.AdSettings.SetAdvertiserTrackingEnabled(userAccepts);
 #endif
             }
 
