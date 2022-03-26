@@ -8,7 +8,7 @@ namespace Virterix.AdMediation.Editor
     {
         public override Type NetworkAdapterType => typeof(AdColonyAdapter);
         protected override string AdapterScriptName => "AdColonyAdapter";
-        protected override string AdapterDefinePeprocessorKey => "_AMS_ADCOLONY";
+        protected override string AdapterDefinePreprocessorKey => "_AMS_ADCOLONY";
  
         public override bool IsAdSupported(AdType adType)
         {

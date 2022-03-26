@@ -110,7 +110,7 @@ namespace Virterix.AdMediation
                 path = UnityEditor.AssetDatabase.GUIDToAssetPath(foundAssets[0]);
             }
             ScriptableObject adMobSettings = UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
-            
+    
             if (adMobSettings != null)
             {
                 Type settingsType = adMobSettings.GetType();

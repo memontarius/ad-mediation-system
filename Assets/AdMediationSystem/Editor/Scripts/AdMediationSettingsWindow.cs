@@ -11,8 +11,8 @@ namespace Virterix.AdMediation.Editor
 {
     public class AdMediationSettingsWindow : EditorWindow
     {
-        public const string SETTINGS_PATH = "Assets/AdMediationSystem/Editor/Resources/";
-        public const string SETTINGS_DIRECTORY_NAME = "AdmSettings";
+        public const string SETTINGS_PATH = "Assets/Editor/";
+        public const string SETTINGS_DIRECTORY_NAME = "AdMediationSettings";
         public const string PROJECT_SETTINGS_FILENAME = "adm_project_settings.asset";
         public const string PREFIX_SAVEKEY = "adm.";
         public const string PROJECT_NAME_SAVEKEY = "project_name";

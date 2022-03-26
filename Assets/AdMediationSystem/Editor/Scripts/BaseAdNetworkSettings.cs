@@ -75,7 +75,7 @@ namespace Virterix.AdMediation.Editor
         }
         
         protected virtual string AdapterScriptName { get; }
-        protected virtual string AdapterDefinePeprocessorKey { get; }
+        protected virtual string AdapterDefinePreprocessorKey { get; }
         public virtual string JsonAppIdKey { get { return "appId"; } }
         public virtual bool IsAppIdSupported { get; } = true;
         public virtual bool IsCommonTimeroutSupported { get; } = false;
@@ -135,8 +135,8 @@ namespace Virterix.AdMediation.Editor
             string content = File.ReadAllText(adapterPath);
             if (content.Length > 0)
             {
-                string define = "#define " + AdapterDefinePeprocessorKey;
-                string undefine = "//#define " + AdapterDefinePeprocessorKey;
+                string define = "#define " + AdapterDefinePreprocessorKey;
+                string undefine = "//#define " + AdapterDefinePreprocessorKey;
 
                 if (_enabled)
                 {

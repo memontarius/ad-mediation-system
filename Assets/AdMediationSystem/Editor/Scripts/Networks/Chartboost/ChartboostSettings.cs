@@ -12,7 +12,7 @@ namespace Virterix.AdMediation.Editor
  
         public override Type NetworkAdapterType => typeof(ChartboostAdapter);
         protected override string AdapterScriptName => "ChartboostAdapter";
-        protected override string AdapterDefinePeprocessorKey => "_AMS_CHARTBOOST";
+        protected override string AdapterDefinePreprocessorKey => "_AMS_CHARTBOOST";
         public override bool IsCommonTimeroutSupported => true;
 
         public override bool IsAdSupported(AdType adType)

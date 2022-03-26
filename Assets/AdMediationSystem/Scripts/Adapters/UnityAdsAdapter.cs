@@ -1,10 +1,8 @@
 //#define _AMS_UNITY_ADS
 
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Boomlagoon.JSON;
-using System.Linq;
 #if _AMS_UNITY_ADS
 using UnityEngine.Advertisements;
 #endif
@@ -186,16 +184,21 @@ namespace Virterix.AdMediation
         {
             if (consent != PersonalisationConsent.Undefined)
             {
-                MetaData gdprMetaData = new MetaData("gdpr");
-                gdprMetaData.Set("consent", consent == PersonalisationConsent.Accepted ? "true" : "false");
-                Advertisement.SetMetaData(gdprMetaData);
-
-                MetaData privacyMetaData = new MetaData("privacy");
-                privacyMetaData.Set("consent", consent == PersonalisationConsent.Accepted ? "true" : "false");
-                Advertisement.SetMetaData(privacyMetaData);
+                string value = consent == PersonalisationConsent.Accepted ? "true" : "false";
+                SetMetaData("user", "nonbehavioral", value);
+                SetMetaData("gdpr", "consent", value);
+                SetMetaData("pipl", "consent", value);
+                SetMetaData("privacy", "consent", value);
             }
         }
 
+        private void SetMetaData<TValue>(string category, string key, TValue value)
+        {
+            MetaData coppaUserMetaData = new MetaData(category);
+            coppaUserMetaData.Set(key, value);
+            Advertisement.SetMetaData(coppaUserMetaData);
+        }
+        
         //_______________________________________________________________________________
         #region Callback Event Methods
  
@@ -275,4 +278,4 @@ namespace Virterix.AdMediation
 
 #endif // _AMS_UNITY_ADS
     }
-} // namespace Virterix.AdMediation
+}

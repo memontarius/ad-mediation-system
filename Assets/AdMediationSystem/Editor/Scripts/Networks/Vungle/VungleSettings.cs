@@ -9,7 +9,7 @@ namespace Virterix.AdMediation.Editor
         public override bool IsAppIdSupported => true;
         public override Type NetworkAdapterType => typeof(VungleAdapter);
         protected override string AdapterScriptName => "VungleAdapter";
-        protected override string AdapterDefinePeprocessorKey => "_AMS_VUNGLE";
+        protected override string AdapterDefinePreprocessorKey => "_AMS_VUNGLE";
 
         public override bool IsAdSupported(AdType adType)
         {

@@ -14,7 +14,7 @@ namespace Virterix.AdMediation.Editor
      
         public override Type NetworkAdapterType => typeof(PollfishAdapter);
         protected override string AdapterScriptName => "PollfishAdapter";
-        protected override string AdapterDefinePeprocessorKey => "_AMS_POLLFISH";
+        protected override string AdapterDefinePreprocessorKey => "_AMS_POLLFISH";
         public override string JsonAppIdKey => "apiKey";
         public override bool IsCommonTimeroutSupported => true;
 

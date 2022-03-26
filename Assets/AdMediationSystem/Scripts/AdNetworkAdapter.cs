@@ -331,19 +331,15 @@ namespace Virterix.AdMediation
         public AdInstance GetAdInstance(AdType adType, string adInstanceName)
         {
             AdInstance foundData = null;
-
-            if (m_adInstances.Count > 0)
+            foreach (AdInstance data in m_adInstances)
             {
-                foreach (AdInstance data in m_adInstances)
-                {
-                    if (data.m_adType != adType)
-                        continue;
+                if (data.m_adType != adType)
+                    continue;
 
-                    if (data.Name == adInstanceName)
-                    {
-                        foundData = data;
-                        break;
-                    }
+                if (data.Name == adInstanceName)
+                {
+                    foundData = data;
+                    break;
                 }
             }
             return foundData;
@@ -352,16 +348,12 @@ namespace Virterix.AdMediation
         public AdInstance GetAdInstance(string adInstanceName)
         {
             AdInstance foundData = null;
-
-            if (m_adInstances.Count > 0)
+            foreach (AdInstance data in m_adInstances)
             {
-                foreach (AdInstance data in m_adInstances)
+                if (data.Name == adInstanceName)
                 {
-                    if (data.Name == adInstanceName)
-                    {
-                        foundData = data;
-                        break;
-                    }
+                    foundData = data;
+                    break;
                 }
             }
             return foundData;
@@ -370,16 +362,12 @@ namespace Virterix.AdMediation
         public AdInstance GetAdInstanceByAdId(string adId)
         {
             AdInstance foundData = null;
-
-            if (m_adInstances.Count > 0)
+            foreach (AdInstance data in m_adInstances)
             {
-                foreach (AdInstance data in m_adInstances)
+                if (data.m_adId == adId)
                 {
-                    if (data.m_adId == adId)
-                    {
-                        foundData = data;
-                        break;
-                    }
+                    foundData = data;
+                    break;
                 }
             }
             return foundData;
@@ -388,7 +376,6 @@ namespace Virterix.AdMediation
         public AdType GetAdTypeByAdInstanceId(string adId)
         {
             AdType instanceAdType = AdType.Unknown;
-
             foreach (AdInstance adInstance in m_adInstances)
             {
                 if (adInstance.m_adId == adId)
@@ -401,7 +388,7 @@ namespace Virterix.AdMediation
         }
 
         /// <summary>
-        /// GDPR, CCPA Compliance
+        /// GDPR, CCPA and other user privacy of regions compliance
         /// </summary>
         protected virtual void SetUserConsentToPersonalizedAds(PersonalisationConsent consent)
         {
@@ -430,15 +417,15 @@ namespace Virterix.AdMediation
 
         private void UpdateEvents()
         {
-            if (m_events.Count > 0)
+            if (m_events.Count == 0)
+                return;
+
+            for (int i = 0; i < m_events.Count; i++)
             {
-                for (int i = 0; i < m_events.Count; i++)
-                {
-                    EventParam eventParam = m_events[i];
-                    NotifyEvent(eventParam.m_adEvent, eventParam.m_adInstance);
-                }
-                m_events.Clear();
+                EventParam eventParam = m_events[i];
+                NotifyEvent(eventParam.m_adEvent, eventParam.m_adInstance);
             }
+            m_events.Clear();
         }
 
         /// <summary>
@@ -514,7 +501,7 @@ namespace Virterix.AdMediation
         }
 
         /// <summary>
-        /// Initialises parameters from srciptable objects
+        /// Initialises parameters from scriptable objects
         /// </summary>
         private void InitializeAdInstanceParameters()
         {
@@ -564,4 +551,4 @@ namespace Virterix.AdMediation
 
         #endregion Internal Methods
     }
-} // namespace Virterix.AdMediation
+}
