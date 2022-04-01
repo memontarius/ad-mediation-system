@@ -315,23 +315,11 @@
  <Reference Include="Google.VersionHandler">
  <HintPath>E:/Projects/Virterix/Tools/AdMediationSystem/AdMediationSystem/Assets/ExternalDependencyManager/Editor/Google.VersionHandler.dll</HintPath>
  </Reference>
- <Reference Include="log4netPlastic">
- <HintPath>E:/Projects/Virterix/Tools/AdMediationSystem/AdMediationSystem/Library/PackageCache/com.unity.collab-proxy@1.15.13/Lib/Editor/PlasticSCM/log4netPlastic.dll</HintPath>
- </Reference>
  <Reference Include="Newtonsoft.Json">
  <HintPath>E:/Projects/Virterix/Tools/AdMediationSystem/AdMediationSystem/Library/PackageCache/com.unity.nuget.newtonsoft-json@2.0.0/Runtime/Newtonsoft.Json.dll</HintPath>
  </Reference>
- <Reference Include="Unity.Plastic.Newtonsoft.Json">
- <HintPath>E:/Projects/Virterix/Tools/AdMediationSystem/AdMediationSystem/Library/PackageCache/com.unity.collab-proxy@1.15.13/Lib/Editor/PlasticSCM/Unity.Plastic.Newtonsoft.Json.dll</HintPath>
- </Reference>
  <Reference Include="GoogleMobileAds.Core">
  <HintPath>E:/Projects/Virterix/Tools/AdMediationSystem/AdMediationSystem/Assets/GoogleMobileAds/GoogleMobileAds.Core.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Plastic.Antlr3.Runtime">
- <HintPath>E:/Projects/Virterix/Tools/AdMediationSystem/AdMediationSystem/Library/PackageCache/com.unity.collab-proxy@1.15.13/Lib/Editor/PlasticSCM/Unity.Plastic.Antlr3.Runtime.dll</HintPath>
- </Reference>
- <Reference Include="unityplastic">
- <HintPath>E:/Projects/Virterix/Tools/AdMediationSystem/AdMediationSystem/Library/PackageCache/com.unity.collab-proxy@1.15.13/Lib/Editor/PlasticSCM/unityplastic.dll</HintPath>
  </Reference>
  <Reference Include="Google.JarResolver_v1.2.165">
  <HintPath>E:/Projects/Virterix/Tools/AdMediationSystem/AdMediationSystem/Assets/ExternalDependencyManager/Editor/Google.JarResolver_v1.2.165.dll</HintPath>

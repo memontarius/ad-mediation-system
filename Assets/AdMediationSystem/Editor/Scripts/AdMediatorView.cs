@@ -226,8 +226,8 @@ namespace Virterix.AdMediation.Editor
                         int maxPassages = 1;
                         var culture = System.Globalization.CultureInfo.InvariantCulture;
                         int.TryParse(maxPassValue, System.Globalization.NumberStyles.Integer, culture, out maxPassages);
-                        maxPassProp.intValue = Mathf.Clamp(maxPassages, 1, 5);
-           
+                        maxPassProp.intValue = Mathf.Clamp(maxPassages, 1, int.MaxValue);
+                        
                         rect.x += 40;
                         rect.width = 28;
                         if (GUI.Button(rect, '\u2573'.ToString()))

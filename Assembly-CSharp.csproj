@@ -175,8 +175,8 @@
      <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AdColony\AdColonyAdInstanceBannerParameters.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\AdRemoteSettingsProvider.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\AdType.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Common\JSONObject.cs" />
      <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesUserProfile.cs" />
+     <Compile Include="Assets\AdMediationSystem\Scripts\Common\JSONObject.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\EndpointDetails.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AppLovin\AppLovinAdInstanceBannerParameters.cs" />
      <Compile Include="Assets\GoogleMobileAds\Platforms\Mediation\AppLovinClientFactory.cs" />
@@ -800,9 +800,6 @@
  </Reference>
  <Reference Include="UnityEditor.UI">
  <HintPath>E:/Projects/Virterix/Tools/AdMediationSystem/AdMediationSystem/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
- </Reference>
- <Reference Include="Unity.PlasticSCM.Editor">
- <HintPath>E:/Projects/Virterix/Tools/AdMediationSystem/AdMediationSystem/Library/ScriptAssemblies/Unity.PlasticSCM.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Rider.Editor">
  <HintPath>E:/Projects/Virterix/Tools/AdMediationSystem/AdMediationSystem/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
