@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEditorInternal;
 using UnityEditor;
 using UnityEngine;
@@ -91,4 +90,4 @@ namespace Virterix.AdMediation.Editor
             GUILayout.EndVertical();
         }
     }
-} // namespace Virterix.AdMediation.Editor
+}

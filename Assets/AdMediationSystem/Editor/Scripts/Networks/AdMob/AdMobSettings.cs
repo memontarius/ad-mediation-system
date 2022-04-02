@@ -1,7 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEditor;
-using System.Reflection;
 
 namespace Virterix.AdMediation.Editor
 {
@@ -64,4 +62,4 @@ namespace Virterix.AdMediation.Editor
             return specificBannerPosition;
         }
     }
-} // namespace Virterix.AdMediation.Editor
+}

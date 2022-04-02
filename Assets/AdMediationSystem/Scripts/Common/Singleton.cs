@@ -22,4 +22,4 @@ namespace Virterix.Common
             }
         }
     }
-} // namespace Virterix.Common
+}

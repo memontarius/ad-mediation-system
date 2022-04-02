@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
 
 namespace Virterix.AdMediation
@@ -497,6 +496,5 @@ namespace Virterix.AdMediation
         }
     }
 
-    #endregion // Methods
-
-} // namespace Virterix.AdMediation
+    #endregion
+}

@@ -20,4 +20,4 @@
         /// <returns></returns>
         AdUnit Fetch(AdUnit[][] tiers);
     }
-} // namespace Virterix.AdMediation
+}

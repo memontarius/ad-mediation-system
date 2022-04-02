@@ -62,7 +62,7 @@ namespace Virterix.AdMediation
 
         public static T CreateParameters<T>(string parameterFolder, string parameterFileName) where T : AdInstanceParameters
         {
-            T result = CreateParameters<T>(AdMediationSystem.Instance.m_projectName, parameterFolder, parameterFileName);
+            T result = CreateParameters<T>(AdMediationSystem.Instance.ProjectName, parameterFolder, parameterFileName);
             return result;
         }
 
@@ -77,4 +77,4 @@ namespace Virterix.AdMediation
         }
 #endif
     }
-} // Virterix.AdMediation
+}

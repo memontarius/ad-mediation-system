@@ -192,4 +192,4 @@ namespace Virterix.AdMediation.Editor
 
 
     }
-} // namespace Virterix.AdMediation.Editor
+}

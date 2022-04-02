@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Virterix.AdMediation
@@ -67,4 +66,4 @@ namespace Virterix.AdMediation
             return adInstance;
         }
     }
-} // namespace Virterix.AdMediation
+}

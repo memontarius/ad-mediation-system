@@ -198,4 +198,4 @@ namespace Virterix.AdMediation
             DisplayTime = 0.0f;
         }
     }
-} // namespace Virterix.AdMediation
+}

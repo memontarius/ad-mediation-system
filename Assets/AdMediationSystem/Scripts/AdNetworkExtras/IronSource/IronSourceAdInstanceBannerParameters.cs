@@ -1,5 +1,3 @@
-using System;
-
 namespace Virterix.AdMediation
 {
     public class IronSourceAdInstanceBannerParameters : AdInstanceParameters
@@ -26,4 +24,4 @@ namespace Virterix.AdMediation
         }
 #endif
     }
-} // namespace Virterix.AdMediation
+}

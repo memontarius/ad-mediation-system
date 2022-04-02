@@ -35,4 +35,4 @@ namespace Virterix.AdMediation.Editor
             GUILayout.EndVertical();
         }
     }
-} // namespace Virterix.AdMediation.Editor
+}

@@ -1,5 +1,3 @@
-using System;
-
 namespace Virterix.AdMediation
 {
     public class AppLovinAdInstanceBannerParameters : AdInstanceParameters
@@ -24,5 +22,5 @@ namespace Virterix.AdMediation
         }
 #endif
     }
-} // Virterix.AdMediation
+}
 

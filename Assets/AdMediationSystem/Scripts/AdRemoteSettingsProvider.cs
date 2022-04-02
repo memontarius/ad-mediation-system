@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System;
+﻿using System;
 using UnityEngine;
 using Boomlagoon.JSON;
 
@@ -26,9 +24,9 @@ namespace Virterix.AdMediation
 
         protected void NotifyOnSettingsReceived(LoadingState loadingState, JSONObject settings)
         {
-            OnSettingsReceived(loadingState, settings);
+            OnSettingsReceived?.Invoke(loadingState, settings);
         }
     }
-} // namespace Virterix.AdMediation
+}
 
 

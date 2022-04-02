@@ -137,7 +137,7 @@ namespace Virterix.AdMediation
 
             bool offerwallMode = false;
             int indPadding = 10;
-            bool releaseMode = !AdMediationSystem.Instance.m_testModeEnabled;
+            bool releaseMode = !AdMediationSystem.Instance.IsTestModeEnabled;
             bool rewardMode = true;
             string requestUUID = SystemInfo.deviceUniqueIdentifier;
             Dictionary<string, string> userAttributes = new Dictionary<string, string>();
@@ -455,11 +455,8 @@ namespace Virterix.AdMediation
 
             AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, m_adInstance);
         }
-
         #endregion // Pollfish callback
-
-#endif // _AMS_POLLFISH
-
+#endif
     }
-} // namespace Virterix.AdMediation
+}
 

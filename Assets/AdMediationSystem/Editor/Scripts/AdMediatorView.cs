@@ -542,4 +542,4 @@ namespace Virterix.AdMediation.Editor
             }
         }
     }
-} // Virterix.AdMediation.Editor
+}

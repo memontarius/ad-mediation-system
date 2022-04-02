@@ -14,4 +14,4 @@
             return null;
         }
     }
-} // namespace Virterix.AdMediation
+}

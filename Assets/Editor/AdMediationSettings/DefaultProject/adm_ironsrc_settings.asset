@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b77aa844bbd015e44b07a26dd5382525, type: 3}
   m_Name: adm_ironsrc_settings
   m_EditorClassIdentifier: 
-  _enabled: 0
+  _enabled: 1
   _networkIdentifier: ironsrc
   _androidAppId: 53fb621d
   _iosAppId: 5d6c983d

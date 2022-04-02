@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 using Virterix.AdMediation;
 
 public class ExampleAdController : BaseAdController

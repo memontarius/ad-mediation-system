@@ -254,10 +254,16 @@ namespace Virterix.AdMediation
                 _adMobMediationBehavior = new AdMobMediationBehavior(this);
             }
 
-            if (AdMediationSystem.Instance.m_isChildrenDirected)
-                builder.SetTagForChildDirectedTreatment(TagForChildDirectedTreatment.True);
-            if (AdMediationSystem.Instance.m_testModeEnabled)
-                builder.SetTestDeviceIds(new List<string>(AdMediationSystem.Instance.m_testDevices));
+            if (AdMediationSystem.Instance.ChildrenDirected != ChildDirectedMode.NotAssign)
+            {
+                var isChildDirected = AdMediationSystem.Instance.ChildrenDirected == ChildDirectedMode.Directed ?
+                        TagForChildDirectedTreatment.True:
+                        TagForChildDirectedTreatment.False;
+                builder.SetTagForChildDirectedTreatment(isChildDirected);
+            }
+
+            if (AdMediationSystem.Instance.IsTestModeEnabled)
+                builder.SetTestDeviceIds(new List<string>(AdMediationSystem.Instance.TestDevices));
 
             if (UnderAgeOfConsent != AdMobTagForUnderAgeOfConsent.Unspecified)
             {
@@ -803,4 +809,4 @@ namespace Virterix.AdMediation
 
 #endif // _AMS_ADMOB
     }
-} // namespace Virterix.AdMediation
+}

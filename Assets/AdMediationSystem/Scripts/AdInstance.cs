@@ -104,4 +104,4 @@ namespace Virterix.AdMediation
             }
         }
     }
-} // namespace Virterix.AdMediation
+}

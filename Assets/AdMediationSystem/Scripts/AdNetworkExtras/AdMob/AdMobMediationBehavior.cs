@@ -99,7 +99,10 @@ namespace Virterix.AdMediation
             }
 
 #if _ADMOB_MEDIATION_APPLOVIN
-            AppLovin.SetIsAgeRestrictedUser(AdMediationSystem.Instance.m_isChildrenDirected);
+            if (AdMediationSystem.Instance.ChildrenDirected != ChildDirectedMode.NotAssign)
+            {
+                AppLovin.SetIsAgeRestrictedUser(AdMediationSystem.Instance.ChildrenDirected == ChildDirectedMode.Directed);
+            }
 #endif
 
 #endif

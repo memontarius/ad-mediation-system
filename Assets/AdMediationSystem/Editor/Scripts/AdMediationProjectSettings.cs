@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Virterix.AdMediation.Editor
@@ -50,7 +49,7 @@ namespace Virterix.AdMediation.Editor
         public bool _initializeOnStart = true;
         public bool _enableTestMode = false;
         public bool _enableExtraLogging = false;
-        public bool _directedChildren = false;
+        public ChildDirectedMode _childrenDirected = ChildDirectedMode.NotAssign;
         public string[] _testDevices;
         public List<AdUnitMediator> _bannerMediators = new List<AdUnitMediator>();
         public List<AdUnitMediator> _interstitialMediators = new List<AdUnitMediator>();
@@ -58,4 +57,4 @@ namespace Virterix.AdMediation.Editor
         public bool _isIOS = true;
         public bool _isAndroid = true;
     }
-} // Virterix.AdMediation.Editor
+}

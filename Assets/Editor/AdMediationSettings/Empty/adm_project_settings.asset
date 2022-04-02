@@ -15,7 +15,7 @@ MonoBehaviour:
   _initializeOnStart: 1
   _enableTestMode: 0
   _enableExtraLogging: 0
-  _directedChildren: 0
+  _childrenDirected: 0
   _testDevices: []
   _bannerMediators: []
   _interstitialMediators: []

@@ -128,7 +128,7 @@ namespace Virterix.AdMediation
                 if (AdInstanceParametersFolder.Length > 0)
                 {
                     path = String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}/{1}/{2}/{3}/", AdMediationSystem.AD_SETTINGS_FOLDER,
-                        AdMediationSystem.Instance.m_projectName, AdMediationSystem.AD_INSTANCE_PARAMETERS_ROOT_FOLDER, AdInstanceParametersFolder);
+                        AdMediationSystem.Instance.ProjectName, AdMediationSystem.AD_INSTANCE_PARAMETERS_ROOT_FOLDER, AdInstanceParametersFolder);
                 }
                 return path;
             }
@@ -545,10 +545,8 @@ namespace Virterix.AdMediation
                 }
             }
             yield return m_waitResponseInstruction;
-            yield break;
         }
-
-
+        
         #endregion Internal Methods
     }
 }

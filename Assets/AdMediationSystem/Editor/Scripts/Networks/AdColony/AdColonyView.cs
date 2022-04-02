@@ -1,6 +1,4 @@
 using System;
-using UnityEditor;
-using UnityEngine;
 
 namespace Virterix.AdMediation.Editor
 {
@@ -22,4 +20,4 @@ namespace Virterix.AdMediation.Editor
         {
         }
     }
-} // Virterix.AdMediation.Editor
+}

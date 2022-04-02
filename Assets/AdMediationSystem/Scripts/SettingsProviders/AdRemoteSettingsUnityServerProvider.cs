@@ -122,4 +122,4 @@ namespace Virterix.AdMediation
         }
 #endif
     }
-} // namespace Virterix.AdMediation
+}

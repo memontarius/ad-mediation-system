@@ -330,13 +330,22 @@ namespace Virterix.AdMediation.Editor
         {
             GameObject mediationSystemObject = new GameObject(AdMediationSystem.PREFAB_NAME + ".prefab");
             AdMediationSystem admSystem = mediationSystemObject.AddComponent<AdMediationSystem>();
-            admSystem.m_projectName = projectName;
-            admSystem.m_isLoadOnlyDefaultSettings = true;
-            admSystem.m_initializeOnStart = commonSettings._initializeOnStart;
-            admSystem.m_testModeEnabled = commonSettings._enableTestMode;
-            admSystem.m_testDevices = commonSettings._testDevices;
-            admSystem.m_isChildrenDirected = commonSettings._directedChildren;
-
+            
+            SerializedObject serializedAdmSystem = new SerializedObject(admSystem);
+            serializedAdmSystem.FindProperty("m_projectName").stringValue = projectName;
+            serializedAdmSystem.FindProperty("m_isLoadOnlyDefaultSettings").boolValue = true;
+            serializedAdmSystem.FindProperty("m_initializeOnStart").boolValue = commonSettings._initializeOnStart;
+            serializedAdmSystem.FindProperty("m_testModeEnabled").boolValue = commonSettings._enableTestMode;
+            serializedAdmSystem.FindProperty("m_childrenDirected").enumValueIndex = (int)commonSettings._childrenDirected;
+            serializedAdmSystem.FindProperty("m_hashCryptKey").stringValue = "svko";
+            SerializedProperty testDevicesProp = serializedAdmSystem.FindProperty("m_testDevices");
+            testDevicesProp.arraySize = commonSettings._testDevices.Length;
+            for (int i = 0; i < testDevicesProp.arraySize; i++)
+            {
+                testDevicesProp.GetArrayElementAtIndex(i).stringValue = commonSettings._testDevices[i];
+            }
+            serializedAdmSystem.ApplyModifiedProperties();
+            
             GameObject networkAdapterHolder = new GameObject("NetworkAdapters");
             networkAdapterHolder.transform.SetParent(mediationSystemObject.transform);
             FillNetworkHolder(networkAdapterHolder, commonSettings, networksSettings);
@@ -407,12 +416,12 @@ namespace Virterix.AdMediation.Editor
 
         private static GameObject SavePrefab(GameObject mediationSystemObject)
         {
-            string settingsPath = GetAdProjectSettingsPath(mediationSystemObject.GetComponent<AdMediationSystem>().m_projectName, true);
+            string settingsPath = GetAdProjectSettingsPath(mediationSystemObject.GetComponent<AdMediationSystem>().ProjectName, true);
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(mediationSystemObject, settingsPath + "/" + AdMediationSystem.PREFAB_NAME + ".prefab");
             AssetDatabase.Refresh();
             return prefab;
         }
 
-        #endregion // System Prefab
+        #endregion
     }
-} // namespace Virterix.AdMediation.Editor
+}

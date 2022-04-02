@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Virterix.AdMediation
+﻿namespace Virterix.AdMediation
 {
     public class UnityAdInstanceBannerParameters : AdInstanceParameters
     {
@@ -24,4 +22,4 @@ namespace Virterix.AdMediation
         }
 #endif
     }
-} // namespace Virterix.AdMediation
+}

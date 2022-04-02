@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
-using System.Globalization;
 
 namespace Virterix.Common
 {
@@ -159,4 +157,4 @@ namespace Virterix.Common
             PlayerPrefs.SetString(m_key, currDateTimeStr);
         }
     }
-} // namespace Virterix.Common
+}

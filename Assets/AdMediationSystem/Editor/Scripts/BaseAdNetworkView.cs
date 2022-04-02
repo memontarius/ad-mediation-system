@@ -477,4 +477,4 @@ namespace Virterix.AdMediation.Editor
             return list;
         }
     }
-} // namespace Virterix.AdMediation.Editor
+}

@@ -51,4 +51,4 @@ namespace Virterix.AdMediation
             return adTypeName;
         }
     }
-} // namespace Virterix.AdMediation
+}

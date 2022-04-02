@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: adm_project_settings
   m_EditorClassIdentifier: 
   _initializeOnStart: 1
-  _enableTestMode: 1
-  _enableExtraLogging: 1
-  _directedChildren: 0
+  _enableTestMode: 0
+  _enableExtraLogging: 0
+  _childrenDirected: 1
   _testDevices:
   - 042ba23b-a110-4288-ae66-0996e9ccb93f
   - F8F050AFDC859ABF15C632F2D292B3DA

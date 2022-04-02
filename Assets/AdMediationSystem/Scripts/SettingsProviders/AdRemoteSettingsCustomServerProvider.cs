@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Virterix.Common;
-using System;
 using UnityEngine.Networking;
 using Boomlagoon.JSON;
 
@@ -60,7 +57,7 @@ namespace Virterix.AdMediation
         {
             string requestUrl = m_apiUrl + "customization." + methodName + "?" +
                 "platform=" + AdMediationSystem.Instance.PlatfomName +
-                "&project=" + AdMediationSystem.Instance.m_projectName +
+                "&project=" + AdMediationSystem.Instance.ProjectName +
                 "&v=" + m_apiVersion;
             return requestUrl;
         }
@@ -113,6 +110,6 @@ namespace Virterix.AdMediation
             NotifyOnSettingsReceived(state, remoteJsonSettings);
         }
     }
-} // namespace Virterix.AdMediation
+}
 
 

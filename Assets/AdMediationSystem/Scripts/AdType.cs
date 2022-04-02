@@ -7,4 +7,4 @@
         Interstitial,
         Incentivized
     }
-} // namespace Virterix.AdMediation
+}

@@ -107,12 +107,12 @@ namespace Virterix.AdMediation
 
             SubscribeEvents();
 #if UNITY_ANDROID || UNITY_IPHONE
-            if (AdMediationSystem.Instance.m_testModeEnabled)
-                MaxSdk.SetTestDeviceAdvertisingIdentifiers(AdMediationSystem.Instance.m_testDevices);
- 
-            if (AdMediationSystem.Instance.m_isChildrenDirected)
-                MaxSdk.SetIsAgeRestrictedUser(AdMediationSystem.Instance.m_isChildrenDirected);
+            if (AdMediationSystem.Instance.IsTestModeEnabled)
+                MaxSdk.SetTestDeviceAdvertisingIdentifiers(AdMediationSystem.Instance.TestDevices);
 
+            if (AdMediationSystem.Instance.ChildrenDirected != ChildDirectedMode.NotAssign)
+                MaxSdk.SetIsAgeRestrictedUser(AdMediationSystem.Instance.ChildrenDirected == ChildDirectedMode.Directed);
+            
             MaxSdk.SetSdkKey(sdkKey);
             SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
             MaxSdk.InitializeSdk();
@@ -468,11 +468,8 @@ namespace Virterix.AdMediation
             m_lastReward.amount = reward.Amount;
             AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, adInstance);
         }
-
         #endregion // Rewarded Callbacks
-
 #endif // _AMS_APPLOVIN
-
     }
-} // namespace Virterix.AdMediation
+}
 

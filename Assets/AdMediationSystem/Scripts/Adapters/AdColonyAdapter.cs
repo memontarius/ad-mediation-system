@@ -127,10 +127,10 @@ namespace Virterix.AdMediation
         private void Configure(string appId)
         {
             AppOptions appOptions = new AppOptions();
-            appOptions.TestModeEnabled = AdMediationSystem.Instance.m_testModeEnabled;
+            appOptions.TestModeEnabled = AdMediationSystem.Instance.IsTestModeEnabled;
 
-            if (AdMediationSystem.Instance.m_isChildrenDirected)
-                appOptions.SetPrivacyFrameworkRequired(AppOptions.COPPA, true);
+            if (AdMediationSystem.Instance.ChildrenDirected == ChildDirectedMode.NotAssign)
+                appOptions.SetPrivacyFrameworkRequired(AppOptions.COPPA, AdMediationSystem.Instance.ChildrenDirected == ChildDirectedMode.Directed);
 
             if (AdMediationSystem.UserPersonalisationConsent != PersonalisationConsent.Undefined)
             {
@@ -453,8 +453,7 @@ namespace Virterix.AdMediation
         }
 
         #endregion // Banner Callbacks
-
 #endif // _AMS_ADCOLONY
     }
-} // namespace Virterix.AdMediation
+}
 

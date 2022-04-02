@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Virterix.AdMediation.Editor
@@ -43,4 +42,4 @@ namespace Virterix.AdMediation.Editor
             pollfishAdapter.m_timeout = _timeout;
         }
     }
-} // namespace Virterix.AdMediation.Editor
+}

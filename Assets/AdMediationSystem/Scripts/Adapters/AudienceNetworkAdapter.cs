@@ -132,9 +132,9 @@ namespace Virterix.AdMediation
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
-            if (AdMediationSystem.Instance.m_testModeEnabled)
+            if (AdMediationSystem.Instance.IsTestModeEnabled)
             {
-                foreach(string device in AdMediationSystem.Instance.m_testDevices)
+                foreach(string device in AdMediationSystem.Instance.TestDevices)
                 {
                     AdSettings.AddTestDevice(device);
                 }
@@ -657,10 +657,7 @@ namespace Virterix.AdMediation
         }
 
         #endregion // Reward Video callback handlers
-
 #endif // _AMS_AUDIENCE_NETWORK
-
     }
-
-} // namespace Virterix.AdMediation
+}
 

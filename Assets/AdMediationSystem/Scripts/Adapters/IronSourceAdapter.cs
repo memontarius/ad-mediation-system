@@ -206,12 +206,16 @@ namespace Virterix.AdMediation
             m_incentivizedInstance = AdFactory.CreateAdInstacne(this, AdType.Incentivized, AdInstance.AD_INSTANCE_DEFAULT_NAME, "", m_timeout);
             AddAdInstance(m_incentivizedInstance);
 
-            SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
-            IronSource.Agent.init(appKey, IronSourceAdUnits.INTERSTITIAL, IronSourceAdUnits.REWARDED_VIDEO, IronSourceAdUnits.BANNER);
             if (m_validateIntegration)
                 IronSource.Agent.validateIntegration();
-        }
 
+            SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
+            if (AdMediationSystem.Instance.ChildrenDirected != ChildDirectedMode.NotAssign)
+                SetChildDirected(AdMediationSystem.Instance.ChildrenDirected);
+
+            IronSource.Agent.init(appKey, IronSourceAdUnits.INTERSTITIAL, IronSourceAdUnits.REWARDED_VIDEO, IronSourceAdUnits.BANNER);
+        }
+        
         public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             switch (adInstance.m_adType)
@@ -349,6 +353,13 @@ namespace Virterix.AdMediation
             }
         }
 
+        private static void SetChildDirected(ChildDirectedMode mode)
+        {
+            string childDirectedMetaValue = mode == ChildDirectedMode.Directed ? "true" : "false";
+            IronSource.Agent.setMetaData("is_deviceid_optout", childDirectedMetaValue);
+            IronSource.Agent.setMetaData("is_child_directed", childDirectedMetaValue);
+        }
+        
         public override void NotifyEvent(AdEvent adEvent, AdInstance adInstance)
         {
             if (adInstance.m_adType == AdType.Banner && adEvent == AdEvent.PreparationFailed)
@@ -535,6 +546,5 @@ namespace Virterix.AdMediation
         #endregion
 
 #endif // _AMS_IRONSOURCE
-
     }
-} // namespace Virterix.AdMediation
+}

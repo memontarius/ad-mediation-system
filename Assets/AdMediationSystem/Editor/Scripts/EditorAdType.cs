@@ -6,4 +6,4 @@
         Interstitial,
         Incentivized
     }
-} // namespace Virterix.AdMediation.Editor
+}

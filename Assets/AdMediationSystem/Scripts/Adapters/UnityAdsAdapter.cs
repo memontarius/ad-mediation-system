@@ -79,14 +79,15 @@ namespace Virterix.AdMediation
 
             if (!parameters.TryGetValue("appId", out m_appId))
                 m_appId = "";
-
+            
+            SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
+            
             if (Advertisement.isSupported && !Advertisement.isInitialized)
             {
                 if (m_isInitializeWhenStart)
-                    Advertisement.Initialize(m_appId, AdMediationSystem.Instance.m_testModeEnabled);
+                    Advertisement.Initialize(m_appId, AdMediationSystem.Instance.IsTestModeEnabled);
                 Advertisement.AddListener(this);
             }
-            SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
         }
 
         protected override void InitializeAdInstanceData(AdInstance adInstance, JSONValue jsonAdInstances)
@@ -191,7 +192,7 @@ namespace Virterix.AdMediation
                 SetMetaData("privacy", "consent", value);
             }
         }
-
+        
         private void SetMetaData<TValue>(string category, string key, TValue value)
         {
             MetaData coppaUserMetaData = new MetaData(category);
@@ -273,9 +274,7 @@ namespace Virterix.AdMediation
                     AddEvent(adInstance.m_adType, AdEvent.Hiding, adInstance);
             }
         }
-
-#endregion // Callback Event Methods
-
+        #endregion // Callback Event Methods
 #endif // _AMS_UNITY_ADS
     }
 }

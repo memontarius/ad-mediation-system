@@ -1,10 +1,4 @@
-﻿using UnityEngine;
-using System;
-using System.Security.Cryptography;
-using System.Collections;
-using System.Text;
-using System.IO;
-
+﻿using System.Text;
 
 namespace Virterix.Common
 {
@@ -107,6 +101,6 @@ namespace Virterix.Common
         }
 
     }
-} // namespace Virterix.Common
+}
 
 

@@ -28,6 +28,13 @@ namespace Virterix.AdMediation
         Initialized
     }
 
+    public enum ChildDirectedMode
+    {
+        NotAssign,
+        Directed,
+        NotDirected
+    }
+    
     public class AdMediationSystem : Singleton<AdMediationSystem>
     {
         private struct MediatorData
@@ -36,6 +43,7 @@ namespace Virterix.AdMediation
             public int[] maxPassages;
         }
 
+        public const string VERSION = "2.3.1";
         public const string AD_SETTINGS_FOLDER = "AdMediationSettings";
         public const string PREFAB_NAME = "AdMediationSystem";
         public const string PLACEMENT_DEFAULT_NAME = "Default";
@@ -80,20 +88,20 @@ namespace Virterix.AdMediation
         #region Variables
         //-------------------------------------------------------------------------------
 
-        public string m_projectName;
-        public bool m_isLoadOnlyDefaultSettings = true;
+        [SerializeField] private string m_projectName;
+        [SerializeField] private bool m_isLoadOnlyDefaultSettings = true;
         [Tooltip("Compare settings loaded from server")]
-        public AdSettingsCompareMode m_settingsCompareMode;
-        public AdRemoteSettingsProvider m_remoteSettingsProvider;
-        public AppPlatform m_platformInEditor;
-        public string m_hashCryptKey;
-        public bool m_isChildrenDirected = false;
-        public bool m_initializeOnStart = true;
-        public bool m_testModeEnabled = false;
-        public string[] m_testDevices;
+        [SerializeField] private AdSettingsCompareMode m_settingsCompareMode;
+        [SerializeField] private AdRemoteSettingsProvider m_remoteSettingsProvider;
+        [SerializeField] private AppPlatform m_platformInEditor;
+        [SerializeField] private string m_hashCryptKey;
+        [SerializeField] private ChildDirectedMode m_childrenDirected = ChildDirectedMode.NotAssign;
+        [SerializeField] private bool m_initializeOnStart = true;
+        [SerializeField] private bool m_testModeEnabled = false;
+        [SerializeField] private string[] m_testDevices;
         // For CCPA GDPR Compliance
         private static PersonalisationConsent m_userPersonalisationConsent;
-
+        
         public static event Action OnInitialized = delegate { };
         /// <summary>
         /// Callback all events of advertising networks.
@@ -106,7 +114,12 @@ namespace Virterix.AdMediation
         private AdNetworkAdapter[] m_networkAdapters;
         private List<AdMediator> m_mediators = new List<AdMediator>();
         private JSONObject m_currSettings;
- 
+        
+        public string ProjectName => m_projectName;
+        public ChildDirectedMode ChildrenDirected => m_childrenDirected;
+        public bool IsTestModeEnabled => m_testModeEnabled;
+        public string[] TestDevices => m_testDevices;
+        
         /// <summary>
         /// Use a personal data of user. To CCPA and GDPR Compliance
         /// </summary>
@@ -971,4 +984,4 @@ namespace Virterix.AdMediation
 
         #endregion // Load
     }
-} // namespace Virterix.AdMediation
+}

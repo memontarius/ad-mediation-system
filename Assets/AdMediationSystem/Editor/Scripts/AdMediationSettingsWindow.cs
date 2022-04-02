@@ -75,7 +75,7 @@ namespace Virterix.AdMediation.Editor
         private SerializedProperty _isIOSProp;
         private SerializedProperty _enableTestModeProp;
         private SerializedProperty _enableExtraLoggingProp;
-        private SerializedProperty _directedChildrenProp;
+        private SerializedProperty _childrenDirectedProp;
         private SerializedProperty _testDevicesProp;
 
         public bool IsAndroid
@@ -181,7 +181,8 @@ namespace Virterix.AdMediation.Editor
                     break;
             }
             DrawBuild();
-
+            DrawVersion();
+            
             EditorGUIUtility.labelWidth = previousLabelWidth;
             EditorGUILayout.EndScrollView();
         }
@@ -352,7 +353,7 @@ namespace Virterix.AdMediation.Editor
             _isIOSProp = _serializedProjectSettings.FindProperty("_isIOS");
             _enableTestModeProp = _serializedProjectSettings.FindProperty("_enableTestMode");
             _enableExtraLoggingProp = _serializedProjectSettings.FindProperty("_enableExtraLogging");
-            _directedChildrenProp = _serializedProjectSettings.FindProperty("_directedChildren");
+            _childrenDirectedProp = _serializedProjectSettings.FindProperty("_childrenDirected");
             _testDevicesProp = _serializedProjectSettings.FindProperty("_testDevices");
 
             bool enableExtraLogging = false;
@@ -657,7 +658,7 @@ namespace Virterix.AdMediation.Editor
             Utils.DrawPropertyField(_serializedProjectSettings, "_initializeOnStart");
 
             GUILayout.BeginHorizontal();
-            EditorGUILayout.PropertyField(_directedChildrenProp);
+            EditorGUILayout.PropertyField(_childrenDirectedProp);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -714,6 +715,14 @@ namespace Virterix.AdMediation.Editor
             }
         }
 
+        private void DrawVersion()
+        {
+            EditorGUILayout.Space();
+            var centeredStyle = GUI.skin.GetStyle("Label");
+            centeredStyle.alignment = TextAnchor.MiddleRight;
+            GUILayout.Label($"{AdMediationSystem.VERSION}", centeredStyle);
+        }
+        
         private void BuildSettings()
         {
             string path = AdMediationSettingsBuilder.GetAdProjectSettingsPath(CurrProjectName, true);
@@ -800,4 +809,4 @@ namespace Virterix.AdMediation.Editor
             PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTarget, definesToField.ToString());
         }
     }
-} // namespace Virterix.AdMediation.Editor
+}

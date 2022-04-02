@@ -266,7 +266,6 @@ namespace Virterix.AdMediation
         {
             AddEvent(AdType.Incentivized, AdEvent.Hiding, m_incentivizedInstance);
         }
-
 #endif // _AMS_CHARTBOOST
     }
-} // namespace Virterix.AdMediation
+}
