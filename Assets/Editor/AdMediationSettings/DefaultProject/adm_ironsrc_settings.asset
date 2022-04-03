@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enabled: 1
   _networkIdentifier: ironsrc
-  _androidAppId: 53fb621d
+  _androidAppId: e689f601
   _iosAppId: 5d6c983d
   _responseWaitTime: 25
   _timeout: 120
@@ -24,12 +24,12 @@ MonoBehaviour:
     _androidId: 
     _iosId: 
     _timeout: 120
-    _bannerType: 3
-  - _name: Top
+    _bannerType: 0
+  - _name: Chat
     _androidId: 
     _iosId: 
     _timeout: 120
-    _bannerType: 3
+    _bannerType: 0
   _interstitialAdInstances: []
   _rewardAdInstances: []
   _overiddenPlacements:

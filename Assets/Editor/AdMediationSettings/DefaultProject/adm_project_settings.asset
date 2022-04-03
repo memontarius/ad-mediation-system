@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _initializeOnStart: 1
   _enableTestMode: 0
-  _enableExtraLogging: 0
-  _childrenDirected: 1
+  _enableExtraLogging: 1
+  _childrenDirected: 0
   _testDevices:
   - 042ba23b-a110-4288-ae66-0996e9ccb93f
   - F8F050AFDC859ABF15C632F2D292B3DA
@@ -40,6 +40,14 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
+      - _networkName: Iron Source
+        _networkIndex: 2
+        _networkIdentifier: ironsrc
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
   - _adType: 1
     _name: Top
     _continueAfterEndSession: 1
@@ -60,6 +68,14 @@ MonoBehaviour:
         _replaced: 0
         _prepareOnExit: 0
         _percentage: 100
+      - _networkName: Iron Source
+        _networkIndex: 2
+        _networkIdentifier: ironsrc
+        _instanceIndex: 1
+        _instanceName: Chat
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 0
   _interstitialMediators:
   - _adType: 2
     _name: Default
@@ -76,6 +92,16 @@ MonoBehaviour:
       - _networkName: AdMob
         _networkIndex: 0
         _networkIdentifier: admob
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 100
+    - _maxPassages: 1
+      _units:
+      - _networkName: Iron Source
+        _networkIndex: 2
+        _networkIdentifier: ironsrc
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0
@@ -117,6 +143,16 @@ MonoBehaviour:
       - _networkName: AdMob
         _networkIndex: 0
         _networkIdentifier: admob
+        _instanceIndex: 0
+        _instanceName: Default
+        _replaced: 0
+        _prepareOnExit: 0
+        _percentage: 100
+    - _maxPassages: 1
+      _units:
+      - _networkName: Iron Source
+        _networkIndex: 2
+        _networkIdentifier: ironsrc
         _instanceIndex: 0
         _instanceName: Default
         _replaced: 0

@@ -482,6 +482,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AMS] IronSourceAdapter.BannerAdLoadedEvent()");
 #endif
+            
             m_bannerState = AdState.Received;
             if (m_bannerDisplayed)
                 IronSource.Agent.displayBanner();
