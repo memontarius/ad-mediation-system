@@ -62,7 +62,7 @@ namespace Virterix.AdMediation.Editor
             _settingsWindow = settingsWindow;
             _adType = adType;
             SetProperty(mediatorId, mediatorProp);
-            mediatorProp.FindPropertyRelative("_adType").intValue = (int)adType;
+            mediatorProp.FindPropertyRelative(nameof(AdUnitMediator.AdvertisingType)).intValue = (int)adType;
             _showMediator = new AnimBool(false);
             _showMediator.valueChanged.AddListener(repaint);
             _tierReorderableList = new ReorderableList(serializedSettings, _tierListProp);
@@ -74,7 +74,7 @@ namespace Virterix.AdMediation.Editor
             {
                 ReorderableList.defaultBehaviours.DoAddButton(list);
                 var addedElement = list.serializedProperty.GetArrayElementAtIndex(list.count - 1);
-                var units = addedElement.FindPropertyRelative("_units");
+                var units = addedElement.FindPropertyRelative(nameof(AdTier.Units));
                 units.arraySize = 0;
             };
             _tierReorderableList.drawHeaderCallback = rect =>
@@ -86,7 +86,7 @@ namespace Virterix.AdMediation.Editor
             _tierReorderableList.drawElementCallback = (elementRect, elementIndex, elementActive, elementFocused) =>
             {
                 var element = _tierListProp.GetArrayElementAtIndex(elementIndex);
-                var unitsProp = element.FindPropertyRelative("_units");
+                var unitsProp = element.FindPropertyRelative(nameof(AdTier.Units));
                 string listKey = element.propertyPath;
 
                 ReorderableList unitReorderableList;
@@ -105,14 +105,14 @@ namespace Virterix.AdMediation.Editor
                         ReorderableList.defaultBehaviours.DoAddButton(list);
                         SerializedProperty unitElement = unitReorderableList.serializedProperty.GetArrayElementAtIndex(list.count - 1);
                         FetchStrategyType strategyType = (FetchStrategyType)_fetchStrategyProp.intValue;
-                        var percentageProp = unitElement.FindPropertyRelative("_percentage");
+                        var percentageProp = unitElement.FindPropertyRelative(nameof(AdUnit.Percentage));
                         percentageProp.intValue = unitsProp.arraySize == 1 ? 100 : 0;
                     };
                     unitReorderableList.onRemoveCallback = (ReorderableList list) =>
                     {
                         int selectedUnitIndex = unitReorderableList.index;
                         var unitElement = unitReorderableList.serializedProperty.GetArrayElementAtIndex(unitReorderableList.index);
-                        int changedValue = -unitElement.FindPropertyRelative("_percentage").intValue;
+                        int changedValue = -unitElement.FindPropertyRelative(nameof(AdUnit.Percentage)).intValue;
                         ReorderableList.defaultBehaviours.DoRemoveButton(list);
                         if (unitsProp.arraySize > 0)
                         {
@@ -133,10 +133,10 @@ namespace Virterix.AdMediation.Editor
 
                         _settingsWindow.GetActiveNetworks(_adType, ref _activeNetworks);
                         string[] activeNetworks = _activeNetworks.ToArray();
-
-                        var networkNameProp = unitElement.FindPropertyRelative("_networkName");
-                        var networkIndexProp = unitElement.FindPropertyRelative("_networkIndex");
-                        var networkIdentifierProp = unitElement.FindPropertyRelative("_networkIdentifier");
+                        
+                        var networkNameProp = unitElement.FindPropertyRelative(nameof(AdUnit.NetworkName));
+                        var networkIndexProp = unitElement.FindPropertyRelative(nameof(AdUnit.NetworkIndex));
+                        var networkIdentifierProp = unitElement.FindPropertyRelative(nameof(AdUnit.NetworkIdentifier));
 
                         string currNetworkName = "";
 
@@ -162,8 +162,8 @@ namespace Virterix.AdMediation.Editor
 
                         popupRect.x += popupRect.width + 2;
                         popupRect.width = width;
-                        var instanceIndexProp = unitElement.FindPropertyRelative("_instanceIndex");
-                        var instanceNameProp = unitElement.FindPropertyRelative("_instanceName");
+                        var instanceIndexProp = unitElement.FindPropertyRelative(nameof(AdUnit.InstanceIndex));
+                        var instanceNameProp = unitElement.FindPropertyRelative(nameof(AdUnit.InstanceName));
                         instanceIndexProp.intValue = EditorGUI.Popup(popupRect, instanceIndexProp.intValue, adInstanceNames);
                         if (instanceIndexProp.intValue < adInstanceNames.Length)
                         {
@@ -174,7 +174,7 @@ namespace Virterix.AdMediation.Editor
                         paramsRect.x += paramsRect.width + 5;
                         paramsRect.width = 110;
                         
-                        var prepareOnExitProp = unitElement.FindPropertyRelative("_prepareOnExit");
+                        var prepareOnExitProp = unitElement.FindPropertyRelative(nameof(AdUnit.PrepareOnExit));
                         prepareOnExitProp.boolValue = EditorGUI.ToggleLeft(paramsRect, "Prepare On Exit", prepareOnExitProp.boolValue);
 
                         FetchStrategyType strategyType = (FetchStrategyType)_fetchStrategyProp.intValue;
@@ -183,14 +183,14 @@ namespace Virterix.AdMediation.Editor
                             case FetchStrategyType.Sequence:
                                 paramsRect.x += paramsRect.width + 5;
                                 paramsRect.width = 75;
-                                var replacedProp = unitElement.FindPropertyRelative("_replaced");
+                                var replacedProp = unitElement.FindPropertyRelative(nameof(AdUnit.Replaced));
                                 replacedProp.boolValue = EditorGUI.ToggleLeft(paramsRect, "Replaced", replacedProp.boolValue);
                                 break;
                             case FetchStrategyType.Random:
                                 paramsRect.x += paramsRect.width + 5;
                                 paramsRect.width = Mathf.Clamp(unitRect.width - 480, 120, 200f);
                                 paramsRect.height = 18;
-                                var percentageProp = unitElement.FindPropertyRelative("_percentage");
+                                var percentageProp = unitElement.FindPropertyRelative(nameof(AdUnit.Percentage));
                                 int percentageMinValue = 0;
                                 int percentageMaxValue = 100;
                                 float previousLabelWidth = EditorGUIUtility.labelWidth;
@@ -211,7 +211,7 @@ namespace Virterix.AdMediation.Editor
                     unitReorderableList.drawHeaderCallback = (rect) =>
                     {
                         EditorGUI.LabelField(rect, "Tier " + (elementIndex + 1).ToString());
-                        var maxPassProp = element.FindPropertyRelative("_maxPassages");
+                        var maxPassProp = element.FindPropertyRelative(nameof(AdTier.MaxPassages));
 
                         rect.x += rect.width - 130;
                         rect.y += 1;
@@ -246,7 +246,7 @@ namespace Virterix.AdMediation.Editor
                 if (index < _tierListProp.arraySize)
                 {
                     var element = _tierListProp.GetArrayElementAtIndex(index);
-                    var unitsProp = element.FindPropertyRelative("_units");
+                    var unitsProp = element.FindPropertyRelative(nameof(AdTier.Units));
                     var elementHeight = unitElementHegiht;
 #if UNITY_2020_1_OR_NEWER
                     elementHeight += 2;
@@ -292,7 +292,7 @@ namespace Virterix.AdMediation.Editor
             {
                 if (changedUnit != null)
                 {
-                    var percentageProp = changedUnit.FindPropertyRelative("_percentage");
+                    var percentageProp = changedUnit.FindPropertyRelative(nameof(AdUnit.Percentage));
                     percentageProp.intValue = maxValue;
                 }
             }
@@ -308,7 +308,7 @@ namespace Virterix.AdMediation.Editor
                     }
 
                     var unit = units.GetArrayElementAtIndex(unitIndex);
-                    var percentageProp = unit.FindPropertyRelative("_percentage");
+                    var percentageProp = unit.FindPropertyRelative(nameof(AdUnit.Percentage));
                     int percentageValue = percentageProp.intValue;
 
                     if (directionState < 0)
@@ -352,14 +352,14 @@ namespace Virterix.AdMediation.Editor
             for (int tierIndex = 0; tierIndex < _tierListProp.arraySize; tierIndex++)
             {
                 var tier = _tierListProp.GetArrayElementAtIndex(tierIndex);
-                var units = tier.FindPropertyRelative("_units");
+                var units = tier.FindPropertyRelative(nameof(AdTier.Units));
 
                 for (int unitIndex = 0; unitIndex < units.arraySize; unitIndex++)
                 {
                     var unit = units.GetArrayElementAtIndex(unitIndex);
-                    var networkNameProp = unit.FindPropertyRelative("_networkName");
-                    var networkIndexProp = unit.FindPropertyRelative("_networkIndex");
-                    var networkIdentifierProp = unit.FindPropertyRelative("_networkIdentifier");
+                    var networkNameProp = unit.FindPropertyRelative(nameof(AdUnit.NetworkName));
+                    var networkIndexProp = unit.FindPropertyRelative(nameof(AdUnit.NetworkIndex));
+                    var networkIdentifierProp = unit.FindPropertyRelative(nameof(AdUnit.NetworkIdentifier));
 
                     _settingsWindow.GetActiveNetworks(_adType, ref _activeNetworks);
                     string[] activeNetworks = _activeNetworks.ToArray();
@@ -385,8 +385,8 @@ namespace Virterix.AdMediation.Editor
                         }
                     }
 
-                    var instanceIndexProp = unit.FindPropertyRelative("_instanceIndex");
-                    var instanceNameProp = unit.FindPropertyRelative("_instanceName");
+                    var instanceIndexProp = unit.FindPropertyRelative(nameof(AdUnit.InstanceIndex));
+                    var instanceNameProp = unit.FindPropertyRelative(nameof(AdUnit.InstanceName));
                     if (instanceIndexProp.intValue < adInstanceNames.Length)
                         instanceNameProp.stringValue = adInstanceNames[instanceIndexProp.intValue];
                 }
@@ -398,15 +398,15 @@ namespace Virterix.AdMediation.Editor
         {
             _index = mediatorId;
             _mediatorProp = mediatorProp;
-            _tierListProp = _mediatorProp.FindPropertyRelative("_tiers");
-            _mediatorNameProp = _mediatorProp.FindPropertyRelative("_name");
-            _fetchStrategyProp = _mediatorProp.FindPropertyRelative("_fetchStrategyType");
-            _continueAfterEndSessionProp = _mediatorProp.FindPropertyRelative("_continueAfterEndSession");
-            _fetchOnAdHiddenProp = _mediatorProp.FindPropertyRelative("_fetchOnAdUnitHidden");
-            _fetchOnStartProp = _mediatorProp.FindPropertyRelative("_fetchOnStart");
-            _bannerPositionProp = _mediatorProp.FindPropertyRelative("_bannerPosition");
-            _bannerMinDisplayTimeProp = _mediatorProp.FindPropertyRelative("_bannerMinDisplayTime");
-            _deferredFetchDelayProp = _mediatorProp.FindPropertyRelative("_deferredFetchDelay");
+            _tierListProp = _mediatorProp.FindPropertyRelative(nameof(AdUnitMediator.Tiers));
+            _mediatorNameProp = _mediatorProp.FindPropertyRelative(nameof(AdUnitMediator.Name));
+            _fetchStrategyProp = _mediatorProp.FindPropertyRelative(nameof(AdUnitMediator.FetchStrategyType));
+            _continueAfterEndSessionProp = _mediatorProp.FindPropertyRelative(nameof(AdUnitMediator.ContinueAfterEndSession));
+            _fetchOnAdHiddenProp = _mediatorProp.FindPropertyRelative(nameof(AdUnitMediator.FetchOnAdUnitHidden));
+            _fetchOnStartProp = _mediatorProp.FindPropertyRelative(nameof(AdUnitMediator.FetchOnStart));
+            _bannerPositionProp = _mediatorProp.FindPropertyRelative(nameof(AdUnitMediator.BannerPosition));
+            _bannerMinDisplayTimeProp = _mediatorProp.FindPropertyRelative(nameof(AdUnitMediator.BannerMinDisplayTime));
+            _deferredFetchDelayProp = _mediatorProp.FindPropertyRelative(nameof(AdUnitMediator.DeferredFetchDelay));
             if (_tierReorderableList != null)
             {
                 _tierReorderableList.serializedProperty = _tierListProp;
@@ -530,13 +530,13 @@ namespace Virterix.AdMediation.Editor
                     for (int unitIndex = 0; unitIndex < units.count; unitIndex++)
                     {
                         var unitProp = units.serializedProperty.GetArrayElementAtIndex(unitIndex);
-                        int percentage = unitProp.FindPropertyRelative("_percentage").intValue;
+                        int percentage = unitProp.FindPropertyRelative(nameof(AdUnit.Percentage)).intValue;
                         totalPercentage += percentage;
                     }
                     if (totalPercentage == 0 && units.count > 0)
                     {
                         var unitProp = units.serializedProperty.GetArrayElementAtIndex(0);
-                        unitProp.FindPropertyRelative("_percentage").intValue = 100;
+                        unitProp.FindPropertyRelative(nameof(AdUnit.Percentage)).intValue = 100;
                     }
                 }
             }

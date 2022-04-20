@@ -1,4 +1,4 @@
-//#define _AMS_ADMOB
+#define _AMS_ADMOB
 
 using UnityEngine;
 using System;
@@ -254,9 +254,9 @@ namespace Virterix.AdMediation
                 _adMobMediationBehavior = new AdMobMediationBehavior(this);
             }
 
-            if (AdMediationSystem.Instance.ChildrenDirected != ChildDirectedMode.NotAssign)
+            if (AdMediationSystem.Instance.ChildrenMode != ChildDirectedMode.NotAssign)
             {
-                var isChildDirected = AdMediationSystem.Instance.ChildrenDirected == ChildDirectedMode.Directed ?
+                var isChildDirected = AdMediationSystem.Instance.ChildrenMode == ChildDirectedMode.Directed ?
                         TagForChildDirectedTreatment.True:
                         TagForChildDirectedTreatment.False;
                 builder.SetTagForChildDirectedTreatment(isChildDirected);

@@ -75,8 +75,11 @@ namespace Virterix.AdMediation.Editor
         private SerializedProperty _isIOSProp;
         private SerializedProperty _enableTestModeProp;
         private SerializedProperty _enableExtraLoggingProp;
-        private SerializedProperty _childrenDirectedProp;
+        private SerializedProperty _childrenModeProp;
         private SerializedProperty _testDevicesProp;
+        private SerializedProperty _enableRemoteConfigProviderProp;
+        private SerializedProperty _remoteConfigPrefixKeyProp;
+        private SerializedProperty _remoteConfigAutoFetchingProp;
 
         public bool IsAndroid
         {
@@ -171,13 +174,13 @@ namespace Virterix.AdMediation.Editor
                     _serializedProjectSettings?.ApplyModifiedProperties();
                     break;
                 case 1:
-                    DrawMediators(_bannerMediators, "_bannerMediators");
+                    DrawMediators(_bannerMediators, nameof(AdMediationProjectSettings.BannerMediators));
                     break;
                 case 2:
-                    DrawMediators(_interstitialMediators, "_interstitialMediators");
+                    DrawMediators(_interstitialMediators, nameof(AdMediationProjectSettings.InterstitialMediators));
                     break;
                 case 3:
-                    DrawMediators(_incentivizedMediators, "_incentivizedMediators");
+                    DrawMediators(_incentivizedMediators, nameof(AdMediationProjectSettings.IncentivizedMediators));
                     break;
             }
             DrawBuild();
@@ -336,6 +339,8 @@ namespace Virterix.AdMediation.Editor
 
         private void InitSettings(string projectName)
         {
+            bool prevEnableRemoteConfigProvider = _enableRemoteConfigProviderProp == null ? false : _enableRemoteConfigProviderProp.boolValue;
+            
             string projectPath = GetProjectFolderPath(projectName);
             if (!Directory.Exists(CommonAdSettingsFolderPath))
             {
@@ -349,13 +354,16 @@ namespace Virterix.AdMediation.Editor
             _projectSettings = Utils.GetOrCreateSettings<AdMediationProjectSettings>(GetProjectSettingsPath(projectName));
             _serializedProjectSettings = new SerializedObject(_projectSettings);
 
-            _isAndroidProp = _serializedProjectSettings.FindProperty("_isAndroid");
-            _isIOSProp = _serializedProjectSettings.FindProperty("_isIOS");
-            _enableTestModeProp = _serializedProjectSettings.FindProperty("_enableTestMode");
-            _enableExtraLoggingProp = _serializedProjectSettings.FindProperty("_enableExtraLogging");
-            _childrenDirectedProp = _serializedProjectSettings.FindProperty("_childrenDirected");
-            _testDevicesProp = _serializedProjectSettings.FindProperty("_testDevices");
-
+            _isAndroidProp = _serializedProjectSettings.FindProperty(nameof(AdMediationProjectSettings.IsAndroid));
+            _isIOSProp = _serializedProjectSettings.FindProperty(nameof(AdMediationProjectSettings.IsIOS));
+            _enableTestModeProp = _serializedProjectSettings.FindProperty(nameof(AdMediationProjectSettings.EnableTestMode));
+            _enableExtraLoggingProp = _serializedProjectSettings.FindProperty(nameof(AdMediationProjectSettings.EnableExtraLogging));
+            _childrenModeProp = _serializedProjectSettings.FindProperty(nameof(AdMediationProjectSettings.ChildrenMode));
+            _testDevicesProp = _serializedProjectSettings.FindProperty(nameof(AdMediationProjectSettings.TestDevices));
+            _enableRemoteConfigProviderProp = _serializedProjectSettings.FindProperty(nameof(AdMediationProjectSettings.EnableUnityRemoteConfigProvider));
+            _remoteConfigAutoFetchingProp = _serializedProjectSettings.FindProperty(nameof(AdMediationProjectSettings.RemoteConfigAutoFetching));
+            _remoteConfigPrefixKeyProp = _serializedProjectSettings.FindProperty(nameof(AdMediationProjectSettings.RemoteConfigPrefixKey));
+            
             bool enableExtraLogging = false;
             string[] defines = EditorUserBuildSettings.activeScriptCompilationDefines;
             foreach (var define in defines)
@@ -369,6 +377,8 @@ namespace Virterix.AdMediation.Editor
             _enableExtraLoggingProp.boolValue = enableExtraLogging;
             _enableExtraLoggingProp.serializedObject.ApplyModifiedProperties();
             InitProjectNames();
+            if (prevEnableRemoteConfigProvider != _enableRemoteConfigProviderProp.boolValue)
+                UpdateUnityRemoteSettingsScriptDefinition();
         }
 
         private void InitProjectNames()
@@ -436,9 +446,9 @@ namespace Virterix.AdMediation.Editor
             _bannerMediators.Clear();
             _interstitialMediators.Clear();
             _incentivizedMediators.Clear();
-            CreateAdMediatorViews(ref _bannerMediators, "_bannerMediators", AdType.Banner);
-            CreateAdMediatorViews(ref _interstitialMediators, "_interstitialMediators", AdType.Interstitial);
-            CreateAdMediatorViews(ref _incentivizedMediators, "_incentivizedMediators", AdType.Incentivized);
+            CreateAdMediatorViews(ref _bannerMediators, nameof(AdMediationProjectSettings.BannerMediators), AdType.Banner);
+            CreateAdMediatorViews(ref _interstitialMediators, nameof(AdMediationProjectSettings.InterstitialMediators), AdType.Interstitial);
+            CreateAdMediatorViews(ref _incentivizedMediators, nameof(AdMediationProjectSettings.IncentivizedMediators), AdType.Incentivized);
         }
 
         private void UpdateActiveNetworks()
@@ -655,10 +665,10 @@ namespace Virterix.AdMediation.Editor
 
             GUILayout.BeginVertical("box");
 
-            Utils.DrawPropertyField(_serializedProjectSettings, "_initializeOnStart");
+            Utils.DrawPropertyField(_serializedProjectSettings, nameof(AdMediationProjectSettings.InitializeOnStart));
 
             GUILayout.BeginHorizontal();
-            EditorGUILayout.PropertyField(_childrenDirectedProp);
+            EditorGUILayout.PropertyField(_childrenModeProp);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -679,7 +689,39 @@ namespace Virterix.AdMediation.Editor
             {
                 EditorGUILayout.PropertyField(_testDevicesProp);
             }
+            
+            DrawRemoteSettingsProvider();
+
             GUILayout.EndVertical();
+        }
+
+        private void DrawRemoteSettingsProvider()
+        {
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(_enableRemoteConfigProviderProp);
+            if (EditorGUI.EndChangeCheck())
+            {
+                UpdateUnityRemoteSettingsScriptDefinition();
+            }
+
+            if (_enableRemoteConfigProviderProp.boolValue)
+            {
+                GUILayout.BeginVertical("box");
+                EditorGUILayout.PropertyField(_remoteConfigAutoFetchingProp, new GUIContent("Auto Fetching"));
+                EditorGUILayout.PropertyField(_remoteConfigPrefixKeyProp,
+                    new GUIContent("Prefix Key", "Will be add platform key (prefix + platform)"));
+                GUILayout.EndVertical();
+            }
+        }
+
+        private void UpdateUnityRemoteSettingsScriptDefinition()
+        {
+            string path = "AdMediationSystem/Scripts/SettingsProviders";
+            string scriptName = "AdRemoteSettingsUnityServerProvider";
+            bool rewrited = Utils.RewriteScriptDefinition(
+                path, scriptName, "_AMS_USE_UNITY_REMOTE_CONFIG", _enableRemoteConfigProviderProp.boolValue);
+            if (rewrited)
+                AssetDatabase.Refresh();
         }
 
         private void DrawAdNetworks()
@@ -748,11 +790,11 @@ namespace Virterix.AdMediation.Editor
             UpdateUnitSelectionInAllMediators();
 
             List<AdUnitMediator> mediators = new List<AdUnitMediator>();
-            AdMediationSettingsBuilder.FillMediators(ref mediators, _projectSettings._bannerMediators);
-            AdMediationSettingsBuilder.FillMediators(ref mediators, _projectSettings._interstitialMediators);
-            AdMediationSettingsBuilder.FillMediators(ref mediators, _projectSettings._incentivizedMediators);
+            AdMediationSettingsBuilder.FillMediators(ref mediators, _projectSettings.BannerMediators);
+            AdMediationSettingsBuilder.FillMediators(ref mediators, _projectSettings.InterstitialMediators);
+            AdMediationSettingsBuilder.FillMediators(ref mediators, _projectSettings.IncentivizedMediators);
 
-            AdMediationSettingsBuilder.BuildBannerAdInstanceParameters(CurrProjectName, networksSettings, _projectSettings._bannerMediators.ToArray());
+            AdMediationSettingsBuilder.BuildBannerAdInstanceParameters(CurrProjectName, networksSettings, _projectSettings.BannerMediators.ToArray());
             var prefab = AdMediationSettingsBuilder.BuildSystemPrefab(CurrProjectName, _projectSettings, networksSettings, mediators.ToArray());
 
             if (IsAndroid)

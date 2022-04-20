@@ -1,5 +1,5 @@
-lastUpgrade=01012
-proj.pluginVersion=0.10.12
+lastUpgrade=01014
+proj.pluginVersion=0.10.14
 proj.AppId=788728264385
 and.BundleId=com.miragelab.boomlandfree
 proj.classDir=Assets

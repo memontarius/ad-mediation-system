@@ -13,7 +13,5 @@ MonoBehaviour:
   m_Name: IronSource_AdInstanceBannerChat
   m_EditorClassIdentifier: 
   m_name: Chat
-  m_bannerPositions:
-  - m_placementName: Top
-    m_bannerPosition: 0
+  m_bannerPositions: []
   m_bannerSize: 0

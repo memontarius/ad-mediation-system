@@ -1,4 +1,4 @@
-//#define _AMS_IRONSOURCE
+#define _AMS_IRONSOURCE
 
 using System;
 using UnityEngine;
@@ -210,8 +210,8 @@ namespace Virterix.AdMediation
                 IronSource.Agent.validateIntegration();
 
             SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
-            if (AdMediationSystem.Instance.ChildrenDirected != ChildDirectedMode.NotAssign)
-                SetChildDirected(AdMediationSystem.Instance.ChildrenDirected);
+            if (AdMediationSystem.Instance.ChildrenMode != ChildDirectedMode.NotAssign)
+                SetChildDirected(AdMediationSystem.Instance.ChildrenMode);
 
             IronSource.Agent.init(appKey, IronSourceAdUnits.INTERSTITIAL, IronSourceAdUnits.REWARDED_VIDEO, IronSourceAdUnits.BANNER);
         }
@@ -545,7 +545,6 @@ namespace Virterix.AdMediation
         }
 
         #endregion
-
-#endif // _AMS_IRONSOURCE
+#endif 
     }
 }

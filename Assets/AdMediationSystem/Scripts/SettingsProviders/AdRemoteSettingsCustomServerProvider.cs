@@ -27,7 +27,7 @@ namespace Virterix.AdMediation
         }
         private TimeSnapshot m_lastUpdateData;
 
-        public override bool IsUpdateRequired => LastUpdateData.IsPeriodOver;
+        public override bool IsUpdatingRequired => LastUpdateData.IsPeriodOver;
 
         public override void Request()
         {
@@ -56,12 +56,12 @@ namespace Virterix.AdMediation
         private string GetCustomizationRequestUrl(string methodName)
         {
             string requestUrl = m_apiUrl + "customization." + methodName + "?" +
-                "platform=" + AdMediationSystem.Instance.PlatfomName +
+                "platform=" + AdMediationSystem.Instance.PlatformName +
                 "&project=" + AdMediationSystem.Instance.ProjectName +
                 "&v=" + m_apiVersion;
             return requestUrl;
         }
-
+ 
         private void SaveCheckUpdateDateTimeSettings()
         {
             LastUpdateData.Save();
@@ -74,7 +74,6 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AdMediationSystem.StartLoadSettingsFromServer() Request url:" + requestUrl);
 #endif
-
             RemoteLoader.Load(requestUrl,
                 _LOAD_SETTINGS_WAITING_TIME,
                 RemoteLoader.CheckMode.EveryFrame,
@@ -84,9 +83,7 @@ namespace Virterix.AdMediation
 
         private void OnLoadingCompleteSettingsFromServer(bool success, UnityWebRequest www)
         {
-
             JSONObject remoteJsonSettings = null;
-
             if (success)
             {
                 string receivedContent = www.downloadHandler.text.Trim();

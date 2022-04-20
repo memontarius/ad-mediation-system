@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
+  m_Name: RemoteConfigDataStoreAsset
+  m_EditorClassIdentifier: 
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"744000d6-16a5-443c-8fb4-056aeb6ab0b3\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"moreGamesGPGUrl\",\r\n      \"type\":
+    \"string\",\r\n      \"value\": \"https://play.google.com/store/apps/developer?id=Virterix\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"7cf77616-984a-43f7-ab86-239c4aa5b92d\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"moreGamesAppstoreUrl\",\r\n      \"type\":
+    \"string\",\r\n      \"value\": \"https://itunes.apple.com/developer/mirage-lab/id538761557?mt=8\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"1a9e63ee-f44d-4de6-827d-b36f8548c79b\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"moreGamesGalaxyUrl\",\r\n      \"type\":
+    \"string\",\r\n      \"value\": \"http://virterix.com/\"\r\n    }\r\n  },\r\n 
+    {\r\n    \"metadata\": {\r\n      \"entityId\": \"35f00287-205e-4bf5-b0de-24e463d00490\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"moreGamesAmazonUrl\",\r\n      \"type\":
+    \"string\",\r\n      \"value\": \"http://www.amazon.com/gp/mas/dl/android?asin=B00GC3G15W&showAll=1\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"69e10d23-baa5-4701-856b-35f4a7ef8b60\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"facebookUrl\",\r\n      \"type\": \"string\",\r\n     
+    \"value\": \"https://www.facebook.com/virterix\"\r\n    }\r\n  },\r\n  {\r\n   
+    \"metadata\": {\r\n      \"entityId\": \"1f203791-4cad-4698-a2ba-cb4ebc67f05d\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"twetterUrl\",\r\n      \"type\": \"string\",\r\n     
+    \"value\": \"https://twitter.com/virterix\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\":
+    {\r\n      \"entityId\": \"f60a2a64-b068-4c67-afaa-213d34153f33\"\r\n    },\r\n   
+    \"rs\": {\r\n      \"key\": \"vkUrl\",\r\n      \"type\": \"string\",\r\n     
+    \"value\": \"https://vk.com/virterix\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\":
+    {\r\n      \"entityId\": \"9c3f2d6a-2a9a-44e8-9f1e-d946385de9b9\"\r\n    },\r\n   
+    \"rs\": {\r\n      \"key\": \"adSettingsAndroid\",\r\n      \"type\": \"string\",\r\n     
+    \"value\": \"{\\\"projectName\\\":\\\"DefaultProject\\\",\\\"networkResponseWaitTime\\\":30,\\\"mediators\\\":[{\\\"adType\\\":\\\"banner\\\",\\\"placement\\\":\\\"Default\\\",\\\"strategy\\\":{\\\"type\\\":\\\"sequence\\\",\\\"maxPass\\\":[1,1],\\\"tiers\\\":[[{\\\"network\\\":\\\"admob\\\"}],[{\\\"network\\\":\\\"ironsrc\\\"}]]}},{\\\"adType\\\":\\\"banner\\\",\\\"placement\\\":\\\"Top\\\",\\\"strategy\\\":{\\\"type\\\":\\\"sequence\\\",\\\"maxPass\\\":[1],\\\"tiers\\\":[[{\\\"network\\\":\\\"admob\\\"}]]}},{\\\"adType\\\":\\\"interstitial\\\",\\\"placement\\\":\\\"Default\\\",\\\"strategy\\\":{\\\"type\\\":\\\"sequence\\\",\\\"maxPass\\\":[1,1],\\\"tiers\\\":[[{\\\"network\\\":\\\"admob\\\"}],[{\\\"network\\\":\\\"ironsrc\\\"}]]}},{\\\"adType\\\":\\\"incentivized\\\",\\\"placement\\\":\\\"Default\\\",\\\"strategy\\\":{\\\"type\\\":\\\"sequence\\\",\\\"maxPass\\\":[1],\\\"tiers\\\":[[{\\\"network\\\":\\\"admob\\\",\\\"prepareOnExit\\\":true}]]}}],\\\"networks\\\":[{\\\"name\\\":\\\"admob\\\",\\\"appId\\\":\\\"ca-app-pub-1726624045989422~7998588197\\\",\\\"instances\\\":[{\\\"adType\\\":\\\"banner\\\",\\\"param\\\":\\\"Default\\\",\\\"id\\\":\\\"ca-app-pub-1726624045989422/2917881533\\\",\\\"timeout\\\":90},{\\\"adType\\\":\\\"banner\\\",\\\"name\\\":\\\"Top\\\",\\\"param\\\":\\\"Top\\\",\\\"id\\\":\\\"ca-app-pub-1726624045989422/6327808850\\\",\\\"timeout\\\":90},{\\\"adType\\\":\\\"interstitial\\\",\\\"id\\\":\\\"ca-app-pub-1726624045989422/7768482027\\\",\\\"timeout\\\":90},{\\\"adType\\\":\\\"incentivized\\\",\\\"id\\\":\\\"ca-app-pub-1726624045989422/9834659581\\\",\\\"timeout\\\":90}]},{\\\"name\\\":\\\"unityads\\\",\\\"appId\\\":\\\"2917696\\\",\\\"instances\\\":[{\\\"adType\\\":\\\"banner\\\",\\\"param\\\":\\\"Default\\\",\\\"id\\\":\\\"banner\\\",\\\"timeout\\\":120},{\\\"adType\\\":\\\"banner\\\",\\\"name\\\":\\\"Top\\\",\\\"param\\\":\\\"Top\\\",\\\"id\\\":\\\"banner_top\\\",\\\"timeout\\\":120},{\\\"adType\\\":\\\"interstitial\\\",\\\"id\\\":\\\"interstitial\\\",\\\"timeout\\\":90},{\\\"adType\\\":\\\"incentivized\\\",\\\"id\\\":\\\"rewardedVideo\\\",\\\"timeout\\\":90}]},{\\\"name\\\":\\\"ironsrc\\\",\\\"appId\\\":\\\"e689f601\\\",\\\"responseWaitTime\\\":25,\\\"instances\\\":[{\\\"adType\\\":\\\"banner\\\",\\\"param\\\":\\\"Default\\\",\\\"id\\\":\\\"\\\",\\\"timeout\\\":120},{\\\"adType\\\":\\\"banner\\\",\\\"name\\\":\\\"Chat\\\",\\\"param\\\":\\\"Chat\\\",\\\"id\\\":\\\"\\\",\\\"timeout\\\":120}]}]}\"\r\n   
+    }\r\n  }\r\n]"
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"744000d6-16a5-443c-8fb4-056aeb6ab0b3\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"moreGamesGPGUrl\",\r\n      \"type\":
+    \"string\",\r\n      \"value\": \"https://play.google.com/store/apps/developer?id=Virterix\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"7cf77616-984a-43f7-ab86-239c4aa5b92d\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"moreGamesAppstoreUrl\",\r\n      \"type\":
+    \"string\",\r\n      \"value\": \"https://itunes.apple.com/developer/mirage-lab/id538761557?mt=8\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"1a9e63ee-f44d-4de6-827d-b36f8548c79b\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"moreGamesGalaxyUrl\",\r\n      \"type\":
+    \"string\",\r\n      \"value\": \"http://virterix.com/\"\r\n    }\r\n  },\r\n 
+    {\r\n    \"metadata\": {\r\n      \"entityId\": \"35f00287-205e-4bf5-b0de-24e463d00490\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"moreGamesAmazonUrl\",\r\n      \"type\":
+    \"string\",\r\n      \"value\": \"http://www.amazon.com/gp/mas/dl/android?asin=B00GC3G15W&showAll=1\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"69e10d23-baa5-4701-856b-35f4a7ef8b60\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"facebookUrl\",\r\n      \"type\": \"string\",\r\n     
+    \"value\": \"https://www.facebook.com/virterix\"\r\n    }\r\n  },\r\n  {\r\n   
+    \"metadata\": {\r\n      \"entityId\": \"1f203791-4cad-4698-a2ba-cb4ebc67f05d\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"twetterUrl\",\r\n      \"type\": \"string\",\r\n     
+    \"value\": \"https://twitter.com/virterix\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\":
+    {\r\n      \"entityId\": \"f60a2a64-b068-4c67-afaa-213d34153f33\"\r\n    },\r\n   
+    \"rs\": {\r\n      \"key\": \"vkUrl\",\r\n      \"type\": \"string\",\r\n     
+    \"value\": \"https://vk.com/virterix\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\":
+    {\r\n      \"entityId\": \"9c3f2d6a-2a9a-44e8-9f1e-d946385de9b9\"\r\n    },\r\n   
+    \"rs\": {\r\n      \"key\": \"adSettingsAndroid\",\r\n      \"type\": \"string\",\r\n     
+    \"value\": \"{\\\"projectName\\\":\\\"DefaultProject\\\",\\\"networkResponseWaitTime\\\":30,\\\"mediators\\\":[{\\\"adType\\\":\\\"banner\\\",\\\"placement\\\":\\\"Default\\\",\\\"strategy\\\":{\\\"type\\\":\\\"sequence\\\",\\\"maxPass\\\":[1,1],\\\"tiers\\\":[[{\\\"network\\\":\\\"admob\\\"}],[{\\\"network\\\":\\\"ironsrc\\\"}]]}},{\\\"adType\\\":\\\"banner\\\",\\\"placement\\\":\\\"Top\\\",\\\"strategy\\\":{\\\"type\\\":\\\"sequence\\\",\\\"maxPass\\\":[1],\\\"tiers\\\":[[{\\\"network\\\":\\\"admob\\\"}]]}},{\\\"adType\\\":\\\"interstitial\\\",\\\"placement\\\":\\\"Default\\\",\\\"strategy\\\":{\\\"type\\\":\\\"sequence\\\",\\\"maxPass\\\":[1,1],\\\"tiers\\\":[[{\\\"network\\\":\\\"admob\\\"}],[{\\\"network\\\":\\\"ironsrc\\\"}]]}},{\\\"adType\\\":\\\"incentivized\\\",\\\"placement\\\":\\\"Default\\\",\\\"strategy\\\":{\\\"type\\\":\\\"sequence\\\",\\\"maxPass\\\":[1],\\\"tiers\\\":[[{\\\"network\\\":\\\"admob\\\",\\\"prepareOnExit\\\":true}]]}}],\\\"networks\\\":[{\\\"name\\\":\\\"admob\\\",\\\"appId\\\":\\\"ca-app-pub-1726624045989422~7998588197\\\",\\\"instances\\\":[{\\\"adType\\\":\\\"banner\\\",\\\"param\\\":\\\"Default\\\",\\\"id\\\":\\\"ca-app-pub-1726624045989422/2917881533\\\",\\\"timeout\\\":90},{\\\"adType\\\":\\\"banner\\\",\\\"name\\\":\\\"Top\\\",\\\"param\\\":\\\"Top\\\",\\\"id\\\":\\\"ca-app-pub-1726624045989422/6327808850\\\",\\\"timeout\\\":90},{\\\"adType\\\":\\\"interstitial\\\",\\\"id\\\":\\\"ca-app-pub-1726624045989422/7768482027\\\",\\\"timeout\\\":90},{\\\"adType\\\":\\\"incentivized\\\",\\\"id\\\":\\\"ca-app-pub-1726624045989422/9834659581\\\",\\\"timeout\\\":90}]},{\\\"name\\\":\\\"unityads\\\",\\\"appId\\\":\\\"2917696\\\",\\\"instances\\\":[{\\\"adType\\\":\\\"banner\\\",\\\"param\\\":\\\"Default\\\",\\\"id\\\":\\\"banner\\\",\\\"timeout\\\":120},{\\\"adType\\\":\\\"banner\\\",\\\"name\\\":\\\"Top\\\",\\\"param\\\":\\\"Top\\\",\\\"id\\\":\\\"banner_top\\\",\\\"timeout\\\":120},{\\\"adType\\\":\\\"interstitial\\\",\\\"id\\\":\\\"interstitial\\\",\\\"timeout\\\":90},{\\\"adType\\\":\\\"incentivized\\\",\\\"id\\\":\\\"rewardedVideo\\\",\\\"timeout\\\":90}]},{\\\"name\\\":\\\"ironsrc\\\",\\\"appId\\\":\\\"e689f601\\\",\\\"responseWaitTime\\\":25,\\\"instances\\\":[{\\\"adType\\\":\\\"banner\\\",\\\"param\\\":\\\"Default\\\",\\\"id\\\":\\\"\\\",\\\"timeout\\\":120},{\\\"adType\\\":\\\"banner\\\",\\\"name\\\":\\\"Chat\\\",\\\"param\\\":\\\"Chat\\\",\\\"id\\\":\\\"\\\",\\\"timeout\\\":120}]}]}\"\r\n   
+    }\r\n  }\r\n]"
+  _environments: "[\r\n  {\r\n    \"projectId\": \"cd781ac5-89f2-412b-bc4a-40baff2b20c9\",\r\n   
+    \"name\": \"production\",\r\n    \"id\": \"3244ab70-7f4c-419a-9ceb-eda99d6ad2d0\",\r\n   
+    \"isDefault\": true,\r\n    \"createdAt\": \"2019-10-07T14:11:29Z\",\r\n    \"updatedAt\":
+    \"2021-08-09T21:22:36Z\"\r\n  },\r\n  {\r\n    \"projectId\": \"cd781ac5-89f2-412b-bc4a-40baff2b20c9\",\r\n   
+    \"name\": \"development\",\r\n    \"id\": \"6e368afd-fa5c-4822-bfb8-69426a822a7e\",\r\n   
+    \"isDefault\": false,\r\n    \"createdAt\": \"2019-10-07T14:11:29Z\",\r\n   
+    \"updatedAt\": \"2021-08-09T21:22:36Z\"\r\n  }\r\n]"

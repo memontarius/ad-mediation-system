@@ -1,4 +1,4 @@
-﻿//#define _AMS_USE_UNITY_REMOTE_CONFIG
+#define _AMS_USE_UNITY_REMOTE_CONFIG
 
 using UnityEngine;
 using Boomlagoon.JSON;
@@ -10,28 +10,21 @@ namespace Virterix.AdMediation
 {
     public class AdRemoteSettingsUnityServerProvider : AdRemoteSettingsProvider
     {
-
-        public bool m_isFetchConfigs;
+        public bool m_autoFetching;
         [Tooltip("Will be add platform key (prefix + platform)")]
         public string m_settingsPrefixKey;
 
+        public override bool IsSelfCached => true;
+
         public string UniqueUserId
         {
-            get
-            {
-                return m_uniqueUserId == "" ? SystemInfo.deviceUniqueIdentifier : m_uniqueUserId;
-            }
-            set
-            {
-                m_uniqueUserId = value;
-            }
+            get => m_uniqueUserId == "" ? SystemInfo.deviceUniqueIdentifier : m_uniqueUserId;
+            set => m_uniqueUserId = value;
         }
         string m_uniqueUserId;
-
-        string SettingsParamKey
-        {
-            get { return m_settingsPrefixKey + AdMediationSystem.Instance.PlatfomName; }
-        }
+        
+        string SettingsParamKey => 
+            m_settingsPrefixKey + AdMediationSystem.Instance.PlatformName;
 
         public struct userAttributes
         {
@@ -59,7 +52,7 @@ namespace Virterix.AdMediation
 
         public override void Request()
         {
-            if (m_isFetchConfigs)
+            if (m_autoFetching)
             {
                 if (m_wasConfigResponse)
                 {
@@ -69,7 +62,7 @@ namespace Virterix.AdMediation
                 {
                     ConfigManager.SetCustomUserID(UniqueUserId);
                     // Fetch configuration setting from the remote service: 
-                    ConfigManager.FetchConfigs<userAttributes, appAttributes>(new userAttributes(), new appAttributes());
+                    ConfigManager.FetchConfigs(new userAttributes(), new appAttributes());
                 }
             }
         }
@@ -87,7 +80,7 @@ namespace Virterix.AdMediation
                 case ConfigOrigin.Cached:
                     break;
                 case ConfigOrigin.Remote:
-                    m_assignmentId = ConfigManager.appConfig.assignmentID;
+                    m_assignmentId = ConfigManager.appConfig.assignmentId;
                     break;
             }
 

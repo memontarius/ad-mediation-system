@@ -53,16 +53,16 @@ namespace Virterix.AdMediation.Editor
             foreach (var mediator in mediators)
             {
                 bool isJumpNextMediator = false;
-                foreach (var tier in mediator._tiers)
+                foreach (var tier in mediator.Tiers)
                 {
-                    foreach (var unit in tier._units)
+                    foreach (var unit in tier.Units)
                     {
-                        if (networkSettings._networkIdentifier == unit._networkIdentifier && 
-                            unit._instanceName == adInstanceContainer._adInstance._name)
+                        if (networkSettings._networkIdentifier == unit.NetworkIdentifier && 
+                            unit.InstanceName == adInstanceContainer._adInstance._name)
                         {
                             BannerPositionContainer position = new BannerPositionContainer();
-                            position.m_placementName = mediator._name;
-                            position.m_bannerPosition = mediator._bannerPosition;
+                            position.m_placementName = mediator.Name;
+                            position.m_bannerPosition = mediator.BannerPosition;
                             positions.Add(position);
                             isJumpNextMediator = true;
                             break;
@@ -144,8 +144,8 @@ namespace Virterix.AdMediation.Editor
             foreach (AdUnitMediator mediator in mediators)
             {
                 JSONObject jsonMediator = new JSONObject();
-                jsonMediator.Add("adType", AdUtils.AdTypeToString(mediator._adType));
-                jsonMediator.Add("placement", mediator._name);
+                jsonMediator.Add("adType", AdUtils.AdTypeToString(mediator.AdvertisingType));
+                jsonMediator.Add("placement", mediator.Name);
                 jsonMediator.Add("strategy", CreateStrategy(mediator));
                 jsonMediators.Add(jsonMediator);
             }
@@ -155,7 +155,7 @@ namespace Virterix.AdMediation.Editor
         private static JSONObject CreateStrategy(AdUnitMediator mediator)
         {
             JSONObject mediationStrategy = new JSONObject();
-            mediationStrategy.Add("type", mediator._fetchStrategyType.ToString().ToLower());
+            mediationStrategy.Add("type", mediator.FetchStrategyType.ToString().ToLower());
             mediationStrategy.Add("maxPass", CreateTierMaxPassages(mediator));
             mediationStrategy.Add("tiers", CreateTiers(mediator));
             return mediationStrategy;
@@ -163,9 +163,9 @@ namespace Virterix.AdMediation.Editor
         public static JSONArray CreateTierMaxPassages(AdUnitMediator mediator)
         {
             JSONArray jsonMaxPassages = new JSONArray();
-            foreach (var tier in mediator._tiers)
+            foreach (var tier in mediator.Tiers)
             {
-                jsonMaxPassages.Add(tier._maxPassages);
+                jsonMaxPassages.Add(tier.MaxPassages);
             }
             return jsonMaxPassages;
         }
@@ -173,10 +173,10 @@ namespace Virterix.AdMediation.Editor
         public static JSONArray CreateTiers(AdUnitMediator mediator)
         {
             JSONArray jsonTiers = new JSONArray();
-            foreach(var tier in mediator._tiers)
+            foreach(var tier in mediator.Tiers)
             {
                 JSONArray jsonTier = new JSONArray();
-                foreach(var unit in tier._units)
+                foreach(var unit in tier.Units)
                 {
                     jsonTier.Add(CreateAdUnit(mediator, unit));
                 }
@@ -189,26 +189,26 @@ namespace Virterix.AdMediation.Editor
         {
             JSONObject jsonUnit = new JSONObject();
 
-            jsonUnit.Add("network", adUnit._networkIdentifier);
-            if (adUnit._instanceName != AdMediation.AdInstance.AD_INSTANCE_DEFAULT_NAME)
+            jsonUnit.Add("network", adUnit.NetworkIdentifier);
+            if (adUnit.InstanceName != AdMediation.AdInstance.AD_INSTANCE_DEFAULT_NAME)
             {
-                jsonUnit.Add("instance", adUnit._instanceName);
+                jsonUnit.Add("instance", adUnit.InstanceName);
             }
-            if (adUnit._prepareOnExit)
+            if (adUnit.PrepareOnExit)
             {
-                jsonUnit.Add("prepareOnExit", adUnit._prepareOnExit);
+                jsonUnit.Add("prepareOnExit", adUnit.PrepareOnExit);
             }         
             
-            switch (mediator._fetchStrategyType)
+            switch (mediator.FetchStrategyType)
             {
                 case FetchStrategyType.Sequence:
-                    if (adUnit._replaced)
+                    if (adUnit.Replaced)
                     {
-                        jsonUnit.Add("replaced", adUnit._replaced);
+                        jsonUnit.Add("replaced", adUnit.Replaced);
                     }
                     break;
                 case FetchStrategyType.Random:
-                    jsonUnit.Add("percentage", adUnit._percentage);
+                    jsonUnit.Add("percentage", adUnit.Percentage);
                     break;
             }
 
@@ -329,20 +329,31 @@ namespace Virterix.AdMediation.Editor
         private static GameObject CreateSystemObject(string projectName, AdMediationProjectSettings commonSettings, BaseAdNetworkSettings[] networksSettings, AdUnitMediator[] mediators)
         {
             GameObject mediationSystemObject = new GameObject(AdMediationSystem.PREFAB_NAME + ".prefab");
-            AdMediationSystem admSystem = mediationSystemObject.AddComponent<AdMediationSystem>();
+            AdRemoteSettingsProvider settingsProvider = null;
             
+            if (commonSettings.EnableUnityRemoteConfigProvider)
+            {
+                settingsProvider = mediationSystemObject.AddComponent<AdRemoteSettingsUnityServerProvider>();
+                SerializedObject serializedSettingsProvider = new SerializedObject(settingsProvider);
+                serializedSettingsProvider.FindProperty("m_settingsPrefixKey").stringValue = commonSettings.RemoteConfigPrefixKey;
+                serializedSettingsProvider.FindProperty("m_autoFetching").boolValue = commonSettings.RemoteConfigAutoFetching;
+                serializedSettingsProvider.ApplyModifiedProperties();
+            }
+            
+            AdMediationSystem admSystem = mediationSystemObject.AddComponent<AdMediationSystem>();
             SerializedObject serializedAdmSystem = new SerializedObject(admSystem);
             serializedAdmSystem.FindProperty("m_projectName").stringValue = projectName;
-            serializedAdmSystem.FindProperty("m_isLoadOnlyDefaultSettings").boolValue = true;
-            serializedAdmSystem.FindProperty("m_initializeOnStart").boolValue = commonSettings._initializeOnStart;
-            serializedAdmSystem.FindProperty("m_testModeEnabled").boolValue = commonSettings._enableTestMode;
-            serializedAdmSystem.FindProperty("m_childrenDirected").enumValueIndex = (int)commonSettings._childrenDirected;
+            serializedAdmSystem.FindProperty("m_isOnlyLoadingByDefaultSettings").boolValue = settingsProvider == null;
+            serializedAdmSystem.FindProperty("m_remoteSettingsProvider").objectReferenceValue = settingsProvider;
+            serializedAdmSystem.FindProperty("m_initializeOnStart").boolValue = commonSettings.InitializeOnStart;
+            serializedAdmSystem.FindProperty("m_testModeEnabled").boolValue = commonSettings.EnableTestMode;
+            serializedAdmSystem.FindProperty("m_childrenMode").enumValueIndex = (int)commonSettings.ChildrenMode;
             serializedAdmSystem.FindProperty("m_hashCryptKey").stringValue = "svko";
             SerializedProperty testDevicesProp = serializedAdmSystem.FindProperty("m_testDevices");
-            testDevicesProp.arraySize = commonSettings._testDevices.Length;
+            testDevicesProp.arraySize = commonSettings.TestDevices.Length;
             for (int i = 0; i < testDevicesProp.arraySize; i++)
             {
-                testDevicesProp.GetArrayElementAtIndex(i).stringValue = commonSettings._testDevices[i];
+                testDevicesProp.GetArrayElementAtIndex(i).stringValue = commonSettings.TestDevices[i];
             }
             serializedAdmSystem.ApplyModifiedProperties();
             
@@ -355,15 +366,15 @@ namespace Virterix.AdMediation.Editor
             
             GameObject bannerMediatorHolder = new GameObject("Banner");
             bannerMediatorHolder.transform.SetParent(mediatorHolder.transform);
-            FillMediatorHolder(bannerMediatorHolder, commonSettings._bannerMediators);
+            FillMediatorHolder(bannerMediatorHolder, commonSettings.BannerMediators);
 
             GameObject interstitialMediatorHolder = new GameObject("Interstitial");
             interstitialMediatorHolder.transform.SetParent(mediatorHolder.transform);
-            FillMediatorHolder(interstitialMediatorHolder, commonSettings._interstitialMediators);
+            FillMediatorHolder(interstitialMediatorHolder, commonSettings.InterstitialMediators);
 
             GameObject incentivizedMediatorHolder = new GameObject("Incentivized");
             incentivizedMediatorHolder.transform.SetParent(mediatorHolder.transform);
-            FillMediatorHolder(incentivizedMediatorHolder, commonSettings._incentivizedMediators);
+            FillMediatorHolder(incentivizedMediatorHolder, commonSettings.IncentivizedMediators);
 
             return mediationSystemObject;
         }
@@ -404,13 +415,13 @@ namespace Virterix.AdMediation.Editor
             foreach (var model in mediators)
             {
                 AdMediator mediator = mediatorHolder.AddComponent<AdMediator>();
-                mediator.m_adType = model._adType;
-                mediator.m_placementName = model._name;
-                mediator.m_fetchOnAdUnitHidden = model._fetchOnAdUnitHidden;
-                mediator.m_continueAfterEndSession = model._continueAfterEndSession;
-                mediator.m_fetchOnStart = model._fetchOnStart;
-                mediator.m_bannerMinDisplayTime = model._adType == AdType.Banner ? model._bannerMinDisplayTime : 0;
-                mediator.m_deferredFetchDelay = model._adType == AdType.Incentivized ? model._deferredFetchDelay : -1;
+                mediator.m_adType = model.AdvertisingType;
+                mediator.m_placementName = model.Name;
+                mediator.m_fetchOnAdUnitHidden = model.FetchOnAdUnitHidden;
+                mediator.m_continueAfterEndSession = model.ContinueAfterEndSession;
+                mediator.m_fetchOnStart = model.FetchOnStart;
+                mediator.m_bannerMinDisplayTime = model.AdvertisingType == AdType.Banner ? model.BannerMinDisplayTime : 0;
+                mediator.m_deferredFetchDelay = model.AdvertisingType == AdType.Incentivized ? model.DeferredFetchDelay : -1;
             }
         }
 

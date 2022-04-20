@@ -134,6 +134,6 @@ namespace Virterix.AdMediation
         }
 
         #endregion // Callbacks
-#endif // _AMS_VUNGLE
+#endif
     }
 }

@@ -657,7 +657,7 @@ namespace Virterix.AdMediation
         }
 
         #endregion // Reward Video callback handlers
-#endif // _AMS_AUDIENCE_NETWORK
+#endif
     }
 }
 

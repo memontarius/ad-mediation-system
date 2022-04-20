@@ -12,151 +12,116 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 020f93c8651de7646badc5e14f92513d, type: 3}
   m_Name: adm_project_settings
   m_EditorClassIdentifier: 
-  _initializeOnStart: 1
-  _enableTestMode: 0
-  _enableExtraLogging: 1
-  _childrenDirected: 0
-  _testDevices:
-  - 042ba23b-a110-4288-ae66-0996e9ccb93f
-  - F8F050AFDC859ABF15C632F2D292B3DA
-  _bannerMediators:
-  - _adType: 1
-    _name: Default
-    _continueAfterEndSession: 1
-    _fetchOnAdUnitHidden: 1
-    _fetchOnStart: 0
-    _bannerMinDisplayTime: 20
-    _deferredFetchDelay: 90
-    _fetchStrategyType: 0
-    _bannerPosition: 3
-    _tiers:
-    - _maxPassages: 1
-      _units:
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 100
-      - _networkName: Iron Source
-        _networkIndex: 2
-        _networkIdentifier: ironsrc
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 0
-  - _adType: 1
-    _name: Top
-    _continueAfterEndSession: 1
-    _fetchOnAdUnitHidden: 1
-    _fetchOnStart: 0
-    _bannerMinDisplayTime: 20
-    _deferredFetchDelay: 90
-    _fetchStrategyType: 0
-    _bannerPosition: 0
-    _tiers:
-    - _maxPassages: 1
-      _units:
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 1
-        _instanceName: Top
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 100
-      - _networkName: Iron Source
-        _networkIndex: 2
-        _networkIdentifier: ironsrc
-        _instanceIndex: 1
-        _instanceName: Chat
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 0
-  _interstitialMediators:
-  - _adType: 2
-    _name: Default
-    _continueAfterEndSession: 1
-    _fetchOnAdUnitHidden: 1
-    _fetchOnStart: 0
-    _bannerMinDisplayTime: 30
-    _deferredFetchDelay: 90
-    _fetchStrategyType: 0
-    _bannerPosition: 0
-    _tiers:
-    - _maxPassages: 1
-      _units:
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 100
-    - _maxPassages: 1
-      _units:
-      - _networkName: Iron Source
-        _networkIndex: 2
-        _networkIdentifier: ironsrc
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 100
-  - _adType: 2
-    _name: Home_Screen
-    _continueAfterEndSession: 1
-    _fetchOnAdUnitHidden: 1
-    _fetchOnStart: 0
-    _bannerMinDisplayTime: 30
-    _deferredFetchDelay: 90
-    _fetchStrategyType: 0
-    _bannerPosition: 0
-    _tiers:
-    - _maxPassages: 1
-      _units:
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 100
-  _incentivizedMediators:
-  - _adType: 3
-    _name: Default
-    _continueAfterEndSession: 1
-    _fetchOnAdUnitHidden: 1
-    _fetchOnStart: 0
-    _bannerMinDisplayTime: 30
-    _deferredFetchDelay: 320
-    _fetchStrategyType: 0
-    _bannerPosition: 0
-    _tiers:
-    - _maxPassages: 1
-      _units:
-      - _networkName: AdMob
-        _networkIndex: 0
-        _networkIdentifier: admob
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 100
-    - _maxPassages: 1
-      _units:
-      - _networkName: Iron Source
-        _networkIndex: 2
-        _networkIdentifier: ironsrc
-        _instanceIndex: 0
-        _instanceName: Default
-        _replaced: 0
-        _prepareOnExit: 0
-        _percentage: 100
-  _isIOS: 1
-  _isAndroid: 1
+  InitializeOnStart: 1
+  EnableTestMode: 0
+  EnableExtraLogging: 1
+  ChildrenMode: 0
+  TestDevices: []
+  BannerMediators:
+  - AdvertisingType: 1
+    Name: Default
+    ContinueAfterEndSession: 1
+    FetchOnAdUnitHidden: 1
+    FetchOnStart: 1
+    BannerMinDisplayTime: 30
+    DeferredFetchDelay: 90
+    FetchStrategyType: 0
+    BannerPosition: 3
+    Tiers:
+    - MaxPassages: 1
+      Units:
+      - NetworkName: AdMob
+        NetworkIndex: 0
+        NetworkIdentifier: admob
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaced: 0
+        PrepareOnExit: 0
+        Percentage: 100
+    - MaxPassages: 1
+      Units:
+      - NetworkName: Iron Source
+        NetworkIndex: 2
+        NetworkIdentifier: ironsrc
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaced: 0
+        PrepareOnExit: 0
+        Percentage: 100
+  - AdvertisingType: 1
+    Name: Top
+    ContinueAfterEndSession: 1
+    FetchOnAdUnitHidden: 1
+    FetchOnStart: 1
+    BannerMinDisplayTime: 30
+    DeferredFetchDelay: 90
+    FetchStrategyType: 0
+    BannerPosition: 0
+    Tiers:
+    - MaxPassages: 1
+      Units:
+      - NetworkName: AdMob
+        NetworkIndex: 0
+        NetworkIdentifier: admob
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaced: 0
+        PrepareOnExit: 0
+        Percentage: 100
+  InterstitialMediators:
+  - AdvertisingType: 2
+    Name: Default
+    ContinueAfterEndSession: 1
+    FetchOnAdUnitHidden: 1
+    FetchOnStart: 1
+    BannerMinDisplayTime: 30
+    DeferredFetchDelay: 90
+    FetchStrategyType: 0
+    BannerPosition: 0
+    Tiers:
+    - MaxPassages: 1
+      Units:
+      - NetworkName: AdMob
+        NetworkIndex: 0
+        NetworkIdentifier: admob
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaced: 0
+        PrepareOnExit: 0
+        Percentage: 100
+    - MaxPassages: 1
+      Units:
+      - NetworkName: Iron Source
+        NetworkIndex: 2
+        NetworkIdentifier: ironsrc
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaced: 0
+        PrepareOnExit: 0
+        Percentage: 100
+  IncentivizedMediators:
+  - AdvertisingType: 3
+    Name: Default
+    ContinueAfterEndSession: 1
+    FetchOnAdUnitHidden: 1
+    FetchOnStart: 1
+    BannerMinDisplayTime: 30
+    DeferredFetchDelay: 90
+    FetchStrategyType: 0
+    BannerPosition: 0
+    Tiers:
+    - MaxPassages: 1
+      Units:
+      - NetworkName: AdMob
+        NetworkIndex: 0
+        NetworkIdentifier: admob
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaced: 0
+        PrepareOnExit: 1
+        Percentage: 100
+  IsIOS: 1
+  IsAndroid: 1
+  EnableUnityRemoteConfigProvider: 1
+  RemoteConfigPrefixKey: adSettings
+  RemoteConfigAutoFetching: 1

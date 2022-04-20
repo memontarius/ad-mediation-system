@@ -110,8 +110,8 @@ namespace Virterix.AdMediation
             if (AdMediationSystem.Instance.IsTestModeEnabled)
                 MaxSdk.SetTestDeviceAdvertisingIdentifiers(AdMediationSystem.Instance.TestDevices);
 
-            if (AdMediationSystem.Instance.ChildrenDirected != ChildDirectedMode.NotAssign)
-                MaxSdk.SetIsAgeRestrictedUser(AdMediationSystem.Instance.ChildrenDirected == ChildDirectedMode.Directed);
+            if (AdMediationSystem.Instance.ChildrenMode != ChildDirectedMode.NotAssign)
+                MaxSdk.SetIsAgeRestrictedUser(AdMediationSystem.Instance.ChildrenMode == ChildDirectedMode.Directed);
             
             MaxSdk.SetSdkKey(sdkKey);
             SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
@@ -469,7 +469,7 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, adInstance);
         }
         #endregion // Rewarded Callbacks
-#endif // _AMS_APPLOVIN
+#endif
     }
 }
 

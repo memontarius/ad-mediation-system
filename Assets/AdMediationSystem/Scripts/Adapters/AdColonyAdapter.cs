@@ -129,8 +129,8 @@ namespace Virterix.AdMediation
             AppOptions appOptions = new AppOptions();
             appOptions.TestModeEnabled = AdMediationSystem.Instance.IsTestModeEnabled;
 
-            if (AdMediationSystem.Instance.ChildrenDirected == ChildDirectedMode.NotAssign)
-                appOptions.SetPrivacyFrameworkRequired(AppOptions.COPPA, AdMediationSystem.Instance.ChildrenDirected == ChildDirectedMode.Directed);
+            if (AdMediationSystem.Instance.ChildrenMode == ChildDirectedMode.NotAssign)
+                appOptions.SetPrivacyFrameworkRequired(AppOptions.COPPA, AdMediationSystem.Instance.ChildrenMode == ChildDirectedMode.Directed);
 
             if (AdMediationSystem.UserPersonalisationConsent != PersonalisationConsent.Undefined)
             {
@@ -451,9 +451,8 @@ namespace Virterix.AdMediation
             var adInstance = GetAdInstanceByAdId(adView.ZoneId);
             AddEvent(adInstance.m_adType, AdEvent.Click, adInstance);
         }
-
         #endregion // Banner Callbacks
-#endif // _AMS_ADCOLONY
+#endif
     }
 }
 

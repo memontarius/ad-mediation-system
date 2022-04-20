@@ -98,5 +98,33 @@ namespace Virterix.AdMediation.Editor
             }
             return result;
         }
+
+        public static bool RewriteScriptDefinition(string path, string scriptName, string definitionName, bool active)
+        {
+            string scriptPath = string.Format("{0}/{1}/{2}.cs", Application.dataPath, path, scriptName);
+            bool replaced = false;
+            
+            string content = File.ReadAllText(scriptPath);
+            if (content.Length > 0)
+            {
+                string define = "#define " + definitionName;
+                string undefine = "//#define " + definitionName;
+
+                if (active)
+                {
+                    replaced = content.Contains(undefine);
+                    if (replaced)
+                        content = content.Replace(undefine, define);
+                }
+                else
+                {
+                    replaced = !content.Contains(undefine);
+                    if (replaced)
+                        content = content.Replace(define, undefine);
+                }
+                File.WriteAllText(scriptPath, content);
+            }
+            return replaced;
+        }
     }
 }

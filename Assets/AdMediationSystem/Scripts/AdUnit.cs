@@ -2,9 +2,6 @@
 
 namespace Virterix.AdMediation
 {
-    /// <summary>
-    /// Defines advertising unit
-    /// </summary>
     public class AdUnit
     {
         private AdType m_adType;

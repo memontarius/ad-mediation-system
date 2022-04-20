@@ -43,7 +43,7 @@ namespace Virterix.AdMediation
             public int[] maxPassages;
         }
 
-        public const string VERSION = "2.3.1";
+        public const string VERSION = "2.3.4";
         public const string AD_SETTINGS_FOLDER = "AdMediationSettings";
         public const string PREFAB_NAME = "AdMediationSystem";
         public const string PLACEMENT_DEFAULT_NAME = "Default";
@@ -60,14 +60,7 @@ namespace Virterix.AdMediation
             Version,
             Hash
         }
-
-        enum SetupSettingsState
-        {
-            Successful,
-            RequiredCheckUpdate,
-            Failure
-        }
-
+        
         struct NetworkParams
         {
             public Dictionary<string, string> m_parameters;
@@ -85,17 +78,17 @@ namespace Virterix.AdMediation
         #endregion // Configuration variables
 
         //===============================================================================
-        #region Variables
+        #region Fields
         //-------------------------------------------------------------------------------
 
         [SerializeField] private string m_projectName;
-        [SerializeField] private bool m_isLoadOnlyDefaultSettings = true;
+        [SerializeField] private bool m_isOnlyLoadingByDefaultSettings = true;
         [Tooltip("Compare settings loaded from server")]
         [SerializeField] private AdSettingsCompareMode m_settingsCompareMode;
         [SerializeField] private AdRemoteSettingsProvider m_remoteSettingsProvider;
         [SerializeField] private AppPlatform m_platformInEditor;
         [SerializeField] private string m_hashCryptKey;
-        [SerializeField] private ChildDirectedMode m_childrenDirected = ChildDirectedMode.NotAssign;
+        [SerializeField] private ChildDirectedMode m_childrenMode = ChildDirectedMode.NotAssign;
         [SerializeField] private bool m_initializeOnStart = true;
         [SerializeField] private bool m_testModeEnabled = false;
         [SerializeField] private string[] m_testDevices;
@@ -112,11 +105,12 @@ namespace Virterix.AdMediation
 
         private Hashtable m_userParameters = new Hashtable();
         private AdNetworkAdapter[] m_networkAdapters;
-        private List<AdMediator> m_mediators = new List<AdMediator>();
+        private readonly List<AdMediator> m_mediators = new List<AdMediator>();
         private JSONObject m_currSettings;
+        private bool m_settingsApplied;
         
         public string ProjectName => m_projectName;
-        public ChildDirectedMode ChildrenDirected => m_childrenDirected;
+        public ChildDirectedMode ChildrenMode => m_childrenMode;
         public bool IsTestModeEnabled => m_testModeEnabled;
         public string[] TestDevices => m_testDevices;
         
@@ -146,25 +140,29 @@ namespace Virterix.AdMediation
             get { return m_currSettings; }
         }
 
-        public string PlatfomName
+        public string PlatformName
         {
             get
             {
-                string platformName = m_platformInEditor.ToString();
-                
-                switch (Application.platform)
+                if (string.IsNullOrEmpty(m_platformName))
                 {
-                    case RuntimePlatform.Android:
-                        platformName = AppPlatform.Android.ToString();
-                        break;
-                    case RuntimePlatform.IPhonePlayer:
-                        platformName = AppPlatform.iOS.ToString();
-                        break;
+                    m_platformName = m_platformInEditor.ToString();
+                    switch (Application.platform)
+                    {
+                        case RuntimePlatform.Android:
+                            m_platformName = AppPlatform.Android.ToString();
+                            break;
+                        case RuntimePlatform.IPhonePlayer:
+                            m_platformName = AppPlatform.iOS.ToString();
+                            break;
+                    }
                 }
-                return platformName;
+                return m_platformName;
             }
         }
 
+        private string m_platformName;
+        
         public InternetChecker InternetChecker
         {
             get
@@ -195,7 +193,7 @@ namespace Virterix.AdMediation
 
         private string SettingsFileName
         {
-            get { return PlatfomName + "_settings"; }
+            get { return PlatformName + "_settings"; }
         }
 
         private string DefaultSettingsFilePathInResources
@@ -234,8 +232,10 @@ namespace Virterix.AdMediation
             }
         }
 
-
-        #endregion // Variables
+        private bool IsSettingsProviderSelfCached =>
+            m_remoteSettingsProvider != null && m_remoteSettingsProvider.IsSelfCached;
+        
+        #endregion // Fields
 
         //===============================================================================
         #region MonoBehaviour methods
@@ -245,19 +245,22 @@ namespace Virterix.AdMediation
         {
             m_userPersonalisationConsent = UserPersonalisationConsent;
             if (m_remoteSettingsProvider != null)
-            {
                 m_remoteSettingsProvider.OnSettingsReceived += OnRemoteSettingsReceived;
-            }
             DontDestroyOnLoad(this.gameObject);
         }
-
+        
         private void Start()
         {
             if (m_initializeOnStart)
-            {
                 Initialize();
-            }
         }
+
+        private void OnDestroy()
+        {
+            if (m_remoteSettingsProvider != null)
+                m_remoteSettingsProvider.OnSettingsReceived -= OnRemoteSettingsReceived;
+        }
+
         #endregion MonoBehaviour methods
 
         //===============================================================================
@@ -398,39 +401,27 @@ namespace Virterix.AdMediation
         {
             AdMediator mediator = Instance.GetMediator(adType, placementName);
             if (mediator != null)
-            {
                 mediator.Fetch();
-            }
             else
-            {
                 Debug.Log("[AMS] AdMediationSystem.Fetch() Not found mediator: " + adType.ToString());
-            }
         }
 
         public static void Show(AdType adType, string placementName = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdMediator mediator = Instance.GetMediator(adType, placementName);
             if (mediator != null)
-            {
                 mediator.Show();
-            }
             else
-            {
                 Debug.Log("[AMS] AdMediationSystem.Fetch() Not found mediator: " + adType.ToString());
-            }
         }
 
         public static void Hide(AdType adType, string placementName = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdMediator mediator = Instance.GetMediator(adType, placementName);
             if (mediator != null)
-            {
                 mediator.Hide();
-            }
             else
-            {
                 Debug.Log("[AMS] AdMediationSystem.Hide() Not found mediator " + adType.ToString());
-            }
         }
 
         public static void NotifyAdNetworkEvent(AdMediator mediator, AdNetworkAdapter network, AdType adType, AdEvent adEvent, string adInstanceName)
@@ -587,13 +578,15 @@ namespace Virterix.AdMediation
 
         private void InitializeSettings()
         {
-            if (!m_isLoadOnlyDefaultSettings && m_remoteSettingsProvider != null && m_remoteSettingsProvider.IsUpdateRequired)
+            if (!m_isOnlyLoadingByDefaultSettings && 
+                m_remoteSettingsProvider != null && 
+                (m_remoteSettingsProvider.IsUpdatingRequired || m_remoteSettingsProvider.IsSelfCached))
             {
                 m_remoteSettingsProvider.Request();
             }
             else
             {
-                LoadJsonSettingsFromFile(ref m_currSettings, m_isLoadOnlyDefaultSettings);
+                LoadJsonSettingsFromFile(out m_currSettings, m_isOnlyLoadingByDefaultSettings);
                 SetupCurrentSettings();
             }
         }
@@ -842,12 +835,13 @@ namespace Virterix.AdMediation
                 if (!setupSuccess)
                 {
                     DeleteSavedJsonSettings();
-                    bool isLoadedDefaultSettings = LoadJsonSettingsFromFile(ref m_currSettings, true);
+                    bool isLoadedDefaultSettings = LoadJsonSettingsFromFile(out m_currSettings, true);
                     if (isLoadedDefaultSettings)
                     {
-                        SetupSettings(m_currSettings);
+                        setupSuccess = SetupSettings(m_currSettings);
                     }
                 }
+                m_settingsApplied = setupSuccess;
             }
             NotifyInitializeCompleted();
         }
@@ -855,9 +849,7 @@ namespace Virterix.AdMediation
         private void DeleteSavedJsonSettings()
         {
             if (File.Exists(SettingsFilePath))
-            {
                 File.Delete(SettingsFilePath);
-            }
         }
 
         #endregion // Initialize
@@ -866,32 +858,30 @@ namespace Virterix.AdMediation
         #region Load
         //-------------------------------------------------------------------------------
 
-        private bool LoadJsonSettingsFromFile(ref JSONObject resultSettings, bool ignoreLoadedSettings = false)
+        private bool LoadJsonSettingsFromFile(out JSONObject resultSettings, bool ignoreCachedSettings = false)
         {
             JSONObject settings = null;
-            bool isLoadedSuccessfully = false;
+            bool loadingSuccess = false;
 
-            if (!ignoreLoadedSettings && File.Exists(SettingsFilePath))
+            if (!ignoreCachedSettings && File.Exists(SettingsFilePath))
             {
                 string jsonString = File.ReadAllText(SettingsFilePath);
 
                 if (IsSettingsHashValid(jsonString))
                 {
                     settings = JSONObject.Parse(jsonString);
-                    isLoadedSuccessfully = settings != null;
+                    loadingSuccess = settings != null;
                 }
 
-                if (!isLoadedSuccessfully)
-                {
+                if (!loadingSuccess)
                     File.Delete(SettingsFilePath);
-                }
 
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("[AMS] AdMediationSystem.LoadJsonSettingsFromFile() " + (isLoadedSuccessfully ? " Valid settings" : " Not valid settings"));
+                Debug.Log("[AMS] AdMediationSystem.LoadJsonSettingsFromFile() " + (loadingSuccess ? " Valid settings" : " Not valid settings"));
 #endif
             }
 
-            if (!isLoadedSuccessfully)
+            if (!loadingSuccess)
             {
                 TextAsset textAsset = Resources.Load<TextAsset>(DefaultSettingsFilePathInResources);
                 if (textAsset != null)
@@ -906,9 +896,9 @@ namespace Virterix.AdMediation
             }
 
             resultSettings = settings;
-            isLoadedSuccessfully = resultSettings != null;
+            loadingSuccess = resultSettings != null;
 
-            return isLoadedSuccessfully;
+            return loadingSuccess;
         }
 
         private void OnRemoteSettingsReceived(AdRemoteSettingsProvider.LoadingState loadingState, JSONObject remoteJsonSettings)
@@ -920,7 +910,6 @@ namespace Virterix.AdMediation
             if (loadingState != AdRemoteSettingsProvider.LoadingState.Failed &&
                 loadingState != AdRemoteSettingsProvider.LoadingState.UnmodifiedLoaded)
             {
-
                 if (remoteJsonSettings != null)
                 {
                     bool isRemoteSettingsModified = true;
@@ -967,7 +956,9 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
                         Debug.Log("[AMS] AdMediationSystem.OnRemoteSettingsReceived() Save file: " + SettingsFilePath);
 #endif
-                        File.WriteAllText(this.SettingsFilePath, remoteJsonSettings.ToString());
+                        if (!IsSettingsProviderSelfCached)
+                            File.WriteAllText(this.SettingsFilePath, remoteJsonSettings.ToString());
+                        
                         m_currSettings = remoteJsonSettings;
                     }
                 }
@@ -979,7 +970,11 @@ namespace Virterix.AdMediation
                 }
             }
 
-            SetupCurrentSettings();
+            if (m_currSettings == null)
+                LoadJsonSettingsFromFile(out m_currSettings, true);
+            
+            if (!m_settingsApplied)
+                SetupCurrentSettings();
         }
 
         #endregion // Load

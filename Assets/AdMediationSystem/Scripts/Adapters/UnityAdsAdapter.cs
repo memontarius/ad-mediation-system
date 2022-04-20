@@ -1,4 +1,4 @@
-//#define _AMS_UNITY_ADS
+#define _AMS_UNITY_ADS
 
 using System.Collections.Generic;
 using UnityEngine;
@@ -275,6 +275,6 @@ namespace Virterix.AdMediation
             }
         }
         #endregion // Callback Event Methods
-#endif // _AMS_UNITY_ADS
+#endif
     }
 }
