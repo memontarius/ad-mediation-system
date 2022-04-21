@@ -57,7 +57,8 @@ namespace Virterix.AdMediation.Editor
         public bool IsIOS = true;
         public bool IsAndroid = true;
         public bool EnableUnityRemoteConfigProvider;
-        public string RemoteConfigPrefixKey;
         public bool RemoteConfigAutoFetching;
+        public string RemoteConfigPrefixKey;
+        public string RemoteConfigEnvironmentID;
     }
 }

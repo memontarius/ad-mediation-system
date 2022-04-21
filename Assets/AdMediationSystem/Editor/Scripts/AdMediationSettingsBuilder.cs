@@ -335,15 +335,16 @@ namespace Virterix.AdMediation.Editor
             {
                 settingsProvider = mediationSystemObject.AddComponent<AdRemoteSettingsUnityServerProvider>();
                 SerializedObject serializedSettingsProvider = new SerializedObject(settingsProvider);
-                serializedSettingsProvider.FindProperty("m_settingsPrefixKey").stringValue = commonSettings.RemoteConfigPrefixKey;
                 serializedSettingsProvider.FindProperty("m_autoFetching").boolValue = commonSettings.RemoteConfigAutoFetching;
+                serializedSettingsProvider.FindProperty("m_settingsPrefixKey").stringValue = commonSettings.RemoteConfigPrefixKey;
+                serializedSettingsProvider.FindProperty("m_environmentID").stringValue = commonSettings.RemoteConfigEnvironmentID;
                 serializedSettingsProvider.ApplyModifiedProperties();
             }
             
             AdMediationSystem admSystem = mediationSystemObject.AddComponent<AdMediationSystem>();
             SerializedObject serializedAdmSystem = new SerializedObject(admSystem);
             serializedAdmSystem.FindProperty("m_projectName").stringValue = projectName;
-            serializedAdmSystem.FindProperty("m_isOnlyLoadingByDefaultSettings").boolValue = settingsProvider == null;
+            serializedAdmSystem.FindProperty("m_isOnlyLoadingDefaultSettings").boolValue = settingsProvider == null;
             serializedAdmSystem.FindProperty("m_remoteSettingsProvider").objectReferenceValue = settingsProvider;
             serializedAdmSystem.FindProperty("m_initializeOnStart").boolValue = commonSettings.InitializeOnStart;
             serializedAdmSystem.FindProperty("m_testModeEnabled").boolValue = commonSettings.EnableTestMode;

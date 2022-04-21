@@ -6,15 +6,14 @@ namespace Virterix.AdMediation
 {
     public class AdRemoteSettingsProvider : MonoBehaviour
     {
-        public enum LoadingState
+        public enum LoadingStatus
         {
+            None,
             Failed,
-            UnmodifiedLoaded,
-            CacheLoaded,
-            RemoteLoaded
+            Success
         }
 
-        public event Action<LoadingState, JSONObject> OnSettingsReceived;
+        public event Action<LoadingStatus, JSONObject> OnSettingsReceived;
         public virtual bool IsUpdatingRequired => true;
         public virtual bool IsSelfCached => true;
         
@@ -22,9 +21,9 @@ namespace Virterix.AdMediation
         {
         }
 
-        protected void NotifyOnSettingsReceived(LoadingState loadingState, JSONObject settings)
+        protected void NotifyOnSettingsReceived(LoadingStatus loadingStatus, JSONObject settings)
         {
-            OnSettingsReceived?.Invoke(loadingState, settings);
+            OnSettingsReceived?.Invoke(loadingStatus, settings);
         }
     }
 }

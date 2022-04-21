@@ -12,56 +12,166 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"744000d6-16a5-443c-8fb4-056aeb6ab0b3\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"1964f894-c14e-42d2-a631-600661cd15da\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"moreGamesGPGUrl\",\r\n      \"type\":
     \"string\",\r\n      \"value\": \"https://play.google.com/store/apps/developer?id=Virterix\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"7cf77616-984a-43f7-ab86-239c4aa5b92d\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"97ceac41-ca8b-4585-9073-90e4a9f85008\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"moreGamesAppstoreUrl\",\r\n      \"type\":
     \"string\",\r\n      \"value\": \"https://itunes.apple.com/developer/mirage-lab/id538761557?mt=8\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"1a9e63ee-f44d-4de6-827d-b36f8548c79b\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"87d6863a-d190-4bc2-a949-63188fc70473\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"moreGamesGalaxyUrl\",\r\n      \"type\":
     \"string\",\r\n      \"value\": \"http://virterix.com/\"\r\n    }\r\n  },\r\n 
-    {\r\n    \"metadata\": {\r\n      \"entityId\": \"35f00287-205e-4bf5-b0de-24e463d00490\"\r\n   
+    {\r\n    \"metadata\": {\r\n      \"entityId\": \"d81fee8c-d36f-47f6-b75a-be4cdf54a905\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"moreGamesAmazonUrl\",\r\n      \"type\":
     \"string\",\r\n      \"value\": \"http://www.amazon.com/gp/mas/dl/android?asin=B00GC3G15W&showAll=1\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"69e10d23-baa5-4701-856b-35f4a7ef8b60\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"67f5b27f-c246-45af-bc81-18f257746d74\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"facebookUrl\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"https://www.facebook.com/virterix\"\r\n    }\r\n  },\r\n  {\r\n   
-    \"metadata\": {\r\n      \"entityId\": \"1f203791-4cad-4698-a2ba-cb4ebc67f05d\"\r\n   
+    \"metadata\": {\r\n      \"entityId\": \"37ee9e47-65c5-49be-9a9d-8e5c704086b7\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"twetterUrl\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"https://twitter.com/virterix\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\":
-    {\r\n      \"entityId\": \"f60a2a64-b068-4c67-afaa-213d34153f33\"\r\n    },\r\n   
+    {\r\n      \"entityId\": \"e66c3c75-3dad-419b-811d-f0bc7b116235\"\r\n    },\r\n   
     \"rs\": {\r\n      \"key\": \"vkUrl\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"https://vk.com/virterix\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\":
-    {\r\n      \"entityId\": \"9c3f2d6a-2a9a-44e8-9f1e-d946385de9b9\"\r\n    },\r\n   
-    \"rs\": {\r\n      \"key\": \"adSettingsAndroid\",\r\n      \"type\": \"string\",\r\n     
-    \"value\": \"{\\\"projectName\\\":\\\"DefaultProject\\\",\\\"networkResponseWaitTime\\\":30,\\\"mediators\\\":[{\\\"adType\\\":\\\"banner\\\",\\\"placement\\\":\\\"Default\\\",\\\"strategy\\\":{\\\"type\\\":\\\"sequence\\\",\\\"maxPass\\\":[1,1],\\\"tiers\\\":[[{\\\"network\\\":\\\"admob\\\"}],[{\\\"network\\\":\\\"ironsrc\\\"}]]}},{\\\"adType\\\":\\\"banner\\\",\\\"placement\\\":\\\"Top\\\",\\\"strategy\\\":{\\\"type\\\":\\\"sequence\\\",\\\"maxPass\\\":[1],\\\"tiers\\\":[[{\\\"network\\\":\\\"admob\\\"}]]}},{\\\"adType\\\":\\\"interstitial\\\",\\\"placement\\\":\\\"Default\\\",\\\"strategy\\\":{\\\"type\\\":\\\"sequence\\\",\\\"maxPass\\\":[1,1],\\\"tiers\\\":[[{\\\"network\\\":\\\"admob\\\"}],[{\\\"network\\\":\\\"ironsrc\\\"}]]}},{\\\"adType\\\":\\\"incentivized\\\",\\\"placement\\\":\\\"Default\\\",\\\"strategy\\\":{\\\"type\\\":\\\"sequence\\\",\\\"maxPass\\\":[1],\\\"tiers\\\":[[{\\\"network\\\":\\\"admob\\\",\\\"prepareOnExit\\\":true}]]}}],\\\"networks\\\":[{\\\"name\\\":\\\"admob\\\",\\\"appId\\\":\\\"ca-app-pub-1726624045989422~7998588197\\\",\\\"instances\\\":[{\\\"adType\\\":\\\"banner\\\",\\\"param\\\":\\\"Default\\\",\\\"id\\\":\\\"ca-app-pub-1726624045989422/2917881533\\\",\\\"timeout\\\":90},{\\\"adType\\\":\\\"banner\\\",\\\"name\\\":\\\"Top\\\",\\\"param\\\":\\\"Top\\\",\\\"id\\\":\\\"ca-app-pub-1726624045989422/6327808850\\\",\\\"timeout\\\":90},{\\\"adType\\\":\\\"interstitial\\\",\\\"id\\\":\\\"ca-app-pub-1726624045989422/7768482027\\\",\\\"timeout\\\":90},{\\\"adType\\\":\\\"incentivized\\\",\\\"id\\\":\\\"ca-app-pub-1726624045989422/9834659581\\\",\\\"timeout\\\":90}]},{\\\"name\\\":\\\"unityads\\\",\\\"appId\\\":\\\"2917696\\\",\\\"instances\\\":[{\\\"adType\\\":\\\"banner\\\",\\\"param\\\":\\\"Default\\\",\\\"id\\\":\\\"banner\\\",\\\"timeout\\\":120},{\\\"adType\\\":\\\"banner\\\",\\\"name\\\":\\\"Top\\\",\\\"param\\\":\\\"Top\\\",\\\"id\\\":\\\"banner_top\\\",\\\"timeout\\\":120},{\\\"adType\\\":\\\"interstitial\\\",\\\"id\\\":\\\"interstitial\\\",\\\"timeout\\\":90},{\\\"adType\\\":\\\"incentivized\\\",\\\"id\\\":\\\"rewardedVideo\\\",\\\"timeout\\\":90}]},{\\\"name\\\":\\\"ironsrc\\\",\\\"appId\\\":\\\"e689f601\\\",\\\"responseWaitTime\\\":25,\\\"instances\\\":[{\\\"adType\\\":\\\"banner\\\",\\\"param\\\":\\\"Default\\\",\\\"id\\\":\\\"\\\",\\\"timeout\\\":120},{\\\"adType\\\":\\\"banner\\\",\\\"name\\\":\\\"Chat\\\",\\\"param\\\":\\\"Chat\\\",\\\"id\\\":\\\"\\\",\\\"timeout\\\":120}]}]}\"\r\n   
-    }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"744000d6-16a5-443c-8fb4-056aeb6ab0b3\"\r\n   
+    {\r\n      \"entityId\": \"ddca32c8-1587-40b2-8672-37635203ab5b\"\r\n    },\r\n   
+    \"rs\": {\r\n      \"key\": \"adSettingsAndroid\",\r\n      \"type\": \"json\",\r\n     
+    \"schemaId\": null,\r\n      \"value\": {\r\n        \"projectName\": \"DefaultProject\",\r\n       
+    \"networkResponseWaitTime\": 30,\r\n        \"mediators\": [\r\n          {\r\n           
+    \"adType\": \"banner\",\r\n            \"placement\": \"Default\",\r\n           
+    \"strategy\": {\r\n              \"type\": \"sequence\",\r\n              \"maxPass\":
+    [\r\n                1,\r\n                1\r\n              ],\r\n             
+    \"tiers\": [\r\n                [\r\n                  {\r\n                   
+    \"network\": \"admob\"\r\n                  }\r\n                ],\r\n               
+    [\r\n                  {\r\n                    \"network\": \"ironsrc\"\r\n                 
+    }\r\n                ]\r\n              ]\r\n            }\r\n          },\r\n         
+    {\r\n            \"adType\": \"banner\",\r\n            \"placement\": \"Top\",\r\n           
+    \"strategy\": {\r\n              \"type\": \"sequence\",\r\n              \"maxPass\":
+    [\r\n                1\r\n              ],\r\n              \"tiers\": [\r\n               
+    [\r\n                  {\r\n                    \"network\": \"admob\"\r\n                 
+    }\r\n                ]\r\n              ]\r\n            }\r\n          },\r\n         
+    {\r\n            \"adType\": \"interstitial\",\r\n            \"placement\":
+    \"Default\",\r\n            \"strategy\": {\r\n              \"type\": \"sequence\",\r\n             
+    \"maxPass\": [\r\n                1,\r\n                1\r\n              ],\r\n             
+    \"tiers\": [\r\n                [\r\n                  {\r\n                   
+    \"network\": \"admob\"\r\n                  }\r\n                ],\r\n               
+    [\r\n                  {\r\n                    \"network\": \"ironsrc\"\r\n                 
+    }\r\n                ]\r\n              ]\r\n            }\r\n          },\r\n         
+    {\r\n            \"adType\": \"incentivized\",\r\n            \"placement\":
+    \"Default\",\r\n            \"strategy\": {\r\n              \"type\": \"sequence\",\r\n             
+    \"maxPass\": [\r\n                1\r\n              ],\r\n              \"tiers\":
+    [\r\n                [\r\n                  {\r\n                    \"network\":
+    \"admob\",\r\n                    \"prepareOnExit\": true\r\n                 
+    }\r\n                ]\r\n              ]\r\n            }\r\n          }\r\n       
+    ],\r\n        \"networks\": [\r\n          {\r\n            \"name\": \"admob\",\r\n           
+    \"appId\": \"ca-app-pub-1726624045989422~7998588197\",\r\n            \"instances\":
+    [\r\n              {\r\n                \"adType\": \"banner\",\r\n               
+    \"param\": \"Default\",\r\n                \"id\": \"ca-app-pub-1726624045989422/2917881533\",\r\n               
+    \"timeout\": 90\r\n              },\r\n              {\r\n                \"adType\":
+    \"banner\",\r\n                \"name\": \"Top\",\r\n                \"param\":
+    \"Top\",\r\n                \"id\": \"ca-app-pub-1726624045989422/6327808850\",\r\n               
+    \"timeout\": 90\r\n              },\r\n              {\r\n                \"adType\":
+    \"interstitial\",\r\n                \"id\": \"ca-app-pub-1726624045989422/7768482027\",\r\n               
+    \"timeout\": 90\r\n              },\r\n              {\r\n                \"adType\":
+    \"incentivized\",\r\n                \"id\": \"ca-app-pub-1726624045989422/9834659581\",\r\n               
+    \"timeout\": 90\r\n              }\r\n            ]\r\n          },\r\n         
+    {\r\n            \"name\": \"unityads\",\r\n            \"appId\": \"2917696\",\r\n           
+    \"instances\": [\r\n              {\r\n                \"adType\": \"banner\",\r\n               
+    \"param\": \"Default\",\r\n                \"id\": \"banner\",\r\n               
+    \"timeout\": 120\r\n              },\r\n              {\r\n                \"adType\":
+    \"banner\",\r\n                \"name\": \"Top\",\r\n                \"param\":
+    \"Top\",\r\n                \"id\": \"banner_top\",\r\n                \"timeout\":
+    120\r\n              },\r\n              {\r\n                \"adType\": \"interstitial\",\r\n               
+    \"id\": \"interstitial\",\r\n                \"timeout\": 90\r\n             
+    },\r\n              {\r\n                \"adType\": \"incentivized\",\r\n               
+    \"id\": \"rewardedVideo\",\r\n                \"timeout\": 90\r\n             
+    }\r\n            ]\r\n          },\r\n          {\r\n            \"name\": \"ironsrc\",\r\n           
+    \"appId\": \"e689f601\",\r\n            \"responseWaitTime\": 25,\r\n           
+    \"instances\": [\r\n              {\r\n                \"adType\": \"banner\",\r\n               
+    \"param\": \"Default\",\r\n                \"id\": \"\",\r\n                \"timeout\":
+    120\r\n              },\r\n              {\r\n                \"adType\": \"banner\",\r\n               
+    \"name\": \"Chat\",\r\n                \"param\": \"Chat\",\r\n               
+    \"id\": \"\",\r\n                \"timeout\": 120\r\n              }\r\n           
+    ]\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  }\r\n]"
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"1964f894-c14e-42d2-a631-600661cd15da\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"moreGamesGPGUrl\",\r\n      \"type\":
     \"string\",\r\n      \"value\": \"https://play.google.com/store/apps/developer?id=Virterix\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"7cf77616-984a-43f7-ab86-239c4aa5b92d\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"97ceac41-ca8b-4585-9073-90e4a9f85008\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"moreGamesAppstoreUrl\",\r\n      \"type\":
     \"string\",\r\n      \"value\": \"https://itunes.apple.com/developer/mirage-lab/id538761557?mt=8\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"1a9e63ee-f44d-4de6-827d-b36f8548c79b\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"87d6863a-d190-4bc2-a949-63188fc70473\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"moreGamesGalaxyUrl\",\r\n      \"type\":
     \"string\",\r\n      \"value\": \"http://virterix.com/\"\r\n    }\r\n  },\r\n 
-    {\r\n    \"metadata\": {\r\n      \"entityId\": \"35f00287-205e-4bf5-b0de-24e463d00490\"\r\n   
+    {\r\n    \"metadata\": {\r\n      \"entityId\": \"d81fee8c-d36f-47f6-b75a-be4cdf54a905\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"moreGamesAmazonUrl\",\r\n      \"type\":
     \"string\",\r\n      \"value\": \"http://www.amazon.com/gp/mas/dl/android?asin=B00GC3G15W&showAll=1\"\r\n   
-    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"69e10d23-baa5-4701-856b-35f4a7ef8b60\"\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"67f5b27f-c246-45af-bc81-18f257746d74\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"facebookUrl\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"https://www.facebook.com/virterix\"\r\n    }\r\n  },\r\n  {\r\n   
-    \"metadata\": {\r\n      \"entityId\": \"1f203791-4cad-4698-a2ba-cb4ebc67f05d\"\r\n   
+    \"metadata\": {\r\n      \"entityId\": \"37ee9e47-65c5-49be-9a9d-8e5c704086b7\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"twetterUrl\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"https://twitter.com/virterix\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\":
-    {\r\n      \"entityId\": \"f60a2a64-b068-4c67-afaa-213d34153f33\"\r\n    },\r\n   
+    {\r\n      \"entityId\": \"e66c3c75-3dad-419b-811d-f0bc7b116235\"\r\n    },\r\n   
     \"rs\": {\r\n      \"key\": \"vkUrl\",\r\n      \"type\": \"string\",\r\n     
     \"value\": \"https://vk.com/virterix\"\r\n    }\r\n  },\r\n  {\r\n    \"metadata\":
-    {\r\n      \"entityId\": \"9c3f2d6a-2a9a-44e8-9f1e-d946385de9b9\"\r\n    },\r\n   
-    \"rs\": {\r\n      \"key\": \"adSettingsAndroid\",\r\n      \"type\": \"string\",\r\n     
-    \"value\": \"{\\\"projectName\\\":\\\"DefaultProject\\\",\\\"networkResponseWaitTime\\\":30,\\\"mediators\\\":[{\\\"adType\\\":\\\"banner\\\",\\\"placement\\\":\\\"Default\\\",\\\"strategy\\\":{\\\"type\\\":\\\"sequence\\\",\\\"maxPass\\\":[1,1],\\\"tiers\\\":[[{\\\"network\\\":\\\"admob\\\"}],[{\\\"network\\\":\\\"ironsrc\\\"}]]}},{\\\"adType\\\":\\\"banner\\\",\\\"placement\\\":\\\"Top\\\",\\\"strategy\\\":{\\\"type\\\":\\\"sequence\\\",\\\"maxPass\\\":[1],\\\"tiers\\\":[[{\\\"network\\\":\\\"admob\\\"}]]}},{\\\"adType\\\":\\\"interstitial\\\",\\\"placement\\\":\\\"Default\\\",\\\"strategy\\\":{\\\"type\\\":\\\"sequence\\\",\\\"maxPass\\\":[1,1],\\\"tiers\\\":[[{\\\"network\\\":\\\"admob\\\"}],[{\\\"network\\\":\\\"ironsrc\\\"}]]}},{\\\"adType\\\":\\\"incentivized\\\",\\\"placement\\\":\\\"Default\\\",\\\"strategy\\\":{\\\"type\\\":\\\"sequence\\\",\\\"maxPass\\\":[1],\\\"tiers\\\":[[{\\\"network\\\":\\\"admob\\\",\\\"prepareOnExit\\\":true}]]}}],\\\"networks\\\":[{\\\"name\\\":\\\"admob\\\",\\\"appId\\\":\\\"ca-app-pub-1726624045989422~7998588197\\\",\\\"instances\\\":[{\\\"adType\\\":\\\"banner\\\",\\\"param\\\":\\\"Default\\\",\\\"id\\\":\\\"ca-app-pub-1726624045989422/2917881533\\\",\\\"timeout\\\":90},{\\\"adType\\\":\\\"banner\\\",\\\"name\\\":\\\"Top\\\",\\\"param\\\":\\\"Top\\\",\\\"id\\\":\\\"ca-app-pub-1726624045989422/6327808850\\\",\\\"timeout\\\":90},{\\\"adType\\\":\\\"interstitial\\\",\\\"id\\\":\\\"ca-app-pub-1726624045989422/7768482027\\\",\\\"timeout\\\":90},{\\\"adType\\\":\\\"incentivized\\\",\\\"id\\\":\\\"ca-app-pub-1726624045989422/9834659581\\\",\\\"timeout\\\":90}]},{\\\"name\\\":\\\"unityads\\\",\\\"appId\\\":\\\"2917696\\\",\\\"instances\\\":[{\\\"adType\\\":\\\"banner\\\",\\\"param\\\":\\\"Default\\\",\\\"id\\\":\\\"banner\\\",\\\"timeout\\\":120},{\\\"adType\\\":\\\"banner\\\",\\\"name\\\":\\\"Top\\\",\\\"param\\\":\\\"Top\\\",\\\"id\\\":\\\"banner_top\\\",\\\"timeout\\\":120},{\\\"adType\\\":\\\"interstitial\\\",\\\"id\\\":\\\"interstitial\\\",\\\"timeout\\\":90},{\\\"adType\\\":\\\"incentivized\\\",\\\"id\\\":\\\"rewardedVideo\\\",\\\"timeout\\\":90}]},{\\\"name\\\":\\\"ironsrc\\\",\\\"appId\\\":\\\"e689f601\\\",\\\"responseWaitTime\\\":25,\\\"instances\\\":[{\\\"adType\\\":\\\"banner\\\",\\\"param\\\":\\\"Default\\\",\\\"id\\\":\\\"\\\",\\\"timeout\\\":120},{\\\"adType\\\":\\\"banner\\\",\\\"name\\\":\\\"Chat\\\",\\\"param\\\":\\\"Chat\\\",\\\"id\\\":\\\"\\\",\\\"timeout\\\":120}]}]}\"\r\n   
-    }\r\n  }\r\n]"
+    {\r\n      \"entityId\": \"ddca32c8-1587-40b2-8672-37635203ab5b\"\r\n    },\r\n   
+    \"rs\": {\r\n      \"key\": \"adSettingsAndroid\",\r\n      \"type\": \"json\",\r\n     
+    \"schemaId\": null,\r\n      \"value\": {\r\n        \"projectName\": \"DefaultProject\",\r\n       
+    \"networkResponseWaitTime\": 30,\r\n        \"mediators\": [\r\n          {\r\n           
+    \"adType\": \"banner\",\r\n            \"placement\": \"Default\",\r\n           
+    \"strategy\": {\r\n              \"type\": \"sequence\",\r\n              \"maxPass\":
+    [\r\n                1,\r\n                1\r\n              ],\r\n             
+    \"tiers\": [\r\n                [\r\n                  {\r\n                   
+    \"network\": \"admob\"\r\n                  }\r\n                ],\r\n               
+    [\r\n                  {\r\n                    \"network\": \"ironsrc\"\r\n                 
+    }\r\n                ]\r\n              ]\r\n            }\r\n          },\r\n         
+    {\r\n            \"adType\": \"banner\",\r\n            \"placement\": \"Top\",\r\n           
+    \"strategy\": {\r\n              \"type\": \"sequence\",\r\n              \"maxPass\":
+    [\r\n                1\r\n              ],\r\n              \"tiers\": [\r\n               
+    [\r\n                  {\r\n                    \"network\": \"admob\"\r\n                 
+    }\r\n                ]\r\n              ]\r\n            }\r\n          },\r\n         
+    {\r\n            \"adType\": \"interstitial\",\r\n            \"placement\":
+    \"Default\",\r\n            \"strategy\": {\r\n              \"type\": \"sequence\",\r\n             
+    \"maxPass\": [\r\n                1,\r\n                1\r\n              ],\r\n             
+    \"tiers\": [\r\n                [\r\n                  {\r\n                   
+    \"network\": \"admob\"\r\n                  }\r\n                ],\r\n               
+    [\r\n                  {\r\n                    \"network\": \"ironsrc\"\r\n                 
+    }\r\n                ]\r\n              ]\r\n            }\r\n          },\r\n         
+    {\r\n            \"adType\": \"incentivized\",\r\n            \"placement\":
+    \"Default\",\r\n            \"strategy\": {\r\n              \"type\": \"sequence\",\r\n             
+    \"maxPass\": [\r\n                1\r\n              ],\r\n              \"tiers\":
+    [\r\n                [\r\n                  {\r\n                    \"network\":
+    \"admob\",\r\n                    \"prepareOnExit\": true\r\n                 
+    }\r\n                ]\r\n              ]\r\n            }\r\n          }\r\n       
+    ],\r\n        \"networks\": [\r\n          {\r\n            \"name\": \"admob\",\r\n           
+    \"appId\": \"ca-app-pub-1726624045989422~7998588197\",\r\n            \"instances\":
+    [\r\n              {\r\n                \"adType\": \"banner\",\r\n               
+    \"param\": \"Default\",\r\n                \"id\": \"ca-app-pub-1726624045989422/2917881533\",\r\n               
+    \"timeout\": 90\r\n              },\r\n              {\r\n                \"adType\":
+    \"banner\",\r\n                \"name\": \"Top\",\r\n                \"param\":
+    \"Top\",\r\n                \"id\": \"ca-app-pub-1726624045989422/6327808850\",\r\n               
+    \"timeout\": 90\r\n              },\r\n              {\r\n                \"adType\":
+    \"interstitial\",\r\n                \"id\": \"ca-app-pub-1726624045989422/7768482027\",\r\n               
+    \"timeout\": 90\r\n              },\r\n              {\r\n                \"adType\":
+    \"incentivized\",\r\n                \"id\": \"ca-app-pub-1726624045989422/9834659581\",\r\n               
+    \"timeout\": 90\r\n              }\r\n            ]\r\n          },\r\n         
+    {\r\n            \"name\": \"unityads\",\r\n            \"appId\": \"2917696\",\r\n           
+    \"instances\": [\r\n              {\r\n                \"adType\": \"banner\",\r\n               
+    \"param\": \"Default\",\r\n                \"id\": \"banner\",\r\n               
+    \"timeout\": 120\r\n              },\r\n              {\r\n                \"adType\":
+    \"banner\",\r\n                \"name\": \"Top\",\r\n                \"param\":
+    \"Top\",\r\n                \"id\": \"banner_top\",\r\n                \"timeout\":
+    120\r\n              },\r\n              {\r\n                \"adType\": \"interstitial\",\r\n               
+    \"id\": \"interstitial\",\r\n                \"timeout\": 90\r\n             
+    },\r\n              {\r\n                \"adType\": \"incentivized\",\r\n               
+    \"id\": \"rewardedVideo\",\r\n                \"timeout\": 90\r\n             
+    }\r\n            ]\r\n          },\r\n          {\r\n            \"name\": \"ironsrc\",\r\n           
+    \"appId\": \"e689f601\",\r\n            \"responseWaitTime\": 25,\r\n           
+    \"instances\": [\r\n              {\r\n                \"adType\": \"banner\",\r\n               
+    \"param\": \"Default\",\r\n                \"id\": \"\",\r\n                \"timeout\":
+    120\r\n              },\r\n              {\r\n                \"adType\": \"banner\",\r\n               
+    \"name\": \"Chat\",\r\n                \"param\": \"Chat\",\r\n               
+    \"id\": \"\",\r\n                \"timeout\": 120\r\n              }\r\n           
+    ]\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  }\r\n]"
   _environments: "[\r\n  {\r\n    \"projectId\": \"cd781ac5-89f2-412b-bc4a-40baff2b20c9\",\r\n   
     \"name\": \"production\",\r\n    \"id\": \"3244ab70-7f4c-419a-9ceb-eda99d6ad2d0\",\r\n   
     \"isDefault\": true,\r\n    \"createdAt\": \"2019-10-07T14:11:29Z\",\r\n    \"updatedAt\":

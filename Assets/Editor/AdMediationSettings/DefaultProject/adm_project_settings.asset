@@ -123,5 +123,6 @@ MonoBehaviour:
   IsIOS: 1
   IsAndroid: 1
   EnableUnityRemoteConfigProvider: 1
-  RemoteConfigPrefixKey: adSettings
   RemoteConfigAutoFetching: 1
+  RemoteConfigPrefixKey: adSettings
+  RemoteConfigEnvironmentID: 

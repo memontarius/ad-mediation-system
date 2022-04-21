@@ -78,9 +78,10 @@ namespace Virterix.AdMediation.Editor
         private SerializedProperty _childrenModeProp;
         private SerializedProperty _testDevicesProp;
         private SerializedProperty _enableRemoteConfigProviderProp;
-        private SerializedProperty _remoteConfigPrefixKeyProp;
         private SerializedProperty _remoteConfigAutoFetchingProp;
-
+        private SerializedProperty _remoteConfigPrefixKeyProp;
+        private SerializedProperty _remoteConfigEnvironmentIDProp;
+        
         public bool IsAndroid
         {
             get { return _isAndroidProp.boolValue; }
@@ -363,6 +364,7 @@ namespace Virterix.AdMediation.Editor
             _enableRemoteConfigProviderProp = _serializedProjectSettings.FindProperty(nameof(AdMediationProjectSettings.EnableUnityRemoteConfigProvider));
             _remoteConfigAutoFetchingProp = _serializedProjectSettings.FindProperty(nameof(AdMediationProjectSettings.RemoteConfigAutoFetching));
             _remoteConfigPrefixKeyProp = _serializedProjectSettings.FindProperty(nameof(AdMediationProjectSettings.RemoteConfigPrefixKey));
+            _remoteConfigEnvironmentIDProp = _serializedProjectSettings.FindProperty(nameof(AdMediationProjectSettings.RemoteConfigEnvironmentID));
             
             bool enableExtraLogging = false;
             string[] defines = EditorUserBuildSettings.activeScriptCompilationDefines;
@@ -708,8 +710,10 @@ namespace Virterix.AdMediation.Editor
             {
                 GUILayout.BeginVertical("box");
                 EditorGUILayout.PropertyField(_remoteConfigAutoFetchingProp, new GUIContent("Auto Fetching"));
-                EditorGUILayout.PropertyField(_remoteConfigPrefixKeyProp,
+                EditorGUILayout.PropertyField(_remoteConfigPrefixKeyProp, 
                     new GUIContent("Prefix Key", "Will be add platform key (prefix + platform)"));
+                EditorGUILayout.PropertyField(_remoteConfigEnvironmentIDProp, 
+                    new GUIContent("Environment ID", "If empty default settings will be loaded"));
                 GUILayout.EndVertical();
             }
         }

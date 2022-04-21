@@ -37,7 +37,7 @@ namespace Virterix.AdMediation
             }
             else
             {
-                NotifyOnSettingsReceived(LoadingState.UnmodifiedLoaded, null);
+                NotifyOnSettingsReceived(LoadingStatus.None, null);
             }
         }
 
@@ -103,8 +103,8 @@ namespace Virterix.AdMediation
                 Debug.Log("AdMediationSystem.OnLoadingCompleteSettingsFromServer() Not response from server. Error: " + www.error);
             }
 
-            LoadingState state = success ? LoadingState.RemoteLoaded : LoadingState.Failed;
-            NotifyOnSettingsReceived(state, remoteJsonSettings);
+            LoadingStatus status = success ? LoadingStatus.Success : LoadingStatus.Failed;
+            NotifyOnSettingsReceived(status, remoteJsonSettings);
         }
     }
 }

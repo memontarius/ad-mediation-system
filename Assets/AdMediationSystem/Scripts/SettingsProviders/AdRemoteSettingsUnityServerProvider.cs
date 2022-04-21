@@ -10,12 +10,14 @@ namespace Virterix.AdMediation
 {
     public class AdRemoteSettingsUnityServerProvider : AdRemoteSettingsProvider
     {
-        public bool m_autoFetching;
+        [SerializeField] private bool m_autoFetching;
         [Tooltip("Will be add platform key (prefix + platform)")]
-        public string m_settingsPrefixKey;
-
+        [SerializeField] private string m_settingsPrefixKey;
+        [Tooltip("If empty, default settings will be loaded")]
+        [SerializeField] private string m_environmentID;
+        
         public override bool IsSelfCached => true;
-
+        
         public string UniqueUserId
         {
             get => m_uniqueUserId == "" ? SystemInfo.deviceUniqueIdentifier : m_uniqueUserId;
@@ -33,9 +35,7 @@ namespace Virterix.AdMediation
         public struct appAttributes
         {
         }
-
-        string m_assignmentId;
-
+        
 #if _AMS_USE_UNITY_REMOTE_CONFIG
         ConfigResponse m_lastConfigResponse;
         bool m_wasConfigResponse;
@@ -55,13 +55,11 @@ namespace Virterix.AdMediation
             if (m_autoFetching)
             {
                 if (m_wasConfigResponse)
-                {
                     ParseRemoteSettings(m_lastConfigResponse);
-                }
                 else
                 {
-                    ConfigManager.SetCustomUserID(UniqueUserId);
-                    // Fetch configuration setting from the remote service: 
+                    if (!string.IsNullOrEmpty(m_environmentID))
+                        ConfigManager.SetEnvironmentID(m_environmentID);
                     ConfigManager.FetchConfigs(new userAttributes(), new appAttributes());
                 }
             }
@@ -71,47 +69,17 @@ namespace Virterix.AdMediation
         {
             m_wasConfigResponse = true;
             m_lastConfigResponse = configResponse;
-
-            // Conditionally update settings, depending on the response's origin:
-            switch (configResponse.requestOrigin)
-            {
-                case ConfigOrigin.Default:
-                    break;
-                case ConfigOrigin.Cached:
-                    break;
-                case ConfigOrigin.Remote:
-                    m_assignmentId = ConfigManager.appConfig.assignmentId;
-                    break;
-            }
-
             ParseRemoteSettings(m_lastConfigResponse);
         }
 
         private void ParseRemoteSettings(ConfigResponse configResponse)
         {
-            string settings = ConfigManager.appConfig.GetString(SettingsParamKey);
+            string settings = ConfigManager.appConfig.GetJson(SettingsParamKey, "");
             JSONObject jsonSettings = null;
-
-            if (settings != "")
-            {
+            if (!string.IsNullOrEmpty(settings))
                 jsonSettings = JSONObject.Parse(settings);
-            }
-
-            LoadingState loadingState = LoadingState.Failed;
-            switch (configResponse.requestOrigin)
-            {
-                case ConfigOrigin.Default:
-                    loadingState = LoadingState.UnmodifiedLoaded;
-                    break;
-                case ConfigOrigin.Cached:
-                    loadingState = LoadingState.UnmodifiedLoaded;
-                    break;
-                case ConfigOrigin.Remote:
-                    loadingState = LoadingState.RemoteLoaded;
-                    break;
-            }
-
-            NotifyOnSettingsReceived(loadingState, jsonSettings);
+            LoadingStatus loadingStatus = jsonSettings != null ? LoadingStatus.Success : LoadingStatus.None;
+            NotifyOnSettingsReceived(loadingStatus, jsonSettings);
         }
 #endif
     }
