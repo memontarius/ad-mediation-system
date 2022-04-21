@@ -1,4 +1,4 @@
-#define _AMS_IRONSOURCE
+//#define _AMS_IRONSOURCE
 
 using System;
 using UnityEngine;

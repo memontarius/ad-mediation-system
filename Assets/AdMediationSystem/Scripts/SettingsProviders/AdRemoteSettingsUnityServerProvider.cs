@@ -1,4 +1,4 @@
-#define _AMS_USE_UNITY_REMOTE_CONFIG
+//#define _AMS_USE_UNITY_REMOTE_CONFIG
 
 using UnityEngine;
 using Boomlagoon.JSON;

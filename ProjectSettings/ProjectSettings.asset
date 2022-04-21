@@ -758,8 +758,8 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
-    Android: AD_MEDIATION_DEBUG_MODE
-    iPhone: AD_MEDIATION_DEBUG_MODE
+    Android: 
+    iPhone: 
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
