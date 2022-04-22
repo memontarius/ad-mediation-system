@@ -87,7 +87,7 @@ MonoBehaviour:
         InstanceIndex: 0
         InstanceName: Default
         Replaced: 0
-        PrepareOnExit: 0
+        PrepareOnExit: 1
         Percentage: 100
     - MaxPassages: 1
       Units:
