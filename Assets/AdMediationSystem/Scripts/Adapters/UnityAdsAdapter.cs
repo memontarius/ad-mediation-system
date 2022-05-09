@@ -261,11 +261,11 @@ namespace Virterix.AdMediation
                     switch (showResult)
                     {
                         case ShowResult.Finished:
-                            AddEvent(adInstance.m_adType, AdEvent.IncentivizedCompleted, adInstance);
+                            AddEvent(adInstance.m_adType, AdEvent.IncentivizationCompleted, adInstance);
                             break;
                         case ShowResult.Skipped:
                         case ShowResult.Failed:
-                            AddEvent(adInstance.m_adType, AdEvent.IncentivizedUncompleted, adInstance);
+                            AddEvent(adInstance.m_adType, AdEvent.IncentivizationUncompleted, adInstance);
                             break;
                     }
                 }

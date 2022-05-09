@@ -259,7 +259,7 @@ namespace Virterix.AdMediation
         {
             m_lastReward.label = location.ToString();
             m_lastReward.amount = count;
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, m_incentivizedInstance);
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizationCompleted, m_incentivizedInstance);
         }
 
         private void DidDismissRewardedVideo(CBLocation location)

@@ -15,8 +15,8 @@ namespace Virterix.AdMediation
         Click,
         Hiding,
         PreparationFailed,
-        IncentivizedCompleted,
-        IncentivizedUncompleted
+        IncentivizationCompleted,
+        IncentivizationUncompleted
     }
 
     public enum ConsentType
@@ -31,7 +31,7 @@ namespace Virterix.AdMediation
         public double amount;
     }
 
-    public partial class AdNetworkAdapter : MonoBehaviour
+    public class AdNetworkAdapter : MonoBehaviour
     {
         //_______________________________________________________________________________
         #region Classes & Structs
@@ -43,7 +43,16 @@ namespace Virterix.AdMediation
         {
             public AdType m_adType;
             public float m_timeout;
-
+            
+            public TimeoutParams(float timeoutMultiplier)
+            {
+                TimeoutMultiplier = timeoutMultiplier;
+                m_adType = AdType.Unknown;
+                m_timeout = 0.0f;
+                m_isSetupFailedLoadTime = false;
+                m_failedLoadTime = 0.0f;
+            }
+            
             public float FailedLoadingTime
             {
                 set
@@ -57,6 +66,8 @@ namespace Virterix.AdMediation
             bool m_isSetupFailedLoadTime;
             float m_failedLoadTime;
 
+            public float TimeoutMultiplier { get; set; }
+            
             public bool IsTimeout
             {
                 get
@@ -67,7 +78,8 @@ namespace Virterix.AdMediation
                     if (canUsed && m_isSetupFailedLoadTime)
                     {
                         float elapsedTime = Time.realtimeSinceStartup - m_failedLoadTime;
-                        active = elapsedTime < m_timeout;
+                        float timeoutTime = m_timeout * TimeoutMultiplier;
+                        active = elapsedTime < timeoutTime;
                         m_isSetupFailedLoadTime = active;
                     }
                     return active;
@@ -98,6 +110,8 @@ namespace Virterix.AdMediation
         }
         #endregion Classes & Structs
 
+        public static string RESPONSE_WAIT_TIME_KEY = "responseWaitTime";
+        
         public event Action<AdNetworkAdapter, AdType, AdEvent, AdInstance> OnEvent = delegate { };
 
         public string m_networkName;
@@ -164,15 +178,7 @@ namespace Virterix.AdMediation
             UpdateEvents();
             StopAllCoroutines();
         }
-
-        private void OnDestroy()
-        {
-            foreach(var adInstance in m_adInstances)
-            {
-                adInstance.Cleanup();
-            }
-        }
-
+        
         #endregion MonoBehavior Methods
 
         //_______________________________________________________________________________
@@ -213,7 +219,6 @@ namespace Virterix.AdMediation
                 m_waitResponseHandlingInterval = 0.5f;
                 m_waitResponseInstruction = new WaitForSeconds(m_waitResponseHandlingInterval);
             }
-
             if (parameters != null)
             {
                 InitializeParameters(parameters, adInstances);
@@ -301,9 +306,13 @@ namespace Virterix.AdMediation
             {
                 case AdEvent.PreparationFailed:
                     CancelWaitResponseHandling(adInstance);
-                    adInstance.SaveFailedPreparationTime();
+                    adInstance.RegisterFailedLoading();
+                    float timeoutMultiplier = Mathf.Clamp(adInstance.FailedLoadingCount * 0.85f, 1.0f,
+                        AdInstance.MAX_TIMEOUT_MULTIPLAYER);
+                    adInstance.SaveFailedPreparationTime(timeoutMultiplier);
                     break;
                 case AdEvent.Prepared:
+                    adInstance.ResetFailedLoading();
                     CancelWaitResponseHandling(adInstance);
                     break;
             }
@@ -444,7 +453,7 @@ namespace Virterix.AdMediation
             }
             if (jsonAdInstance.Obj.ContainsKey("timeout"))
             {
-                TimeoutParams timeoutParameters = new TimeoutParams();
+                TimeoutParams timeoutParameters = new TimeoutParams(1.0f);
                 timeoutParameters.m_timeout = (float)jsonAdInstance.Obj.GetNumber("timeout");
                 timeoutParameters.m_adType = adInstance.m_adType;
                 adInstance.m_timeout = timeoutParameters;
@@ -461,9 +470,8 @@ namespace Virterix.AdMediation
 
         protected virtual void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
-            string responseWaitTimeKey = "responseWaitTime";
-            if (parameters.ContainsKey(responseWaitTimeKey))
-                m_responseWaitTime = (float)Convert.ToDouble(parameters[responseWaitTimeKey]);
+            if (parameters.ContainsKey(RESPONSE_WAIT_TIME_KEY))
+                m_responseWaitTime = (float)Convert.ToDouble(parameters[RESPONSE_WAIT_TIME_KEY]);
             else
                 m_responseWaitTime = AdMediationSystem.Instance.DefaultNetworkResponseWaitTime;
 

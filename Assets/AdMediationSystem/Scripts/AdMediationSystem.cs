@@ -43,7 +43,7 @@ namespace Virterix.AdMediation
             public int[] maxPassages;
         }
 
-        public const string VERSION = "2.3.6";
+        public const string VERSION = "2.3.7";
         public const string AD_SETTINGS_FOLDER = "AdMediationSettings";
         public const string PREFAB_NAME = "AdMediationSystem";
         public const string PLACEMENT_DEFAULT_NAME = "Default";
@@ -675,7 +675,6 @@ namespace Virterix.AdMediation
                     if (networkAdapter != null)
                     {
                         Dictionary<string, string> dictNetworkParams = new Dictionary<string, string>();
-
                         // Parse parameters
                         foreach (KeyValuePair<string, JSONValue> pairValue in jsonValNetworkParams.Obj)
                         {
@@ -684,12 +683,10 @@ namespace Virterix.AdMediation
 
                         NetworkParams networkParams = new NetworkParams();
                         networkParams.m_parameters = dictNetworkParams;
-
                         if (jsonValNetworkParams.Obj.ContainsKey(networkAdInstancesNameKey))
                         {
                             networkParams.m_adInstances = jsonValNetworkParams.Obj.GetArray(networkAdInstancesNameKey);
                         }
-
                         dictNetworks.Add(networkAdapter, networkParams);
                     }
                     else
@@ -817,7 +814,7 @@ namespace Virterix.AdMediation
                 foreach (KeyValuePair<AdNetworkAdapter, NetworkParams> pair in dictNetworks)
                 {
                     AdNetworkAdapter netwrok = pair.Key;
-                    Dictionary<string, string> networkParameters = (Dictionary<string, string>)pair.Value.m_parameters;
+                    Dictionary<string, string> networkParameters = pair.Value.m_parameters;
                     netwrok.Initialize(networkParameters, pair.Value.m_adInstances);
                 }
 

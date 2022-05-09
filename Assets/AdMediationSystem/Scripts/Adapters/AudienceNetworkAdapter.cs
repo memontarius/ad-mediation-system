@@ -635,7 +635,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AudienceNetworkAdapter.RewardedVideoAdComplete()");
 #endif
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizationCompleted, adInstance);
         }
 
         // S2S validation result
@@ -644,7 +644,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AudienceNetworkAdapter.RewardedVideoAdDidSucceed()");
 #endif
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizationCompleted, adInstance);
         }
 
         // S2S validation result
@@ -653,7 +653,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AudienceNetworkAdapter.RewardedVideoAdDidFail()");
 #endif
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedUncompleted, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizationUncompleted, adInstance);
         }
 
         #endregion // Reward Video callback handlers

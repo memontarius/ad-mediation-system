@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InitializeOnStart: 1
   EnableTestMode: 0
-  EnableExtraLogging: 1
+  EnableExtraLogging: 0
   ChildrenMode: 0
   TestDevices: []
   BannerMediators:
@@ -122,7 +122,7 @@ MonoBehaviour:
         Percentage: 100
   IsIOS: 1
   IsAndroid: 1
-  EnableUnityRemoteConfigProvider: 1
+  EnableUnityRemoteConfigProvider: 0
   RemoteConfigAutoFetching: 1
   RemoteConfigPrefixKey: adSettings
   RemoteConfigEnvironmentID: 

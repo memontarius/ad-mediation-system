@@ -466,7 +466,7 @@ namespace Virterix.AdMediation
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
             m_lastReward.label = reward.Label;
             m_lastReward.amount = reward.Amount;
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizationCompleted, adInstance);
         }
         #endregion // Rewarded Callbacks
 #endif

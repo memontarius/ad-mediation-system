@@ -795,7 +795,7 @@ namespace Virterix.AdMediation
 #endif
             m_lastReward.label = reward.Type;
             m_lastReward.amount = reward.Amount;
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizationCompleted, adInstance);
         }
 
         private void HandleRewardVideoPaidEvent(AdMobAdInstanceData adInstance, object sender, AdValueEventArgs args)

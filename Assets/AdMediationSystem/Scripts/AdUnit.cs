@@ -24,27 +24,15 @@ namespace Virterix.AdMediation
         public int Index { get; private set; }
         public int TierIndex { get; private set; }
 
-        public string PlacementName
-        {
-            get { return m_placementName; }
-        }
+        public string PlacementName => m_placementName;
 
-        public bool IsPrepareOnExit
-        {
-            get { return m_isPrepareOnExit; }
-        }
+        public bool IsPrepareOnExit => m_isPrepareOnExit;
         private bool m_isPrepareOnExit;
 
-        public string AdInstanceName
-        {
-            get { return m_adInstanceName; }
-        }
+        public string AdInstanceName => m_adInstanceName;
         private string m_adInstanceName;
 
-        public BaseFetchStrategyParams FetchStrategyParams
-        {
-            get { return m_fetchStrategyParams; }
-        }
+        public BaseFetchStrategyParams FetchStrategyParams => m_fetchStrategyParams;
 
         public AdInstance AdInstance
         {
@@ -61,13 +49,7 @@ namespace Virterix.AdMediation
         private AdInstance m_adInstance;
         private bool m_isAdInstanceSetted;
 
-        public bool IsReady
-        {
-            get
-            {
-                return IsTimeout ? false : m_network.IsReady(AdInstance);
-            }
-        }
+        public bool IsReady => IsTimeout ? false : m_network.IsReady(AdInstance);
 
         public int Impressions
         {
@@ -76,10 +58,7 @@ namespace Virterix.AdMediation
         }
         int m_impressions;
 
-        public bool WasLastImpressionSuccessful
-        {
-            get {  return m_wasLastImpressionSuccessful; }
-        }
+        public bool WasLastImpressionSuccessful => m_wasLastImpressionSuccessful;
         bool m_wasLastImpressionSuccessful;
 
         public float DisplayTime

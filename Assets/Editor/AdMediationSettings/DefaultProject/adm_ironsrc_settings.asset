@@ -16,7 +16,7 @@ MonoBehaviour:
   _networkIdentifier: ironsrc
   _androidAppId: e689f601
   _iosAppId: 5d6c983d
-  _responseWaitTime: 25
+  _responseWaitTime: 30
   _timeout: 120
   _directedTowardsChildren: 0
   _bannerAdInstances:

@@ -359,7 +359,7 @@ namespace Virterix.AdMediation
             }
 #endif
 
-            AddEvent(AdType.Incentivized, AdEvent.IncentivizedCompleted, m_adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.IncentivizationCompleted, m_adInstance);
         }
 
         private void surveyOpened()

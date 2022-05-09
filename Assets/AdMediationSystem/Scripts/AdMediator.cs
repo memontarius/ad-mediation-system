@@ -10,7 +10,7 @@ namespace Virterix.AdMediation
     /// </summary>
     public class AdMediator : MonoBehaviour
     {
-        private const string _PREFIX_LAST_UNITID_SAVE_KEY = "adm.last.unit.";
+        private const string _PREFIX_LAST_UNITED_SAVE_KEY = "adm.last.unit.";
 
         //===============================================================================
         #region Properties
@@ -117,7 +117,7 @@ namespace Virterix.AdMediation
             get
             {
                 return string.Format(CultureInfo.InvariantCulture, 
-                    "{0}{1}.{2}", _PREFIX_LAST_UNITID_SAVE_KEY, m_adType.ToString(), m_placementName).ToLower();
+                    "{0}{1}.{2}", _PREFIX_LAST_UNITED_SAVE_KEY, m_adType.ToString(), m_placementName).ToLower();
             }
         }
 

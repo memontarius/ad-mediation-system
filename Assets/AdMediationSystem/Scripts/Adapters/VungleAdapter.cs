@@ -130,7 +130,7 @@ namespace Virterix.AdMediation
         private void OnAdRewardedEvent(string placementId)
         {
             var adInstance = GetAdInstanceByAdId(placementId);
-            AddEvent(adInstance.m_adType, AdEvent.IncentivizedCompleted, adInstance);
+            AddEvent(adInstance.m_adType, AdEvent.IncentivizationCompleted, adInstance);
         }
 
         #endregion // Callbacks

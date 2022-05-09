@@ -58,7 +58,7 @@ namespace Virterix.AdMediation
             AdInstance adInstance = new AdInstance(network, adType, adId, instanceName);
             if (timeout > 0.0001f)
             {
-                AdNetworkAdapter.TimeoutParams timeoutParameters = new AdNetworkAdapter.TimeoutParams();
+                AdNetworkAdapter.TimeoutParams timeoutParameters = new AdNetworkAdapter.TimeoutParams(1.0f);
                 timeoutParameters.m_timeout = timeout;
                 timeoutParameters.m_adType = adInstance.m_adType;
                 adInstance.m_timeout = timeoutParameters;

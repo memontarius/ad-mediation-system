@@ -405,7 +405,7 @@ namespace Virterix.AdMediation
             var adInstance = GetAdInstanceByAdId(zoneId);
             if (adInstance.m_adType == AdType.Incentivized)
             {
-                AdEvent adEvent = success ? AdEvent.IncentivizedCompleted : AdEvent.IncentivizedUncompleted;
+                AdEvent adEvent = success ? AdEvent.IncentivizationCompleted : AdEvent.IncentivizationUncompleted;
                 AddEvent(adInstance.m_adType, adEvent, adInstance);
             }
         }

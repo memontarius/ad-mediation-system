@@ -447,7 +447,7 @@ namespace Virterix.AdMediation
         {
             m_lastReward.label = ssp.getRewardName();
             m_lastReward.amount = ssp.getRewardAmount();
-            AddEvent(m_incentivizedInstance.m_adType, AdEvent.IncentivizedCompleted, m_incentivizedInstance);
+            AddEvent(m_incentivizedInstance.m_adType, AdEvent.IncentivizationCompleted, m_incentivizedInstance);
         }
 
         void RewardedVideoAdClosedEvent()

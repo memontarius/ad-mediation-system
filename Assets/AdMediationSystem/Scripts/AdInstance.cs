@@ -1,15 +1,16 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Virterix.AdMediation
 {
     public class AdInstance
     {
         public const string AD_INSTANCE_DEFAULT_NAME = "Default";
-
+        public const float MAX_TIMEOUT_MULTIPLAYER = float.MaxValue;
+        
         public AdInstance(AdNetworkAdapter newtrok)
         {
             m_network = newtrok;
-            m_network.OnEvent += OnNetworkEvent;
         }
 
         public AdInstance(AdNetworkAdapter newtrok, AdType adType, string adID, string name = AD_INSTANCE_DEFAULT_NAME)
@@ -19,7 +20,6 @@ namespace Virterix.AdMediation
             m_adId = adID;
             Name = name;
             m_network = newtrok;
-            m_network.OnEvent += OnNetworkEvent;
         }
 
         public string Name
@@ -61,7 +61,8 @@ namespace Virterix.AdMediation
         }
 
         public string CurrPlacement { get; set; }
-
+        public int FailedLoadingCount { get; private set; }
+        
         private AdNetworkAdapter.AdState m_state = AdNetworkAdapter.AdState.Uncertain;
         public AdType m_adType;
         public string m_adId;
@@ -73,35 +74,31 @@ namespace Virterix.AdMediation
         public float m_startImpressionTime;
         public float m_displayTime; 
         public Coroutine m_waitResponseHandler;
-
+        
         private bool m_wasLastPreparationFailed;
         private AdNetworkAdapter m_network;
-
-        public void SaveFailedPreparationTime()
+        
+        public void SaveFailedPreparationTime(float timeoutMultiplier)
         {
             if (m_timeout != null)
             {
                 AdNetworkAdapter.TimeoutParams timeoutParameters = m_timeout.Value;
                 timeoutParameters.FailedLoadingTime = Time.realtimeSinceStartup;
+                timeoutParameters.TimeoutMultiplier = timeoutMultiplier;
                 m_timeout = timeoutParameters;
             }
         }
-
-        public void Cleanup()
+        
+        public void RegisterFailedLoading()
         {
-            if (m_network != null)
-                m_network.OnEvent += OnNetworkEvent;
+            FailedLoadingCount += 1;
+            m_wasLastPreparationFailed = true;
         }
-
-        private void OnNetworkEvent(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstance adInstance)
+        
+        public void ResetFailedLoading()
         {
-            if (adInstance == this)
-            {
-                if (adEvent == AdEvent.PreparationFailed)
-                    m_wasLastPreparationFailed = true;
-                else if (adEvent == AdEvent.Prepared)
-                    m_wasLastPreparationFailed = false;
-            }
+            FailedLoadingCount = 0;
+            m_wasLastPreparationFailed = false;
         }
     }
 }

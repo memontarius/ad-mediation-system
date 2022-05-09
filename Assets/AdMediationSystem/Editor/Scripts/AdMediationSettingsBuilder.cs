@@ -295,11 +295,7 @@ namespace Virterix.AdMediation.Editor
                 {
                     jsonAdInstance.Add("param", adInstanceHolder._adInstance._name);
                 }
-                if (networkSettings._responseWaitTime != AdMediationSystem.DEFAULT_NETWORK_RESPONSE_WAIT_TIME)
-                {
-                    //jsonAdInstance.Add("responseWaitTime", networkSettings._responseWaitTime);
-                }
-
+           
                 string adUnitId = "";
                 switch(platform)
                 {
@@ -317,7 +313,6 @@ namespace Virterix.AdMediation.Editor
                 }
                 jsonInstances.Add(jsonAdInstance);
             }
-
             return jsonInstances;
         }
 
