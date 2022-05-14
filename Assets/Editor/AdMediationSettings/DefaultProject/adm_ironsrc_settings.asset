@@ -32,6 +32,7 @@ MonoBehaviour:
     _bannerType: 0
   _interstitialAdInstances: []
   _rewardAdInstances: []
+  _useOfferwall: 0
   _overiddenPlacements:
   - adType: 0
     originPlacement: Default

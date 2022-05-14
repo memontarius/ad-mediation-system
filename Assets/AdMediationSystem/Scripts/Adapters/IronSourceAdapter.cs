@@ -35,10 +35,12 @@ namespace Virterix.AdMediation
 
         public int m_timeout = 120;
         public bool m_validateIntegration;
-
+        public bool m_useOfferwall;
         [SerializeField]
         public OverridePlacement[] m_overriddenPlacements;
-
+        
+        public string UserId { get; set; }
+        
         private AdInstance m_interstitialInstance;
         private AdInstance m_incentivizedInstance;
   
@@ -209,11 +211,17 @@ namespace Virterix.AdMediation
             if (m_validateIntegration)
                 IronSource.Agent.validateIntegration();
 
+            if (!string.IsNullOrEmpty(UserId))
+                IronSource.Agent.setUserId(UserId);
+            
             SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
             if (AdMediationSystem.Instance.ChildrenMode != ChildDirectedMode.NotAssign)
                 SetChildDirected(AdMediationSystem.Instance.ChildrenMode);
 
-            IronSource.Agent.init(appKey, IronSourceAdUnits.INTERSTITIAL, IronSourceAdUnits.REWARDED_VIDEO, IronSourceAdUnits.BANNER);
+            if (m_useOfferwall)
+                IronSource.Agent.init(appKey, IronSourceAdUnits.INTERSTITIAL, IronSourceAdUnits.REWARDED_VIDEO, IronSourceAdUnits.BANNER, IronSourceAdUnits.OFFERWALL);
+            else
+                IronSource.Agent.init(appKey, IronSourceAdUnits.INTERSTITIAL, IronSourceAdUnits.REWARDED_VIDEO, IronSourceAdUnits.BANNER);
         }
         
         public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)

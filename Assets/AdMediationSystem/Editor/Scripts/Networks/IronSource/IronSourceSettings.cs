@@ -6,8 +6,9 @@ namespace Virterix.AdMediation.Editor
 {
     public class IronSourceSettings : BaseAdNetworkSettings
     {
+        public bool _useOfferwall;
         public List<IronSourceAdapter.OverridePlacement> _overiddenPlacements;
-
+        
         public override Type NetworkAdapterType => typeof(IronSourceAdapter);
         protected override string AdapterScriptName => "IronSourceAdapter";
         protected override string AdapterDefinePreprocessorKey => "_AMS_IRONSOURCE";
@@ -34,6 +35,7 @@ namespace Virterix.AdMediation.Editor
         {
             IronSourceAdapter adapter = networkAdapter as IronSourceAdapter;
             adapter.m_timeout = _timeout;
+            adapter.m_useOfferwall = _useOfferwall;
             var overridenPlacements = _overiddenPlacements.ToArray();
             for(int i = 0; i < overridenPlacements.Length; i++)
             {

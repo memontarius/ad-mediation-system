@@ -16,6 +16,7 @@ namespace Virterix.AdMediation.Editor
         protected override bool IsAdInstanceIdsDisplayed => false;
 
         private SerializedProperty _overiddenPlacementsProp;
+        private SerializedProperty _useOfferwallProp;
         private ReorderableList _overriddenPlacementList;
 
         public IronSourceView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
@@ -27,6 +28,7 @@ namespace Virterix.AdMediation.Editor
             _overriddenPlacementFoldAnimation = new AnimBool(_isOverriddenPlacementUncollapsed);
             _overriddenPlacementFoldAnimation.valueChanged.AddListener(settingsWindow.Repaint);
 
+            _useOfferwallProp = _serializedSettings.FindProperty("_useOfferwall");
             _overiddenPlacementsProp = _serializedSettings.FindProperty("_overiddenPlacements");
             _overriddenPlacementList = new ReorderableList(_serializedSettings, _overiddenPlacementsProp, false, false, true, true);
             
@@ -70,7 +72,9 @@ namespace Virterix.AdMediation.Editor
         protected override void DrawSpecificSettings()
         {
             GUILayout.BeginVertical("box");
- 
+            _useOfferwallProp.boolValue = GUILayout.Toggle(_useOfferwallProp.boolValue, "Use Offerwall");
+            EditorGUILayout.Space();
+            
             char collapsedSymbol = _isOverriddenPlacementUncollapsed ? AdMediationSettingsWindow.SYMBOL_BOTTOM_ARROW : AdMediationSettingsWindow.SYMBOL_LEFT_ARROW;
             string buttonTitle = string.Format("{0}  {1}", collapsedSymbol, "Override Placement Names");
 
@@ -79,7 +83,7 @@ namespace Virterix.AdMediation.Editor
                 _isOverriddenPlacementUncollapsed = !_isOverriddenPlacementUncollapsed;
                 EditorPrefs.SetBool(OVERRIDDEN_PLACEMENT_LIST_COLLAPSED_SAVEKEY, _isOverriddenPlacementUncollapsed);
             }
-
+            
             _overriddenPlacementFoldAnimation.target = _isOverriddenPlacementUncollapsed;
             if (EditorGUILayout.BeginFadeGroup(_overriddenPlacementFoldAnimation.faded))
             {

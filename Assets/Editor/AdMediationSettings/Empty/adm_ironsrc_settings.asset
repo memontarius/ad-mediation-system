@@ -22,4 +22,5 @@ MonoBehaviour:
   _bannerAdInstances: []
   _interstitialAdInstances: []
   _rewardAdInstances: []
+  _useOfferwall: 0
   _overiddenPlacements: []

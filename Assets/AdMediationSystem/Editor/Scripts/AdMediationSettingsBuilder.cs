@@ -399,6 +399,7 @@ namespace Virterix.AdMediation.Editor
                     }
                     adapter.m_networkName = settings._networkIdentifier;
                     adapter.m_adSupportParams = adSupportedParams.ToArray();
+                    adapter.m_responseWaitTime = settings._responseWaitTime;
                     settings.SetupNetworkAdapter(commonSettings, adapter);
                 }
             }

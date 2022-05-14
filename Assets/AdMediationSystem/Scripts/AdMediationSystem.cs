@@ -43,7 +43,7 @@ namespace Virterix.AdMediation
             public int[] maxPassages;
         }
 
-        public const string VERSION = "2.3.7";
+        public const string VERSION = "2.3.9";
         public const string AD_SETTINGS_FOLDER = "AdMediationSettings";
         public const string PREFAB_NAME = "AdMediationSystem";
         public const string PLACEMENT_DEFAULT_NAME = "Default";
@@ -234,6 +234,16 @@ namespace Virterix.AdMediation
 
         private bool IsSettingsProviderSelfCached =>
             m_remoteSettingsProvider != null && m_remoteSettingsProvider.IsSelfCached;
+
+        private AdNetworkAdapter[] NetworkAdapters
+        {
+            get
+            {
+                if (m_networkAdapters == null)
+                    m_networkAdapters = GetComponentsInChildren<AdNetworkAdapter>(true);
+                return m_networkAdapters;
+            }
+        }
         
         #endregion // Fields
 
@@ -356,15 +366,12 @@ namespace Virterix.AdMediation
         public AdNetworkAdapter GetNetwork(string networkName)
         {
             AdNetworkAdapter foundNetwork = null;
-            if (m_networkAdapters != null)
+            foreach (AdNetworkAdapter networkAdapter in NetworkAdapters)
             {
-                foreach (AdNetworkAdapter networkAdapter in m_networkAdapters)
+                if (networkAdapter.m_networkName.Equals(networkName))
                 {
-                    if (networkAdapter.m_networkName.Equals(networkName))
-                    {
-                        foundNetwork = networkAdapter;
-                        break;
-                    }
+                    foundNetwork = networkAdapter;
+                    break;
                 }
             }
             return foundNetwork;
@@ -570,7 +577,7 @@ namespace Virterix.AdMediation
         public void Initialize()
         {
             InitStatus = InitializedStatus.Initializing;
-            m_networkAdapters = GetComponentsInChildren<AdNetworkAdapter>(true);
+            m_networkAdapters = NetworkAdapters;
             AdMediator[] mediators = GetComponentsInChildren<AdMediator>(true);
             m_mediators.AddRange(mediators);
             InitializeSettings();
