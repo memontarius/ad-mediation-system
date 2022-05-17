@@ -491,7 +491,10 @@ namespace Virterix.AdMediation.Editor
                 {
                     EditorGUILayout.Space(2);
                     EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.PropertyField(_deferredFetchDelayProp, GUILayout.Width(332));
+                    var label = new GUIContent("Deferred Fetch Delay",
+                        "When all networks don't fill ad then the fetch will be performed automatically after the delay. " +
+                        "Negative value is disabled. (In Seconds)");
+                    EditorGUILayout.PropertyField(_deferredFetchDelayProp, label, GUILayout.Width(332));
                     EditorGUILayout.EndHorizontal();
                 }
 

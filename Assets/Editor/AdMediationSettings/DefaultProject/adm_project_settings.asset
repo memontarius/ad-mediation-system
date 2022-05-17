@@ -112,9 +112,9 @@ MonoBehaviour:
     Tiers:
     - MaxPassages: 1
       Units:
-      - NetworkName: AdMob
-        NetworkIndex: 0
-        NetworkIdentifier: admob
+      - NetworkName: Iron Source
+        NetworkIndex: 2
+        NetworkIdentifier: ironsrc
         InstanceIndex: 0
         InstanceName: Default
         Replaced: 0

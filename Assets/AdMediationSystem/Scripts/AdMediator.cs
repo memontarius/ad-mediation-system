@@ -35,15 +35,9 @@ namespace Virterix.AdMediation
             "Negative value is disabled. (In Seconds)")]
         public float m_deferredFetchDelay = -1;
         
-        public AdUnit CurrentUnit
-        {
-            get { return m_currUnit; }
-        }
+        public AdUnit CurrentUnit => m_currUnit;
 
-        public bool IsBannerDisplayed
-        {
-            get { return m_isBannerDisplayed; }
-        }
+        public bool IsBannerDisplayed => m_isBannerDisplayed;
 
         public string CurrentNetworkName
         {
@@ -106,10 +100,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        public bool WasLastNetworkPreparationSuccessfully
-        {
-            get { return m_isLastNetworkSuccessfullyPrepared; }
-        }
+        public bool WasLastNetworkPreparationSuccessfully => m_isLastNetworkSuccessfullyPrepared;
         private bool m_isLastNetworkSuccessfullyPrepared;
 
         private string LastAdUnitIdSaveKey
@@ -121,6 +112,10 @@ namespace Virterix.AdMediation
             }
         }
 
+        private bool DeferredFetchEnabled => m_deferredFetchDelay > 0.01f;
+        private bool DeferredFetchActive => m_deferredFetchCoroutine != null;
+        private float DeferredFetchDelay => m_deferredFetchCallCount * m_deferredFetchDelay;
+
         #endregion // Properties
 
         private AdUnit[][] m_tiers;
@@ -130,9 +125,10 @@ namespace Virterix.AdMediation
         private int m_lastActiveTierId;
         private int m_lastActiveUnitId;
         private bool m_isBannerDisplayed = false;
-        private Coroutine m_coroutineDeferredFetch;
+        private Coroutine m_deferredFetchCoroutine;
         private int m_failedPreparationCount;
         private int m_nonTimeoutUnitCountSinceFirstFailed;
+        private int m_deferredFetchCallCount;
 
         //===============================================================================
         #region MonoBehavior Methods
@@ -165,22 +161,17 @@ namespace Virterix.AdMediation
         public void Initialize(AdUnit[][] tiers, int[] tierMaxPassages)
         {
             m_lastActiveUnitId = -1;
+            m_deferredFetchCallCount = 1;
             m_tiers = tiers;
             for (int i = 0; i < m_tiers.Length; i++)
-            {
                 m_totalUnits += m_tiers[i].Length;
-            }
 
             m_fetchStrategy.Init(tiers, m_totalUnits, tierMaxPassages);
             if (m_continueAfterEndSession)
-            {
                 RestoreLastActiveAdUnit();
-            }
 
             if (m_fetchOnStart)
-            {
                 Fetch();
-            }
         }
 
         public virtual void Fetch()
@@ -191,24 +182,23 @@ namespace Virterix.AdMediation
                 return;
             }
 
-            if (m_coroutineDeferredFetch != null)
-            {
-                StopCoroutine(m_coroutineDeferredFetch);
-                m_coroutineDeferredFetch = null;
-            }
-
+            KillDeferredFetch();
             AdUnit unit = m_fetchStrategy.Fetch(m_tiers);
-
+            
             if (unit != null)
             {
                 SetCurrentUnit(unit);
-
                 if (CurrentUnit != null)
                 {
                     CurrentUnit.ResetDisplayTime();
                     if ((m_adType == AdType.Banner) && m_isBannerDisplayed)
                         CurrentUnit.Show();
                 }
+            }
+            else
+            {
+                if (DeferredFetchEnabled && !DeferredFetchActive)
+                    StartDeferredFetch(DeferredFetchDelay, true);
             }
 
 #if AD_MEDIATION_DEBUG_MODE
@@ -262,9 +252,7 @@ namespace Virterix.AdMediation
         private bool ShowAnyReadyNetwork()
         {
             if (m_totalUnits == 0)
-            {
                 return false;
-            }
 
             int currTierIndex = m_currUnit != null ? m_currUnit.TierIndex : 0;
             int currUnitIndex = m_currUnit != null ? m_currUnit.Index : 0;
@@ -324,27 +312,28 @@ namespace Virterix.AdMediation
             unit.Prepare();
         }
 
-        private void StartDeferredFetch(float delay)
+        private void StartDeferredFetch(float delay, bool increaseCallCounter = false)
         {
-            KillDefferedFetch();
-            m_coroutineDeferredFetch = StartCoroutine(DeferredFetch(delay));
+            if (increaseCallCounter)
+                m_deferredFetchCallCount++;
+            KillDeferredFetch();
+            m_deferredFetchCoroutine = StartCoroutine(DeferredFetch(delay));
         }
 
-        private void KillDefferedFetch()
+        private void KillDeferredFetch()
         {
-            if (m_coroutineDeferredFetch != null)
+            if (m_deferredFetchCoroutine != null)
             {
-                StopCoroutine(m_coroutineDeferredFetch);
-                m_coroutineDeferredFetch = null;
+                StopCoroutine(m_deferredFetchCoroutine);
+                m_deferredFetchCoroutine = null;
             }
         }
 
         private IEnumerator DeferredFetch(float delay)
         {
             yield return new WaitForSecondsRealtime(delay);
-            m_coroutineDeferredFetch = null;
+            m_deferredFetchCoroutine = null;
             Fetch();
-            yield break;
         }
 
         private void ResetCurrentUnit(AdUnit nextUnit)
@@ -451,16 +440,14 @@ namespace Virterix.AdMediation
                 case AdEvent.PreparationFailed:
                     m_isLastNetworkSuccessfullyPrepared = false;
                     if (m_failedPreparationCount == 0)
-                    {
                         m_nonTimeoutUnitCountSinceFirstFailed = UnitNonTimeoutCount;
-                    }
                     
                     m_failedPreparationCount++;
                     if (m_failedPreparationCount > m_nonTimeoutUnitCountSinceFirstFailed)
                     {
                         m_failedPreparationCount = 0;
-                        if (m_deferredFetchDelay >= 0.0001f)
-                            StartDeferredFetch(m_deferredFetchDelay);
+                        if (DeferredFetchEnabled && !DeferredFetchActive)
+                            StartDeferredFetch(DeferredFetchDelay, true);
                     }
                     else
                         StartDeferredFetch(0.5f);
@@ -468,6 +455,7 @@ namespace Virterix.AdMediation
                 case AdEvent.Prepared:
                     m_isLastNetworkSuccessfullyPrepared = true;
                     m_failedPreparationCount = 0;
+                    m_deferredFetchCallCount = 1;
                     break;
                 case AdEvent.Hiding:
                     AdUnit currAdUnit = m_currUnit;
