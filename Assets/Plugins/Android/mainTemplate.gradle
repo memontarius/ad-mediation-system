@@ -8,6 +8,12 @@
             url "https://maven.google.com"
         }
         maven {
+            url "https://maven.google.com" // Assets/Chartboost/Editor/ChartboostDependencies.xml:17
+        }
+        maven {
+            url "https://repo.maven.apache.org/maven2/" // Assets/GoogleMobileAds/Editor/AdColonyMediationDependencies.xml:8, Assets/GoogleMobileAds/Editor/AppLovinMediationDependencies.xml:8, Assets/GoogleMobileAds/Editor/UnityMediationDependencies.xml:9, Assets/GoogleMobileAds/Editor/UnityMediationDependencies.xml:17
+        }
+        maven {
             url "https://maven.google.com/" // Assets/GoogleMobileAds/Editor/GoogleMobileAdsDependencies.xml:7, Assets/IronSource/Editor/IronSourceSDKDependencies.xml:16, Assets/IronSource/Editor/IronSourceSDKDependencies.xml:24, Assets/IronSource/Editor/IronSourceSDKDependencies.xml:32
         }
         maven {
@@ -15,6 +21,9 @@
         }
         maven {
             url "https://android-sdk.is.com/" // Assets/IronSource/Editor/IronSourceSDKDependencies.xml:8
+        }
+        maven {
+            url "https://dl.google.com/dl/android/maven2/" // Assets/GoogleMobileAds/Editor/AdColonyMediationDependencies.xml:8, Assets/GoogleMobileAds/Editor/AppLovinMediationDependencies.xml:8, Assets/GoogleMobileAds/Editor/UnityMediationDependencies.xml:9
         }
         mavenLocal()
         mavenCentral()
@@ -27,12 +36,20 @@ apply plugin: 'com.android.library'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
+    implementation 'androidx.appcompat:appcompat:1.1.0' // Assets/Chartboost/Editor/ChartboostDependencies.xml:7
+    implementation 'com.chartboost:chartboost-sdk:8.2.1' // Assets/Chartboost/Editor/ChartboostDependencies.xml:18
+    implementation 'com.google.ads.mediation:adcolony:4.7.0.0' // Assets/GoogleMobileAds/Editor/AdColonyMediationDependencies.xml:8
+    implementation 'com.google.ads.mediation:applovin:11.3.3.0' // Assets/GoogleMobileAds/Editor/AppLovinMediationDependencies.xml:8
+    implementation 'com.google.ads.mediation:unity:4.1.0.0' // Assets/GoogleMobileAds/Editor/UnityMediationDependencies.xml:9
     implementation 'com.google.android.gms:play-services-ads:20.6.0' // Assets/GoogleMobileAds/Editor/GoogleMobileAdsDependencies.xml:7
+    // implementation 'com.google.android.gms:play-services-ads-identifier:17.0.0' // Assets/Chartboost/Editor/ChartboostDependencies.xml:6
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1' // Assets/IronSource/Editor/IronSourceSDKDependencies.xml:16
     implementation 'com.google.android.gms:play-services-appset:16.0.2' // Assets/IronSource/Editor/IronSourceSDKDependencies.xml:24
+    implementation 'com.google.android.gms:play-services-base:17.3.0' // Assets/Chartboost/Editor/ChartboostDependencies.xml:5
     implementation 'com.google.android.gms:play-services-basement:18.0.0' // Assets/IronSource/Editor/IronSourceSDKDependencies.xml:32
     implementation 'com.google.games:gpgs-plugin-support:0.10.14' // Assets/GooglePlayGames/Editor/GooglePlayGamesPluginDependencies.xml:11
     implementation 'com.ironsource.sdk:mediationsdk:7.2.1.1' // Assets/IronSource/Editor/IronSourceSDKDependencies.xml:8
+    implementation 'com.unity3d.ads:unity-ads:4.1.0' // Assets/GoogleMobileAds/Editor/UnityMediationDependencies.xml:17
 // Android Resolver Dependencies End
 **DEPS**}
 

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InitializeOnStart: 1
   EnableTestMode: 0
-  EnableExtraLogging: 0
+  EnableExtraLogging: 1
   ChildrenMode: 0
   TestDevices: []
   BannerMediators:
@@ -22,7 +22,7 @@ MonoBehaviour:
     Name: Default
     ContinueAfterEndSession: 1
     FetchOnAdUnitHidden: 1
-    FetchOnStart: 1
+    FetchOnStart: 0
     BannerMinDisplayTime: 30
     DeferredFetchDelay: 90
     FetchStrategyType: 0
@@ -41,7 +41,7 @@ MonoBehaviour:
     - MaxPassages: 1
       Units:
       - NetworkName: Iron Source
-        NetworkIndex: 2
+        NetworkIndex: 1
         NetworkIdentifier: ironsrc
         InstanceIndex: 0
         InstanceName: Default
@@ -52,7 +52,7 @@ MonoBehaviour:
     Name: Top
     ContinueAfterEndSession: 1
     FetchOnAdUnitHidden: 1
-    FetchOnStart: 1
+    FetchOnStart: 0
     BannerMinDisplayTime: 30
     DeferredFetchDelay: 90
     FetchStrategyType: 0
@@ -63,8 +63,8 @@ MonoBehaviour:
       - NetworkName: AdMob
         NetworkIndex: 0
         NetworkIdentifier: admob
-        InstanceIndex: 0
-        InstanceName: Default
+        InstanceIndex: 1
+        InstanceName: Top
         Replaced: 0
         PrepareOnExit: 0
         Percentage: 100
@@ -73,7 +73,7 @@ MonoBehaviour:
     Name: Default
     ContinueAfterEndSession: 1
     FetchOnAdUnitHidden: 1
-    FetchOnStart: 1
+    FetchOnStart: 0
     BannerMinDisplayTime: 30
     DeferredFetchDelay: 90
     FetchStrategyType: 0
@@ -104,7 +104,7 @@ MonoBehaviour:
     Name: Default
     ContinueAfterEndSession: 1
     FetchOnAdUnitHidden: 1
-    FetchOnStart: 1
+    FetchOnStart: 0
     BannerMinDisplayTime: 30
     DeferredFetchDelay: 90
     FetchStrategyType: 0

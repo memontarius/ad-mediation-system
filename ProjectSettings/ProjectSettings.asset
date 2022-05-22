@@ -241,7 +241,7 @@ PlayerSettings:
   useCustomLauncherGradleManifest: 1
   useCustomBaseGradleTemplate: 0
   useCustomGradlePropertiesTemplate: 1
-  useCustomProguardFile: 1
+  useCustomProguardFile: 0
   AndroidTargetArchitectures: 3
   AndroidTargetDevices: 0
   AndroidSplashScreenScale: 0
@@ -757,8 +757,8 @@ PlayerSettings:
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
     0: AD_MEDIATION_DEBUG_MODE
-    4: 
-    7: 
+    4: AD_MEDIATION_DEBUG_MODE
+    7: AD_MEDIATION_DEBUG_MODE
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

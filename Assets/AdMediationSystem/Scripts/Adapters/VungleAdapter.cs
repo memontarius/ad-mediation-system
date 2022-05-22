@@ -20,12 +20,13 @@ namespace Virterix.AdMediation
                 Vungle.onResume();
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             SubscribeEvents();
         }
 
-        private new void OnDisable()
+        protected override void OnDisable()
         {
             base.OnDisable();
             UnsubscribeEvents();

@@ -40,7 +40,6 @@ namespace Virterix.Common
 
         private IEnumerator LoadingHandler(string url, float waitingTime, CheckMode checkingMode, Action<bool, UnityWebRequest> OnLoadingCompleted)
         {
-
             UnityWebRequest www = UnityWebRequest.Get(url);
             www.SendWebRequest();
 
@@ -80,17 +79,12 @@ namespace Virterix.Common
                 }
 
                 if (passedTime > waitingTime)
-                {
                     break;
-                }
             }
 
             success = www.error == null;
-
             if (OnLoadingCompleted != null)
-            {
                 OnLoadingCompleted(success, www);
-            }
 
             www.Dispose();
 
@@ -103,7 +97,6 @@ namespace Virterix.Common
                     Destroy(this);
                     break;
             }
-
             yield return null;
         }
 

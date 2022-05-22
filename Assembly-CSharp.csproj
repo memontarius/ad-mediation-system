@@ -26,7 +26,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\Bin\Debug\Assembly-CSharp\</OutputPath>
-    <DefineConstants>UNITY_2020_3_34;UNITY_2020_3;UNITY_2020;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_INCLUDE_TESTS;USE_SEARCH_ENGINE_API;SCENE_TEMPLATE_MODULE;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_RUNTIME_PERMISSIONS;ENABLE_ENGINE_CODE_STRIPPING;ENABLE_ONSCREEN_KEYBOARD;ENABLE_MANAGED_UNITYTLS;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;ENABLE_VIDEO;PLATFORM_ANDROID;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;UNITY_CAN_SHOW_SPLASH_SCREEN;UNITY_HAS_GOOGLEVR;UNITY_HAS_TANGO;ENABLE_SPATIALTRACKING;PLATFORM_EXTENDS_VULKAN_DEVICE;PLATFORM_HAS_MULTIPLE_SWAPCHAINS;UNITY_ANDROID_SUPPORTS_SHADOWFILES;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_4_6;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <DefineConstants>UNITY_2020_3_34;UNITY_2020_3;UNITY_2020;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_INCLUDE_TESTS;USE_SEARCH_ENGINE_API;SCENE_TEMPLATE_MODULE;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_RUNTIME_PERMISSIONS;ENABLE_ENGINE_CODE_STRIPPING;ENABLE_ONSCREEN_KEYBOARD;ENABLE_MANAGED_UNITYTLS;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;ENABLE_VIDEO;PLATFORM_ANDROID;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;UNITY_CAN_SHOW_SPLASH_SCREEN;UNITY_HAS_GOOGLEVR;UNITY_HAS_TANGO;ENABLE_SPATIALTRACKING;PLATFORM_EXTENDS_VULKAN_DEVICE;PLATFORM_HAS_MULTIPLE_SWAPCHAINS;UNITY_ANDROID_SUPPORTS_SHADOWFILES;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_4_6;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;AD_MEDIATION_DEBUG_MODE;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169,0649</NoWarn>
@@ -43,6 +43,7 @@
   <ItemGroup>
      <Compile Include="Assets\IronSource\Scripts\IronSourceBannerAndroid.cs" />
      <Compile Include="Assets\IronSource\Scripts\IronSourceMediationSettings.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Common\Mediation\UnityAds\IUnityAdsClient.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AudienceNetwork\AudienceNetworkMediationUtils.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\PlayerProfile.cs" />
      <Compile Include="Assets\GooglePlayGames\OurUtils\PlatformUtils.cs" />
@@ -50,6 +51,7 @@
      <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\AudienceNetworkAdapter.cs" />
      <Compile Include="Assets\IronSource\Scripts\IUnitySegment.cs" />
      <Compile Include="Assets\IronSource\Scripts\UnsupportedPlatformAgent.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Common\Mediation\UnityAds\DummyClient.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Events\Event.cs" />
      <Compile Include="Assets\IronSource\Scripts\IUnityOfferwall.cs" />
      <Compile Include="Assets\IronSource\Scripts\IronSourceInitializationAndroid.cs" />
@@ -60,30 +62,40 @@
      <Compile Include="Assets\IronSource\DemoScene\IronSourceDemoScript.cs" />
      <Compile Include="Assets\GooglePlayGames\OurUtils\NearbyHelperObject.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\AdMediationSystem.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Platforms\iOS\Mediation\AdColony\AdColonyAppOptionsClient.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Video\VideoCapabilities.cs" />
      <Compile Include="Assets\IronSource\Scripts\IUnityRewardedVideoManual.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\AdInstance.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\DummyClient.cs" />
      <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesPlatform.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Platforms\Mediation\UnityAdsClientFactory.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\FetchStrategies\SequenceFetchStrategy.cs" />
      <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesAchievement.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Events\IEvent.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Platforms\iOS\Mediation\AdColony\Externs.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\INearbyConnectionClient.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\ChartboostAdapter.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Platforms\Mediation\AdColonyAppOptionsClientFactory.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\CommonStatusCodes.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\AdUnit.cs" />
+     <Compile Include="Assets\Chartboost\Scripts\Chartboost.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\UnityAds\UnityAdInstanceBannerParameters.cs" />
      <Compile Include="Assets\IronSource\Scripts\IUnityInitialization.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\Common\TimeSnapshot.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\SignInStatus.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Achievement.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Platforms\Android\Mediation\AdColony\AdColonyAppOptionsClient.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Api\Mediation\AdColony\AdColonyAppOptions.cs" />
      <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidJavaConverter.cs" />
+     <Compile Include="Assets\Chartboost\Examples\ChartboostExample\ChartboostExample.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\AdFactory.cs" />
      <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidTaskUtils.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\BaseAdController.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Platforms\iOS\Mediation\UnityAds\UnityAdsClient.cs" />
      <Compile Include="Assets\IronSource\Scripts\IronSourceIAgent.cs" />
+     <Compile Include="Assets\AdMediationSystem\Scripts\BaseAdController.cs" />
      <Compile Include="Assets\IronSource\Scripts\IronSourceEvents.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\SettingsProviders\AdRemoteSettingsCustomServerProvider.cs" />
+     <Compile Include="Assets\Chartboost\Scripts\CBExternal.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\DummyNearbyConnectionClient.cs" />
      <Compile Include="Assets\IronSource\Scripts\IronSourceOfferwallAndroid.cs" />
      <Compile Include="Assets\IronSource\Scripts\IronSourceImpressionData.cs" />
@@ -91,6 +103,7 @@
      <Compile Include="Assets\IronSource\Scripts\IronSourceConfig.cs" />
      <Compile Include="Assets\GooglePlayGames\GameInfo.cs" />
      <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesLocalUser.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Api\Mediation\AdColony\AdColonyMediationExtras.cs" />
      <Compile Include="Assets\IronSource\Scripts\IronSourceInterstitialAndroid.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\VungleAdapter.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Events\IEventsClient.cs" />
@@ -100,6 +113,7 @@
      <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesScore.cs" />
      <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidSavedGameClient.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Player.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Api\Mediation\UnityAds\UnityAds.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\IPlayGamesClient.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Video\CaptureOverlayStateListener.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\CommonTypes.cs" />
@@ -125,6 +139,8 @@
      <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\AdvertisingResult.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Video\VideoCaptureState.cs" />
      <Compile Include="Assets\GooglePlayGames\Platforms\TokenClient.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Platforms\Android\Mediation\AppLovin\AppLovinClient.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Platforms\iOS\Mediation\AppLovin\AppLovinClient.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AdMob\AdMobMediationBehavior.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\SignInInteractivity.cs" />
      <Compile Include="Assets\GooglePlayGames\OurUtils\Misc.cs" />
@@ -139,6 +155,7 @@
      <Compile Include="Assets\IronSource\Scripts\IronSourceRewardedVideoManualAndroid.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\Common\Singleton.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AudienceNetwork\AudienceNetworkAdInstanceBannerParameters.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Api\Mediation\AppLovin\AppLovin.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\ConnectionRequest.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\PollfishAdapter.cs" />
      <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidEventsClient.cs" />
@@ -149,30 +166,40 @@
      <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesLeaderboard.cs" />
      <Compile Include="Assets\IronSource\Scripts\IronSourceError.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\Common\CryptString.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Common\Mediation\AppLovin\IAppLovinClient.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\NearbyConnectionConfiguration.cs" />
      <Compile Include="Assets\IronSource\Scripts\IUnityRewardedVideo.cs" />
      <Compile Include="Assets\GooglePlayGames\Platforms\NearbyConnectionClientFactory.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\IFetchStrategy.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Common\Mediation\AppLovin\DummyClient.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\SignInHelper.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Common\Mediation\AdColony\DummyClient.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Platforms\Android\Mediation\UnityAds\UnityAdsClient.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Platforms\iOS\Mediation\AppLovin\Externs.cs" />
      <Compile Include="Assets\IronSource\Scripts\IUnityBanner.cs" />
      <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidClient.cs" />
      <Compile Include="Assets\IronSource\Scripts\IUnityImpressionData.cs" />
      <Compile Include="Assets\IronSource\Scripts\IronSourceUtils.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\AdUtils.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Common\Mediation\AdColony\IAdColonyAppOptionsClient.cs" />
      <Compile Include="Assets\IronSource\Scripts\iOSAgent.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Platforms\iOS\Mediation\UnityAds\Externs.cs" />
      <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidTokenClient.cs" />
      <Compile Include="Assets\IronSource\Scripts\IronSourceImpressionDataAndroid.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AdColony\AdColonyAdInstanceBannerParameters.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\AdRemoteSettingsProvider.cs" />
      <Compile Include="Assets\IronSource\Scripts\IUnityInterstitial.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\AdType.cs" />
+     <Compile Include="Assets\Chartboost\Scripts\CBSettings.cs" />
      <Compile Include="Assets\IronSource\Scripts\IronSourceConstants.cs" />
      <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesUserProfile.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\Common\JSONObject.cs" />
      <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\EndpointDetails.cs" />
      <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AppLovin\AppLovinAdInstanceBannerParameters.cs" />
      <Compile Include="Assets\IronSource\Scripts\IronSourcePlacement.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Platforms\Mediation\AppLovinClientFactory.cs" />
      <Compile Include="Assets\IronSource\Scripts\IronSource.cs" />
+     <Compile Include="Assets\Chartboost\Scripts\CBJSON.cs" />
      <None Include="Assets\GoogleMobileAds\GoogleMobileAds_version-7.0.0_manifest.txt" />
      <None Include="Assets\Resources\AdMediationSettings\DefaultProject\android_settings.json" />
      <None Include="Assets\GooglePlayGames\Plugins\Android\GooglePlayGamesManifest.plugin\AndroidManifest.xml" />
@@ -793,9 +820,6 @@
      <Reference Include="UnityEngine.Purchasing.SecurityStub">
      <HintPath>E:\Projects\Virterix\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\UnityEngine.Purchasing.SecurityStub.dll</HintPath>
      </Reference>
-     <Reference Include="UnityEngine.Advertisements">
-     <HintPath>E:\Projects\Virterix\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\UnityEngine.Advertisements.dll</HintPath>
-     </Reference>
      <Reference Include="Unity.RemoteConfig.Editor">
      <HintPath>E:\Projects\Virterix\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.RemoteConfig.Editor.dll</HintPath>
      </Reference>
@@ -817,6 +841,9 @@
      <Reference Include="UnityEngine.Purchasing.Codeless">
      <HintPath>E:\Projects\Virterix\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\UnityEngine.Purchasing.Codeless.dll</HintPath>
      </Reference>
+     <Reference Include="Unity.Mobile.AndroidLogcat.Editor">
+     <HintPath>E:\Projects\Virterix\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Mobile.AndroidLogcat.Editor.dll</HintPath>
+     </Reference>
      <Reference Include="Unity.Timeline.Editor">
      <HintPath>E:\Projects\Virterix\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
      </Reference>
@@ -826,14 +853,8 @@
      <Reference Include="Unity.RemoteConfig.Editor.Core">
      <HintPath>E:\Projects\Virterix\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.RemoteConfig.Editor.Core.dll</HintPath>
      </Reference>
-     <Reference Include="UnityEngine.Monetization">
-     <HintPath>E:\Projects\Virterix\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\UnityEngine.Monetization.dll</HintPath>
-     </Reference>
      <Reference Include="UnityEditor.Purchasing">
      <HintPath>E:\Projects\Virterix\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\UnityEditor.Purchasing.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.Advertisements.Editor">
-     <HintPath>E:\Projects\Virterix\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\UnityEngine.Advertisements.Editor.dll</HintPath>
      </Reference>
   </ItemGroup>
   <ItemGroup>

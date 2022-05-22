@@ -69,8 +69,9 @@ namespace Virterix.AdMediation
             }
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
 #if UNITY_ANDROID || UNITY_IOS
             Pollfish.surveyCompletedEvent += surveyCompleted;
             Pollfish.surveyOpenedEvent += surveyOpened;
@@ -82,10 +83,9 @@ namespace Virterix.AdMediation
 #endif
         }
 
-        private new void OnDisable()
+        protected override void OnDisable()
         {
             base.OnDisable();
-
 #if UNITY_ANDROID || UNITY_IOS
             Pollfish.surveyCompletedEvent -= surveyCompleted;
             Pollfish.surveyOpenedEvent -= surveyOpened;

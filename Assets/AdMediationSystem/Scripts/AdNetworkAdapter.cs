@@ -122,15 +122,9 @@ namespace Virterix.AdMediation
         #region Properties
         //-------------------------------------------------------------------------------
 
-        public IncentivizedReward LastReward
-        {
-            get { return m_lastReward; }
-        }
+        public IncentivizedReward LastReward => m_lastReward;
 
-        public string CurrBannerPlacement
-        {
-            get { return m_currBannerPlacement; }
-        }
+        public string CurrBannerPlacement => m_currBannerPlacement;
 
         public virtual bool UseSingleBannerInstance => false;
 
@@ -148,10 +142,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        protected virtual string AdInstanceParametersFolder
-        {
-            get { return "";  }
-        }
+        protected virtual string AdInstanceParametersFolder => "";
 
         #endregion Properties
 
@@ -161,22 +152,22 @@ namespace Virterix.AdMediation
         protected IncentivizedReward m_lastReward;
         protected string m_currBannerPlacement;
 
-        private static float m_waitResponseHandlingInterval;
-        private static WaitForSeconds m_waitResponseInstruction;
-
+        private static float s_waitResponseHandlingInterval;
+        private WaitForSeconds _waitResponseIntervalInstruction;
+        private readonly WaitForSecondsRealtime _updateEventsIntervalInstruction = new WaitForSecondsRealtime(0.33f);
+        
         //_______________________________________________________________________________
         #region MonoBehavior Methods
         //-------------------------------------------------------------------------------
-
-        protected void Update()
+        protected virtual void OnEnable()
         {
-            UpdateEvents();
+            StartCoroutine(ProcessUpdateEvents());
         }
 
-        protected void OnDisable()
+        protected virtual void OnDisable()
         {
-            UpdateEvents();
             StopAllCoroutines();
+            UpdateEvents();
         }
         
         #endregion MonoBehavior Methods
@@ -214,11 +205,12 @@ namespace Virterix.AdMediation
 
         public void Initialize(Dictionary<string, string> parameters = null, JSONArray adInstances = null)
         {
-            if (m_waitResponseInstruction == null)
+            if (_waitResponseIntervalInstruction == null)
             {
-                m_waitResponseHandlingInterval = 0.5f;
-                m_waitResponseInstruction = new WaitForSeconds(m_waitResponseHandlingInterval);
+                s_waitResponseHandlingInterval = 0.5f;
+                _waitResponseIntervalInstruction = new WaitForSeconds(s_waitResponseHandlingInterval);
             }
+            
             if (parameters != null)
             {
                 InitializeParameters(parameters, adInstances);
@@ -226,19 +218,6 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AMS] AdNetworkAdapter.Initialize() Initialize network adapter: " + m_networkName + " adInstances:" + m_adInstances.Count);
 #endif
-        }
-
-        /// <summary>
-        /// Not working!
-        /// </summary>
-        public virtual void DisableWhenInitialize()
-        {
-
-#if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("[AMS] AdNetworkAdapter.DisableWhenInitialize() " + m_networkName);
-#endif
-
-            this.enabled = false;
         }
 
         public virtual bool IsReady(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME) 
@@ -297,11 +276,17 @@ namespace Virterix.AdMediation
             eventParam.m_adType = adType;
             eventParam.m_adInstance = adInstance;
             eventParam.m_adEvent = adEvent;
-            m_events.Add(eventParam);
+            lock (m_events)
+            {
+                m_events.Add(eventParam);
+            }
         }
 
         public virtual void NotifyEvent(AdEvent adEvent, AdInstance adInstance)
         {
+            if (adInstance == null)
+                return;
+            
             switch (adEvent)
             {
                 case AdEvent.PreparationFailed:
@@ -424,11 +409,20 @@ namespace Virterix.AdMediation
         #region Internal Methods
         //-------------------------------------------------------------------------------
 
+        private IEnumerator ProcessUpdateEvents()
+        {
+            while (true)
+            {
+                yield return _updateEventsIntervalInstruction;
+                UpdateEvents();
+            }
+        }
+
         private void UpdateEvents()
         {
             if (m_events.Count == 0)
                 return;
-
+            
             for (int i = 0; i < m_events.Count; i++)
             {
                 EventParam eventParam = m_events[i];
@@ -535,8 +529,8 @@ namespace Virterix.AdMediation
 
             while (true)
             {
-                yield return m_waitResponseInstruction;
-                passedTime += m_waitResponseHandlingInterval;
+                yield return _waitResponseIntervalInstruction;
+                passedTime += s_waitResponseHandlingInterval;
 
                 if (passedTime >= m_responseWaitTime)
                 {
@@ -552,7 +546,7 @@ namespace Virterix.AdMediation
                     }
                 }
             }
-            yield return m_waitResponseInstruction;
+            yield return _waitResponseIntervalInstruction;
         }
         
         #endregion Internal Methods

@@ -41,11 +41,12 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <None Include="Assets\Plugins\Android\proguard-user.txt" />
+     <None Include="Assets\Plugins\Android\res\xml\network_security_config.xml" />
      <None Include="Assets\Plugins\Android\GooglePlayGamesManifest.androidlib\AndroidManifest.xml" />
      <None Include="Assets\Plugins\Android\GoogleMobileAdsPlugin.androidlib\AndroidManifest.xml" />
      <None Include="Assets\Plugins\Android\GoogleMobileAdsAdColonyMediation\AndroidManifest.xml" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
+     <None Include="Assets\Plugins\Android\ChartboostSDK.androidlib\AndroidManifest.xml" />
      <None Include="Assets\Plugins\Android\GoogleMobileAdsAppLovinMediation\AndroidManifest.xml" />
      <Reference Include="UnityEngine">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.34f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Boomlagoon.JSON;
 using System.Linq;
 using System.Collections;
+using UnityEngine.PlayerLoop;
 
 namespace Virterix.AdMediation
 {
@@ -60,12 +61,13 @@ namespace Virterix.AdMediation
         }
 
 #if _AMS_IRONSOURCE
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             SubscribeEvents();
         }
 
-        private new void OnDisable()
+        protected override void OnDisable()
         {
             base.OnDisable();
             UnsubscribeEvents();
@@ -210,7 +212,7 @@ namespace Virterix.AdMediation
 
             if (m_validateIntegration)
                 IronSource.Agent.validateIntegration();
-
+            
             if (!string.IsNullOrEmpty(UserId))
                 IronSource.Agent.setUserId(UserId);
             
@@ -371,16 +373,15 @@ namespace Virterix.AdMediation
         public override void NotifyEvent(AdEvent adEvent, AdInstance adInstance)
         {
             if (adInstance.m_adType == AdType.Banner && adEvent == AdEvent.PreparationFailed)
-            {
                 m_bannerState = AdState.Unavailable;
-            }
             base.NotifyEvent(adEvent, adInstance);
         }
 
         private string GetOverridenPlacement(AdType adType, string placementName)
         {
-            foreach(var overridenPlacement in m_overriddenPlacements)
+            for (int i = 0; i < m_overriddenPlacements.Length; i++)
             {
+                OverridePlacement overridenPlacement = m_overriddenPlacements[i];
                 if (overridenPlacement.adType == adType && overridenPlacement.originPlacement == placementName)
                 {
                     placementName = overridenPlacement.overriddenPlacement;
@@ -413,11 +414,16 @@ namespace Virterix.AdMediation
 
         void InterstitialAdShowSucceededEvent()
         {
-            AddEvent(m_interstitialInstance.m_adType, AdEvent.Show, m_interstitialInstance);
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] IronSourceAdapter.InterstitialAdShowSucceededEvent()");
+#endif
         }
 
         void InterstitialAdShowFailedEvent(IronSourceError error)
         {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] IronSourceAdapter.InterstitialAdShowFailedEvent()");
+#endif
             m_interstitialInstance.State = AdState.Unavailable;
         }
 
@@ -428,10 +434,17 @@ namespace Virterix.AdMediation
 
         void InterstitialAdOpenedEvent()
         {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] IronSourceAdapter.InterstitialAdOpenedEvent()");
+#endif
+            AddEvent(m_interstitialInstance.m_adType, AdEvent.Show, m_interstitialInstance);
         }
 
         void InterstitialAdClosedEvent()
         {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] IronSourceAdapter.InterstitialAdClosedEvent()");
+#endif
             AddEvent(m_interstitialInstance.m_adType, AdEvent.Hiding, m_interstitialInstance);
         }
 

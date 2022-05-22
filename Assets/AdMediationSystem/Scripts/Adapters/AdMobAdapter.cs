@@ -227,7 +227,7 @@ namespace Virterix.AdMediation
             }
             return admobAdPosition;
         }
-
+        
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
@@ -618,11 +618,70 @@ namespace Virterix.AdMediation
             }
 
             OnAdRequest(adType, new AdRequestBuilderContainer(requestBuilder));
-
             AdRequest request = requestBuilder.Build();
             return request;
         }
 
+        public override void NotifyEvent(AdEvent adEvent, AdInstance adInstance)
+        {
+            switch (adInstance.m_adType)
+            {
+                case AdType.Banner:
+                    HandleBannerEvents(adEvent, adInstance);
+                    break;
+                case AdType.Interstitial:
+                    HandleInterstitialEvents(adEvent, adInstance);
+                    break;
+                case AdType.Incentivized:
+                    HandleRewardedVideoEvents(adEvent, adInstance);
+                    break;
+            }
+            base.NotifyEvent(adEvent, adInstance);
+        }
+
+        private void HandleBannerEvents(AdEvent adEvent, AdInstance adInstance)
+        {
+            switch (adEvent)
+            {
+                case AdEvent.Prepared:
+                    adInstance.State = AdState.Received;
+                    break;
+                case AdEvent.PreparationFailed:
+                    DestroyBanner((AdMobAdInstanceData)adInstance);
+                    break;
+            }
+        }
+        
+        private void HandleInterstitialEvents(AdEvent adEvent, AdInstance adInstance)
+        {
+            switch (adEvent)
+            {
+                case AdEvent.Prepared:
+                    adInstance.State = AdState.Received;
+                    break;
+                case AdEvent.PreparationFailed:
+                case AdEvent.Hiding:
+                    DestroyInterstitial((AdMobAdInstanceData)adInstance);
+                    break;
+            }
+        }
+
+        private void HandleRewardedVideoEvents(AdEvent adEvent, AdInstance adInstance)
+        {
+            switch (adEvent)
+            {
+                case AdEvent.Prepared:
+                    adInstance.State = AdState.Received;
+                    break;
+                case AdEvent.PreparationFailed:
+                    adInstance.State = AdState.Uncertain;
+                    break;
+                case AdEvent.Hiding:
+                    DestroyRewardVideo((AdMobAdInstanceData)adInstance); 
+                    break;
+            }
+        }
+        
         //------------------------------------------------------------------------
         // AdMob Callbacks
         private void OnInitComplete(InitializationStatus initStatus)
@@ -639,19 +698,20 @@ namespace Virterix.AdMediation
             print("[AMS] AdMobAdapter.HandleAdLoaded() " + " adInstance: " + adInstance.Name +
                 " isVisibled: " + adInstance.m_bannerDisplayed);
 #endif
-
-            adInstance.State = AdState.Received;
-            BannerView bannerView = adInstance.m_adView as BannerView;
             AddEvent(AdType.Banner, AdEvent.Prepared, adInstance);
-            if (adInstance.m_bannerDisplayed)
+            lock (adInstance)
             {
+                BannerView bannerView = adInstance.m_adView as BannerView;
+                if (adInstance.m_bannerDisplayed)
+                {
 #if UNITY_EDITOR
-                bannerView.Hide();
+                    bannerView.Hide();
 #endif
-                bannerView.Show();
+                    bannerView.Show();
+                }
+                else
+                    bannerView.Hide();
             }
-            else
-                bannerView.Hide();
         }
 
         public void HandleAdFailedToLoad(AdMobAdInstanceData adInstance, object sender, AdFailedToLoadEventArgs args)
@@ -660,7 +720,6 @@ namespace Virterix.AdMediation
             print("[AMS] AdMobAdapter.HandleAdFailedToLoad() " + " adInstance: " + adInstance.Name +
                 " message: " + args.LoadAdError.GetMessage());
 #endif
-            DestroyBanner(adInstance);
             AddEvent(AdType.Banner, AdEvent.PreparationFailed, adInstance);
         }
 
@@ -695,7 +754,6 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             print("[AMS] AdMobAdapter.HandleInterstitialLoaded()");
 #endif
-            adInstance.State = AdState.Received;
             AddEvent(AdType.Interstitial, AdEvent.Prepared, adInstance);
         }
 
@@ -704,7 +762,6 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             print("[AMS] AdMobAdapter.HandleInterstitialFailedToLoad() message: " + args.LoadAdError.GetMessage());
 #endif
-            DestroyInterstitial(adInstance);
             AddEvent(AdType.Interstitial, AdEvent.PreparationFailed, adInstance);
         }
 
@@ -728,7 +785,6 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             print("[AMS] AdMobAdapter.HandleInterstitialClosed()");
 #endif
-            DestroyInterstitial(adInstance);
             AddEvent(AdType.Interstitial, AdEvent.Hiding, adInstance);
         }
 
@@ -742,7 +798,6 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoLoaded()");
 #endif
-            adInstance.State = AdState.Received;
             AddEvent(AdType.Incentivized, AdEvent.Prepared, adInstance);
         }
 
@@ -751,7 +806,6 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoFailedToLoad() message: " + args.LoadAdError.GetMessage());
 #endif
-            adInstance.State = AdState.Uncertain;
             AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, adInstance);
         }
 
@@ -760,7 +814,6 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoFailedToLoad() message: " + args.Message);
 #endif
-            DestroyRewardVideo(adInstance);
             AddEvent(AdType.Incentivized, AdEvent.Hiding, adInstance);
         }
 
@@ -784,7 +837,6 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoClosed()");
 #endif
-            DestroyRewardVideo(adInstance);
             AddEvent(AdType.Incentivized, AdEvent.Hiding, adInstance);
         }
 
@@ -807,6 +859,6 @@ namespace Virterix.AdMediation
 
 #endregion // Reward Video callback handlers
 
-#endif // _AMS_ADMOB
+#endif
     }
 }

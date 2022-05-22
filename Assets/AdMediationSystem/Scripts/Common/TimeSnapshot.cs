@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Globalization;
 
 namespace Virterix.Common
 {
@@ -14,7 +15,7 @@ namespace Virterix.Common
             Hours,
             Days
         }
-
+        
         string m_key;
         public float m_period;
         public PeriodType m_periodType;
@@ -129,31 +130,25 @@ namespace Virterix.Common
             if (stringDateTime.Length != 0)
             {
                 if (m_useEncryption)
-                {
                     stringDateTime = CryptString.Decode(stringDateTime, EncryptionKey);
-                }
 
-                wasSave = DateTime.TryParse(stringDateTime, out date);
+                wasSave = DateTime.TryParse(stringDateTime, CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
                 if (!wasSave)
-                {
-                    date = DateTime.Now.ToUniversalTime();
-                }
+                    date = DateTime.UtcNow;
             }
             return wasSave;
         }
 
         public void Save(bool isUpdateCurrSavedData = true)
         {
-            DateTime currDateTime = DateTime.Now.ToUniversalTime();
+            DateTime currDateTime = DateTime.UtcNow;
             if (isUpdateCurrSavedData)
-            {
                 m_savedDate = currDateTime;
-            }
-            string currDateTimeStr = currDateTime.ToString();
+            
+            string currDateTimeStr = currDateTime.ToString(CultureInfo.InvariantCulture);
             if (m_useEncryption)
-            {
                 currDateTimeStr = CryptString.Encode(currDateTimeStr, EncryptionKey);
-            }
+            
             PlayerPrefs.SetString(m_key, currDateTimeStr);
         }
     }

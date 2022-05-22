@@ -103,12 +103,13 @@ namespace Virterix.AdMediation
             return id;
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             SubscribeAdEvents();
         }
 
-        private new void OnDisable()
+        protected override void OnDisable()
         {
             base.OnDisable();
             UnsubscribeAdEvents();

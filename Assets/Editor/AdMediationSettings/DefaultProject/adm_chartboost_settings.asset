@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3aa395e8a3417949bb2f456cb45fec4, type: 3}
   m_Name: adm_chartboost_settings
   m_EditorClassIdentifier: 
-  _enabled: 0
+  _enabled: 1
   _networkIdentifier: chartboost
   _androidAppId: 54f98cb30d60257eaf2c13d5
   _iosAppId: 54f98cb20d60257eaf2c13d3
