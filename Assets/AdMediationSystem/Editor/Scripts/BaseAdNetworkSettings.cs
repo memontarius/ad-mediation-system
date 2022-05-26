@@ -130,14 +130,15 @@ namespace Virterix.AdMediation.Editor
 
         public void SetupNetworkAdapterScript()
         {
-            string adapterPath = string.Format("{0}/{1}/{2}.cs", Application.dataPath, "AdMediationSystem/Scripts/Adapters", AdapterScriptName);
+            string adapterPath = string.Format("{0}/{1}/{2}/{3}.cs", 
+                Application.dataPath, "AdMediationSystem", "/Scripts/Adapters", AdapterScriptName);
 
             string content = File.ReadAllText(adapterPath);
             if (content.Length > 0)
             {
                 string define = "#define " + AdapterDefinePreprocessorKey;
                 string undefine = "//#define " + AdapterDefinePreprocessorKey;
-
+                
                 if (_enabled)
                 {
                     content = content.Replace(undefine, define);
@@ -189,7 +190,5 @@ namespace Virterix.AdMediation.Editor
                 adInstanceDataHolders[index++] = adInstanceDataHolder;  
             }
         }
-
-
     }
 }

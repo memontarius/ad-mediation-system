@@ -19,7 +19,8 @@ namespace Virterix.AdMediation.Editor
         public const string EXTRA_LOGGING_DEFINE = "AD_MEDIATION_DEBUG_MODE";
         public const char SYMBOL_LEFT_ARROW = '\u21A6'; // '\u25B7'
         public const char SYMBOL_BOTTOM_ARROW = '\u21A7'; // '\u25BD'
-
+        public const char SYMBOL_REFRESH = '\u21BB';
+        
         private int SelectedTab
         {
             get { return _selectedTab; }
@@ -640,20 +641,28 @@ namespace Virterix.AdMediation.Editor
 
         private void DrawProjectSettings()
         {
+            GUILayout.BeginHorizontal();
             GUILayout.Label("Settings", EditorStyles.boldLabel);
 
+            if (GUILayout.Button(SYMBOL_REFRESH.ToString(), GUILayout.Height(18), GUILayout.Width(32)))
+            {
+                AdMediationSettingsBuilder.SetupNetworkScripts(NetworkSettings, true, _networkEnabledStates);
+                foreach (var networkView in _networks)
+                    networkView.WriteDefinitionInScript();
+                AssetDatabase.Refresh();
+            }
+            GUILayout.EndHorizontal();
+            
             GUILayout.BeginHorizontal("box");
             IsAndroid = GUILayout.Toggle(IsAndroid, " Android");
             if (!IsAndroid && !IsIOS)
-            {
                 IsIOS = true;
-            }
+            
             GUILayout.Space(20);
             IsIOS = GUILayout.Toggle(IsIOS, " iOS");
             if (!IsAndroid && !IsIOS)
-            {
                 IsAndroid = true;
-            }
+            
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             if (_serializedProjectSettings.ApplyModifiedProperties())
@@ -765,8 +774,10 @@ namespace Virterix.AdMediation.Editor
         {
             EditorGUILayout.Space();
             var centeredStyle = GUI.skin.GetStyle("Label");
+            var previousAlignment = centeredStyle.alignment;
             centeredStyle.alignment = TextAnchor.MiddleRight;
             GUILayout.Label($"{AdMediationSystem.VERSION}", centeredStyle);
+            centeredStyle.alignment = previousAlignment;
         }
         
         private void BuildSettings()

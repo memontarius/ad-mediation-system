@@ -207,6 +207,7 @@
      <None Include="Assets\IronSource\Plugins\Android\IronSource.plugin\AndroidManifest.xml" />
      <None Include="Assets\Resources\AdMediationSettings\DefaultProject\ios_settings.json" />
      <None Include="Assets\Resources\AdMediationSettings\Empty\android_settings.json" />
+     <None Include="Assets\Resources\AdMediationSettings\Empty\ios_settings.json" />
      <None Include="Assets\Resources\BillingMode.json" />
      <Reference Include="UnityEngine">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.34f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>

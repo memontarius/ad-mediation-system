@@ -476,5 +476,9 @@ namespace Virterix.AdMediation.Editor
 
             return list;
         }
+
+        public virtual void WriteDefinitionInScript()
+        {
+        }
     }
 }

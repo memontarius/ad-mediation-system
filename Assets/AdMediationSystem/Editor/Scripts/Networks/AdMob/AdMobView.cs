@@ -71,6 +71,15 @@ namespace Virterix.AdMediation.Editor
             return activationChanged;
         }
 
+        public override void WriteDefinitionInScript()
+        {
+            int flags = _mediationNetworkFlagsProp.intValue;
+            for (int i = 0; i < _mediationNetworkOptions.Length; i++) {
+                bool enabled = (flags & (1 << i)) == (1 << i);
+                WriteDefinitionInScript(enabled, _mediationNetworkDefinitions[i]);
+            }
+        }
+        
         protected override void DrawSpecificSettings()
         {
             GUILayout.BeginVertical("box");
@@ -88,23 +97,20 @@ namespace Virterix.AdMediation.Editor
                 _mediationNetworkFlagsProp.intValue = EditorGUILayout.MaskField("Networks", _mediationNetworkFlagsProp.intValue, _mediationNetworkOptions);
                 changed = EditorGUI.EndChangeCheck();
 
-                if (changed) {
-                    int flags = _mediationNetworkFlagsProp.intValue;
-                    for (int i = 0; i < _mediationNetworkOptions.Length; i++) {
-                        bool enabled = (flags & (1 << i)) == (1 << i);
-                        WriteDefinitionInScript(enabled, _mediationNetworkDefinitions[i]);
-                    }
+                if (changed)
+                {
+                    WriteDefinitionInScript();
                     AssetDatabase.Refresh();
                 }
             }
             GUILayout.EndVertical();
         }
-
+        
         public void WriteDefinitionInScript(bool include, string macros)
         {
             string[] findFolders = new[] { "Assets/AdMediationSystem/Scripts" };
             string[] assets = AssetDatabase.FindAssets("AdMobMediationBehavior", findFolders);
-
+            
             if (assets.Length == 1)
             {
                 var assetLocalPath = AssetDatabase.GUIDToAssetPath(assets[0]).Remove(0, 6);
@@ -138,8 +144,6 @@ namespace Virterix.AdMediation.Editor
                         File.WriteAllText(scriptPath, content);
                 }
             }
-
-
         }
     }
 }
