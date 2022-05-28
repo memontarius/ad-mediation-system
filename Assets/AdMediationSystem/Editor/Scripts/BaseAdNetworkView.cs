@@ -42,15 +42,10 @@ namespace Virterix.AdMediation.Editor
 
         public bool Collapsed { get; set; }
 
-        public BaseAdNetworkSettings Settings
-        {
-            get { return _settings; }
-        }
+        public BaseAdNetworkSettings Settings => _settings;
 
-        protected string SettingsFileName
-        {
-            get { return string.Format("adm_{0}_settings.asset", Identifier); }
-        }
+        protected string SettingsFileName => 
+            string.Format("Adm{0}Settings.asset", Name.Replace(" ", ""));
 
         protected virtual string[] BannerTypes { get; set; }
 
@@ -58,21 +53,11 @@ namespace Virterix.AdMediation.Editor
 
         protected virtual bool IsAdInstanceIdsDisplayed { get; } = true;
 
-        protected string SettingsFilePath
-        {
-            get
-            {
-                return String.Format("{0}/{1}", AdMediationSettingsWindow.GetProjectFolderPath(_settingsWindow.CurrProjectName), SettingsFileName);
-            }
-        }
+        protected string SettingsFilePath => 
+            String.Format("{0}/{1}", AdMediationSettingsWindow.GetProjectFolderPath(_settingsWindow.CurrProjectName), SettingsFileName);
 
-        private string CollapsedSaveKey
-        {
-            get 
-            { 
-                return string.Format("{0}{1}.collapsed", AdMediationSettingsWindow.PREFIX_SAVEKEY, Name); 
-            }
-        }
+        private string CollapsedSaveKey => 
+            string.Format("{0}{1}.collapsed", AdMediationSettingsWindow.PREFIX_SAVEKEY, Name);
 
         protected AdMediationSettingsWindow _settingsWindow;
         protected SerializedObject _serializedSettings;

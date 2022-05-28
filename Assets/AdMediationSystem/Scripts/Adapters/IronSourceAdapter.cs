@@ -13,11 +13,18 @@ namespace Virterix.AdMediation
     public class IronSourceAdapter : AdNetworkAdapter
     {
         [Serializable]
-        public struct OverridePlacement
+        public struct OverriddenPlacement
         {
-            public AdType adType;
-            public string originPlacement;
-            public string overriddenPlacement;
+            public OverriddenPlacement(AdType adType, string originPlacement, string targetPlacement)
+            {
+                AdvertisingType = adType;
+                OriginPlacement = originPlacement;
+                TargetPlacement = targetPlacement;
+            }
+            
+            public AdType AdvertisingType;
+            public string OriginPlacement;
+            public string TargetPlacement;
         }
 
         public enum IrnSrcBannerSize
@@ -38,7 +45,7 @@ namespace Virterix.AdMediation
         public bool m_validateIntegration;
         public bool m_useOfferwall;
         [SerializeField]
-        public OverridePlacement[] m_overriddenPlacements;
+        public OverriddenPlacement[] m_overriddenPlacements;
         
         public string UserId { get; set; }
         
@@ -381,10 +388,10 @@ namespace Virterix.AdMediation
         {
             for (int i = 0; i < m_overriddenPlacements.Length; i++)
             {
-                OverridePlacement overridenPlacement = m_overriddenPlacements[i];
-                if (overridenPlacement.adType == adType && overridenPlacement.originPlacement == placementName)
+                OverriddenPlacement overridenPlacement = m_overriddenPlacements[i];
+                if (overridenPlacement.AdvertisingType == adType && overridenPlacement.OriginPlacement == placementName)
                 {
-                    placementName = overridenPlacement.overriddenPlacement;
+                    placementName = overridenPlacement.TargetPlacement;
                     break;
                 }
             }

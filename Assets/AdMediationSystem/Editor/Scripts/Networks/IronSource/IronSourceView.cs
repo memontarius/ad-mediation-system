@@ -15,7 +15,7 @@ namespace Virterix.AdMediation.Editor
 
         protected override bool IsAdInstanceIdsDisplayed => false;
 
-        private SerializedProperty _overiddenPlacementsProp;
+        private SerializedProperty _overriddenPlacementsProp;
         private SerializedProperty _useOfferwallProp;
         private ReorderableList _overriddenPlacementList;
 
@@ -29,8 +29,8 @@ namespace Virterix.AdMediation.Editor
             _overriddenPlacementFoldAnimation.valueChanged.AddListener(settingsWindow.Repaint);
 
             _useOfferwallProp = _serializedSettings.FindProperty("_useOfferwall");
-            _overiddenPlacementsProp = _serializedSettings.FindProperty("_overiddenPlacements");
-            _overriddenPlacementList = new ReorderableList(_serializedSettings, _overiddenPlacementsProp, false, false, true, true);
+            _overriddenPlacementsProp = _serializedSettings.FindProperty("_overriddenPlacements");
+            _overriddenPlacementList = new ReorderableList(_serializedSettings, _overriddenPlacementsProp, false, false, true, true);
             
             _overriddenPlacementList.drawElementCallback = (rect, index, active, focused) =>
             {
@@ -39,7 +39,7 @@ namespace Virterix.AdMediation.Editor
                 float width = Mathf.Clamp(elementWidth * 0.5f, 100, 2800) - 120;
                 rect.y += 2;
 
-                SerializedProperty adTypeProp = element.FindPropertyRelative("adType");
+                SerializedProperty adTypeProp = element.FindPropertyRelative("AdvertisingType");
                 adTypeProp.intValue = EditorGUI.Popup(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight),
                     adTypeProp.intValue, Utils.EditorAdTypes);
 
@@ -48,7 +48,7 @@ namespace Virterix.AdMediation.Editor
                 rect.x += 50;
                 EditorGUI.PropertyField(
                     new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight),
-                    element.FindPropertyRelative("originPlacement"),
+                    element.FindPropertyRelative("OriginPlacement"),
                     GUIContent.none
                 );
 
@@ -57,7 +57,7 @@ namespace Virterix.AdMediation.Editor
                 rect.x += 70;
                 EditorGUI.PropertyField(
                     new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight),
-                    element.FindPropertyRelative("overriddenPlacement"),
+                    element.FindPropertyRelative("TargetPlacement"),
                     GUIContent.none
                 );
             };

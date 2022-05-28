@@ -13,7 +13,7 @@ namespace Virterix.AdMediation.Editor
     {
         public const string SETTINGS_PATH = "Assets/Editor/";
         public const string SETTINGS_DIRECTORY_NAME = "AdMediationSettings";
-        public const string PROJECT_SETTINGS_FILENAME = "adm_project_settings.asset";
+        public const string PROJECT_SETTINGS_FILENAME = "AdmProjectSettings.asset";
         public const string PREFIX_SAVEKEY = "adm.";
         public const string PROJECT_NAME_SAVEKEY = "project_name";
         public const string EXTRA_LOGGING_DEFINE = "AD_MEDIATION_DEBUG_MODE";
@@ -94,15 +94,9 @@ namespace Virterix.AdMediation.Editor
             private set { _isIOSProp.boolValue = value; }
         }
 
-        public bool IsTestModeEnabled
-        {
-            get { return _enableTestModeProp.boolValue; }
-        }
+        public bool IsTestModeEnabled => _enableTestModeProp.boolValue;
 
-        public string[] ActiveNetworks
-        {
-            get { return _activeNetworks.ToArray(); }
-        }
+        public string[] ActiveNetworks => _activeNetworks.ToArray();
 
         public string CurrProjectName
         {
@@ -119,20 +113,14 @@ namespace Virterix.AdMediation.Editor
             }
         }
 
-        public bool IsProjectValid
-        {
-            get { return !string.IsNullOrEmpty(CurrProjectName) && _serializedProjectSettings != null; }
-        }
+        public bool IsProjectValid =>
+            !string.IsNullOrEmpty(CurrProjectName) && _serializedProjectSettings != null;
 
-        private string ProjectNameSaveKey
-        {
-            get { return string.Format("{0}{1}{2}", PREFIX_SAVEKEY, Application.productName, PROJECT_NAME_SAVEKEY); }
-        }
+        private string ProjectNameSaveKey =>
+            string.Format("{0}{1}{2}", PREFIX_SAVEKEY, Application.productName, PROJECT_NAME_SAVEKEY);
 
-        public static string CommonAdSettingsFolderPath
-        {
-            get { return string.Format("{0}{1}", SETTINGS_PATH, SETTINGS_DIRECTORY_NAME); }
-        }
+        public static string CommonAdSettingsFolderPath =>
+            string.Format("{0}{1}", SETTINGS_PATH, SETTINGS_DIRECTORY_NAME);
 
         private void OnEnable()
         {

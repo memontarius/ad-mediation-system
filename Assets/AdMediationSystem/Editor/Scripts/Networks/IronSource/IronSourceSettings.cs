@@ -6,8 +6,30 @@ namespace Virterix.AdMediation.Editor
 {
     public class IronSourceSettings : BaseAdNetworkSettings
     {
+        private const string PLACEMENT_DEFAULT = AdMediationSystem.PLACEMENT_DEFAULT_NAME;
+
+        [Serializable]
+        public struct OverriddenPlacement
+        {
+            public OverriddenPlacement(EditorAdType adType, string originPlacement, string targetPlacement)
+            {
+                AdvertisingType = adType;
+                OriginPlacement = originPlacement;
+                TargetPlacement = targetPlacement;
+            }
+            
+            public EditorAdType AdvertisingType;
+            public string OriginPlacement;
+            public string TargetPlacement;
+        }
+        
         public bool _useOfferwall;
-        public List<IronSourceAdapter.OverridePlacement> _overiddenPlacements;
+        public List<OverriddenPlacement> _overriddenPlacements = new List<OverriddenPlacement>()
+        {
+            new OverriddenPlacement(EditorAdType.Banner, PLACEMENT_DEFAULT, "DefaultBanner"),
+            new OverriddenPlacement(EditorAdType.Interstitial, PLACEMENT_DEFAULT, "DefaultInterstitial"),
+            new OverriddenPlacement(EditorAdType.Incentivized, PLACEMENT_DEFAULT, "DefaultRewardedVideo")
+        };
         
         public override Type NetworkAdapterType => typeof(IronSourceAdapter);
         protected override string AdapterScriptName => "IronSourceAdapter";
@@ -36,12 +58,17 @@ namespace Virterix.AdMediation.Editor
             IronSourceAdapter adapter = networkAdapter as IronSourceAdapter;
             adapter.m_timeout = _timeout;
             adapter.m_useOfferwall = _useOfferwall;
-            var overridenPlacements = _overiddenPlacements.ToArray();
-            for(int i = 0; i < overridenPlacements.Length; i++)
+            var overriddenPlacements = _overriddenPlacements.ToArray();
+            var adapterOverriddenPlacements = new IronSourceAdapter.OverriddenPlacement[overriddenPlacements.Length];
+            for(int i = 0; i < overriddenPlacements.Length; i++)
             {
-                overridenPlacements[i].adType = Utils.ConvertEditorAdType((EditorAdType)overridenPlacements[i].adType);
+                var overriddenPlacement = overriddenPlacements[i];
+                var adapterOverriddenPlacement = new IronSourceAdapter.OverriddenPlacement(
+                    Utils.ConvertEditorAdType((EditorAdType)overriddenPlacement.AdvertisingType),
+                    overriddenPlacement.OriginPlacement, overriddenPlacement.TargetPlacement);
+                adapterOverriddenPlacements[i] = adapterOverriddenPlacement;
             }
-            adapter.m_overriddenPlacements = overridenPlacements;
+            adapter.m_overriddenPlacements = adapterOverriddenPlacements;
         }
 
         protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
