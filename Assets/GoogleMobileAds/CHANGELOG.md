@@ -1,6 +1,16 @@
 Google Mobile Ads Unity Plugin Change Log
 
 **************
+Version 7.0.1
+**************
+
+Plugin:
+- Fixed Github issue [1943](https://github.com/googleads/googleads-mobile-unity/issues/1943) related App Id saving.
+- Fixed Github issue [2001](https://github.com/googleads/googleads-mobile-unity/issues/2001) related to Android manifest.
+- Fixed Github issue [2003](https://github.com/googleads/googleads-mobile-unity/issues/2003) related to Ad Inspector crash.
+- Added Dummy AdInspector for Unity editor.
+
+**************
 Version 7.0.0
 **************
 
@@ -8,11 +18,6 @@ Plugin:
 - Added support for GMA iOS SDK v9. Requires using GMA iOS SDK v9.0.0 or higher.
 - Fixed https://github.com/googleads/googleads-mobile-unity/issues/1620
 - Updated to use External Dependency Manager for Unity 1.2.169.
-
-Built and tested with:
-- Google Play services 20.6.0
-- Google Mobile Ads iOS SDK 9.0.0
-- External Dependency Manager for Unity 1.2.169.
 
 **************
 Version 6.1.2

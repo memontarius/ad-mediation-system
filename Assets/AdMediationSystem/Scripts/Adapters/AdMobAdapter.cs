@@ -1,4 +1,4 @@
-//#define _AMS_ADMOB
+#define _AMS_ADMOB
 
 using UnityEngine;
 using System;

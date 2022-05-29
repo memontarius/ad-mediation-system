@@ -92,7 +92,7 @@ MonoBehaviour:
     - MaxPassages: 1
       Units:
       - NetworkName: Iron Source
-        NetworkIndex: 2
+        NetworkIndex: 1
         NetworkIdentifier: ironsrc
         InstanceIndex: 0
         InstanceName: Default
@@ -113,7 +113,7 @@ MonoBehaviour:
     - MaxPassages: 1
       Units:
       - NetworkName: Iron Source
-        NetworkIndex: 2
+        NetworkIndex: 1
         NetworkIdentifier: ironsrc
         InstanceIndex: 0
         InstanceName: Default
