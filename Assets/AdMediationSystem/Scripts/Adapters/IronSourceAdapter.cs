@@ -1,4 +1,4 @@
-#define _AMS_IRONSOURCE
+//#define _AMS_IRONSOURCE
 
 using System;
 using UnityEngine;
@@ -82,7 +82,9 @@ namespace Virterix.AdMediation
 
         private void OnApplicationPause(bool isPaused)
         {
+#if !UNITY_EDITOR
             IronSource.Agent.onApplicationPause(isPaused);
+#endif
         }
 
         public static IronSourceBannerSize ConvertToNativeBannerSize(IrnSrcBannerSize bannerSize)
@@ -399,7 +401,7 @@ namespace Virterix.AdMediation
         }
 
         //------------------------------------------------------------------------
-        #region Interstitial callback handlers
+            #region Interstitial callback handlers
 
         void InterstitialAdReadyEvent()
         {
@@ -455,10 +457,10 @@ namespace Virterix.AdMediation
             AddEvent(m_interstitialInstance.m_adType, AdEvent.Hiding, m_interstitialInstance);
         }
 
-        #endregion // Interstitial callback handlers
+            #endregion // Interstitial callback handlers
 
         //------------------------------------------------------------------------
-        #region Rewarded Video callback handlers
+            #region Rewarded Video callback handlers
 
         void RewardedVideoAvailabilityChangedEvent(bool canShowAd)
         {
@@ -501,10 +503,10 @@ namespace Virterix.AdMediation
             AddEvent(m_incentivizedInstance.m_adType, AdEvent.Click, m_incentivizedInstance);
         }
 
-        #endregion // Rewarded Video callback handlers
+            #endregion // Rewarded Video callback handlers
 
         //------------------------------------------------------------------------
-        #region Banner callback handlers
+            #region Banner callback handlers
         private void BannerAdLoadedEvent()
         {
 #if AD_MEDIATION_DEBUG_MODE
@@ -558,10 +560,10 @@ namespace Virterix.AdMediation
 #endif
         }
 
-        #endregion // Banner callback handlers
+            #endregion // Banner callback handlers
 
         //------------------------------------------------------------------------
-        #region ImpressionSuccess callback handler
+            #region ImpressionSuccess callback handler
 
         void ImpressionSuccessEvent(IronSourceImpressionData impressionData)
         {
@@ -572,7 +574,7 @@ namespace Virterix.AdMediation
 #endif
         }
 
-        #endregion
-#endif 
+            #endregion
+#endif
+        }
     }
-}

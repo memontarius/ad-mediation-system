@@ -1,10 +1,9 @@
-#define _AMS_ADMOB
+//#define _AMS_ADMOB
 
 using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Boomlagoon.JSON;
-using System.Linq;
 #if UNITY_EDITOR
 using System.Reflection;
 #endif

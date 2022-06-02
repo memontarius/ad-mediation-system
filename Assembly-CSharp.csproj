@@ -200,6 +200,7 @@
      <Compile Include="Assets\GoogleMobileAds\Platforms\Mediation\AppLovinClientFactory.cs" />
      <Compile Include="Assets\IronSource\Scripts\IronSource.cs" />
      <Compile Include="Assets\Chartboost\Scripts\CBJSON.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Api\Mediation\MediationExtras.cs" />
      <None Include="Assets\GoogleMobileAds\GoogleMobileAds_version-7.0.1_manifest.txt" />
      <None Include="Assets\Resources\AdMediationSettings\DefaultProject\android_settings.json" />
      <None Include="Assets\GooglePlayGames\Plugins\Android\GooglePlayGamesManifest.plugin\AndroidManifest.xml" />
