@@ -31,7 +31,6 @@ namespace Virterix.AdMediation
 {
     public class AdMobMediationBehavior
     {
-
 #if _ADMOB_USE_MEDIATION
 #if _ADMOB_MEDIATION_ADCOLONY
         private AdColonyMediationExtras _adColonyExtras;

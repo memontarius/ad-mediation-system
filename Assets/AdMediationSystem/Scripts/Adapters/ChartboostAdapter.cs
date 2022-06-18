@@ -99,25 +99,19 @@ namespace Virterix.AdMediation
         {
             base.InitializeParameters(parameters, jsonAdInstances);
 
-            bool autocache = false;
-            string autocacheStr = "";
+            bool autoCacheAds = false;
+            string autoCacheAdsValue = "";
             string appId = "";
             string appSignature = "";
 
-            if (!parameters.TryGetValue("autocache", out autocacheStr))
-            {
-                autocacheStr = "";
-            }
-            autocache = autocacheStr == "true";
+            if (!parameters.TryGetValue("autocache", out autoCacheAdsValue))
+                autoCacheAdsValue = "";
+            autoCacheAds = autoCacheAdsValue == "true";
 
             if (!parameters.TryGetValue("appId", out appId))
-            {
                 appId = "";
-            }
             if (!parameters.TryGetValue("appSignature", out appSignature))
-            {
                 appSignature = "";
-            }
 
             m_interstitialInstance = AdFactory.CreateAdInstacne(this, AdType.Interstitial, AdInstance.AD_INSTANCE_DEFAULT_NAME, "", m_timeout);
             AddAdInstance(m_interstitialInstance);
@@ -125,10 +119,8 @@ namespace Virterix.AdMediation
             AddAdInstance(m_incentivizedInstance);
 
             if (appId != null && appSignature != null)
-            {
                 Chartboost.CreateWithAppId(appId, appSignature);
-            }
-            Chartboost.setAutoCacheAds(autocache);
+            Chartboost.setAutoCacheAds(autoCacheAds);
             SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
         }
 
@@ -253,7 +245,11 @@ namespace Virterix.AdMediation
 
         private void DidCloseRewardedVideo(CBLocation location)
         {
-            
+        }
+
+        private void DidDismissRewardedVideo(CBLocation location)
+        {
+            AddEvent(AdType.Incentivized, AdEvent.Hiding, m_incentivizedInstance);
         }
 
         private void DidCompleteRewardedVideo(CBLocation location, int count)
@@ -263,10 +259,6 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Incentivized, AdEvent.IncentivizationCompleted, m_incentivizedInstance);
         }
 
-        private void DidDismissRewardedVideo(CBLocation location)
-        {
-            AddEvent(AdType.Incentivized, AdEvent.Hiding, m_incentivizedInstance);
-        }
 #endif
     }
 }

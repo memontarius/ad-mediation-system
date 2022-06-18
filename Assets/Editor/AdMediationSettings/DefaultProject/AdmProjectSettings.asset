@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InitializeOnStart: 1
   EnableTestMode: 0
-  EnableExtraLogging: 0
+  EnableExtraLogging: 1
   ChildrenMode: 0
   TestDevices: []
   BannerMediators:
@@ -92,13 +92,21 @@ MonoBehaviour:
     - MaxPassages: 1
       Units:
       - NetworkName: Iron Source
-        NetworkIndex: 1
+        NetworkIndex: 2
         NetworkIdentifier: ironsrc
         InstanceIndex: 0
         InstanceName: Default
         Replaced: 0
         PrepareOnExit: 0
         Percentage: 100
+      - NetworkName: Chartboost
+        NetworkIndex: 1
+        NetworkIdentifier: chartboost
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaced: 0
+        PrepareOnExit: 0
+        Percentage: 0
   IncentivizedMediators:
   - AdvertisingType: 3
     Name: Default
@@ -112,14 +120,32 @@ MonoBehaviour:
     Tiers:
     - MaxPassages: 1
       Units:
+      - NetworkName: AdMob
+        NetworkIndex: 0
+        NetworkIdentifier: admob
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaced: 0
+        PrepareOnExit: 0
+        Percentage: 100
+    - MaxPassages: 1
+      Units:
       - NetworkName: Iron Source
-        NetworkIndex: 1
+        NetworkIndex: 2
         NetworkIdentifier: ironsrc
         InstanceIndex: 0
         InstanceName: Default
         Replaced: 0
         PrepareOnExit: 1
         Percentage: 100
+      - NetworkName: Chartboost
+        NetworkIndex: 1
+        NetworkIdentifier: chartboost
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaced: 0
+        PrepareOnExit: 1
+        Percentage: 0
   IsIOS: 1
   IsAndroid: 1
   EnableUnityRemoteConfigProvider: 0

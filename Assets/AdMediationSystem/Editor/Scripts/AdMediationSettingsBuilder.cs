@@ -346,7 +346,7 @@ namespace Virterix.AdMediation.Editor
             serializedAdmSystem.FindProperty("m_childrenMode").enumValueIndex = (int)commonSettings.ChildrenMode;
             serializedAdmSystem.FindProperty("m_hashCryptKey").stringValue = "svko";
             SerializedProperty testDevicesProp = serializedAdmSystem.FindProperty("m_testDevices");
-            testDevicesProp.arraySize = commonSettings.TestDevices.Length;
+            testDevicesProp.arraySize = commonSettings.TestDevices?.Length ?? 0;
             for (int i = 0; i < testDevicesProp.arraySize; i++)
             {
                 testDevicesProp.GetArrayElementAtIndex(i).stringValue = commonSettings.TestDevices[i];

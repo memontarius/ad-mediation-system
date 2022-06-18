@@ -15,7 +15,7 @@ namespace Virterix.AdMediation.Editor
         protected override string AdapterScriptName => "PollfishAdapter";
         protected override string AdapterDefinePreprocessorKey => "_AMS_POLLFISH";
         public override string JsonAppIdKey => "apiKey";
-        public override bool IsCommonTimeroutSupported => true;
+        public override bool IsCommonTimeoutSupported => true;
 
         public override bool IsAdSupported(AdType adType)
         {

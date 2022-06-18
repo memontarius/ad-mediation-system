@@ -12,6 +12,15 @@ namespace Virterix.AdMediation
 {
     public class IronSourceAdapter : AdNetworkAdapter
     {
+        [Flags]
+        public enum IrnSrcAdType
+        {
+            Banner = (1 << 0),
+            Interstitial = (1 << 1),
+            Incentivized = (1 << 2),
+            Offerwall = (1 << 3)
+        }
+
         [Serializable]
         public struct OverriddenPlacement
         {
@@ -43,7 +52,7 @@ namespace Virterix.AdMediation
 
         public int m_timeout = 120;
         public bool m_validateIntegration;
-        public bool m_useOfferwall;
+        public IrnSrcAdType m_useAdTypes;
         [SerializeField]
         public OverriddenPlacement[] m_overriddenPlacements;
         
@@ -136,6 +145,8 @@ namespace Virterix.AdMediation
             IronSourceEvents.onRewardedVideoAdOpenedEvent += RewardedVideoAdOpenedEvent;
             IronSourceEvents.onRewardedVideoAdClosedEvent += RewardedVideoAdClosedEvent;
             IronSourceEvents.onRewardedVideoAvailabilityChangedEvent += RewardedVideoAvailabilityChangedEvent;
+            IronSourceEvents.onRewardedVideoAdReadyEvent += RewardedVideoAdReadyEvent;
+            IronSourceEvents.onRewardedVideoAdLoadFailedEvent += RewardedVideoAdLoadFailedEvent;
             IronSourceEvents.onRewardedVideoAdStartedEvent += RewardedVideoAdStartedEvent;
             IronSourceEvents.onRewardedVideoAdEndedEvent += RewardedVideoAdEndedEvent;
             IronSourceEvents.onRewardedVideoAdRewardedEvent += RewardedVideoAdRewardedEvent;
@@ -169,6 +180,8 @@ namespace Virterix.AdMediation
             IronSourceEvents.onRewardedVideoAdOpenedEvent -= RewardedVideoAdOpenedEvent;
             IronSourceEvents.onRewardedVideoAdClosedEvent -= RewardedVideoAdClosedEvent;
             IronSourceEvents.onRewardedVideoAvailabilityChangedEvent -= RewardedVideoAvailabilityChangedEvent;
+            IronSourceEvents.onRewardedVideoAdReadyEvent -= RewardedVideoAdReadyEvent;
+            IronSourceEvents.onRewardedVideoAdLoadFailedEvent -= RewardedVideoAdLoadFailedEvent;
             IronSourceEvents.onRewardedVideoAdStartedEvent -= RewardedVideoAdStartedEvent;
             IronSourceEvents.onRewardedVideoAdEndedEvent -= RewardedVideoAdEndedEvent;
             IronSourceEvents.onRewardedVideoAdRewardedEvent -= RewardedVideoAdRewardedEvent;
@@ -229,10 +242,15 @@ namespace Virterix.AdMediation
             if (AdMediationSystem.Instance.ChildrenMode != ChildDirectedMode.NotAssign)
                 SetChildDirected(AdMediationSystem.Instance.ChildrenMode);
 
-            if (m_useOfferwall)
-                IronSource.Agent.init(appKey, IronSourceAdUnits.INTERSTITIAL, IronSourceAdUnits.REWARDED_VIDEO, IronSourceAdUnits.BANNER, IronSourceAdUnits.OFFERWALL);
-            else
-                IronSource.Agent.init(appKey, IronSourceAdUnits.INTERSTITIAL, IronSourceAdUnits.REWARDED_VIDEO, IronSourceAdUnits.BANNER);
+            IronSource.Agent.setManualLoadRewardedVideo(true);
+            if (m_useAdTypes.HasFlag(IrnSrcAdType.Banner))
+                IronSource.Agent.init(appKey, IronSourceAdUnits.BANNER);
+            if (m_useAdTypes.HasFlag(IrnSrcAdType.Interstitial))
+                IronSource.Agent.init(appKey, IronSourceAdUnits.INTERSTITIAL);
+            if (m_useAdTypes.HasFlag(IrnSrcAdType.Incentivized))
+                IronSource.Agent.init(appKey, IronSourceAdUnits.REWARDED_VIDEO);
+            if (m_useAdTypes.HasFlag(IrnSrcAdType.Offerwall))
+                IronSource.Agent.init(appKey, IronSourceAdUnits.OFFERWALL);
         }
         
         public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
@@ -249,6 +267,7 @@ namespace Virterix.AdMediation
                     IronSource.Agent.loadInterstitial();
                     break;
                 case AdType.Incentivized:
+                    IronSource.Agent.loadRewardedVideo();
                     break;
             }
         }
@@ -460,12 +479,28 @@ namespace Virterix.AdMediation
             #endregion // Interstitial callback handlers
 
         //------------------------------------------------------------------------
-            #region Rewarded Video callback handlers
+        #region Rewarded Video callback handlers
 
-        void RewardedVideoAvailabilityChangedEvent(bool canShowAd)
+        void RewardedVideoAdReadyEvent()
         {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] IronSourceAdapter.RewardedVideoAdReadyEvent()");
+#endif
             m_incentivizedInstance.State = AdState.Received;
             AddEvent(m_incentivizedInstance.m_adType, AdEvent.Prepared, m_incentivizedInstance);
+        }
+
+        void RewardedVideoAdLoadFailedEvent(IronSourceError error)
+        {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] IronSourceAdapter.RewardedVideoAdLoadFailedEvent() code:" + error.getErrorCode() + " desc:" + error.getDescription());
+#endif
+            m_incentivizedInstance.State = AdState.Unavailable;
+            AddEvent(m_incentivizedInstance.m_adType, AdEvent.PreparationFailed, m_incentivizedInstance);
+        }   
+            
+        void RewardedVideoAvailabilityChangedEvent(bool canShowAd)
+        {
         }
 
         void RewardedVideoAdOpenedEvent()
@@ -473,10 +508,10 @@ namespace Virterix.AdMediation
             AddEvent(m_incentivizedInstance.m_adType, AdEvent.Show, m_incentivizedInstance);
         }
 
-        void RewardedVideoAdRewardedEvent(IronSourcePlacement ssp)
+        void RewardedVideoAdRewardedEvent(IronSourcePlacement placement)
         {
-            m_lastReward.label = ssp.getRewardName();
-            m_lastReward.amount = ssp.getRewardAmount();
+            m_lastReward.label = placement.getRewardName();
+            m_lastReward.amount = placement.getRewardAmount();
             AddEvent(m_incentivizedInstance.m_adType, AdEvent.IncentivizationCompleted, m_incentivizedInstance);
         }
 
@@ -503,10 +538,10 @@ namespace Virterix.AdMediation
             AddEvent(m_incentivizedInstance.m_adType, AdEvent.Click, m_incentivizedInstance);
         }
 
-            #endregion // Rewarded Video callback handlers
+        #endregion // Rewarded Video callback handlers
 
         //------------------------------------------------------------------------
-            #region Banner callback handlers
+        #region Banner callback handlers
         private void BannerAdLoadedEvent()
         {
 #if AD_MEDIATION_DEBUG_MODE
@@ -560,10 +595,10 @@ namespace Virterix.AdMediation
 #endif
         }
 
-            #endregion // Banner callback handlers
+        #endregion // Banner callback handlers
 
         //------------------------------------------------------------------------
-            #region ImpressionSuccess callback handler
+        #region ImpressionSuccess callback handler
 
         void ImpressionSuccessEvent(IronSourceImpressionData impressionData)
         {

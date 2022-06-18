@@ -758,8 +758,8 @@ PlayerSettings:
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
     0: AD_MEDIATION_DEBUG_MODE
-    4: 
-    7: 
+    4: AD_MEDIATION_DEBUG_MODE
+    7: AD_MEDIATION_DEBUG_MODE
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

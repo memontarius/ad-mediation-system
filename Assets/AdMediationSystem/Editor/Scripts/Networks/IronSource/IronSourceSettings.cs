@@ -23,7 +23,7 @@ namespace Virterix.AdMediation.Editor
             public string TargetPlacement;
         }
         
-        public bool _useOfferwall;
+        public IronSourceAdapter.IrnSrcAdType _useAdTypes;
         public List<OverriddenPlacement> _overriddenPlacements = new List<OverriddenPlacement>()
         {
             new OverriddenPlacement(EditorAdType.Banner, PLACEMENT_DEFAULT, "DefaultBanner"),
@@ -34,7 +34,7 @@ namespace Virterix.AdMediation.Editor
         public override Type NetworkAdapterType => typeof(IronSourceAdapter);
         protected override string AdapterScriptName => "IronSourceAdapter";
         protected override string AdapterDefinePreprocessorKey => "_AMS_IRONSOURCE";
-        public override bool IsCommonTimeroutSupported => true;
+        public override bool IsCommonTimeoutSupported => true;
 
         public override bool IsAdSupported(AdType adType)
         {
@@ -57,7 +57,8 @@ namespace Virterix.AdMediation.Editor
         {
             IronSourceAdapter adapter = networkAdapter as IronSourceAdapter;
             adapter.m_timeout = _timeout;
-            adapter.m_useOfferwall = _useOfferwall;
+            adapter.m_useAdTypes = _useAdTypes;
+            
             var overriddenPlacements = _overriddenPlacements.ToArray();
             var adapterOverriddenPlacements = new IronSourceAdapter.OverriddenPlacement[overriddenPlacements.Length];
             for(int i = 0; i < overriddenPlacements.Length; i++)

@@ -22,7 +22,7 @@ MonoBehaviour:
   _bannerAdInstances: []
   _interstitialAdInstances: []
   _rewardAdInstances: []
-  _useOfferwall: 0
+  _useAdTypes: 0
   _overriddenPlacements:
   - AdvertisingType: 0
     OriginPlacement: Default

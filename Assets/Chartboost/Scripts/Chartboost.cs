@@ -1193,12 +1193,12 @@ namespace ChartboostSDK {
 			Chartboost.shouldPause = setShouldPause;
 			if (pause && !isPaused) {
 				lastTimeScale = Time.timeScale;
-				Time.timeScale = 0;
+				//Time.timeScale = 0;
 				isPaused = true;
 				disableUI(true);
 			}
 			else if (!pause && isPaused){
-				Time.timeScale = lastTimeScale;
+				//Time.timeScale = lastTimeScale;
 				isPaused = false;
 				disableUI(false);
 			}

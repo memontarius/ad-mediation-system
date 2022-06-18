@@ -78,7 +78,7 @@ namespace Virterix.AdMediation.Editor
         protected virtual string AdapterDefinePreprocessorKey { get; }
         public virtual string JsonAppIdKey { get { return "appId"; } }
         public virtual bool IsAppIdSupported { get; } = true;
-        public virtual bool IsCommonTimeroutSupported { get; } = false;
+        public virtual bool IsCommonTimeoutSupported { get; } = false;
 
         public virtual string GetNetworkSDKVersion()
         {

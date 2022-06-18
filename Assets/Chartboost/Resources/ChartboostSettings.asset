@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffdb59321f5aa47a48670265007a796b, type: 3}
   m_Name: ChartboostSettings
   m_EditorClassIdentifier: 
-  iOSAppId: CB_IOS_APP_ID
-  iOSAppSecret: CB_IOS_APP_SIGNATURE
-  androidAppId: CB_ANDROID_APP_ID
-  androidAppSecret: CB_ANDROID_APP_SIGNATURE
+  iOSAppId: 54f98cb20d60257eaf2c13d3
+  iOSAppSecret: 3d45615701f3e12f9df676f17389c9382518e44a
+  androidAppId: 54f98cb30d60257eaf2c13d5
+  androidAppSecret: bee4501e83fd1346d378575666a97f44dec0b899
   amazonAppId: CB_AMAZON_APP_ID
   amazonAppSecret: CB_AMAZON_APP_SIGNATURE
   isLoggingEnabled: 0

@@ -294,7 +294,7 @@ namespace Virterix.AdMediation.Editor
         {
             GUILayout.BeginVertical("box");
             EditorGUILayout.PropertyField(_responseWaitTimeProp, GUILayout.ExpandWidth(true));
-            if(Settings.IsCommonTimeroutSupported)
+            if(Settings.IsCommonTimeoutSupported)
             {
                 Utils.DrawPropertyField(_serializedSettings, "_timeout");
             }

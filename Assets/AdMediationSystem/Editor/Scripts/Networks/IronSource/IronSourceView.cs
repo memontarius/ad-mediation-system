@@ -16,19 +16,25 @@ namespace Virterix.AdMediation.Editor
         protected override bool IsAdInstanceIdsDisplayed => false;
 
         private SerializedProperty _overriddenPlacementsProp;
-        private SerializedProperty _useOfferwallProp;
+        private SerializedProperty _useAdTypesProp;
         private ReorderableList _overriddenPlacementList;
-
+        private string[] _irnSrcAdTypeNames;
+        
         public IronSourceView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
             base(settingsWindow, name, identifier)
         {
             BannerTypes = Enum.GetNames(typeof(IronSourceAdapter.IrnSrcBannerSize));
             
+            var irnSrcAdTypes = Enum.GetValues(typeof(IronSourceAdapter.IrnSrcAdType)) as IronSourceAdapter.IrnSrcAdType[]; 
+            _irnSrcAdTypeNames = new string[irnSrcAdTypes.Length];
+            for(int i = 0; i < _irnSrcAdTypeNames.Length; i++)
+                _irnSrcAdTypeNames[i] = irnSrcAdTypes[i].ToString();
+
             _isOverriddenPlacementUncollapsed = EditorPrefs.GetBool(OVERRIDDEN_PLACEMENT_LIST_COLLAPSED_SAVEKEY, false);
             _overriddenPlacementFoldAnimation = new AnimBool(_isOverriddenPlacementUncollapsed);
             _overriddenPlacementFoldAnimation.valueChanged.AddListener(settingsWindow.Repaint);
-
-            _useOfferwallProp = _serializedSettings.FindProperty("_useOfferwall");
+            
+            _useAdTypesProp = _serializedSettings.FindProperty("_useAdTypes");
             _overriddenPlacementsProp = _serializedSettings.FindProperty("_overriddenPlacements");
             _overriddenPlacementList = new ReorderableList(_serializedSettings, _overriddenPlacementsProp, false, false, true, true);
             
@@ -72,7 +78,8 @@ namespace Virterix.AdMediation.Editor
         protected override void DrawSpecificSettings()
         {
             GUILayout.BeginVertical("box");
-            _useOfferwallProp.boolValue = GUILayout.Toggle(_useOfferwallProp.boolValue, "Use Offerwall");
+            
+            _useAdTypesProp.intValue = EditorGUILayout.MaskField("Use Ad Types", _useAdTypesProp.intValue, _irnSrcAdTypeNames);
             EditorGUILayout.Space();
             
             char collapsedSymbol = _isOverriddenPlacementUncollapsed ? AdMediationSettingsWindow.SYMBOL_BOTTOM_ARROW : AdMediationSettingsWindow.SYMBOL_LEFT_ARROW;
