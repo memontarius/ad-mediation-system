@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7591ebecf893f2b43a95231d3e9dc92c, type: 3}
   m_Name: AdmUnityAdsSettings
   m_EditorClassIdentifier: 
-  _enabled: 0
+  _enabled: 1
   _networkIdentifier: unityads
   _androidAppId: 2917696
   _iosAppId: 2917694
@@ -21,24 +21,24 @@ MonoBehaviour:
   _directedTowardsChildren: 0
   _bannerAdInstances:
   - _name: Default
-    _androidId: banner
-    _iosId: 
+    _androidId: Android_Banner
+    _iosId: iOS_Banner
     _timeout: 120
     _bannerType: 0
   - _name: Top
-    _androidId: banner_top
-    _iosId: 
+    _androidId: Android_Banner_Top
+    _iosId: Android_Banner_Top
     _timeout: 120
-    _bannerType: 0
+    _bannerType: 2
   _interstitialAdInstances:
   - _name: Default
-    _androidId: interstitial
-    _iosId: interstitial
+    _androidId: Android_Interstitial
+    _iosId: iOS_Interstitial
     _timeout: 90
     _bannerType: 0
   _rewardAdInstances:
   - _name: Default
-    _androidId: rewardedVideo
-    _iosId: rewardedVideo
+    _androidId: Android_Rewarded
+    _iosId: iOS_Rewarded
     _timeout: 90
     _bannerType: 0

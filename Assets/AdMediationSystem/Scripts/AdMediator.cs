@@ -218,7 +218,7 @@ namespace Virterix.AdMediation
                 if (m_currUnit.AdType == AdType.Banner)
                     wasShowSuccessfully = m_currUnit.Show();
                 else
-                    wasShowSuccessfully = m_currUnit.IsReady ? m_currUnit.Show() : false;
+                    wasShowSuccessfully = m_currUnit.IsReady && m_currUnit.Show();
 
                 if (!wasShowSuccessfully && !ShowAnyReadyNetwork())
                     Fetch();

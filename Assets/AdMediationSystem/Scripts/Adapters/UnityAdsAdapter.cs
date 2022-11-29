@@ -1,35 +1,80 @@
 //#define _AMS_UNITY_ADS
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Boomlagoon.JSON;
+using Unity.Services.Core;
 #if _AMS_UNITY_ADS
-using UnityEngine.Advertisements;
+using Unity.Services.Mediation;
 #endif
 
 namespace Virterix.AdMediation
 {
     public class UnityAdsAdapter : AdNetworkAdapter
-#if _AMS_UNITY_ADS
-    ,IUnityAdsListener
-#endif
     {
-        public bool m_isInitializeWhenStart = true; 
-
+        public bool m_isInitializeWhenStart = true;
         private string m_appId;
         private bool m_isBannerDisplayed;
-
-        public enum UnityAdsBannerPosition
+        public Vector2 m_bannerHidingOffset = new Vector2(100000f, 100000f);
+#if _AMS_UNITY_ADS   
+        private IInterstitialAd m_interstitialAd;
+        private IBannerAd m_bannerAd;
+        private IRewardedAd m_rewardedAd;
+#endif
+        private AdMediator[] m_bannerMediators;
+        
+        public enum UnityBannerAnchor
         {
-            TopLeft,
-            TopCenter,
-            TopRight,
-            BottomLeft,
-            BottomCenter,
-            BottomRight,
-            Center
+            TopCenter = 0,
+            TopLeft = 1,
+            TopRight = 2,
+            Center = 3,
+            MiddleLeft = 4,
+            MiddleRight = 5,
+            BottomCenter = 6,
+            BottomLeft = 7,
+            BottomRight = 8,
+            None = 9,
+            Default = BottomCenter
         }
+        
+        public enum UnityBannerSize
+        {
+            Banner,
+            LargeBanner,
+            MediumRectangle,
+            Leaderboard
+        }
+        
+        public class UnityAdInstanceData : AdInstance
+        {
+            public UnityAdInstanceData(AdNetworkAdapter network) : base(network)
+            {
+            }
 
+            public UnityAdInstanceData(AdNetworkAdapter network, AdType adType, string adID, string name = AdInstance.AD_INSTANCE_DEFAULT_NAME) :
+                base(network, adType, adID, name)
+            {
+            }
+
+#if _AMS_UNITY_ADS  
+            public IInterstitialAd InterstitialAd;
+            public IRewardedAd RewardedAd;
+            public IBannerAd BannerAd;
+            public BannerAdSize BannerSize;
+            public BannerAdAnchor BannerAnchor;
+            
+            public EventHandler OnLoaded;
+            public EventHandler<LoadErrorEventArgs> OnFailedLoad;
+            public EventHandler OnShowed;
+            public EventHandler OnClicked;
+            public EventHandler OnClosed;
+            public EventHandler<ShowErrorEventArgs> OnFailedShow;
+            public EventHandler<RewardEventArgs> OnUserRewarded;
+#endif
+        }
+        
         protected override string AdInstanceParametersFolder
         {
             get { return UnityAdInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER; }
@@ -46,50 +91,109 @@ namespace Virterix.AdMediation
         }
 
 #if _AMS_UNITY_ADS
-        public static BannerPosition ConvertToNativeBannerPosition(UnityAdsBannerPosition bannerPosition)
+        public static BannerAdAnchor ConvertToNativeBannerPosition(UnityBannerAnchor bannerAnchor)
         {
-            BannerPosition nativeBannerPosition = BannerPosition.BOTTOM_CENTER;
-            switch(bannerPosition)
+            BannerAdAnchor nativeBannerAnchor = BannerAdAnchor.BottomCenter;
+            switch(bannerAnchor)
             {
-                case UnityAdsBannerPosition.BottomCenter:
-                    nativeBannerPosition = BannerPosition.BOTTOM_CENTER;
+                case UnityBannerAnchor.Center:
+                    nativeBannerAnchor = BannerAdAnchor.Center;
                     break;
-                case UnityAdsBannerPosition.BottomLeft:
-                    nativeBannerPosition = BannerPosition.BOTTOM_LEFT;
+                case UnityBannerAnchor.None:
+                    nativeBannerAnchor = BannerAdAnchor.None;
                     break;
-                case UnityAdsBannerPosition.BottomRight:
-                    nativeBannerPosition = BannerPosition.BOTTOM_RIGHT;
+                case UnityBannerAnchor.BottomCenter:
+                    nativeBannerAnchor = BannerAdAnchor.BottomCenter;
                     break;
-                case UnityAdsBannerPosition.TopCenter:
-                    nativeBannerPosition = BannerPosition.TOP_CENTER;
+                case UnityBannerAnchor.BottomLeft:
+                    nativeBannerAnchor = BannerAdAnchor.BottomLeft;
                     break;
-                case UnityAdsBannerPosition.TopLeft:
-                    nativeBannerPosition = BannerPosition.TOP_LEFT;
+                case UnityBannerAnchor.BottomRight:
+                    nativeBannerAnchor = BannerAdAnchor.BottomRight;
                     break;
-                case UnityAdsBannerPosition.TopRight:
-                    nativeBannerPosition = BannerPosition.TOP_RIGHT;
+                case UnityBannerAnchor.MiddleLeft:
+                    nativeBannerAnchor = BannerAdAnchor.MiddleLeft;
+                    break;
+                case UnityBannerAnchor.MiddleRight:
+                    nativeBannerAnchor = BannerAdAnchor.MiddleRight;
+                    break;
+                case UnityBannerAnchor.TopCenter:
+                    nativeBannerAnchor = BannerAdAnchor.TopCenter;
+                    break;
+                case UnityBannerAnchor.TopLeft:
+                    nativeBannerAnchor = BannerAdAnchor.TopLeft;
+                    break;
+                case UnityBannerAnchor.TopRight:
+                    nativeBannerAnchor = BannerAdAnchor.TopRight;
+                    break;
+                default:
+                    nativeBannerAnchor = BannerAdAnchor.Default;
                     break;
             } 
-            return nativeBannerPosition;
+            return nativeBannerAnchor;
         }
 
+        public static BannerAdSize ConvertToNativeBannerSize(UnityBannerSize bannerAnchor)
+        {
+            BannerAdSize nativeBannerSize = null;
+            switch(bannerAnchor)
+            {
+                case UnityBannerSize.Banner:
+                    nativeBannerSize = new BannerAdSize(BannerAdPredefinedSize.Banner);
+                    break;
+                case UnityBannerSize.Leaderboard:
+                    nativeBannerSize = new BannerAdSize(BannerAdPredefinedSize.Leaderboard);
+                    break;
+                case UnityBannerSize.LargeBanner:
+                    nativeBannerSize = new BannerAdSize(BannerAdPredefinedSize.LargeBanner);
+                    break;
+                case UnityBannerSize.MediumRectangle:
+                    nativeBannerSize = new BannerAdSize(BannerAdPredefinedSize.MediumRectangle);
+                    break;
+            } 
+            return nativeBannerSize;
+        }
+        
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
-
             if (!parameters.TryGetValue("appId", out m_appId))
                 m_appId = "";
             
-            SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
-            
-            if (Advertisement.isSupported && !Advertisement.isInitialized)
+            m_bannerMediators = AdMediationSystem.Instance.GetAllMediators(AdType.Banner);
+            InitializeUnity(m_appId);
+        }
+        
+        private async void InitializeUnity(string appId)
+        {
+            try
             {
-                if (m_isInitializeWhenStart)
-                    Advertisement.Initialize(m_appId, AdMediationSystem.Instance.IsTestModeEnabled);
-                Advertisement.AddListener(this);
+                await UnityServices.InitializeAsync(GetGameOptions(appId));
+                OnInitializationComplete();
+            }
+            catch (Exception e)
+            {
+                OnInitializationFailed(e);
             }
         }
-
+        
+        private InitializationOptions GetGameOptions(string appId)
+        {
+            var initializationOptions = new InitializationOptions();
+#if UNITY_IOS
+            if (!string.IsNullOrEmpty(appId))
+            {
+                initializationOptions.SetGameId(appId);
+            }
+#elif UNITY_ANDROID
+            if (!string.IsNullOrEmpty(appId))
+            {
+                initializationOptions.SetGameId(appId);
+            }
+#endif
+            return initializationOptions;
+        }
+        
         protected override void InitializeAdInstanceData(AdInstance adInstance, JSONValue jsonAdInstances)
         {
             base.InitializeAdInstanceData(adInstance, jsonAdInstances);
@@ -97,183 +201,428 @@ namespace Virterix.AdMediation
 
         protected override AdInstance CreateAdInstanceData(JSONValue jsonAdInstance)
         {
-            AdInstance adInstance = new AdInstance(this);
+            AdInstance adInstance = new UnityAdInstanceData(this);
             return adInstance;
         }
 
-        public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        public override void Prepare(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdType adType = adInstance.m_adType;
-            if (!IsReady(adInstance))
+            if (!IsReady(adInstance) && adInstance.State != AdState.Loading)
             {
                 adInstance.State = AdState.Loading;
-               
-                if (adType == AdType.Banner)
+                UnityAdInstanceData unityAdInstance = (UnityAdInstanceData)adInstance;
+                adInstance.CurrPlacement = placement;
+                
+                try
                 {
-                    adInstance.CurrPlacement = placement;
-                    Advertisement.Banner.Hide(true);
-                    Advertisement.Banner.Load(adInstance.m_adId);
+                    switch (adType)
+                    {
+                        case AdType.Interstitial:
+                            if (unityAdInstance.InterstitialAd.AdState != Unity.Services.Mediation.AdState.Loading)
+                                unityAdInstance.InterstitialAd.LoadAsync();
+                            break;
+                        case AdType.Incentivized:
+                            if (unityAdInstance.RewardedAd.AdState != Unity.Services.Mediation.AdState.Loading)
+                                unityAdInstance.RewardedAd.LoadAsync();
+                            break;
+                        case AdType.Banner:
+                            if (unityAdInstance.BannerAd.AdState != Unity.Services.Mediation.AdState.Loading) 
+                                unityAdInstance.BannerAd.LoadAsync();
+                            break;
+                    }
                 }
-                else
+                catch (LoadFailedException)
                 {
-                    Advertisement.Load(adInstance.m_adId);
+                    adInstance.State = AdState.Unavailable;
                 }
             }
         }
 
-        public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        public override bool Show(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdType adType = adInstance.m_adType;
             bool isPreviousBannerDisplayed = m_isBannerDisplayed;
-
+            UnityAdInstanceData unityAdInstance = (UnityAdInstanceData)adInstance;
+            
             if (adType == AdType.Banner)
             {
                 adInstance.m_bannerDisplayed = true;
+                adInstance.CurrPlacement = placement;
                 m_isBannerDisplayed = true;
                 m_currBannerPlacement = placement;
-                adInstance.CurrPlacement = placement;
             }
 
             if (IsReady(adInstance))
             {
-                if (adType == AdType.Banner)
+                switch (adType)
                 {
-                    UnityAdInstanceBannerParameters bannerParams = adInstance.m_adInstanceParams as UnityAdInstanceBannerParameters;
-                    if (bannerParams != null)
-                    {
-#if UNITY_EDITOR
-                        Advertisement.Banner.Hide(true);
-#endif
-                        var bannerPosition = ConvertToNativeBannerPosition((UnityAdsBannerPosition)GetBannerPosition(adInstance, placement));
-                        Advertisement.Banner.SetPosition(bannerPosition);
-                    }
-                    Advertisement.Banner.Show(adInstance.m_adId);
-
-                    if (!isPreviousBannerDisplayed)
-                        AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
-                }
-                else
-                {
-                    Advertisement.Show(adInstance.m_adId);
+                    case AdType.Interstitial:
+                        try
+                        {
+                            var showOptions = new InterstitialAdShowOptions { AutoReload = true };
+                            unityAdInstance.InterstitialAd.ShowAsync(showOptions);
+                        }
+                        catch (ShowFailedException e)
+                        {
+                            Debug.Log($"[AMS] UnityAds Interstitial failed to show : {e.Message}");
+                        }
+                        break; 
+                    case AdType.Incentivized:
+                        try
+                        {
+                            var showOptions = new RewardedAdShowOptions { AutoReload = true };
+                            unityAdInstance.RewardedAd.ShowAsync(showOptions);
+                        }
+                        catch (ShowFailedException e)
+                        {
+                            Debug.LogWarning($"[AMS] UnityAds Rewarded failed to show: {e.Message}");
+                        }
+                        break;
+                    case AdType.Banner:
+                        BannerAdAnchor bannerAnchor = ConvertToNativeBannerPosition((UnityBannerAnchor)GetBannerPosition(adInstance, placement));
+                        unityAdInstance.BannerAd.SetPosition(bannerAnchor);
+                        if (!isPreviousBannerDisplayed)
+                            AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
+                        break;
                 }
                 return true;
             }
             return false;
         }
 
-        public override void Hide(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        public override void Hide(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             if (adInstance.m_adType == AdType.Banner)
             {
-                adInstance.m_bannerDisplayed = false;
-                Advertisement.Banner.Hide();
-                if (m_isBannerDisplayed)
-                    NotifyEvent(AdEvent.Hiding, adInstance);
-                m_isBannerDisplayed = false;
+                UnityAdInstanceData unityAdInstance = (UnityAdInstanceData)adInstance;
+                bool wasShownInOtherPlacement = false;
+                
+                foreach (var mediator in m_bannerMediators)
+                {
+                    if (IsAdBannerInstanceUsedInMediator(adInstance, mediator))
+                    {
+                        BannerAdAnchor bannerAnchor = ConvertToNativeBannerPosition(
+                            (UnityBannerAnchor)GetBannerPosition(adInstance, mediator.m_placementName));
+                        unityAdInstance.BannerAd.SetPosition(bannerAnchor);
+                        wasShownInOtherPlacement = true;
+                        break;
+                    }
+                }
+
+                if (!wasShownInOtherPlacement)
+                {
+                    adInstance.m_bannerDisplayed = false;
+                    unityAdInstance.BannerAd?.SetPosition(unityAdInstance.BannerAnchor, m_bannerHidingOffset);
+                    
+                    if (m_isBannerDisplayed)
+                        NotifyEvent(AdEvent.Hiding, adInstance);
+                    m_isBannerDisplayed = false;
+                }
             }
         }
 
-        public override bool IsReady(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        private static bool IsAdBannerInstanceUsedInMediator(AdInstance adInstance, AdMediator mediator) => 
+            mediator.IsBannerDisplayed && mediator.CurrentUnit != null && mediator.CurrentUnit.AdInstance == adInstance;
+
+        public override bool IsReady(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             bool isReady = false;
             if (adInstance != null)
-                isReady = Advertisement.IsReady(adInstance.m_adId);
+            {
+                UnityAdInstanceData unityAdInstance = (UnityAdInstanceData)adInstance;
+                switch (adInstance.m_adType)
+                {
+                    case AdType.Interstitial:
+                        isReady = unityAdInstance.InterstitialAd.AdState == Unity.Services.Mediation.AdState.Loaded;
+                        break;
+                    case AdType.Incentivized:
+                        isReady = unityAdInstance.RewardedAd.AdState == Unity.Services.Mediation.AdState.Loaded;
+                        break;
+                    case AdType.Banner:
+                        isReady = unityAdInstance.State == AdState.Received;
+                        break;
+                }
+            }
             return isReady;
         }
 
         protected override void SetUserConsentToPersonalizedAds(PersonalisationConsent consent)
         {
-            if (consent != PersonalisationConsent.Undefined)
+            if (consent != PersonalisationConsent.Undefined && MediationService.Instance != null)
             {
-                string value = consent == PersonalisationConsent.Accepted ? "true" : "false";
-                SetMetaData("user", "nonbehavioral", value);
-                SetMetaData("gdpr", "consent", value);
-                SetMetaData("pipl", "consent", value);
-                SetMetaData("privacy", "consent", value);
+                // GDPR 
+                var gdprConsent = consent == PersonalisationConsent.Accepted ? ConsentStatus.Given : ConsentStatus.Denied;
+                MediationService.Instance.DataPrivacy.UserGaveConsent(gdprConsent, DataPrivacyLaw.GDPR);
+                // CCPA
+                var ccpaConsent =  consent == PersonalisationConsent.Accepted ? ConsentStatus.Given : ConsentStatus.Denied;
+                MediationService.Instance.DataPrivacy.UserGaveConsent(ccpaConsent, DataPrivacyLaw.CCPA);
+                // PIPL 
+                var piplConsent =  consent == PersonalisationConsent.Accepted ? ConsentStatus.Given : ConsentStatus.Denied;
+                MediationService.Instance.DataPrivacy.UserGaveConsent(piplConsent, DataPrivacyLaw.PIPLAdPersonalization);
+                MediationService.Instance.DataPrivacy.UserGaveConsent(piplConsent, DataPrivacyLaw.PIPLDataTransport);
             }
         }
-        
-        private void SetMetaData<TValue>(string category, string key, TValue value)
+
+        private IInterstitialAd CreateInterstitialAd(UnityAdInstanceData unityAdInstance)
         {
-            MetaData coppaUserMetaData = new MetaData(category);
-            coppaUserMetaData.Set(key, value);
-            Advertisement.SetMetaData(coppaUserMetaData);
+            IInterstitialAd interstitial = MediationService.Instance.CreateInterstitialAd(unityAdInstance.m_adId);
+            unityAdInstance.State = AdState.Uncertain;
+            
+            unityAdInstance.OnLoaded = delegate(object sender, EventArgs args)
+            {
+                OnAdLoaded(unityAdInstance, sender, args);
+            };
+            unityAdInstance.OnFailedLoad = delegate(object sender, LoadErrorEventArgs args)
+            {
+                OnAdFailedLoad(unityAdInstance, sender, args);
+            };
+            unityAdInstance.OnShowed += delegate(object sender, EventArgs args)
+            {
+                OnAdShowed(unityAdInstance, sender, args);
+            };
+            unityAdInstance.OnClosed += delegate(object sender, EventArgs args)
+            {
+                OnAdClosed(unityAdInstance, sender, args);
+            };
+            unityAdInstance.OnFailedShow += delegate(object sender, ShowErrorEventArgs args)
+            {
+                OnAdFailedShow(unityAdInstance, sender, args);
+            };
+
+            interstitial.OnLoaded += unityAdInstance.OnLoaded;
+            interstitial.OnFailedLoad += unityAdInstance.OnFailedLoad;
+            interstitial.OnShowed += unityAdInstance.OnShowed;
+            interstitial.OnClosed += unityAdInstance.OnClosed;
+            interstitial.OnFailedShow += unityAdInstance.OnFailedShow;
+            return interstitial;
         }
         
+        private void DisposeInterstitialAd(UnityAdInstanceData unityAdInstance)
+        {
+            unityAdInstance.State = AdState.Uncertain;
+            unityAdInstance.InterstitialAd.OnLoaded -= unityAdInstance.OnLoaded;
+            unityAdInstance.InterstitialAd.OnFailedLoad -= unityAdInstance.OnFailedLoad;
+            unityAdInstance.InterstitialAd.OnShowed -= unityAdInstance.OnShowed;
+            unityAdInstance.InterstitialAd.OnClosed -= unityAdInstance.OnClosed;
+            unityAdInstance.InterstitialAd.OnFailedShow -= unityAdInstance.OnFailedShow;
+            unityAdInstance.InterstitialAd.Dispose();
+            unityAdInstance.InterstitialAd = null;
+        }
+        
+        private IRewardedAd CreateRewardedAd(UnityAdInstanceData unityAdInstance)
+        {
+            IRewardedAd rewardedAd = MediationService.Instance.CreateRewardedAd(unityAdInstance.m_adId);
+            unityAdInstance.State = AdState.Uncertain;
+            
+            unityAdInstance.OnLoaded = delegate(object sender, EventArgs args)
+            {
+                OnAdLoaded(unityAdInstance, sender, args);
+            };
+            unityAdInstance.OnFailedLoad = delegate(object sender, LoadErrorEventArgs args)
+            {
+                OnAdFailedLoad(unityAdInstance, sender, args);
+            };
+            unityAdInstance.OnShowed += delegate(object sender, EventArgs args)
+            {
+                OnAdShowed(unityAdInstance, sender, args);
+            };
+            unityAdInstance.OnClosed += delegate(object sender, EventArgs args)
+            {
+                OnAdClosed(unityAdInstance, sender, args);
+            };
+            unityAdInstance.OnFailedShow += delegate(object sender, ShowErrorEventArgs args)
+            {
+                OnAdFailedShow(unityAdInstance, sender, args);
+            };
+            unityAdInstance.OnUserRewarded += delegate(object sender, RewardEventArgs args)
+            {
+                OnAdUserRewarded(unityAdInstance, sender, args);
+            };
+            
+            rewardedAd.OnLoaded += unityAdInstance.OnLoaded;
+            rewardedAd.OnFailedLoad += unityAdInstance.OnFailedLoad;
+            rewardedAd.OnShowed += unityAdInstance.OnShowed;
+            rewardedAd.OnClosed += unityAdInstance.OnClosed;
+            rewardedAd.OnFailedShow += unityAdInstance.OnFailedShow;
+            rewardedAd.OnUserRewarded += unityAdInstance.OnUserRewarded;
+            return rewardedAd;
+        }
+        
+        private void DisposeRewardedAd(UnityAdInstanceData unityAdInstance)
+        {
+            unityAdInstance.State = AdState.Uncertain;
+            unityAdInstance.RewardedAd.OnLoaded -= unityAdInstance.OnLoaded;
+            unityAdInstance.RewardedAd.OnFailedLoad -= unityAdInstance.OnFailedLoad;
+            unityAdInstance.RewardedAd.OnShowed -= unityAdInstance.OnShowed;
+            unityAdInstance.RewardedAd.OnClosed -= unityAdInstance.OnClosed;
+            unityAdInstance.RewardedAd.OnFailedShow -= unityAdInstance.OnFailedShow;
+            unityAdInstance.RewardedAd.OnUserRewarded -= unityAdInstance.OnUserRewarded;
+            unityAdInstance.RewardedAd.Dispose();
+            unityAdInstance.RewardedAd = null;
+        }
+        
+        private IBannerAd CreateBannerAd(UnityAdInstanceData unityAdInstance)
+        {
+            UnityAdInstanceBannerParameters bannerParams = unityAdInstance.m_adInstanceParams as UnityAdInstanceBannerParameters;
+            unityAdInstance.BannerSize = ConvertToNativeBannerSize(bannerParams.m_bannerSize);
+            unityAdInstance.BannerAnchor = ConvertToNativeBannerPosition(bannerParams.m_bannerAnchor);
+            
+            IBannerAd bannerAd = MediationService.Instance.CreateBannerAd(unityAdInstance.m_adId,
+                unityAdInstance.BannerSize, unityAdInstance.BannerAnchor, m_bannerHidingOffset);
+            unityAdInstance.State = AdState.Uncertain;
+            
+            unityAdInstance.OnLoaded = delegate(object sender, EventArgs args)
+            {
+                OnAdLoaded(unityAdInstance, sender, args);
+            };
+            unityAdInstance.OnFailedLoad = delegate(object sender, LoadErrorEventArgs args)
+            {
+                OnAdFailedLoad(unityAdInstance, sender, args);
+            };
+            bannerAd.OnLoaded += unityAdInstance.OnLoaded;
+            bannerAd.OnFailedLoad += unityAdInstance.OnFailedLoad;
+            return bannerAd;
+        }
+        
+        private void DisposeBannerAd(UnityAdInstanceData unityAdInstance)
+        {
+            unityAdInstance.State = AdState.Uncertain;
+            unityAdInstance.BannerAd.OnLoaded -= unityAdInstance.OnLoaded;
+            unityAdInstance.BannerAd.OnFailedLoad -= unityAdInstance.OnFailedLoad;
+            unityAdInstance.BannerAd.Dispose();
+            unityAdInstance.BannerAd = null;
+        }
+
+        private void OnDestroy()
+        {
+            foreach (AdInstance adInstance in m_adInstances)
+            {
+                UnityAdInstanceData unityAdInstance = (UnityAdInstanceData)adInstance;
+                switch (adInstance.m_adType)
+                {
+                    case AdType.Interstitial:
+                        DisposeInterstitialAd(unityAdInstance);
+                        break;
+                    case AdType.Incentivized:
+                        DisposeRewardedAd(unityAdInstance);
+                        break;
+                    case AdType.Banner:
+                        DisposeBannerAd(unityAdInstance);
+                        break;
+                }
+            }
+        }
+
         //_______________________________________________________________________________
         #region Callback Event Methods
  
-        public void OnUnityAdsReady(string adId)
+        private void OnInitializationComplete()
         {
-            AdInstance adInstance = GetAdInstanceByAdId(adId);
-
-            if (adInstance != null)
+            SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
+            MediationService.Instance.ImpressionEventPublisher.OnImpression += OnInterstitialImpressionEvent;
+            foreach (var instance in m_adInstances)
             {
-#if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("[AMS] UnityAdsAdapter.OnUnityAdsReady() adId: " + adInstance.m_adId + " bannerVisibled:" + adInstance.m_bannerDisplayed);
-#endif
-                adInstance.State = AdState.Received;
-                if (adInstance.m_adType == AdType.Banner)
+                UnityAdInstanceData unityAdInstance = (UnityAdInstanceData)instance;
+
+                switch (unityAdInstance.m_adType)
                 {
-                    if (adInstance.m_bannerDisplayed)
-                    {
-                        if (!string.IsNullOrEmpty(m_currBannerPlacement))
-                        {
-                            var pos = ConvertToNativeBannerPosition((UnityAdsBannerPosition)GetBannerPosition(adInstance, m_currBannerPlacement));
-                            Advertisement.Banner.SetPosition(pos);
-                        }
-                        Advertisement.Banner.Show(adInstance.m_adId);
-                    }
-                    else
-                        Advertisement.Banner.Hide();
+                    case AdType.Interstitial:
+                        unityAdInstance.InterstitialAd = CreateInterstitialAd(unityAdInstance);
+                        break;
+                    case AdType.Incentivized:
+                        unityAdInstance.RewardedAd = CreateRewardedAd(unityAdInstance);
+                        break;
+                    case AdType.Banner:
+                        unityAdInstance.BannerAd = CreateBannerAd(unityAdInstance);
+                        break;
                 }
-                AddEvent(adInstance.m_adType, AdEvent.Prepared, adInstance);
             }
         }
 
-        public void OnUnityAdsDidError(string message)
+        private void OnInitializationFailed(Exception error)
         {
+            SdkInitializationError initializationError = SdkInitializationError.Unknown;
+            if (error is InitializeFailedException initializeFailedException)
+            {
+                initializationError = initializeFailedException.initializationError;
+            }
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("[AMS] UnityAdsAdapter.OnUnityAdsDidError() message: " + message);
+            Debug.Log($"[AMS] UnityAds Initialization Failed: {initializationError}:{error.Message}");
 #endif
         }
 
-        public void OnUnityAdsDidStart(string adId)
+        private void OnInterstitialImpressionEvent(object sender, ImpressionEventArgs args)
         {
-            AdInstance adInstance = GetAdInstanceByAdId(adId);
-            if (adInstance != null)
-            {
-                AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
-            }
-        }
-
-        public void OnUnityAdsDidFinish(string adId, ShowResult showResult)
-        {
-            AdInstance adInstance = GetAdInstanceByAdId(adId);
-
-            if (adInstance != null)
-            {
+            var impressionData = args.ImpressionData != null ? JsonUtility.ToJson(args.ImpressionData, true) : "null";
 #if AD_MEDIATION_DEBUG_MODE
-                Debug.Log("[AMS] UnityAdsAdapter.OnUnityAdsDidFinish() adId: " + adInstance.m_adId);
+            Debug.Log($"[AMS] UnityAds Impression event from ad unit id {args.AdUnitId} : {impressionData}");
 #endif
-                if (adInstance.m_adType == AdType.Incentivized)
-                {
-                    switch (showResult)
-                    {
-                        case ShowResult.Finished:
-                            AddEvent(adInstance.m_adType, AdEvent.IncentivizationCompleted, adInstance);
-                            break;
-                        case ShowResult.Skipped:
-                        case ShowResult.Failed:
-                            AddEvent(adInstance.m_adType, AdEvent.IncentivizationUncompleted, adInstance);
-                            break;
-                    }
-                }
-
-                if (adInstance.m_adType != AdType.Banner)
-                    AddEvent(adInstance.m_adType, AdEvent.Hiding, adInstance);
-            }
         }
+
+        // UnityAds Callbacks
+        private void OnAdLoaded(UnityAdInstanceData adInstance, object sender, EventArgs args)
+        {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] UnityAds Ad loaded");
+#endif
+            adInstance.State = AdState.Received;
+            if (adInstance.m_adType == AdType.Banner)
+            {
+                BannerAdAnchor bannerAnchor = BannerAdAnchor.Default;
+                if (!string.IsNullOrEmpty(m_currBannerPlacement))
+                    bannerAnchor = ConvertToNativeBannerPosition((UnityBannerAnchor)GetBannerPosition(adInstance, m_currBannerPlacement));
+
+                if (adInstance.m_bannerDisplayed)
+                    adInstance.BannerAd.SetPosition(bannerAnchor);
+                else
+                    adInstance.BannerAd.SetPosition(bannerAnchor, m_bannerHidingOffset);
+            }
+            AddEvent(adInstance.m_adType, AdEvent.Prepared, adInstance);
+        }
+
+        private void OnAdShowed(UnityAdInstanceData adInstance,object sender, EventArgs args)
+        {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] UnityAds Closed! Showed Ad...");
+#endif
+            AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
+        }
+
+        private void OnAdClosed(UnityAdInstanceData adInstance,object sender, EventArgs args)
+        {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] UnityAds Closed! Loading Ad...");
+#endif
+            if (adInstance.m_adType != AdType.Banner)
+                adInstance.State = AdState.Unavailable;
+            AddEvent(adInstance.m_adType, AdEvent.Hiding, adInstance);
+        }
+
+        private void OnAdFailedShow(UnityAdInstanceData adInstance,object sender, ShowErrorEventArgs args)
+        {
+            if (adInstance.m_adType != AdType.Banner)
+                adInstance.State = AdState.Unavailable;
+            AddEvent(adInstance.m_adType, AdEvent.Hiding, adInstance);
+        }
+
+        private void OnAdFailedLoad(UnityAdInstanceData adInstance, object sender, LoadErrorEventArgs args)
+        {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log($"[AMS] UnityAds Failed to load ad. {args.Message}");
+#endif
+            adInstance.State = AdState.Unavailable;
+            AddEvent(adInstance.m_adType, AdEvent.PreparationFailed, adInstance);
+        }
+        
+        private void OnAdUserRewarded(UnityAdInstanceData adInstance, object sender, RewardEventArgs args)
+        {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log($"[AMS] UnityAds User Rewarded ad.");
+#endif
+            AddEvent(adInstance.m_adType, AdEvent.IncentivizationCompleted, adInstance);
+        }
+        
         #endregion // Callback Event Methods
 #endif
     }

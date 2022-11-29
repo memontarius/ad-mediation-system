@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace Virterix.AdMediation.Editor
 {
     public class UnityAdsView : BaseAdNetworkView
@@ -6,17 +8,13 @@ namespace Virterix.AdMediation.Editor
         protected override InstanceElementHeight CreateInstanceElementHeight(AdType adType)
         {
             var elementHeight = base.CreateInstanceElementHeight(adType);
-            if (adType == AdType.Banner)
-            {
-                elementHeight.androidHeight = elementHeight.iosHeight -= 22;
-                elementHeight.height -= 22;
-            }
             return elementHeight;
         }
 
         public UnityAdsView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
             base(settingsWindow, name, identifier)
         {
+            BannerTypes = Enum.GetNames(typeof(UnityAdsAdapter.UnityBannerSize));
         }
 
         protected override BaseAdNetworkSettings CreateSettingsModel()

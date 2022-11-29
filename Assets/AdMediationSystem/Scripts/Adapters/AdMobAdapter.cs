@@ -238,6 +238,11 @@ namespace Virterix.AdMediation
             OnDidInitialize();
         }
 
+        protected override void InitializeAdInstanceData(AdInstance adInstance, JSONValue jsonAdInstance)
+        {
+            base.InitializeAdInstanceData(adInstance, jsonAdInstance);
+        }
+
         protected override AdInstance CreateAdInstanceData(JSONValue jsonAdInstance)
         {
             AdInstance adInstance = new AdMobAdInstanceData(this);

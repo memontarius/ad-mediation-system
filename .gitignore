@@ -1,6 +1,9 @@
-/.git/*
-/.idea/*
-/.vs/*
+/.git/
+/.idea/
+/.vs/
+/.plastic/
+/.vscode/
+/.cr/
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
@@ -9,7 +12,24 @@
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 /.tmp.drivedownload/*
-/AssetStoreTools/
+/.collabignore
+/.vsconfig
+/UpgradeLog.htm
+/VersionHandlerSave.log
+
+# UNIQUE TABLE TOWER TO ASSETS
+/Assets/ConsolePro/Editor Console Pro Documentation.pdf
+/Assets/DoozyUI/DoozyUI 2.9 - Manual.pdf
+/Assets/EnhancedScroller v2/Demos/
+/Assets/EnhancedScroller v2/Tutorials/
+/Assets/EnhancedScroller v2/Documentation/
+/Assets/ExcaliburGames/Mesh Face Optimization/Example/
+/Assets/ExcaliburGames/Mesh Face Optimization/Documentation/
+/Assets/Fingers/Demo/
+/Assets/OUTPUT/Plugins/VolumetricCrystalMaterials/ExampleScene/
+/Assets/Photon/PhotonNetworking-Documentation
+/Assets/AllSkyFree/AllSkyDemoEnvironment/
+
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
