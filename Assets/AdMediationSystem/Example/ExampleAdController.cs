@@ -19,6 +19,7 @@ public class ExampleAdController : BaseAdController
     private void Awake()
     {
         AdMediationSystem.OnInitialized += OnMediationSystemInitialized;
+        AdMediationSystem.OnAllNetworksInitializeResponseReceived += OnAllNetworksInitializeResponseReceived;
         AdMediationSystem.Load("DefaultProject");
         m_adPersonalizedText.rectTransform.parent.GetComponent<Button>().interactable = false;
     }
@@ -35,6 +36,11 @@ public class ExampleAdController : BaseAdController
         }
     }
 
+    private void OnAllNetworksInitializeResponseReceived()
+    {
+        //FetchAllAds();
+    }
+    
     private void FetchAllAds()
     {
         AdMediationSystem.Fetch(AdType.Interstitial);

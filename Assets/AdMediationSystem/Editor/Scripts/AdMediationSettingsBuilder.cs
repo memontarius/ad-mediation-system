@@ -308,9 +308,9 @@ namespace Virterix.AdMediation.Editor
                 }
                 jsonAdInstance.Add("id", adUnitId);
                 if (adInstanceHolder._adInstance._timeout > 0)
-                {
                     jsonAdInstance.Add("timeout", adInstanceHolder._adInstance._timeout);
-                }
+                if (adInstanceHolder._adInstance._loadingOnStart)
+                    jsonAdInstance.Add("loadOnStart", true);
                 jsonInstances.Add(jsonAdInstance);
             }
             return jsonInstances;

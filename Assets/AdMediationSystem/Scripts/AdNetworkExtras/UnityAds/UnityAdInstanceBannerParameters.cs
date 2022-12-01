@@ -9,6 +9,7 @@
         public UnityAdsAdapter.UnityBannerAnchor m_bannerAnchor;
         
         public override AdType AdvertiseType => AdType.Banner;
+        public bool m_prepareOnStart;
         
 #if UNITY_EDITOR
         public static AdInstanceParameters CreateParameters()

@@ -1,4 +1,4 @@
-//#define _AMS_ADMOB
+#define _AMS_ADMOB
 
 using UnityEngine;
 using System;
@@ -93,6 +93,8 @@ namespace Virterix.AdMediation
         /// Should be assigned before initialization
         /// </summary>
         public AdMobMaxAdContentRating MaxContentRating { get; set; }
+
+        public override bool RequiredWaitingInitializationResponse => true;
 
         protected override string AdInstanceParametersFolder
         {
@@ -312,7 +314,7 @@ namespace Virterix.AdMediation
             MaxContentRating = (AdMobMaxAdContentRating)PlayerPrefs.GetInt(MaxContentRatingSaveKey, (int)AdMobMaxAdContentRating.Unspecified);
         }
 
-        public override void Prepare(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        public override void Prepare(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
             if (!IsReady(adMobAdInstance))
@@ -337,9 +339,12 @@ namespace Virterix.AdMediation
             }
         }
 
-        public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        public override bool Show(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
-            AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
+            AdMobAdInstanceData adMobAdInstance = adInstance as AdMobAdInstanceData;
+            if (adMobAdInstance == null)
+                return false;
+            
             AdType adType = adInstance.m_adType;
             bool isAdAvailable = IsReady(adInstance, placement);
             bool isPreviousBannerDisplayed = adMobAdInstance.m_bannerDisplayed;
@@ -370,45 +375,46 @@ namespace Virterix.AdMediation
                         break;
                     case AdType.Interstitial:
                         InterstitialAd interstitial = adInstance.m_adView as InterstitialAd;
-                        interstitial.Show();
+                        interstitial?.Show();
                         break;
                     case AdType.Incentivized:
                         RewardedAd rewardedAd = adInstance.m_adView as RewardedAd;
-                        rewardedAd.Show();
+                        rewardedAd?.Show();
                         break;
                 }
             }
             return isAdAvailable;
         }
 
-        public override void Hide(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        public override void Hide(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
-            AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
-            AdType adType = adInstance.m_adType;
-
-            switch (adType)
+            AdMobAdInstanceData adMobAdInstance = adInstance as AdMobAdInstanceData;
+            if (adMobAdInstance == null)
+                return;
+            
+            switch (adInstance.m_adType)
             {
                 case AdType.Banner:
-                    if (adInstance.State == AdState.Received)
+                    adMobAdInstance.m_bannerDisplayed = false;
+                    if (adInstance.State == AdState.Received && adInstance.m_adView != null)
                     {
                         BannerView bannerView = adInstance.m_adView as BannerView;
                         bannerView.Hide();
                         if (adMobAdInstance.m_bannerDisplayed)
                             NotifyEvent(AdEvent.Hiding, adInstance);
                     }
-                    adMobAdInstance.m_bannerDisplayed = false;
                     break;
             }
         }
 
-        public override bool IsReady(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
+        public override bool IsReady(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
 #if UNITY_EDITOR
             //return false;
 #endif
             AdType adType = adInstance.m_adType;
             bool isReady = adInstance.State == AdState.Received;
-            AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
+            AdMobAdInstanceData adMobAdInstance = adInstance as AdMobAdInstanceData;
 
             switch (adType)
             {
@@ -690,7 +696,11 @@ namespace Virterix.AdMediation
         // AdMob Callbacks
         private void OnInitComplete(InitializationStatus initStatus)
         {
-            OnInitializationComplete(new InitializationStatusContainer(initStatus));     
+            WasInitializationResponse = true;
+            OnInitializationComplete(new InitializationStatusContainer(initStatus));
+#if AD_MEDIATION_DEBUG_MODE
+            print("[AMS] AdMobAdapter.OnInitComplete()");
+#endif
         }
 
         //------------------------------------------------------------------------
@@ -699,14 +709,13 @@ namespace Virterix.AdMediation
         public void HandleAdLoaded(AdMobAdInstanceData adInstance, object sender, EventArgs args)
         {
 #if AD_MEDIATION_DEBUG_MODE
-            print("[AMS] AdMobAdapter.HandleAdLoaded() " + " adInstance: " + adInstance.Name +
-                " isVisibled: " + adInstance.m_bannerDisplayed);
+            print("[AMS] AdMobAdapter.HandleAdLoaded() " + " adInstance: " + adInstance.Name + " isVisibled: " + adInstance.m_bannerDisplayed);
 #endif
             AddEvent(AdType.Banner, AdEvent.Prepared, adInstance);
             lock (adInstance)
             {
                 BannerView bannerView = adInstance.m_adView as BannerView;
-                if (adInstance.m_bannerDisplayed)
+                if (adInstance.m_bannerDisplayed && bannerView != null)
                 {
 #if UNITY_EDITOR
                     bannerView.Hide();
@@ -721,8 +730,7 @@ namespace Virterix.AdMediation
         public void HandleAdFailedToLoad(AdMobAdInstanceData adInstance, object sender, AdFailedToLoadEventArgs args)
         {
 #if AD_MEDIATION_DEBUG_MODE
-            print("[AMS] AdMobAdapter.HandleAdFailedToLoad() " + " adInstance: " + adInstance.Name +
-                " message: " + args.LoadAdError.GetMessage());
+            print("[AMS] AdMobAdapter.HandleAdFailedToLoad() " + " adInstance: " + adInstance.Name + " message: " + args.LoadAdError.GetMessage());
 #endif
             AddEvent(AdType.Banner, AdEvent.PreparationFailed, adInstance);
         }

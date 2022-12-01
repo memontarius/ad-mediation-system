@@ -27,7 +27,7 @@ namespace Virterix.AdMediation
         private string m_name = AD_INSTANCE_PARAMETERS_DEFAULT_NAME;
 
         public BannerPositionContainer[] m_bannerPositions;
-
+        
         public virtual AdType AdvertiseType
         {
             get

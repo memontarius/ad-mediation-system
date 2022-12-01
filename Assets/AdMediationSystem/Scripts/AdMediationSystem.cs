@@ -43,7 +43,7 @@ namespace Virterix.AdMediation
             public int[] maxPassages;
         }
 
-        public const string VERSION = "2.4.6";
+        public const string VERSION = "2.4.7";
         public const string AD_SETTINGS_FOLDER = "AdMediationSettings";
         public const string PREFAB_NAME = "AdMediationSystem";
         public const string PLACEMENT_DEFAULT_NAME = "Default";
@@ -95,7 +95,8 @@ namespace Virterix.AdMediation
         // For CCPA GDPR Compliance
         private static PersonalisationConsent m_userPersonalisationConsent;
         
-        public static event Action OnInitialized = delegate { };
+        public static event Action OnInitialized;
+        public static event Action OnAllNetworksInitializeResponseReceived;
         /// <summary>
         /// Callback all events of advertising networks.
         /// 5th parameter is the ad instance name
@@ -535,9 +536,39 @@ namespace Virterix.AdMediation
         private void NotifyInitializeCompleted()
         {
             InitStatus = InitializedStatus.Initialized;
-            OnInitialized();
+            OnInitialized?.Invoke();
+            StartCoroutine(WaitingNetworkInitializeResponses());
         }
 
+        private IEnumerator WaitingNetworkInitializeResponses()
+        {
+            var waitInstruction = new WaitForSecondsRealtime(0.5f);
+            int requiredInitializationResponseQuantity = 0;
+            
+            foreach (AdNetworkAdapter network in m_networkAdapters)
+            {
+                if (network.RequiredWaitingInitializationResponse)
+                    requiredInitializationResponseQuantity++;
+            }
+            
+            while (requiredInitializationResponseQuantity > 0)
+            {
+                yield return waitInstruction;
+                foreach (AdNetworkAdapter network in m_networkAdapters)
+                {
+                    if (network.RequiredWaitingInitializationResponse && network.WasInitializationResponse)
+                        requiredInitializationResponseQuantity--;
+                }
+            }
+
+            foreach (AdMediator mediator in m_mediators)
+            {
+                if (mediator.m_fetchOnStart)
+                    mediator.Fetch();
+            }
+            OnAllNetworksInitializeResponseReceived?.Invoke();
+        }
+        
         #endregion // Other internal methods
 
         //===============================================================================
@@ -801,7 +832,7 @@ namespace Virterix.AdMediation
                     mediatorData.tiers = tierUnits.ToArray();
                     mediatorData.maxPassages = maxPassages.ToArray();
                     initMediators.Add(mediator, mediatorData);
-
+                    
                     tierUnits.Clear();
                     maxPassages.Clear();
                 }
@@ -839,10 +870,9 @@ namespace Virterix.AdMediation
                     mediator.FetchStrategy = new DummyFetchStrategy();
                 }
             }
-
             return setupSettingsSuccess;
         }
-
+ 
         private void SetupCurrentSettings()
         {
             if (m_currSettings != null)

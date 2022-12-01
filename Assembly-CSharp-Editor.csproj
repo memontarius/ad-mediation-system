@@ -43,12 +43,16 @@
   <ItemGroup>
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\BaseAdNetworkView.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AdMob\AdMobView.cs" />
+     <Compile Include="Assets\GooglePlayGames\Editor\GPGSUtil.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AudienceNetwork\AudienceNetworkSettings.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\AdMediationSettingsWindow.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Pollfish\PollfishSettings.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\UnityAds\UnityAdsSettings.cs" />
+     <Compile Include="Assets\GooglePlayGames\Editor\GPGSProjectSettings.cs" />
+     <Compile Include="Assets\GooglePlayGames\Editor\GPGSAndroidSetupUI.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\AdMediationProjectSettings.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Pollfish\PollfishView.cs" />
+     <Compile Include="Assets\GooglePlayGames\Editor\NearbyConnectionUI.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Chartboost\ChartboostSettings.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AdMob\AdMobSettings.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\IronSource\IronSourceView.cs" />
@@ -60,41 +64,58 @@
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\AdMediationSettingsBuilder.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\BaseAdNetworkSettings.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\IronSource\IronSourceSettings.cs" />
+     <Compile Include="Assets\GooglePlayGames\Editor\GPGSPostBuild.cs" />
+     <Compile Include="Assets\GooglePlayGames\Editor\GPGSUpgrader.cs" />
+     <Compile Include="Assets\GooglePlayGames\Editor\GPGSDocsUI.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Vungle\VungleSettings.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AdColony\AdColonyView.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\EditorAdType.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Chartboost\ChartboostView.cs" />
+     <Compile Include="Assets\GooglePlayGames\Editor\GPGSStrings.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\AdMediatorView.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Vungle\VungleView.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Applovin\ApplovinSettings.cs" />
-     <Folder Include="Assets\GeneratedLocalRepo\GooglePlayGames\com.google.play.games\Editor\m2repository\com\google\games" />
-     <Folder Include="Assets\GeneratedLocalRepo\GooglePlayGames\com.google.play.games\Editor\m2repository\com\google\games\gpgs-plugin-support\0.11.01" />
      <Folder Include="Assets\Editor\Platform-Dependencies" />
+     <Folder Include="Assets\GooglePlayGames\Editor" />
+     <None Include="Assets\GooglePlayGames\Editor\m2repository\com\google\games\gpgs-plugin-support\maven-metadata.xml" />
+     <Folder Include="Assets\GooglePlayGames\Editor\m2repository" />
+     <Folder Include="Assets\GeneratedLocalRepo\GooglePlayGames\Editor\m2repository\com\google\games\gpgs-plugin-support" />
      <Folder Include="Assets\Editor\AdMediationSettings\Empty" />
-     <Folder Include="Assets\GeneratedLocalRepo\GooglePlayGames\com.google.play.games\Editor\m2repository\com" />
      <Folder Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AdColony" />
      <Folder Include="Assets\ExternalDependencyManager\Editor" />
      <None Include="Assets\Editor\Platform-Dependencies\Android\Checksum.txt" />
      <Folder Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Chartboost" />
      <Folder Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AudienceNetwork" />
      <None Include="Assets\Editor\MediationAdapterDependencies.xml" />
-     <Folder Include="Assets\GeneratedLocalRepo\GooglePlayGames\com.google.play.games\Editor\m2repository" />
      <Folder Include="Assets\Editor" />
      <Folder Include="Assets\Editor\RemoteConfig\Data" />
+     <Folder Include="Assets\GeneratedLocalRepo\GooglePlayGames\Editor\m2repository\com\google\games\gpgs-plugin-support\0.10.14" />
      <Folder Include="Assets\Editor\AdMediationSettings" />
+     <Folder Include="Assets\GooglePlayGames\Editor\m2repository\com" />
      <Folder Include="Assets\Editor\Platform-Dependencies\Android" />
+     <None Include="Assets\GooglePlayGames\Editor\template-GameInfo.txt" />
+     <Folder Include="Assets\GeneratedLocalRepo\GooglePlayGames\Editor\m2repository" />
+     <Folder Include="Assets\GeneratedLocalRepo\GooglePlayGames\Editor\m2repository\com" />
+     <None Include="Assets\GooglePlayGames\Editor\GooglePlayGamesPluginDependencies.xml" />
      <Folder Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Vungle" />
      <Folder Include="Assets\Editor\AdMediationSettings\DefaultProject" />
-     <Folder Include="Assets\GeneratedLocalRepo\GooglePlayGames\com.google.play.games\Editor\m2repository\com\google\games\gpgs-plugin-support" />
+     <None Include="Assets\GooglePlayGames\Editor\GooglePlayGamesPlugin_v0.10.14.txt" />
+     <Folder Include="Assets\GooglePlayGames\Editor\m2repository\com\google" />
      <Folder Include="Assets\Editor\RemoteConfig" />
      <Folder Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Applovin" />
-     <Folder Include="Assets\GeneratedLocalRepo\GooglePlayGames\com.google.play.games\Editor\m2repository\com\google" />
+     <Folder Include="Assets\GeneratedLocalRepo\GooglePlayGames\Editor\m2repository\com\google\games" />
      <Folder Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Pollfish" />
-     <Folder Include="Assets\GeneratedLocalRepo\GooglePlayGames\com.google.play.games\Editor" />
+     <Folder Include="Assets\GooglePlayGames\Editor\m2repository\com\google\games\gpgs-plugin-support" />
+     <Folder Include="Assets\GooglePlayGames\Editor\m2repository\com\google\games\gpgs-plugin-support\0.10.14" />
+     <Folder Include="Assets\GooglePlayGames\Editor\m2repository\com\google\games" />
+     <Folder Include="Assets\GeneratedLocalRepo\GooglePlayGames\Editor\m2repository\com\google" />
      <Folder Include="Assets\AdMediationSystem\Editor" />
+     <None Include="Assets\GooglePlayGames\Editor\template-AndroidManifest.txt" />
+     <Folder Include="Assets\GeneratedLocalRepo\GooglePlayGames\Editor" />
      <None Include="Assets\ExternalDependencyManager\Editor\external-dependency-manager_version-1.2.175_manifest.txt" />
      <Folder Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AdMob" />
      <Folder Include="Assets\AdMediationSystem\Editor\Scripts\Networks\UnityAds" />
+     <None Include="Assets\GooglePlayGames\Editor\template-Constants.txt" />
      <Folder Include="Assets\AdMediationSystem\Editor\Scripts\Networks\IronSource" />
      <Folder Include="Assets\AdMediationSystem\Editor\Scripts\Networks" />
      <Folder Include="Assets\ExternalDependencyManager\Editor\1.2.175" />
@@ -886,17 +907,9 @@
       <Project>{d28b944e-3b4e-097e-e1ca-0ccc63248509}</Project>
       <Name>Assembly-CSharp</Name>
     </ProjectReference>
-    <ProjectReference Include="Google.Play.Games.Editor.csproj">
-      <Project>{71c77f55-81e9-0432-cab6-950e8b172b49}</Project>
-      <Name>Google.Play.Games.Editor</Name>
-    </ProjectReference>
     <ProjectReference Include="GoogleMobileAds.Editor.csproj">
       <Project>{60dd04b4-4920-d85b-a20d-4287f474bf9b}</Project>
       <Name>GoogleMobileAds.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Google.Play.Games.csproj">
-      <Project>{22e6d37d-6d24-b76a-ea05-13da8edfbdd3}</Project>
-      <Name>Google.Play.Games</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

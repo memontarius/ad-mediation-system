@@ -1,4 +1,4 @@
-//#define _AMS_UNITY_ADS
+#define _AMS_UNITY_ADS
 
 using System;
 using System.Collections.Generic;
@@ -6,6 +6,7 @@ using UnityEngine;
 using Boomlagoon.JSON;
 using Unity.Services.Core;
 #if _AMS_UNITY_ADS
+using System.Collections;
 using Unity.Services.Mediation;
 #endif
 
@@ -23,6 +24,8 @@ namespace Virterix.AdMediation
         private IRewardedAd m_rewardedAd;
 #endif
         private AdMediator[] m_bannerMediators;
+        private bool m_unityAdsInitialized;
+        private float m_deferredInitializeDelay = 30;
         
         public enum UnityBannerAnchor
         {
@@ -81,6 +84,8 @@ namespace Virterix.AdMediation
         }
 
         public override bool UseSingleBannerInstance => true;
+
+        public override bool RequiredWaitingInitializationResponse => true;
 
         public static string GetSDKVersion()
         {
@@ -208,11 +213,14 @@ namespace Virterix.AdMediation
         public override void Prepare(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdType adType = adInstance.m_adType;
-            if (!IsReady(adInstance) && adInstance.State != AdState.Loading)
+            if (!IsReady(adInstance) && adInstance.State != AdState.Loading && m_unityAdsInitialized)
             {
+                adInstance.CurrPlacement = placement;
+                if (!m_unityAdsInitialized)
+                    return;
+                
                 adInstance.State = AdState.Loading;
                 UnityAdInstanceData unityAdInstance = (UnityAdInstanceData)adInstance;
-                adInstance.CurrPlacement = placement;
                 
                 try
                 {
@@ -261,7 +269,7 @@ namespace Virterix.AdMediation
                         try
                         {
                             var showOptions = new InterstitialAdShowOptions { AutoReload = true };
-                            unityAdInstance.InterstitialAd.ShowAsync(showOptions);
+                            unityAdInstance.InterstitialAd?.ShowAsync(showOptions);
                         }
                         catch (ShowFailedException e)
                         {
@@ -272,7 +280,7 @@ namespace Virterix.AdMediation
                         try
                         {
                             var showOptions = new RewardedAdShowOptions { AutoReload = true };
-                            unityAdInstance.RewardedAd.ShowAsync(showOptions);
+                            unityAdInstance.RewardedAd?.ShowAsync(showOptions);
                         }
                         catch (ShowFailedException e)
                         {
@@ -281,7 +289,7 @@ namespace Virterix.AdMediation
                         break;
                     case AdType.Banner:
                         BannerAdAnchor bannerAnchor = ConvertToNativeBannerPosition((UnityBannerAnchor)GetBannerPosition(adInstance, placement));
-                        unityAdInstance.BannerAd.SetPosition(bannerAnchor);
+                        unityAdInstance.BannerAd?.SetPosition(bannerAnchor);
                         if (!isPreviousBannerDisplayed)
                             AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
                         break;
@@ -304,7 +312,7 @@ namespace Virterix.AdMediation
                     {
                         BannerAdAnchor bannerAnchor = ConvertToNativeBannerPosition(
                             (UnityBannerAnchor)GetBannerPosition(adInstance, mediator.m_placementName));
-                        unityAdInstance.BannerAd.SetPosition(bannerAnchor);
+                        unityAdInstance.BannerAd?.SetPosition(bannerAnchor);
                         wasShownInOtherPlacement = true;
                         break;
                     }
@@ -328,7 +336,7 @@ namespace Virterix.AdMediation
         public override bool IsReady(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             bool isReady = false;
-            if (adInstance != null)
+            if (adInstance != null && m_unityAdsInitialized)
             {
                 UnityAdInstanceData unityAdInstance = (UnityAdInstanceData)adInstance;
                 switch (adInstance.m_adType)
@@ -513,12 +521,21 @@ namespace Virterix.AdMediation
                 }
             }
         }
+        
+        private IEnumerator DeferredInitializeUnityAds()
+        {
+            yield return new WaitForSecondsRealtime(m_deferredInitializeDelay);
+            m_deferredInitializeDelay = Mathf.Clamp(m_deferredInitializeDelay * 2, 30f, 60 * 5);
+            InitializeUnity(m_appId);
+        }
 
         //_______________________________________________________________________________
         #region Callback Event Methods
  
         private void OnInitializationComplete()
         {
+            WasInitializationResponse = true;
+            m_unityAdsInitialized = true;
             SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
             MediationService.Instance.ImpressionEventPublisher.OnImpression += OnInterstitialImpressionEvent;
             foreach (var instance in m_adInstances)
@@ -537,16 +554,25 @@ namespace Virterix.AdMediation
                         unityAdInstance.BannerAd = CreateBannerAd(unityAdInstance);
                         break;
                 }
+                
+                if (unityAdInstance.LoadingOnStart)
+                    Prepare(unityAdInstance, "");
             }
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log($"[AMS] UnityAds Initialization Success");
+#endif
         }
 
         private void OnInitializationFailed(Exception error)
         {
+            WasInitializationResponse = true;
             SdkInitializationError initializationError = SdkInitializationError.Unknown;
             if (error is InitializeFailedException initializeFailedException)
             {
                 initializationError = initializeFailedException.initializationError;
             }
+
+            StartCoroutine(DeferredInitializeUnityAds());
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log($"[AMS] UnityAds Initialization Failed: {initializationError}:{error.Message}");
 #endif
@@ -564,14 +590,14 @@ namespace Virterix.AdMediation
         private void OnAdLoaded(UnityAdInstanceData adInstance, object sender, EventArgs args)
         {
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("[AMS] UnityAds Ad loaded");
+            Debug.Log($"[AMS] UnityAds Ad loaded. AdType: {adInstance.m_adType} Name: {adInstance.Name}");
 #endif
             adInstance.State = AdState.Received;
             if (adInstance.m_adType == AdType.Banner)
             {
                 BannerAdAnchor bannerAnchor = BannerAdAnchor.Default;
-                if (!string.IsNullOrEmpty(m_currBannerPlacement))
-                    bannerAnchor = ConvertToNativeBannerPosition((UnityBannerAnchor)GetBannerPosition(adInstance, m_currBannerPlacement));
+                if (!string.IsNullOrEmpty(adInstance.CurrPlacement))
+                    bannerAnchor = ConvertToNativeBannerPosition((UnityBannerAnchor)GetBannerPosition(adInstance, adInstance.CurrPlacement));
 
                 if (adInstance.m_bannerDisplayed)
                     adInstance.BannerAd.SetPosition(bannerAnchor);

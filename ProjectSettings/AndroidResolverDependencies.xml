@@ -5,16 +5,16 @@
     <package>com.google.ads.mediation:adcolony:4.8.0.0</package>
     <package>com.google.ads.mediation:applovin:11.5.4.0</package>
     <package>com.google.android.gms:play-services-ads:21.3.0</package>
-    <package>com.google.games:gpgs-plugin-support:0.11.01</package>
+    <package>com.google.games:gpgs-plugin-support:0.10.14</package>
     <package>com.unity3d.mediation:mediation-sdk:[1.0,2.0[</package>
     <package>com.unity3d.mediation:unityads-adapter:[1.0,2.0[</package>
   </packages>
   <files>
-    <file>Assets/GeneratedLocalRepo/GooglePlayGames/com.google.play.games/Editor/m2repository/com/google/games/gpgs-plugin-support/0.11.01/gpgs-plugin-support-0.11.01.aar</file>
-    <file>Assets/GeneratedLocalRepo/GooglePlayGames/com.google.play.games/Editor/m2repository/com/google/games/gpgs-plugin-support/0.11.01/gpgs-plugin-support-0.11.01.pom</file>
+    <file>Assets/GeneratedLocalRepo/GooglePlayGames/Editor/m2repository/com/google/games/gpgs-plugin-support/0.10.14/gpgs-plugin-support-0.10.14.aar</file>
+    <file>Assets/GeneratedLocalRepo/GooglePlayGames/Editor/m2repository/com/google/games/gpgs-plugin-support/0.10.14/gpgs-plugin-support-0.10.14.pom</file>
   </files>
   <settings>
-    <setting name="androidAbis" value="arm64-v8a" />
+    <setting name="androidAbis" value="arm64-v8a,armeabi-v7a" />
     <setting name="bundleId" value="com.virterix.admediationsystem" />
     <setting name="explodeAars" value="True" />
     <setting name="gradleBuildEnabled" value="True" />

@@ -18,3 +18,4 @@ MonoBehaviour:
     m_bannerPosition: 6
   m_bannerSize: 0
   m_bannerAnchor: 0
+  m_prepareOnStart: 0

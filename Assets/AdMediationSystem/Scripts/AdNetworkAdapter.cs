@@ -108,6 +108,11 @@ namespace Virterix.AdMediation
             Received,
             Unavailable
         }
+
+        public enum NetworkState
+        {
+            
+        }
         #endregion Classes & Structs
 
         public static string RESPONSE_WAIT_TIME_KEY = "responseWaitTime";
@@ -128,6 +133,10 @@ namespace Virterix.AdMediation
 
         public virtual bool UseSingleBannerInstance => false;
 
+        public virtual bool RequiredWaitingInitializationResponse => false;
+
+        public virtual bool WasInitializationResponse { get; protected set; }
+
         private string AdInstanceParametersPath
         {
             get
@@ -143,7 +152,7 @@ namespace Virterix.AdMediation
         }
 
         protected virtual string AdInstanceParametersFolder => "";
-
+        
         #endregion Properties
 
         private List<EventParam> m_events = new List<EventParam>();
@@ -452,6 +461,8 @@ namespace Virterix.AdMediation
                 timeoutParameters.m_adType = adInstance.m_adType;
                 adInstance.m_timeout = timeoutParameters;
             }
+            if (jsonAdInstance.Obj.ContainsKey("loadOnStart"))
+                adInstance.LoadingOnStart = jsonAdInstance.Obj.GetBoolean("loadOnStart");
             m_adInstances.Add(adInstance);
         }
 

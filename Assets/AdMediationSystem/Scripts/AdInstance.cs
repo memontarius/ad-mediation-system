@@ -7,7 +7,9 @@ namespace Virterix.AdMediation
     {
         public const string AD_INSTANCE_DEFAULT_NAME = "Default";
         public const float MAX_TIMEOUT_MULTIPLAYER = float.MaxValue;
-        
+
+        public bool LoadingOnStart { get; set; }
+
         public AdInstance(AdNetworkAdapter newtrok)
         {
             m_network = newtrok;

@@ -35,6 +35,7 @@ namespace Virterix.AdMediation.Editor
         public string _androidId;
         public string _iosId;
         public float _timeout;
+        public bool _loadingOnStart;
         public int _bannerType;
     }
 

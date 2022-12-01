@@ -55,16 +55,26 @@ namespace Virterix.AdMediation
             get
             {
                 bool ready = false;
+                if (m_tiers == null)
+                    return false;
+                
                 for (int tierIndex = 0; tierIndex < m_tiers.Length; tierIndex++)
                 {
                     AdUnit[] units = m_tiers[tierIndex];
                     for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
                     {
-                        if ( units[unitIndex].IsReady)
+                        try
                         {
-                            ready = true;
-                            break;
+                            if (units[unitIndex].IsReady)
+                            {
+                                ready = true;
+                                break;
+                            }
                         }
+                        catch (Exception e)
+                        {
+                            Debug.LogWarning($"[AMS] Exception at get Ad Unit Ready. Message: {e.Message}");
+                        } 
                     }
                 }
                 return ready;
@@ -133,7 +143,6 @@ namespace Virterix.AdMediation
         //===============================================================================
         #region MonoBehavior Methods
         //-------------------------------------------------------------------------------
-
         private void OnApplicationPause(bool pause)
         {
             if (pause)
@@ -169,11 +178,8 @@ namespace Virterix.AdMediation
             m_fetchStrategy.Init(tiers, m_totalUnits, tierMaxPassages);
             if (m_continueAfterEndSession)
                 RestoreLastActiveAdUnit();
-
-            if (m_fetchOnStart)
-                Fetch();
         }
-
+        
         public virtual void Fetch()
         {
             if (m_fetchStrategy == null)

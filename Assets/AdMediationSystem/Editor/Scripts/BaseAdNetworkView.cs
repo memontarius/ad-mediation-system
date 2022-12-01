@@ -70,7 +70,7 @@ namespace Virterix.AdMediation.Editor
         private AnimBool _showSettings;
         private SerializedProperty _enabledProp;
         private List<AdInstanceBlockData> _instanceBlocks = new List<AdInstanceBlockData>();
-
+        
         protected GUIStyle InstanceFoldoutButtonStyle
         {
             get
@@ -380,8 +380,8 @@ namespace Virterix.AdMediation.Editor
             {
                 SerializedProperty element = list.serializedProperty.GetArrayElementAtIndex(index);
                 float elementWidth = rect.width;
-                float width = Mathf.Clamp(elementWidth - 215, 180, 2800);
-
+                float width = Mathf.Clamp(elementWidth - 320, 180, 2800);
+                
                 rect.y += 5;
                 EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), "Name");
                 EditorGUI.PropertyField(
@@ -389,15 +389,23 @@ namespace Virterix.AdMediation.Editor
                     element.FindPropertyRelative("_name"),
                     GUIContent.none
                 );
-
-                float addX = Mathf.Clamp(elementWidth - 395, 0, 2800);
+                
+                float addX = Mathf.Clamp(elementWidth - 500, 0, 2800);
                 EditorGUI.LabelField(new Rect(rect.x + 270 + addX, rect.y, 80, EditorGUIUtility.singleLineHeight), "Timeout");
                 EditorGUI.PropertyField(
                     new Rect(rect.x + 325 + addX, rect.y, 70, EditorGUIUtility.singleLineHeight),
                     element.FindPropertyRelative("_timeout"),
                     GUIContent.none
                 );
-
+                
+                addX = Mathf.Clamp(elementWidth - 360, 0, 2800);
+                EditorGUI.LabelField(new Rect(rect.x + 260 + addX, rect.y, 80, EditorGUIUtility.singleLineHeight), "Load On Start");
+                EditorGUI.PropertyField(
+                    new Rect(rect.x + 345 + addX, rect.y, 70, EditorGUIUtility.singleLineHeight),
+                    element.FindPropertyRelative("_loadingOnStart"),
+                    GUIContent.none
+                );
+                
                 width = Mathf.Clamp(elementWidth - 80, 315, 2800);
                 if (IsAdInstanceIdsDisplayed)
                 {
@@ -439,6 +447,8 @@ namespace Virterix.AdMediation.Editor
                 ReorderableList.defaultBehaviours.DoAddButton(list);
                 list.elementHeight = CalculateElementHeight(instanceBlock);
                 var property = list.serializedProperty.GetArrayElementAtIndex(list.index);
+                
+                property.FindPropertyRelative("_loadingOnStart").boolValue = false;
                 property.FindPropertyRelative("_timeout").floatValue = 120;
                 if (list.index == 0)
                 {
