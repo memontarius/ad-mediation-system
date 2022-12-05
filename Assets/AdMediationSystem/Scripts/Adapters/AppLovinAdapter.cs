@@ -201,7 +201,7 @@ namespace Virterix.AdMediation
                     case AdType.Banner:
                         MaxSdk.ShowBanner(adInstance.m_adId);
                         if (!isPrevousBannerDisplayed)
-                            AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
+                            AddEvent(adInstance.m_adType, AdEvent.Showing, adInstance);
                         break;
                     case AdType.Interstitial:
                         MaxSdk.ShowInterstitial(adInstance.m_adId, placement);
@@ -321,7 +321,7 @@ namespace Virterix.AdMediation
         private void OnBannerAdClickedEvent(string adUnitIdentifier)
         {
             var adInstance = GetAdInstanceByAdId(adUnitIdentifier);
-            AddEvent(adInstance.m_adType, AdEvent.Click, adInstance);
+            AddEvent(adInstance.m_adType, AdEvent.Clicked, adInstance);
         }
 
         private void OnBannerAdLoadedEvent(string adUnitIdentifier)
@@ -382,7 +382,7 @@ namespace Virterix.AdMediation
         private void OnInterstitialDisplayedEvent(string adUnitId)
         {
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            AddEvent(AdType.Interstitial, AdEvent.Show, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Showing, adInstance);
         }
 
         private void InterstitialFailedToDisplayEvent(string adUnitId, int errorCode)
@@ -396,7 +396,7 @@ namespace Virterix.AdMediation
         private void OnInterstitialClickedEvent(string adUnitId)
         {
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            AddEvent(AdType.Interstitial, AdEvent.Click, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Clicked, adInstance);
         }
 
         private void OnInterstitialDismissedEvent(string adUnitId)
@@ -443,13 +443,13 @@ namespace Virterix.AdMediation
         private void OnRewardedAdDisplayedEvent(string adUnitId)
         {
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            AddEvent(AdType.Incentivized, AdEvent.Show, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Showing, adInstance);
         }
 
         private void OnRewardedAdClickedEvent(string adUnitId)
         {
             AdInstance adInstance = GetAdInstanceByAdId(adUnitId);
-            AddEvent(AdType.Incentivized, AdEvent.Click, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Clicked, adInstance);
         }
 
         private void OnRewardedAdDismissedEvent(string adUnitId)

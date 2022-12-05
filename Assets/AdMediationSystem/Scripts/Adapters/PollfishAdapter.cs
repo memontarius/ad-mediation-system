@@ -364,7 +364,7 @@ namespace Virterix.AdMediation
 
         private void surveyOpened()
         {
-            AddEvent(AdType.Incentivized, AdEvent.Show, m_adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Showing, m_adInstance);
 
             HideBanners();
         }

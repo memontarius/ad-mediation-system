@@ -208,7 +208,7 @@ namespace Virterix.AdMediation
 
                         isShowSuccessful = bannerView.Show(bannerPosition.x, bannerPosition.y);
                         if (isShowSuccessful)
-                            NotifyEvent(AdEvent.Show, audienceNetworkAdInstance);
+                            NotifyEvent(AdEvent.Showing, audienceNetworkAdInstance);
                     }
                     break;
                 case AdType.Interstitial:
@@ -217,7 +217,7 @@ namespace Virterix.AdMediation
                         InterstitialAd interstitialAd = audienceNetworkAdInstance.m_adView as InterstitialAd;
                         isShowSuccessful = interstitialAd.Show();
                         if (isShowSuccessful)
-                            NotifyEvent(AdEvent.Show, audienceNetworkAdInstance);
+                            NotifyEvent(AdEvent.Showing, audienceNetworkAdInstance);
                         else
                             DestroyInterstitial(audienceNetworkAdInstance);
                     }
@@ -228,7 +228,7 @@ namespace Virterix.AdMediation
                         RewardedVideoAd rewardVideo = audienceNetworkAdInstance.m_adView as RewardedVideoAd;
                         isShowSuccessful = rewardVideo.Show();
                         if (isShowSuccessful)
-                            NotifyEvent(AdEvent.Show, audienceNetworkAdInstance);
+                            NotifyEvent(AdEvent.Showing, audienceNetworkAdInstance);
                         else
                             DestroyRewardVideo(audienceNetworkAdInstance);
                     }
@@ -547,7 +547,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AudienceNetworkAdapter.BannerAdViewDidClick()");
 #endif
-            AddEvent(AdType.Banner, AdEvent.Click, adInstance);
+            AddEvent(AdType.Banner, AdEvent.Clicked, adInstance);
         }
 
         #endregion //Banner callback handlers
@@ -587,7 +587,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AudienceNetworkAdapter.InterstitialAdDidClick()");
 #endif
-            AddEvent(AdType.Interstitial, AdEvent.Click, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Clicked, adInstance);
         }
 
         #endregion // Interstitial callback handlers
@@ -618,7 +618,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("AudienceNetworkAdapter.RewardedVideoAdDidClick()");
 #endif
-            AddEvent(AdType.Incentivized, AdEvent.Click, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Clicked, adInstance);
         }
 
         void RewardedVideoAdDidClose(AudienceNetworkAdInstanceData adInstance)

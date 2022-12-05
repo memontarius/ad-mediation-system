@@ -189,7 +189,7 @@ namespace Virterix.AdMediation
                     case AdType.Banner:
                         Ads.ShowAdView(GetAdViewId(adInstance));
                         if (!isPreviousBannerDisplayed)
-                            AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
+                            AddEvent(adInstance.m_adType, AdEvent.Showing, adInstance);
                         break;
                 }
                 return true;
@@ -349,7 +349,7 @@ namespace Virterix.AdMediation
             Debug.Log("[AMS] AdColonyAdapter OnOpened()");
 #endif
             var adInstance = GetAdInstanceByAdId(interstitial.ZoneId);
-            AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
+            AddEvent(adInstance.m_adType, AdEvent.Showing, adInstance);
         }
 
         private void OnClosed(InterstitialAd interstitial)
@@ -450,7 +450,7 @@ namespace Virterix.AdMediation
         private void OnAdViewClicked(AdColonyAdView adView)
         {
             var adInstance = GetAdInstanceByAdId(adView.ZoneId);
-            AddEvent(adInstance.m_adType, AdEvent.Click, adInstance);
+            AddEvent(adInstance.m_adType, AdEvent.Clicked, adInstance);
         }
         #endregion // Banner Callbacks
 #endif

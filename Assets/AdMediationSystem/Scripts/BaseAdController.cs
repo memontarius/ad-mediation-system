@@ -46,7 +46,7 @@ namespace Virterix.AdMediation
         {
             if (adType == AdType.Interstitial || adType == AdType.Incentivized) {
                 switch (adEvent) {
-                    case AdEvent.Show:
+                    case AdEvent.Showing:
                         if (adType == AdType.Interstitial) {
                             m_interstitialCount++;
                         }

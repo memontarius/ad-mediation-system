@@ -5,6 +5,8 @@ using System;
 using System.IO;
 using Boomlagoon.JSON;
 using Virterix.Common;
+using Debug = UnityEngine.Debug;
+using Random = UnityEngine.Random;
 
 namespace Virterix.AdMediation
 {
@@ -43,7 +45,7 @@ namespace Virterix.AdMediation
             public int[] maxPassages;
         }
 
-        public const string VERSION = "2.4.7";
+        public const string VERSION = "2.4.9";
         public const string AD_SETTINGS_FOLDER = "AdMediationSettings";
         public const string PREFAB_NAME = "AdMediationSystem";
         public const string PLACEMENT_DEFAULT_NAME = "Default";
@@ -542,7 +544,9 @@ namespace Virterix.AdMediation
 
         private IEnumerator WaitingNetworkInitializeResponses()
         {
-            var waitInstruction = new WaitForSecondsRealtime(0.5f);
+            float period = 0.33f;
+            float waitingTime = 30f;
+            var waitInstruction = new WaitForSecondsRealtime(period);
             int requiredInitializationResponseQuantity = 0;
             
             foreach (AdNetworkAdapter network in m_networkAdapters)
@@ -550,14 +554,18 @@ namespace Virterix.AdMediation
                 if (network.RequiredWaitingInitializationResponse)
                     requiredInitializationResponseQuantity++;
             }
+            int initializationResponseCount = requiredInitializationResponseQuantity;
+            float passedTime = 0.0f;
             
-            while (requiredInitializationResponseQuantity > 0)
+            while (initializationResponseCount > 0 && passedTime < waitingTime)
             {
                 yield return waitInstruction;
+                passedTime += period;
+                initializationResponseCount = requiredInitializationResponseQuantity;
                 foreach (AdNetworkAdapter network in m_networkAdapters)
                 {
                     if (network.RequiredWaitingInitializationResponse && network.WasInitializationResponse)
-                        requiredInitializationResponseQuantity--;
+                        initializationResponseCount--;
                 }
             }
 

@@ -187,13 +187,14 @@ namespace Virterix.AdMediation
                 Debug.LogWarning("[AMS] AdMediator.Fetch() Not strategy of fetch! adType:" + m_adType);
                 return;
             }
-
+            
             KillDeferredFetch();
             AdUnit unit = m_fetchStrategy.Fetch(m_tiers);
             
             if (unit != null)
             {
                 SetCurrentUnit(unit);
+                
                 if (CurrentUnit != null)
                 {
                     CurrentUnit.ResetDisplayTime();
@@ -346,11 +347,11 @@ namespace Virterix.AdMediation
         {
             if (m_currUnit != null)
             {
-                var currUnit = m_currUnit;
+                AdUnit currUnit = m_currUnit;
                 m_currUnit = null;
-
+                
                 if (!IsSameNetworkUnitContains(currUnit, nextUnit))
-                    currUnit.AdNetwork.OnEvent -= OnCurrentNetworkEvent;
+                    currUnit.AdNetwork.InternalEventCallback = null;
                 
                 if (m_adType == AdType.Banner)
                     currUnit.Hide();
@@ -372,13 +373,13 @@ namespace Virterix.AdMediation
                     unit.Hide();
 
                 m_currUnit = unit;
-
+                
                 if (!isNetworkSame)
-                    m_currUnit.AdNetwork.OnEvent += OnCurrentNetworkEvent;
+                    m_currUnit.AdNetwork.InternalEventCallback = OnCurrentNetworkEvent;
             }
-
+            
             m_currUnit.AdNetwork.NotifyEvent(AdEvent.Selected, m_currUnit.AdInstance);
-
+            
             if (m_currUnit.IsReady)
                 m_currUnit.AdNetwork.NotifyEvent(AdEvent.Prepared, m_currUnit.AdInstance);
             else
@@ -432,7 +433,7 @@ namespace Virterix.AdMediation
             
             AdMediationSystem.NotifyAdNetworkEvent(this, network, m_adType, adEvent, adInstanceName);
             
-            if (adEvent == AdEvent.PreparationFailed || adEvent == AdEvent.Hiding || adEvent == AdEvent.Show)
+            if (adEvent == AdEvent.PreparationFailed || adEvent == AdEvent.Hiding || adEvent == AdEvent.Showing)
             {
                 if (m_currUnit != null)
                 {
@@ -486,7 +487,9 @@ namespace Virterix.AdMediation
 
         private static bool IsSameNetworkUnitContains(AdUnit unit, AdUnit otherUnit)
         {
-            return (unit != null && otherUnit != null) ? unit.AdNetwork == otherUnit.AdNetwork : false;
+            if (unit != null && otherUnit != null)
+                return unit.AdNetwork == otherUnit.AdNetwork;
+            return false;
         }
     }
 

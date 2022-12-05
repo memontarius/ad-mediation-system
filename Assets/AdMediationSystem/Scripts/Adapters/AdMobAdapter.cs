@@ -1,4 +1,4 @@
-#define _AMS_ADMOB
+//#define _AMS_ADMOB
 
 using UnityEngine;
 using System;
@@ -316,7 +316,7 @@ namespace Virterix.AdMediation
 
         public override void Prepare(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
-            AdMobAdInstanceData adMobAdInstance = adInstance == null ? null : adInstance as AdMobAdInstanceData;
+            AdMobAdInstanceData adMobAdInstance = adInstance as AdMobAdInstanceData;
             if (!IsReady(adMobAdInstance))
             {
                 AdType adType = adInstance.m_adType;
@@ -371,7 +371,7 @@ namespace Virterix.AdMediation
                             bannerView.SetPosition(ConvertToNativeBannerPosition((AdMobBannerPosition)GetBannerPosition(adInstance, placement)));
                         }
                         if (!isPreviousBannerDisplayed)
-                            AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
+                            AddEvent(adInstance.m_adType, AdEvent.Showing, adInstance);
                         break;
                     case AdType.Interstitial:
                         InterstitialAd interstitial = adInstance.m_adView as InterstitialAd;
@@ -782,7 +782,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             print("[AMS] AdMobAdapter.HandleInterstitialOpened()");
 #endif
-            AddEvent(AdType.Interstitial, AdEvent.Show, adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Showing, adInstance);
         }
 
         void HandleInterstitialClosing(AdMobAdInstanceData adInstance, object sender, EventArgs args)
@@ -834,7 +834,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoOpened()");
 #endif
-            AddEvent(AdType.Incentivized, AdEvent.Show, adInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Showing, adInstance);
         }
 
         public void HandleRewardVideoStarted(AdMobAdInstanceData adInstance, object sender, EventArgs args)

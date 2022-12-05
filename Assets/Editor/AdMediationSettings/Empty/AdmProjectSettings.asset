@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InitializeOnStart: 1
   EnableTestMode: 0
-  EnableExtraLogging: 1
+  EnableExtraLogging: 0
   ChildrenMode: 0
   TestDevices: []
   BannerMediators: []

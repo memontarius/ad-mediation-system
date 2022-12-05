@@ -118,7 +118,7 @@ namespace Virterix.AdMediation
         private void OnAdStartedEvent(string placementId)
         {
             var adInstance = GetAdInstanceByAdId(placementId);
-            AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
+            AddEvent(adInstance.m_adType, AdEvent.Showing, adInstance);
         }
 
         private void OnAdEndEvent(string placementId)

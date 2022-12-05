@@ -206,7 +206,7 @@ namespace Virterix.AdMediation
 
         private bool ShouldDisplayInterstitial(CBLocation location)
         {
-            AddEvent(AdType.Interstitial, AdEvent.Show, m_interstitialInstance);
+            AddEvent(AdType.Interstitial, AdEvent.Showing, m_interstitialInstance);
             bool showInterstitial = true;
             return showInterstitial;
         }
@@ -238,7 +238,7 @@ namespace Virterix.AdMediation
 
         private bool ShouldDisplayRewardedVideo(CBLocation location)
         {
-            AddEvent(AdType.Incentivized, AdEvent.Show, m_incentivizedInstance);
+            AddEvent(AdType.Incentivized, AdEvent.Showing, m_incentivizedInstance);
             bool showIncentivized = true;
             return showIncentivized;
         }

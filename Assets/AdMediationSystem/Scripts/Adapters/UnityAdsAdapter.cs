@@ -1,4 +1,4 @@
-#define _AMS_UNITY_ADS
+//#define _AMS_UNITY_ADS
 
 using System;
 using System.Collections.Generic;
@@ -75,6 +75,7 @@ namespace Virterix.AdMediation
             public EventHandler OnClosed;
             public EventHandler<ShowErrorEventArgs> OnFailedShow;
             public EventHandler<RewardEventArgs> OnUserRewarded;
+            public EventHandler<LoadErrorEventArgs> OnRefreshed;
 #endif
         }
         
@@ -291,7 +292,7 @@ namespace Virterix.AdMediation
                         BannerAdAnchor bannerAnchor = ConvertToNativeBannerPosition((UnityBannerAnchor)GetBannerPosition(adInstance, placement));
                         unityAdInstance.BannerAd?.SetPosition(bannerAnchor);
                         if (!isPreviousBannerDisplayed)
-                            AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
+                            AddEvent(adInstance.m_adType, AdEvent.Showing, adInstance);
                         break;
                 }
                 return true;
@@ -488,8 +489,14 @@ namespace Virterix.AdMediation
             {
                 OnAdFailedLoad(unityAdInstance, sender, args);
             };
+            unityAdInstance.OnRefreshed = delegate(object sender, LoadErrorEventArgs args)
+            {
+                OnAdRefreshed(unityAdInstance, sender, args);
+            };
+            
             bannerAd.OnLoaded += unityAdInstance.OnLoaded;
             bannerAd.OnFailedLoad += unityAdInstance.OnFailedLoad;
+            bannerAd.OnRefreshed += unityAdInstance.OnRefreshed;
             return bannerAd;
         }
         
@@ -498,6 +505,7 @@ namespace Virterix.AdMediation
             unityAdInstance.State = AdState.Uncertain;
             unityAdInstance.BannerAd.OnLoaded -= unityAdInstance.OnLoaded;
             unityAdInstance.BannerAd.OnFailedLoad -= unityAdInstance.OnFailedLoad;
+            unityAdInstance.BannerAd.OnRefreshed -= unityAdInstance.OnRefreshed;
             unityAdInstance.BannerAd.Dispose();
             unityAdInstance.BannerAd = null;
         }
@@ -612,7 +620,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AMS] UnityAds Closed! Showed Ad...");
 #endif
-            AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
+            AddEvent(adInstance.m_adType, AdEvent.Showing, adInstance);
         }
 
         private void OnAdClosed(UnityAdInstanceData adInstance,object sender, EventArgs args)
@@ -625,6 +633,14 @@ namespace Virterix.AdMediation
             AddEvent(adInstance.m_adType, AdEvent.Hiding, adInstance);
         }
 
+        private void OnAdClicked(UnityAdInstanceData adInstance,object sender, EventArgs args)
+        {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] UnityAds Clicked!");
+#endif
+            AddEvent(adInstance.m_adType, AdEvent.Clicked, adInstance);
+        }
+        
         private void OnAdFailedShow(UnityAdInstanceData adInstance,object sender, ShowErrorEventArgs args)
         {
             if (adInstance.m_adType != AdType.Banner)
@@ -647,6 +663,13 @@ namespace Virterix.AdMediation
             Debug.Log($"[AMS] UnityAds User Rewarded ad.");
 #endif
             AddEvent(adInstance.m_adType, AdEvent.IncentivizationCompleted, adInstance);
+        }
+        
+        private void OnAdRefreshed(UnityAdInstanceData adInstance,object sender, LoadErrorEventArgs args)
+        {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] UnityAds Refreshed!");
+#endif
         }
         
         #endregion // Callback Event Methods

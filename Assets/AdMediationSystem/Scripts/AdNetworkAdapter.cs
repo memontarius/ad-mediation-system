@@ -11,8 +11,8 @@ namespace Virterix.AdMediation
     {
         Selected,
         Prepared,
-        Show,
-        Click,
+        Showing,
+        Clicked,
         Hiding,
         PreparationFailed,
         IncentivizationCompleted,
@@ -116,8 +116,10 @@ namespace Virterix.AdMediation
         #endregion Classes & Structs
 
         public static string RESPONSE_WAIT_TIME_KEY = "responseWaitTime";
+        public delegate void AdEventCallback(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstance adInstance);
         
         public event Action<AdNetworkAdapter, AdType, AdEvent, AdInstance> OnEvent = delegate { };
+        public AdEventCallback InternalEventCallback { get; set; }
 
         public string m_networkName;
         public AdParam[] m_adSupportParams;
@@ -136,7 +138,7 @@ namespace Virterix.AdMediation
         public virtual bool RequiredWaitingInitializationResponse => false;
 
         public virtual bool WasInitializationResponse { get; protected set; }
-
+        
         private string AdInstanceParametersPath
         {
             get
@@ -164,7 +166,7 @@ namespace Virterix.AdMediation
         private static float s_waitResponseHandlingInterval;
         private WaitForSeconds _waitResponseIntervalInstruction;
         private readonly WaitForSecondsRealtime _updateEventsIntervalInstruction = new WaitForSecondsRealtime(0.33f);
-        
+
         //_______________________________________________________________________________
         #region MonoBehavior Methods
         //-------------------------------------------------------------------------------
@@ -310,6 +312,7 @@ namespace Virterix.AdMediation
                     CancelWaitResponseHandling(adInstance);
                     break;
             }
+            InternalEventCallback?.Invoke(this, adInstance.m_adType, adEvent, adInstance);
             OnEvent(this, adInstance.m_adType, adEvent, adInstance);
         }
 

@@ -319,7 +319,7 @@ namespace Virterix.AdMediation
                             IronSource.Agent.displayBanner();
 
                         if (!isPreviousBannerDisplayed)
-                            AddEvent(adInstance.m_adType, AdEvent.Show, adInstance);
+                            AddEvent(adInstance.m_adType, AdEvent.Showing, adInstance);
                         break;
                     case AdType.Interstitial:
                         IronSource.Agent.showInterstitial(actualPlacementName);
@@ -457,7 +457,7 @@ namespace Virterix.AdMediation
 
         void InterstitialAdClickedEvent()
         {
-            AddEvent(m_interstitialInstance.m_adType, AdEvent.Click, m_interstitialInstance);
+            AddEvent(m_interstitialInstance.m_adType, AdEvent.Clicked, m_interstitialInstance);
         }
 
         void InterstitialAdOpenedEvent()
@@ -465,7 +465,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AMS] IronSourceAdapter.InterstitialAdOpenedEvent()");
 #endif
-            AddEvent(m_interstitialInstance.m_adType, AdEvent.Show, m_interstitialInstance);
+            AddEvent(m_interstitialInstance.m_adType, AdEvent.Showing, m_interstitialInstance);
         }
 
         void InterstitialAdClosedEvent()
@@ -505,7 +505,7 @@ namespace Virterix.AdMediation
 
         void RewardedVideoAdOpenedEvent()
         {
-            AddEvent(m_incentivizedInstance.m_adType, AdEvent.Show, m_incentivizedInstance);
+            AddEvent(m_incentivizedInstance.m_adType, AdEvent.Showing, m_incentivizedInstance);
         }
 
         void RewardedVideoAdRewardedEvent(IronSourcePlacement placement)
@@ -535,7 +535,7 @@ namespace Virterix.AdMediation
 
         void RewardedVideoAdClickedEvent(IronSourcePlacement ssp)
         {
-            AddEvent(m_incentivizedInstance.m_adType, AdEvent.Click, m_incentivizedInstance);
+            AddEvent(m_incentivizedInstance.m_adType, AdEvent.Clicked, m_incentivizedInstance);
         }
 
         #endregion // Rewarded Video callback handlers
@@ -570,7 +570,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AMS] IronSourceAdapter.BannerAdClickedEvent()");
 #endif
-            AddEvent(AdType.Banner, AdEvent.Click, m_currBannerInstance);
+            AddEvent(AdType.Banner, AdEvent.Clicked, m_currBannerInstance);
         }
 
         private void BannerAdScreenPresentedEvent()
@@ -578,7 +578,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AMS] IronSourceAdapter.BannerAdScreenPresentedEvent()");
 #endif
-            AddEvent(AdType.Banner, AdEvent.Show, m_currBannerInstance);
+            AddEvent(AdType.Banner, AdEvent.Showing, m_currBannerInstance);
         }
 
         private void BannerAdScreenDismissedEvent()

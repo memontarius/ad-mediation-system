@@ -38,10 +38,10 @@ public class ExampleAdController : BaseAdController
 
     private void OnAllNetworksInitializeResponseReceived()
     {
-        //FetchAllAds();
+        FetchAllAds();
     }
     
-    private void FetchAllAds()
+    public void FetchAllAds()
     {
         AdMediationSystem.Fetch(AdType.Interstitial);
         AdMediationSystem.Fetch(AdType.Incentivized);
@@ -151,7 +151,7 @@ public class ExampleAdController : BaseAdController
 
         m_eventLogText.text = log;
 
-        if (adEvent == AdEvent.Show && network.m_networkName != "pollfish" &&
+        if (adEvent == AdEvent.Showing && network.m_networkName != "pollfish" &&
             (adType == AdType.Interstitial || adType == AdType.Incentivized))
         {
             m_adInterstitialCount++;

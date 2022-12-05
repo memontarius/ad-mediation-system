@@ -127,7 +127,7 @@ namespace Virterix.AdMediation
                 }
             }
 
-            m_currUnit = restoredUnit == null ? m_currUnit : restoredUnit;
+            m_currUnit = restoredUnit ?? m_currUnit;
         }
 
         public AdUnit Fetch(AdUnit[][] tiers)
@@ -162,7 +162,7 @@ namespace Virterix.AdMediation
                 if (m_unitIndex >= units.Length)
                 {
                     m_unitIndex = 0;
-                    bool isMovingToNextTier = m_tierPassCount < m_tierMaxPassages[m_tierIndex] ? ResolveMovingToNextTier(units) : true;
+                    bool isMovingToNextTier = m_tierPassCount >= m_tierMaxPassages[m_tierIndex] || ResolveMovingToNextTier(units);
 
                     if (isMovingToNextTier)
                     {
@@ -193,16 +193,14 @@ namespace Virterix.AdMediation
                 Debug.LogWarning("[AdMediationSystem] Unit is empty!");
 #endif
             }
-            SequenceStrategyParams sequenceParams = currUnit == null ? null : currUnit.FetchStrategyParams as SequenceStrategyParams;
+            SequenceStrategyParams sequenceParams = currUnit?.FetchStrategyParams as SequenceStrategyParams;
 
-            bool isSkipUnit = currUnit == null ? false : ResolveSkipUnit(currUnit, units, sequenceParams);
+            bool isSkipUnit = currUnit != null && ResolveSkipUnit(currUnit, units, sequenceParams);
             bool isFindNextUnit = isSkipUnit && m_fetchCount < m_maxRecursionFetch;
             fetchedUnit = isSkipUnit ? fetchedUnit : currUnit;
 
             if (isFindNextUnit)
-            {
                 fetchedUnit = InternalFetch(tiers);
-            }
 
             return fetchedUnit;
         }
@@ -212,19 +210,14 @@ namespace Virterix.AdMediation
             bool skip = unit.IsTimeout;
             if (!skip && unitSequenceParams.m_replaced)
             {
-                AdUnit passUnit = null;
                 for (int i = 0; i < units.Length; i++)
                 {
-                    passUnit = units[i];
+                    AdUnit passUnit = units[i];
                     if (passUnit == unit)
-                    {
                         continue;
-                    } 
                     skip = passUnit.WasLastImpressionSuccessful;
                     if (skip)
-                    {
                         break;
-                    }
                 }
             }
             return skip;
@@ -235,21 +228,18 @@ namespace Virterix.AdMediation
             int unvalidCount = 0;
             int replacedCount = 0;
             SequenceStrategyParams unitSequenceParams;
-
+            AdUnit unit = null;
+                
             for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
             {
-                var unit = units[unitIndex];
+                unit = units[unitIndex];
                 unitSequenceParams = unit.FetchStrategyParams as SequenceStrategyParams;
                 if (unitSequenceParams.m_replaced)
-                {
                     replacedCount++;
-                }
                 else
                 {
                     if (unit.IsTimeout || unit.AdInstance.WasLastPreparationFailed)
-                    {
                         unvalidCount++;
-                    }
                 }
             }
             bool isMovingToNextTier = unvalidCount == (units.Length - replacedCount);
