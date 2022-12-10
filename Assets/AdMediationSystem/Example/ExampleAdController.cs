@@ -38,7 +38,7 @@ public class ExampleAdController : BaseAdController
 
     private void OnAllNetworksInitializeResponseReceived()
     {
-        FetchAllAds();
+        //FetchAllAds();
     }
     
     public void FetchAllAds()

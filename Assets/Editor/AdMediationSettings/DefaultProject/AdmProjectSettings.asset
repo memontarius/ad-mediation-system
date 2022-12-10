@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InitializeOnStart: 1
   EnableTestMode: 1
-  EnableExtraLogging: 0
+  EnableExtraLogging: 1
   ChildrenMode: 0
   TestDevices:
   - 9AACAECC39C6EF1FA598CCA87F934C22
@@ -141,6 +141,34 @@ MonoBehaviour:
         Replaced: 0
         PrepareOnExit: 0
         Percentage: 100
+  - AdvertisingType: 3
+    Name: Game Over
+    ContinueAfterEndSession: 1
+    FetchOnAdUnitHidden: 1
+    FetchOnStart: 0
+    BannerMinDisplayTime: 30
+    DeferredFetchDelay: 90
+    FetchStrategyType: 0
+    BannerPosition: 0
+    Tiers:
+    - MaxPassages: 1
+      Units:
+      - NetworkName: AdMob
+        NetworkIndex: 0
+        NetworkIdentifier: admob
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaced: 0
+        PrepareOnExit: 0
+        Percentage: 100
+      - NetworkName: Unity Ads
+        NetworkIndex: 1
+        NetworkIdentifier: unityads
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaced: 0
+        PrepareOnExit: 0
+        Percentage: 0
   IsIOS: 1
   IsAndroid: 1
   EnableUnityRemoteConfigProvider: 0

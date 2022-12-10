@@ -70,13 +70,9 @@ namespace Virterix.AdMediation
             private set
             {
                 if (AdInstance == null)
-                {
                     m_displayTime = value;
-                }
                 else
-                {
                     AdInstance.m_displayTime = value;
-                }
             }
         }
         float m_displayTime;
@@ -121,12 +117,16 @@ namespace Virterix.AdMediation
             m_adInstanceName = adInstanceName;
             m_isPrepareOnExit = isPrepareOnExit;
             TierIndex = tierIndex;
-            Index = unitIndex;          
+            Index = unitIndex;      
         }
 
+        public void SetupAdInstanceCurrentPlacement() =>
+            AdInstance.CurrPlacement = m_placementName;
+        
         /// <returns>True when successfully shown ad</returns>
         public bool Show()
         {
+            AdInstance.CurrPlacement = PlacementName;
             bool showed = m_network.Show(AdInstance, PlacementName);
             Impressions = showed ? Impressions + 1 : Impressions;
             m_wasLastImpressionSuccessful = showed;
@@ -150,6 +150,7 @@ namespace Virterix.AdMediation
 
         public void Prepare()
         {
+            AdInstance.CurrPlacement = PlacementName;
             m_network.Prepare(AdInstance, PlacementName);
         }
 

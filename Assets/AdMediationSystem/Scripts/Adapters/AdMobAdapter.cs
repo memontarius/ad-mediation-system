@@ -317,6 +317,8 @@ namespace Virterix.AdMediation
         public override void Prepare(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdMobAdInstanceData adMobAdInstance = adInstance as AdMobAdInstanceData;
+            adInstance.CurrPlacement = placement;
+            
             if (!IsReady(adMobAdInstance))
             {
                 AdType adType = adInstance.m_adType;
@@ -350,11 +352,9 @@ namespace Virterix.AdMediation
             bool isPreviousBannerDisplayed = adMobAdInstance.m_bannerDisplayed;
 
             if (adType == AdType.Banner)
-            {
                 adMobAdInstance.m_bannerDisplayed = true;
-                adMobAdInstance.CurrPlacement = placement;
-            }
-
+            adMobAdInstance.CurrPlacement = placement;
+            
             if (isAdAvailable)
             {
                 switch (adType)
@@ -414,8 +414,7 @@ namespace Virterix.AdMediation
 #endif
             AdType adType = adInstance.m_adType;
             bool isReady = adInstance.State == AdState.Received;
-            AdMobAdInstanceData adMobAdInstance = adInstance as AdMobAdInstanceData;
-
+            
             switch (adType)
             {
                 case AdType.Incentivized:

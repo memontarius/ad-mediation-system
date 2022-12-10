@@ -116,11 +116,8 @@ namespace Virterix.AdMediation
         #endregion Classes & Structs
 
         public static string RESPONSE_WAIT_TIME_KEY = "responseWaitTime";
-        public delegate void AdEventCallback(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstance adInstance);
-        
         public event Action<AdNetworkAdapter, AdType, AdEvent, AdInstance> OnEvent = delegate { };
-        public AdEventCallback InternalEventCallback { get; set; }
-
+       
         public string m_networkName;
         public AdParam[] m_adSupportParams;
         public float m_responseWaitTime = 30f;
@@ -312,7 +309,6 @@ namespace Virterix.AdMediation
                     CancelWaitResponseHandling(adInstance);
                     break;
             }
-            InternalEventCallback?.Invoke(this, adInstance.m_adType, adEvent, adInstance);
             OnEvent(this, adInstance.m_adType, adEvent, adInstance);
         }
 

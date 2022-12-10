@@ -287,12 +287,11 @@ namespace Virterix.AdMediation
         public override bool Show(AdInstance adInstance = null, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             bool isPreviousBannerDisplayed = m_bannerDisplayed;
-
+            
             if (adInstance.m_adType == AdType.Banner)
             {
                 adInstance.m_bannerDisplayed = true;
                 m_bannerDisplayed = true;
-                adInstance.CurrPlacement = placement;
             }
 
             if (IsReady(adInstance))

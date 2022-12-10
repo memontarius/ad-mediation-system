@@ -767,8 +767,8 @@ PlayerSettings:
   webGLPowerPreference: 2
   scriptingDefineSymbols:
     : AD_MEDIATION_DEBUG_MODE
-    Android: 
-    iPhone: 
+    Android: AD_MEDIATION_DEBUG_MODE
+    iPhone: AD_MEDIATION_DEBUG_MODE
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Net.NetworkInformation;
 
 namespace Virterix.AdMediation
 {
@@ -125,7 +127,7 @@ namespace Virterix.AdMediation
         private bool DeferredFetchEnabled => m_deferredFetchDelay > 0.01f;
         private bool DeferredFetchActive => m_deferredFetchCoroutine != null;
         private float DeferredFetchDelay => m_deferredFetchCallCount * m_deferredFetchDelay;
-
+        
         #endregion // Properties
 
         private AdUnit[][] m_tiers;
@@ -139,10 +141,21 @@ namespace Virterix.AdMediation
         private int m_failedPreparationCount;
         private int m_nonTimeoutUnitCountSinceFirstFailed;
         private int m_deferredFetchCallCount;
+        private List<AdNetworkAdapter> m_networks = new ();
 
         //===============================================================================
         #region MonoBehavior Methods
         //-------------------------------------------------------------------------------
+        private void OnDestroy()
+        {
+            for (int i = 0; i < m_networks.Count; i++)
+            {
+                AdNetworkAdapter network = m_networks[i];
+                if (network != null)
+                    network.OnEvent -= OnCurrentNetworkEvent;
+            }
+        }
+
         private void OnApplicationPause(bool pause)
         {
             if (pause)
@@ -157,7 +170,6 @@ namespace Virterix.AdMediation
             if (m_continueAfterEndSession)
                 SaveLastActiveAdUnit();
         }
-
         #endregion // MonoBehavior Methods
 
         //===============================================================================
@@ -172,8 +184,19 @@ namespace Virterix.AdMediation
             m_lastActiveUnitId = -1;
             m_deferredFetchCallCount = 1;
             m_tiers = tiers;
-            for (int i = 0; i < m_tiers.Length; i++)
-                m_totalUnits += m_tiers[i].Length;
+            for (int tierIndex = 0; tierIndex < m_tiers.Length; tierIndex++)
+            {
+                m_totalUnits +=m_tiers[tierIndex].Length;
+                for (int unitIndex = 0; unitIndex < m_tiers[tierIndex].Length; unitIndex++)
+                {
+                    AdUnit unit = m_tiers[tierIndex][unitIndex];
+                    if (!m_networks.Contains(unit.AdNetwork))
+                        m_networks.Add(unit.AdNetwork);
+                }
+            }
+
+            foreach (var network in m_networks)
+                network.OnEvent += OnCurrentNetworkEvent;
 
             m_fetchStrategy.Init(tiers, m_totalUnits, tierMaxPassages);
             if (m_continueAfterEndSession)
@@ -193,14 +216,10 @@ namespace Virterix.AdMediation
             
             if (unit != null)
             {
+                unit.ResetDisplayTime();
+                if ((m_adType == AdType.Banner) && m_isBannerDisplayed)
+                    unit.Show();
                 SetCurrentUnit(unit);
-                
-                if (CurrentUnit != null)
-                {
-                    CurrentUnit.ResetDisplayTime();
-                    if ((m_adType == AdType.Banner) && m_isBannerDisplayed)
-                        CurrentUnit.Show();
-                }
             }
             else
             {
@@ -349,10 +368,6 @@ namespace Virterix.AdMediation
             {
                 AdUnit currUnit = m_currUnit;
                 m_currUnit = null;
-                
-                if (!IsSameNetworkUnitContains(currUnit, nextUnit))
-                    currUnit.AdNetwork.InternalEventCallback = null;
-                
                 if (m_adType == AdType.Banner)
                     currUnit.Hide();
 
@@ -367,15 +382,13 @@ namespace Virterix.AdMediation
 
             if (unit != m_currUnit)
             {
-                bool isNetworkSame = IsSameNetworkUnitContains(unit, m_currUnit);
+                bool isNetworkSame = IsUnitContainsSameNetwork(unit, m_currUnit);
                 ResetCurrentUnit(unit);
                 if (!isNetworkSame && m_adType == AdType.Banner && !m_isBannerDisplayed)
                     unit.Hide();
 
                 m_currUnit = unit;
-                
-                if (!isNetworkSame)
-                    m_currUnit.AdNetwork.InternalEventCallback = OnCurrentNetworkEvent;
+                m_currUnit?.SetupAdInstanceCurrentPlacement();
             }
             
             m_currUnit.AdNetwork.NotifyEvent(AdEvent.Selected, m_currUnit.AdInstance);
@@ -410,27 +423,39 @@ namespace Virterix.AdMediation
             }
         }
 
+        private bool SolveNeedingAdEventHandling(AdType adType, AdEvent adEvent, AdInstance adInstance)
+        {
+            if (m_currUnit == null)
+                return false;
+ 
+            if (m_adType == AdType.Incentivized &&
+                (adEvent == AdEvent.IncentivizationCompleted || adEvent == AdEvent.IncentivizationUncompleted))
+            {
+                return true;
+            }
+            
+            bool needEventHandling = adType == m_currUnit.AdType;
+            if (needEventHandling)
+            {
+                needEventHandling = m_currUnit.AdInstance == adInstance &&
+                                      (!string.IsNullOrEmpty(m_currUnit.AdInstance.CurrPlacement) &&
+                                       m_currUnit.AdInstance.CurrPlacement == m_placementName);
+            }
+            return needEventHandling;
+        }
+        
         private void OnCurrentNetworkEvent(AdNetworkAdapter network, AdType adType, AdEvent adEvent, AdInstance adInstance)
         {
-            if (m_currUnit == null || adType != m_currUnit.AdType)
+            if (!SolveNeedingAdEventHandling(adType, adEvent, adInstance))
                 return;
-            else if (adInstance != null)
-            {
-                if (m_currUnit.AdInstance != adInstance)
-                    return;
-                if (!string.IsNullOrEmpty(m_currUnit.AdInstance.CurrPlacement) && m_currUnit.AdInstance.CurrPlacement != m_placementName)
-                {
-                    return;
-                }
-            }
- 
+            
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AMS] AdMediator.OnNetworkEvent() Type:" + m_adType + " placementName: " + m_currUnit.PlacementName +
-                "; Ad Instance Name:" + m_currUnit.AdInstanceName +
-                "; Intrnl Type:" + m_currUnit.AdType + "; Network:" + network.m_networkName + "; Event:" + adEvent);
+                      "; Ad Instance Name:" + m_currUnit.AdInstanceName +
+                      "; Intrnl Type:" + m_currUnit.AdType + "; Network:" + network.m_networkName + "; Event:" + adEvent);
 #endif
-            string adInstanceName = adInstance != null ? adInstance.Name : "";
             
+            string adInstanceName = adInstance != null ? adInstance.Name : "";
             AdMediationSystem.NotifyAdNetworkEvent(this, network, m_adType, adEvent, adInstanceName);
             
             if (adEvent == AdEvent.PreparationFailed || adEvent == AdEvent.Hiding || adEvent == AdEvent.Showing)
@@ -465,8 +490,6 @@ namespace Virterix.AdMediation
                     m_deferredFetchCallCount = 1;
                     break;
                 case AdEvent.Hiding:
-                    AdUnit currAdUnit = m_currUnit;
-
                     if (m_fetchOnAdUnitHidden)
                     {
                         bool isPerformFetch = true;
@@ -485,7 +508,7 @@ namespace Virterix.AdMediation
             }
         }
 
-        private static bool IsSameNetworkUnitContains(AdUnit unit, AdUnit otherUnit)
+        private static bool IsUnitContainsSameNetwork(AdUnit unit, AdUnit otherUnit)
         {
             if (unit != null && otherUnit != null)
                 return unit.AdNetwork == otherUnit.AdNetwork;

@@ -24,7 +24,7 @@ MonoBehaviour:
     _androidId: Android_Banner
     _iosId: iOS_Banner
     _timeout: 120
-    _loadingOnStart: 1
+    _loadingOnStart: 0
     _bannerType: 0
   - _name: Top
     _androidId: Android_Banner_Top
