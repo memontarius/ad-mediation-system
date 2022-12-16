@@ -27,7 +27,8 @@ namespace Virterix.AdMediation.Editor
             ((AdMobAdapter)networkAdapter).m_useMediation = _useMediation;
         }
 
-        protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
+        protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, 
+            int bannerType, BannerPositionContainer[] bannerPositions, AdInstance adInstance)
         {
             AdMobAdInstanceBannerParameters parameterHolder = AdMobAdInstanceBannerParameters.CreateParameters(projectName, instanceName);
             parameterHolder.m_bannerSize = (AdMobAdapter.AdMobBannerSize)bannerType;

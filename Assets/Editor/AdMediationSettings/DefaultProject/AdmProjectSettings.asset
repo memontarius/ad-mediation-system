@@ -49,6 +49,14 @@ MonoBehaviour:
         Replaced: 0
         PrepareOnExit: 0
         Percentage: 100
+      - NetworkName: Yandex Mobile Ads
+        NetworkIndex: 2
+        NetworkIdentifier: yandex
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaced: 0
+        PrepareOnExit: 0
+        Percentage: 0
   - AdvertisingType: 1
     Name: Top
     ContinueAfterEndSession: 1
@@ -79,6 +87,14 @@ MonoBehaviour:
         Replaced: 0
         PrepareOnExit: 0
         Percentage: 100
+      - NetworkName: Yandex Mobile Ads
+        NetworkIndex: 2
+        NetworkIdentifier: yandex
+        InstanceIndex: 1
+        InstanceName: Top
+        Replaced: 0
+        PrepareOnExit: 0
+        Percentage: 0
   InterstitialMediators:
   - AdvertisingType: 2
     Name: Default
@@ -110,6 +126,14 @@ MonoBehaviour:
         Replaced: 0
         PrepareOnExit: 0
         Percentage: 100
+      - NetworkName: Yandex Mobile Ads
+        NetworkIndex: 2
+        NetworkIdentifier: yandex
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaced: 0
+        PrepareOnExit: 0
+        Percentage: 0
   IncentivizedMediators:
   - AdvertisingType: 3
     Name: Default
@@ -141,6 +165,14 @@ MonoBehaviour:
         Replaced: 0
         PrepareOnExit: 0
         Percentage: 100
+      - NetworkName: Yandex Mobile Ads
+        NetworkIndex: 2
+        NetworkIdentifier: yandex
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaced: 0
+        PrepareOnExit: 0
+        Percentage: 0
   - AdvertisingType: 3
     Name: Game Over
     ContinueAfterEndSession: 1
@@ -164,6 +196,14 @@ MonoBehaviour:
       - NetworkName: Unity Ads
         NetworkIndex: 1
         NetworkIdentifier: unityads
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaced: 0
+        PrepareOnExit: 0
+        Percentage: 0
+      - NetworkName: Yandex Mobile Ads
+        NetworkIndex: 2
+        NetworkIdentifier: yandex
         InstanceIndex: 0
         InstanceName: Default
         Replaced: 0

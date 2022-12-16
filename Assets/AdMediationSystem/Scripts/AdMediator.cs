@@ -112,6 +112,7 @@ namespace Virterix.AdMediation
             }
         }
 
+        public int TotalUnits => m_totalUnits;
         public bool WasLastNetworkPreparationSuccessfully => m_isLastNetworkSuccessfullyPrepared;
         private bool m_isLastNetworkSuccessfullyPrepared;
 
@@ -131,7 +132,7 @@ namespace Virterix.AdMediation
         #endregion // Properties
 
         private AdUnit[][] m_tiers;
-        
+ 
         private int m_totalUnits;
         protected AdUnit m_currUnit;
         private int m_lastActiveTierId;
@@ -184,9 +185,10 @@ namespace Virterix.AdMediation
             m_lastActiveUnitId = -1;
             m_deferredFetchCallCount = 1;
             m_tiers = tiers;
+            
             for (int tierIndex = 0; tierIndex < m_tiers.Length; tierIndex++)
             {
-                m_totalUnits +=m_tiers[tierIndex].Length;
+                m_totalUnits += m_tiers[tierIndex].Length;
                 for (int unitIndex = 0; unitIndex < m_tiers[tierIndex].Length; unitIndex++)
                 {
                     AdUnit unit = m_tiers[tierIndex][unitIndex];
@@ -194,7 +196,7 @@ namespace Virterix.AdMediation
                         m_networks.Add(unit.AdNetwork);
                 }
             }
-
+            
             foreach (var network in m_networks)
                 network.OnEvent += OnCurrentNetworkEvent;
 
@@ -275,6 +277,24 @@ namespace Virterix.AdMediation
                 m_currUnit.Hide();
         }
 
+        public AdUnit GetUnit(int index)
+        {
+            int unitPassedCount = 0;
+            AdUnit foundUnit = null;
+            for (int tierIndex = 0; tierIndex < m_tiers.Length; tierIndex++)
+            {
+                AdUnit[] tier = m_tiers[tierIndex];
+                if (index < tier.Length + unitPassedCount)
+                {
+                    foundUnit = tier[index - unitPassedCount];
+                    break;
+                }
+                else
+                    unitPassedCount += tier.Length;
+            }
+            return foundUnit;
+        }
+        
         private bool ShowAnyReadyNetwork()
         {
             if (m_totalUnits == 0)

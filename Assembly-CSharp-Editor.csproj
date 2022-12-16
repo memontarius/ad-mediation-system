@@ -47,6 +47,7 @@
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AudienceNetwork\AudienceNetworkSettings.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\AdMediationSettingsWindow.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Pollfish\PollfishSettings.cs" />
+     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Yandex\YandexMobileAdsSettings.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\UnityAds\UnityAdsSettings.cs" />
      <Compile Include="Assets\GooglePlayGames\Editor\GPGSProjectSettings.cs" />
      <Compile Include="Assets\GooglePlayGames\Editor\GPGSAndroidSetupUI.cs" />
@@ -64,6 +65,7 @@
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\AdMediationSettingsBuilder.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\BaseAdNetworkSettings.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\IronSource\IronSourceSettings.cs" />
+     <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Yandex\YandexMobileAdsView.cs" />
      <Compile Include="Assets\GooglePlayGames\Editor\GPGSPostBuild.cs" />
      <Compile Include="Assets\GooglePlayGames\Editor\GPGSUpgrader.cs" />
      <Compile Include="Assets\GooglePlayGames\Editor\GPGSDocsUI.cs" />
@@ -71,12 +73,14 @@
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AdColony\AdColonyView.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\EditorAdType.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Chartboost\ChartboostView.cs" />
+     <Compile Include="Assets\YandexMobileAds\Editor\PostprocessBuildPlayerYandexMobileAds.cs" />
      <Compile Include="Assets\GooglePlayGames\Editor\GPGSStrings.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\AdMediatorView.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Vungle\VungleView.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Applovin\ApplovinSettings.cs" />
      <Folder Include="Assets\Editor\Platform-Dependencies" />
      <Folder Include="Assets\GooglePlayGames\Editor" />
+     <None Include="Assets\PlayServicesResolver\Editor\play-services-resolver_v1.2.137.0.txt" />
      <None Include="Assets\GooglePlayGames\Editor\m2repository\com\google\games\gpgs-plugin-support\maven-metadata.xml" />
      <Folder Include="Assets\GooglePlayGames\Editor\m2repository" />
      <Folder Include="Assets\Editor\AdMediationSettings\Empty" />
@@ -92,10 +96,13 @@
      <Folder Include="Assets\Editor" />
      <Folder Include="Assets\Editor\RemoteConfig\Data" />
      <Folder Include="Assets\Editor\AdMediationSettings" />
+     <Folder Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Yandex" />
      <Folder Include="Assets\GooglePlayGames\Editor\m2repository\com" />
      <Folder Include="Assets\Editor\Platform-Dependencies\Android" />
      <None Include="Assets\GooglePlayGames\Editor\template-GameInfo.txt" />
      <None Include="Assets\GooglePlayGames\Editor\GooglePlayGamesPluginDependencies.xml" />
+     <None Include="Assets\YandexMobileAds\Editor\YandexMobileadsDependencies.xml" />
+     <Folder Include="Assets\YandexMobileAds\Editor" />
      <Folder Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Vungle" />
      <Folder Include="Assets\Editor\AdMediationSettings\DefaultProject" />
      <None Include="Assets\GooglePlayGames\Editor\GooglePlayGamesPlugin_v0.10.14.txt" />
@@ -104,6 +111,7 @@
      <Folder Include="Assets\GeneratedLocalRepo\GooglePlayGames\Editor\m2repository\com" />
      <Folder Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Applovin" />
      <Folder Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Pollfish" />
+     <Folder Include="Assets\PlayServicesResolver\Editor" />
      <Folder Include="Assets\GooglePlayGames\Editor\m2repository\com\google\games\gpgs-plugin-support" />
      <Folder Include="Assets\GooglePlayGames\Editor\m2repository\com\google\games\gpgs-plugin-support\0.10.14" />
      <Folder Include="Assets\GooglePlayGames\Editor\m2repository\com\google\games" />
@@ -373,6 +381,9 @@
      <Reference Include="UnityEditor.Graphs">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.15f1\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
      </Reference>
+     <Reference Include="UnityEditor.WebGL.Extensions">
+     <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.15f1\Editor\Data\PlaybackEngines\WebGLSupport\UnityEditor.WebGL.Extensions.dll</HintPath>
+     </Reference>
      <Reference Include="UnityEditor.Android.Extensions">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.15f1\Editor\Data\PlaybackEngines\AndroidPlayer\UnityEditor.Android.Extensions.dll</HintPath>
      </Reference>
@@ -381,6 +392,21 @@
      </Reference>
      <Reference Include="UnityEditor.WindowsStandalone.Extensions">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.15f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+     </Reference>
+     <Reference Include="AssetStoreTools">
+     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\AssetStoreTools\Editor\AssetStoreTools.dll</HintPath>
+     </Reference>
+     <Reference Include="Google.IOSResolver">
+     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\1.2.175\Google.IOSResolver.dll</HintPath>
+     </Reference>
+     <Reference Include="Google.VersionHandlerImpl">
+     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\1.2.175\Google.VersionHandlerImpl.dll</HintPath>
+     </Reference>
+     <Reference Include="Google.JarResolver">
+     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\1.2.175\Google.JarResolver.dll</HintPath>
+     </Reference>
+     <Reference Include="GoogleMobileAds.Common">
+     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Common.dll</HintPath>
      </Reference>
      <Reference Include="GoogleMobileAds">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.dll</HintPath>
@@ -391,29 +417,14 @@
      <Reference Include="GoogleMobileAds.Unity">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Unity.dll</HintPath>
      </Reference>
-     <Reference Include="AssetStoreTools">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\AssetStoreTools\Editor\AssetStoreTools.dll</HintPath>
-     </Reference>
-     <Reference Include="Google.IOSResolver">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\1.2.175\Google.IOSResolver.dll</HintPath>
-     </Reference>
      <Reference Include="Newtonsoft.Json">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\PackageCache\com.unity.nuget.newtonsoft-json@3.0.2\Runtime\Newtonsoft.Json.dll</HintPath>
      </Reference>
      <Reference Include="GoogleMobileAds.Core">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Core.dll</HintPath>
      </Reference>
-     <Reference Include="Google.VersionHandlerImpl">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\1.2.175\Google.VersionHandlerImpl.dll</HintPath>
-     </Reference>
      <Reference Include="Google.VersionHandler">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\Google.VersionHandler.dll</HintPath>
-     </Reference>
-     <Reference Include="Google.JarResolver">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\1.2.175\Google.JarResolver.dll</HintPath>
-     </Reference>
-     <Reference Include="GoogleMobileAds.Common">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Common.dll</HintPath>
      </Reference>
      <Reference Include="nunit.framework">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\PackageCache\com.unity.ext.nunit@1.0.6\net35\unity-custom\nunit.framework.dll</HintPath>

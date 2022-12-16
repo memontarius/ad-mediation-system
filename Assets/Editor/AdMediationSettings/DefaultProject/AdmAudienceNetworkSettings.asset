@@ -25,30 +25,40 @@ MonoBehaviour:
     _iosId: 932838540097052_1008885919158980
     _timeout: 90
     _loadingOnStart: 0
+    _bannerMaxHeight: 0
     _bannerType: 0
+    _bannerRefreshTime: 0
   - _name: Top
     _androidId: 932838540097052_1545961522118081
     _iosId: 932838540097052_3704025866311625
     _timeout: 90
     _loadingOnStart: 0
+    _bannerMaxHeight: 0
     _bannerType: 0
+    _bannerRefreshTime: 0
   _interstitialAdInstances:
   - _name: Default
     _androidId: 932838540097052_936968189684087
     _iosId: 932838540097052_1969633249750904
     _timeout: 90
     _loadingOnStart: 0
+    _bannerMaxHeight: 0
     _bannerType: 0
+    _bannerRefreshTime: 0
   - _name: DefaultHighCPM
     _androidId: 932838540097052_1545958872118346
     _iosId: 932838540097052_3704029019644643
     _timeout: 90
     _loadingOnStart: 0
+    _bannerMaxHeight: 0
     _bannerType: 0
+    _bannerRefreshTime: 0
   _rewardAdInstances:
   - _name: Default
     _androidId: 932838540097052_1969643389749890
     _iosId: 932838540097052_1969641783083384
     _timeout: 90
     _loadingOnStart: 0
+    _bannerMaxHeight: 0
     _bannerType: 0
+    _bannerRefreshTime: 0

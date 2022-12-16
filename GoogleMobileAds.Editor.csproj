@@ -313,6 +313,9 @@
      <Reference Include="UnityEditor.Graphs">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.15f1\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
      </Reference>
+     <Reference Include="UnityEditor.WebGL.Extensions">
+     <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.15f1\Editor\Data\PlaybackEngines\WebGLSupport\UnityEditor.WebGL.Extensions.dll</HintPath>
+     </Reference>
      <Reference Include="UnityEditor.Android.Extensions">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.15f1\Editor\Data\PlaybackEngines\AndroidPlayer\UnityEditor.Android.Extensions.dll</HintPath>
      </Reference>
@@ -321,6 +324,21 @@
      </Reference>
      <Reference Include="UnityEditor.WindowsStandalone.Extensions">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.15f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+     </Reference>
+     <Reference Include="AssetStoreTools">
+     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\AssetStoreTools\Editor\AssetStoreTools.dll</HintPath>
+     </Reference>
+     <Reference Include="Google.IOSResolver">
+     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\1.2.175\Google.IOSResolver.dll</HintPath>
+     </Reference>
+     <Reference Include="Google.VersionHandlerImpl">
+     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\1.2.175\Google.VersionHandlerImpl.dll</HintPath>
+     </Reference>
+     <Reference Include="Google.JarResolver">
+     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\1.2.175\Google.JarResolver.dll</HintPath>
+     </Reference>
+     <Reference Include="GoogleMobileAds.Common">
+     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Common.dll</HintPath>
      </Reference>
      <Reference Include="GoogleMobileAds">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.dll</HintPath>
@@ -331,29 +349,14 @@
      <Reference Include="GoogleMobileAds.Unity">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Unity.dll</HintPath>
      </Reference>
-     <Reference Include="AssetStoreTools">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\AssetStoreTools\Editor\AssetStoreTools.dll</HintPath>
-     </Reference>
-     <Reference Include="Google.IOSResolver">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\1.2.175\Google.IOSResolver.dll</HintPath>
-     </Reference>
      <Reference Include="Newtonsoft.Json">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\PackageCache\com.unity.nuget.newtonsoft-json@3.0.2\Runtime\Newtonsoft.Json.dll</HintPath>
      </Reference>
      <Reference Include="GoogleMobileAds.Core">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Core.dll</HintPath>
      </Reference>
-     <Reference Include="Google.VersionHandlerImpl">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\1.2.175\Google.VersionHandlerImpl.dll</HintPath>
-     </Reference>
      <Reference Include="Google.VersionHandler">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\Google.VersionHandler.dll</HintPath>
-     </Reference>
-     <Reference Include="Google.JarResolver">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\1.2.175\Google.JarResolver.dll</HintPath>
-     </Reference>
-     <Reference Include="GoogleMobileAds.Common">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Common.dll</HintPath>
      </Reference>
      <Reference Include="nunit.framework">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\PackageCache\com.unity.ext.nunit@1.0.6\net35\unity-custom\nunit.framework.dll</HintPath>

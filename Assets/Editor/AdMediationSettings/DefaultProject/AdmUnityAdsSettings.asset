@@ -24,25 +24,33 @@ MonoBehaviour:
     _androidId: Android_Banner
     _iosId: iOS_Banner
     _timeout: 120
-    _loadingOnStart: 0
+    _loadingOnStart: 1
+    _bannerMaxHeight: 0
     _bannerType: 0
+    _bannerRefreshTime: 0
   - _name: Top
     _androidId: Android_Banner_Top
     _iosId: Android_Banner_Top
     _timeout: 120
-    _loadingOnStart: 0
+    _loadingOnStart: 1
+    _bannerMaxHeight: 0
     _bannerType: 2
+    _bannerRefreshTime: 0
   _interstitialAdInstances:
   - _name: Default
     _androidId: Android_Interstitial
     _iosId: iOS_Interstitial
     _timeout: 90
     _loadingOnStart: 1
+    _bannerMaxHeight: 0
     _bannerType: 0
+    _bannerRefreshTime: 0
   _rewardAdInstances:
   - _name: Default
     _androidId: Android_Rewarded
     _iosId: iOS_Rewarded
     _timeout: 90
     _loadingOnStart: 0
+    _bannerMaxHeight: 0
     _bannerType: 0
+    _bannerRefreshTime: 0

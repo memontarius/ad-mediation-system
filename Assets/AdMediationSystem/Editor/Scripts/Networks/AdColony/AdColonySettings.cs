@@ -16,7 +16,8 @@ namespace Virterix.AdMediation.Editor
 
         public override bool IsCheckAvailabilityWhenPreparing(AdType adType) => true;
 
-        protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
+        protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, 
+            int bannerType, BannerPositionContainer[] bannerPositions, AdInstance adInstance)
         {
             AdColonyAdInstanceBannerParameters parameterHolder = AdColonyAdInstanceBannerParameters.CreateParameters(projectName, instanceName);
             parameterHolder.m_bannerSize = (AdColonyAdapter.AdColonyAdSize)bannerType;

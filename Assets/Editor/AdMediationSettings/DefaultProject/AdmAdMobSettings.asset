@@ -25,26 +25,34 @@ MonoBehaviour:
     _iosId: ca-app-pub-1726624045989422/3428787792
     _timeout: 90
     _loadingOnStart: 0
+    _bannerMaxHeight: 0
     _bannerType: 0
+    _bannerRefreshTime: 0
   - _name: Top
     _androidId: ca-app-pub-1726624045989422/6327808850
     _iosId: ca-app-pub-1726624045989422/6620972801
     _timeout: 90
     _loadingOnStart: 0
+    _bannerMaxHeight: 0
     _bannerType: 0
+    _bannerRefreshTime: 0
   _interstitialAdInstances:
   - _name: Default
     _androidId: ca-app-pub-1726624045989422/7768482027
     _iosId: ca-app-pub-1726624045989422/8206719796
     _timeout: 90
     _loadingOnStart: 0
+    _bannerMaxHeight: 0
     _bannerType: 0
+    _bannerRefreshTime: 0
   _rewardAdInstances:
   - _name: Default
     _androidId: ca-app-pub-1726624045989422/9834659581
     _iosId: ca-app-pub-1726624045989422/2765846565
     _timeout: 90
     _loadingOnStart: 0
+    _bannerMaxHeight: 0
     _bannerType: 0
+    _bannerRefreshTime: 0
   _useMediation: 1
   _mediationNetworkFlags: 20

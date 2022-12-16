@@ -1,0 +1,27 @@
+<dependencies>
+    <androidPackages>
+        <androidPackage spec="com.yandex.android:mobileads:5.4.0">
+            <repositories>
+                <repository>https://maven.google.com/</repository>
+            </repositories>
+        </androidPackage>
+        <androidPackage spec="com.yandex.android:mobmetricalib:5.0.0">
+            <repositories>
+                <repository>https://maven.google.com/</repository>
+            </repositories>
+        </androidPackage>
+    </androidPackages>
+
+    <iosPods>
+        <iosPod name="YandexMobileAds" version="5.3.1">
+            <sources>
+                <source>https://github.com/CocoaPods/Specs</source>
+            </sources>
+        </iosPod>
+        <iosPod name="YandexMobileMetrica" version="4.2.0">
+            <sources>
+                <source>https://github.com/CocoaPods/Specs</source>
+            </sources>
+        </iosPod>
+    </iosPods>
+</dependencies>

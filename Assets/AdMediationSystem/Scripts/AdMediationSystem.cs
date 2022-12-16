@@ -45,7 +45,7 @@ namespace Virterix.AdMediation
             public int[] maxPassages;
         }
 
-        public const string VERSION = "2.5.1";
+        public const string VERSION = "2.5.2";
         public const string AD_SETTINGS_FOLDER = "AdMediationSettings";
         public const string PREFAB_NAME = "AdMediationSystem";
         public const string PLACEMENT_DEFAULT_NAME = "Default";
@@ -137,7 +137,7 @@ namespace Virterix.AdMediation
         {
             get; private set;
         }
-           
+        
         public JSONObject CurrSettings
         {
             get { return m_currSettings; }
@@ -171,9 +171,7 @@ namespace Virterix.AdMediation
             get
             {
                 if (m_internetChecker == null)
-                {
                     m_internetChecker = InternetChecker.Create();
-                }
                 return m_internetChecker;
             }
         }
@@ -194,6 +192,18 @@ namespace Virterix.AdMediation
             private set;
         } = AdMediationSystem.DEFAULT_NETWORK_RESPONSE_WAIT_TIME;
 
+        public AdMediator[] BannerMediators
+        {
+            get
+            {
+                if (m_bannerMediators == null)
+                    m_bannerMediators = GetAllMediators(AdType.Banner);
+                return m_bannerMediators;
+            }
+            private set { m_bannerMediators = value; }
+        }
+        private AdMediator[] m_bannerMediators;
+        
         private string SettingsFileName
         {
             get { return PlatformName + "_settings"; }
@@ -851,23 +861,24 @@ namespace Virterix.AdMediation
             {
                 Debug.LogWarning("[AMS] AdMediationSystem.SetupSettings() Parse settings failed! Catch exception when setup settings. Message: " + e.Message + " __StackTrace__: " + e.StackTrace);
             }
-
+            
             if (setupSettingsSuccess)
             {
-                // Initialization networks
-                foreach (KeyValuePair<AdNetworkAdapter, NetworkParams> pair in dictNetworks)
-                {
-                    AdNetworkAdapter netwrok = pair.Key;
-                    Dictionary<string, string> networkParameters = pair.Value.m_parameters;
-                    netwrok.Initialize(networkParameters, pair.Value.m_adInstances);
-                }
-
+                BannerMediators = GetAllMediators(AdType.Banner);
                 // Initialization mediators
                 foreach (var pair in initMediators)
                 {
                     AdMediator mediator = pair.Key;
                     MediatorData mediatorData = initMediators[mediator];
                     mediator.Initialize(mediatorData.tiers, mediatorData.maxPassages);
+                }
+                
+                // Initialization networks
+                foreach (KeyValuePair<AdNetworkAdapter, NetworkParams> pair in dictNetworks)
+                {
+                    AdNetworkAdapter netwrok = pair.Key;
+                    Dictionary<string, string> networkParameters = pair.Value.m_parameters;
+                    netwrok.Initialize(networkParameters, pair.Value.m_adInstances);
                 }
             }
             else
@@ -878,6 +889,7 @@ namespace Virterix.AdMediation
                     mediator.FetchStrategy = new DummyFetchStrategy();
                 }
             }
+            
             return setupSettingsSuccess;
         }
  

@@ -1,10 +1,11 @@
-//#define _AMS_UNITY_ADS
+#define _AMS_UNITY_ADS
 
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Boomlagoon.JSON;
 using Unity.Services.Core;
+using Debug = UnityEngine.Debug;
 #if _AMS_UNITY_ADS
 using System.Collections;
 using Unity.Services.Mediation;
@@ -161,13 +162,20 @@ namespace Virterix.AdMediation
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
+            
             if (!parameters.TryGetValue("appId", out m_appId))
                 m_appId = "";
             
             m_interstitialShowOptions = new InterstitialAdShowOptions { AutoReload = true };
             m_rewardedShowOptions = new RewardedAdShowOptions { AutoReload = true };
             
-            m_bannerMediators = AdMediationSystem.Instance.GetAllMediators(AdType.Banner);
+            m_bannerMediators = AdMediationSystem.Instance.BannerMediators;
+            StartCoroutine(DeferredInitializeUnity());
+        }
+
+        private IEnumerator DeferredInitializeUnity()
+        {
+            yield return new WaitForSecondsRealtime(0.1f);
             InitializeUnity(m_appId);
         }
         
@@ -321,19 +329,16 @@ namespace Virterix.AdMediation
 
                 if (!wasShownInOtherPlacement)
                 {
+                    bool isBannerDisplayed = adInstance.m_bannerDisplayed;
                     adInstance.m_bannerDisplayed = false;
-                    unityAdInstance.BannerAd?.SetPosition(unityAdInstance.BannerAnchor, m_bannerHidingOffset);
-                    
-                    if (m_isBannerDisplayed)
-                        NotifyEvent(AdEvent.Hiding, adInstance);
                     m_isBannerDisplayed = false;
+                    unityAdInstance.BannerAd?.SetPosition(unityAdInstance.BannerAnchor, m_bannerHidingOffset);
+                    if (isBannerDisplayed)
+                        NotifyEvent(AdEvent.Hiding, adInstance);
                 }
             }
         }
-
-        private static bool IsAdBannerInstanceUsedInMediator(AdInstance adInstance, AdMediator mediator) => 
-            mediator.IsBannerDisplayed && mediator.CurrentUnit != null && mediator.CurrentUnit.AdInstance == adInstance;
-
+        
         public override bool IsReady(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             bool isReady = false;
@@ -386,15 +391,15 @@ namespace Virterix.AdMediation
             {
                 OnAdFailedLoad(unityAdInstance, sender, args);
             };
-            unityAdInstance.OnShowed += delegate(object sender, EventArgs args)
+            unityAdInstance.OnShowed = delegate(object sender, EventArgs args)
             {
                 OnAdShowed(unityAdInstance, sender, args);
             };
-            unityAdInstance.OnClosed += delegate(object sender, EventArgs args)
+            unityAdInstance.OnClosed = delegate(object sender, EventArgs args)
             {
                 OnAdClosed(unityAdInstance, sender, args);
             };
-            unityAdInstance.OnFailedShow += delegate(object sender, ShowErrorEventArgs args)
+            unityAdInstance.OnFailedShow = delegate(object sender, ShowErrorEventArgs args)
             {
                 OnAdFailedShow(unityAdInstance, sender, args);
             };
@@ -432,19 +437,19 @@ namespace Virterix.AdMediation
             {
                 OnAdFailedLoad(unityAdInstance, sender, args);
             };
-            unityAdInstance.OnShowed += delegate(object sender, EventArgs args)
+            unityAdInstance.OnShowed = delegate(object sender, EventArgs args)
             {
                 OnAdShowed(unityAdInstance, sender, args);
             };
-            unityAdInstance.OnClosed += delegate(object sender, EventArgs args)
+            unityAdInstance.OnClosed = delegate(object sender, EventArgs args)
             {
                 OnAdClosed(unityAdInstance, sender, args);
             };
-            unityAdInstance.OnFailedShow += delegate(object sender, ShowErrorEventArgs args)
+            unityAdInstance.OnFailedShow = delegate(object sender, ShowErrorEventArgs args)
             {
                 OnAdFailedShow(unityAdInstance, sender, args);
             };
-            unityAdInstance.OnUserRewarded += delegate(object sender, RewardEventArgs args)
+            unityAdInstance.OnUserRewarded = delegate(object sender, RewardEventArgs args)
             {
                 OnAdUserRewarded(unityAdInstance, sender, args);
             };
@@ -563,7 +568,7 @@ namespace Virterix.AdMediation
                 }
                 
                 if (unityAdInstance.LoadingOnStart)
-                    Prepare(unityAdInstance, "");
+                    Prepare(unityAdInstance);
             }
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log($"[AMS] UnityAds Initialization Success");

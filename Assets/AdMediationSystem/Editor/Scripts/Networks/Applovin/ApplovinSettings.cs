@@ -41,7 +41,8 @@ namespace Virterix.AdMediation.Editor
             return parameters;
         }
 
-        protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
+        protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName,
+            int bannerType, BannerPositionContainer[] bannerPositions, AdInstance adInstance)
         {
             var parameterHolder = AppLovinAdInstanceBannerParameters.CreateParameters(projectName, instanceName);
             SetupBannerPositionContainers(parameterHolder, bannerPositions);

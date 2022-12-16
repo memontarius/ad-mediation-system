@@ -115,7 +115,7 @@ namespace Virterix.AdMediation.Editor
                             string instanceName = adInstanceDataHolder._adInstance._name;
                             int bannerType = adInstanceDataHolder._adInstance._bannerType;
                             var bannerPositions = GetBannerPositions(network, adInstanceDataHolder, mediators);
-                            network.CreateBannerAdInstanceParameters(projectName, instanceName, bannerType, bannerPositions);
+                            network.CreateBannerAdInstanceParameters(projectName, instanceName, bannerType, bannerPositions, adInstanceDataHolder._adInstance);
                         }
                     }
                 }

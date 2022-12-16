@@ -25,24 +25,32 @@ MonoBehaviour:
     _iosId: 
     _timeout: 120
     _loadingOnStart: 0
+    _bannerMaxHeight: 0
     _bannerType: 0
+    _bannerRefreshTime: 0
   - _name: Top
     _androidId: vz177f8357b2724861be
     _iosId: 
     _timeout: 120
     _loadingOnStart: 0
+    _bannerMaxHeight: 0
     _bannerType: 1
+    _bannerRefreshTime: 0
   _interstitialAdInstances:
   - _name: Default
     _androidId: vzcabbcd0fae4a4dbea3
     _iosId: 
     _timeout: 120
     _loadingOnStart: 0
+    _bannerMaxHeight: 0
     _bannerType: 0
+    _bannerRefreshTime: 0
   _rewardAdInstances:
   - _name: Default
     _androidId: vzcffaca46c3e349f091
     _iosId: 
     _timeout: 120
     _loadingOnStart: 0
+    _bannerMaxHeight: 0
     _bannerType: 0
+    _bannerRefreshTime: 0

@@ -8,6 +8,8 @@
     <package>com.google.games:gpgs-plugin-support:0.10.14</package>
     <package>com.unity3d.mediation:mediation-sdk:[1.0,2.0[</package>
     <package>com.unity3d.mediation:unityads-adapter:[1.0,2.0[</package>
+    <package>com.yandex.android:mobileads:5.4.0</package>
+    <package>com.yandex.android:mobmetricalib:5.0.0</package>
   </packages>
   <files>
     <file>Assets/GeneratedLocalRepo/GooglePlayGames/Editor/m2repository/com/google/games/gpgs-plugin-support/0.10.14/gpgs-plugin-support-0.10.14.aar</file>

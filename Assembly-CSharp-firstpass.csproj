@@ -45,8 +45,10 @@
      <Folder Include="Assets\Plugins\Android\GooglePlayGamesManifest.androidlib" />
      <Folder Include="Assets\Plugins\Android\GoogleMobileAdsPlugin.androidlib" />
      <Folder Include="Assets\Plugins\Android" />
+     <Folder Include="Assets\Plugins\Android\YandexMobileAdsPlugin" />
      <None Include="Assets\Plugins\Android\GooglePlayGamesManifest.androidlib\AndroidManifest.xml" />
      <None Include="Assets\Plugins\Android\GoogleMobileAdsPlugin.androidlib\AndroidManifest.xml" />
+     <None Include="Assets\Plugins\Android\YandexMobileAdsPlugin\AndroidManifest.xml" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
      <Folder Include="Assets\Plugins\Android\GoogleMobileAdsAppLovinMediation" />
      <Folder Include="Assets\Plugins\Android\GoogleMobileAdsAdColonyMediation" />

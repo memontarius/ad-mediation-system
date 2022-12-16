@@ -9,7 +9,7 @@
         int TierIndex { get; }
         int UnitIndex { get; }
 
-        void Init(AdUnit[][] tiers, int totalunits, int[] tierMaxPassages);
+        void Init(AdUnit[][] tiers, int totalUnits, int[] tierMaxPassages);
 
         void Reset(AdUnit[][] tiers, int tierIndex, int unitIndex);
 

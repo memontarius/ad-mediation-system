@@ -398,13 +398,14 @@ namespace Virterix.AdMediation.Editor
             AddNetwork(new AdMobView(this, "AdMob", "admob"));
             AddNetwork(new AudienceNetworkView(this, "Audience Network", "audiencenetwork"));
             AddNetwork(new UnityAdsView(this, "Unity Ads", "unityads"));
+            AddNetwork(new YandexMobileAdsView(this, "Yandex Mobile Ads", "yandex"));
             AddNetwork(new ApplovinView(this, "AppLovin", "applovin"));
             AddNetwork(new ChartboostView(this, "Chartboost", "chartboost"));
             AddNetwork(new IronSourceView(this, "Iron Source", "ironsrc"));
             AddNetwork(new AdColonyView(this, "AdColony", "adcolony"));
             AddNetwork(new VungleView(this, "Vungle", "vungle"));
             AddNetwork(new PollfishView(this, "Pollfish", "pollfish"));
-
+            
             if (_networkEnabledStates == null)
             {
                 _networkEnabledStates = new bool[_networks.Count];

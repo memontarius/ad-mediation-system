@@ -4,7 +4,7 @@
 
         public int UnitIndex => 0;
 
-        public void Init(AdUnit[][] tiers, int totalunits, int[] tierMaxPassages) {
+        public void Init(AdUnit[][] tiers, int totalUnits, int[] tierMaxPassages) {
         }
 
         public void Reset(AdUnit[][] tiers, int tierIndex, int unitIndex) {

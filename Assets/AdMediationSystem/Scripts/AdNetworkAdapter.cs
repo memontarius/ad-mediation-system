@@ -559,6 +559,9 @@ namespace Virterix.AdMediation
             yield return _waitResponseIntervalInstruction;
         }
         
+        protected static bool IsAdBannerInstanceUsedInMediator(AdInstance adInstance, AdMediator mediator) => 
+            mediator.IsBannerDisplayed && mediator.CurrentUnit != null && mediator.CurrentUnit.AdInstance == adInstance;
+        
         #endregion Internal Methods
     }
 }

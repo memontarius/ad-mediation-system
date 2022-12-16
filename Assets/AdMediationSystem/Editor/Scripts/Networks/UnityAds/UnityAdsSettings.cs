@@ -19,7 +19,8 @@ namespace Virterix.AdMediation.Editor
 
         public override string GetNetworkSDKVersion() => UnityAdsAdapter.GetSDKVersion();
 
-        protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
+        protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName,
+            int bannerType, BannerPositionContainer[] bannerPositions, AdInstance adInstance)
         {
             var parameterHolder = UnityAdInstanceBannerParameters.CreateParameters(projectName, instanceName);
             SetupBannerPositionContainers(parameterHolder, bannerPositions);

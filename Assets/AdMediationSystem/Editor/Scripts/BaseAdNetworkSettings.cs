@@ -36,7 +36,9 @@ namespace Virterix.AdMediation.Editor
         public string _iosId;
         public float _timeout;
         public bool _loadingOnStart;
+        public int _bannerMaxHeight;
         public int _bannerType;
+        public int _bannerRefreshTime;
     }
 
     public class BaseAdNetworkSettings : ScriptableObject
@@ -92,17 +94,19 @@ namespace Virterix.AdMediation.Editor
             return parameters;
         }
 
-        public AdInstanceParameters CreateBannerAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
+        public AdInstanceParameters CreateBannerAdInstanceParameters(string projectName, string instanceName, int bannerType, 
+            BannerPositionContainer[] bannerPositions, AdInstance adInstance)
         {
-            var parameters = CreateBannerSpecificAdInstanceParameters(projectName, instanceName, bannerType, bannerPositions);
-            parameters.Name = instanceName;
-            EditorUtility.SetDirty(parameters);
+            var bannerParameters = CreateBannerSpecificAdInstanceParameters(projectName, instanceName, bannerType, bannerPositions, adInstance);
+            bannerParameters.Name = instanceName;
+            EditorUtility.SetDirty(bannerParameters);
             AssetDatabase.Refresh();
             AssetDatabase.SaveAssets();
-            return parameters;
+            return bannerParameters;
         }
 
-        protected virtual AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
+        protected virtual AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, 
+            int bannerType, BannerPositionContainer[] bannerPositions, AdInstance adInstance)
         {
             throw new NotImplementedException();
         }

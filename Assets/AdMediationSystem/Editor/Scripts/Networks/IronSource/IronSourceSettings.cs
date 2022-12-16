@@ -72,7 +72,8 @@ namespace Virterix.AdMediation.Editor
             adapter.m_overriddenPlacements = adapterOverriddenPlacements;
         }
 
-        protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, int bannerType, BannerPositionContainer[] bannerPositions)
+        protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, 
+            int bannerType, BannerPositionContainer[] bannerPositions, AdInstance adInstance)
         {
             var parameterHolder = IronSourceAdInstanceBannerParameters.CreateParameters(projectName, instanceName);
             parameterHolder.m_bannerSize = (IronSourceAdapter.IrnSrcBannerSize)bannerType;

@@ -37,9 +37,9 @@ namespace Virterix.AdMediation
             }
         }
 
-        public void Init(AdUnit[][] tiers, int totalunits, int[] tierMaxPassages)
+        public void Init(AdUnit[][] tiers, int totalUnits, int[] tierMaxPassages)
         {
-            m_maxRecursionFetch = totalunits;
+            m_maxRecursionFetch = totalUnits;
             m_disableIncrementInFirstFetch = true;
             m_tierPassCount = 1;
             m_tierMaxPassages = tierMaxPassages;

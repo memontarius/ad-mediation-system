@@ -58,7 +58,7 @@ namespace Virterix.AdMediation.Editor
 
         private string CollapsedSaveKey => 
             string.Format("{0}{1}.collapsed", AdMediationSettingsWindow.PREFIX_SAVEKEY, Name);
-
+        
         protected AdMediationSettingsWindow _settingsWindow;
         protected SerializedObject _serializedSettings;
         protected BaseAdNetworkSettings _settings;
@@ -158,7 +158,7 @@ namespace Virterix.AdMediation.Editor
                 }
                 _serializedSettings.Update();
                 _enabledProp.boolValue = Enabled;
-                DrawCommonSettigns();
+                DrawCommonSettings();
                 DrawPlatformSettings();               
                 DrawSpecificSettings();
                 DrawAdInstanceLists();
@@ -290,7 +290,12 @@ namespace Virterix.AdMediation.Editor
         {
         }
 
-        private void DrawCommonSettigns()
+        protected virtual int GetBannerSizeDropdownRightPadding(int bannerType)
+        {
+            return 0;
+        }
+        
+        private void DrawCommonSettings()
         {
             GUILayout.BeginVertical("box");
             EditorGUILayout.PropertyField(_responseWaitTimeProp, GUILayout.ExpandWidth(true));
@@ -419,8 +424,7 @@ namespace Virterix.AdMediation.Editor
                             GUIContent.none
                         );
                     }
-
-
+                    
                     if (_settingsWindow.IsIOS)
                     {
                         rect.y += 20;
@@ -438,8 +442,10 @@ namespace Virterix.AdMediation.Editor
                     rect.y += 20;
                     EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), "Type");
                     SerializedProperty bannerTypeProp = element.FindPropertyRelative("_bannerType");
-                    bannerTypeProp.intValue = EditorGUI.Popup(new Rect(rect.x + 80, rect.y, width, EditorGUIUtility.singleLineHeight),
+                    float dropdownWidth = width - GetBannerSizeDropdownRightPadding(bannerTypeProp.intValue);
+                    bannerTypeProp.intValue = EditorGUI.Popup(new Rect(rect.x + 80, rect.y, dropdownWidth, EditorGUIUtility.singleLineHeight),
                         bannerTypeProp.intValue, BannerTypes);
+                    DrawBannerSpecificSettings(rect, element, elementWidth, bannerTypeProp.intValue);
                 }
             };
             list.onAddCallback = (ReorderableList l) =>
@@ -460,7 +466,8 @@ namespace Virterix.AdMediation.Editor
                 }
                 property.FindPropertyRelative("_androidId").stringValue = "";
                 property.FindPropertyRelative("_iosId").stringValue = "";
-
+                property.FindPropertyRelative("_bannerMaxHeight").intValue = 100;
+                property.FindPropertyRelative("_bannerRefreshTime").intValue = 45;
                 property.serializedObject.ApplyModifiedProperties();
             };
             list.onRemoveCallback = (ReorderableList l) =>
@@ -470,6 +477,10 @@ namespace Virterix.AdMediation.Editor
             };
 
             return list;
+        }
+
+        protected virtual void DrawBannerSpecificSettings(Rect rect, SerializedProperty element, float elementWidth, int bannerType)
+        {
         }
 
         public virtual void WriteDefinitionInScript()

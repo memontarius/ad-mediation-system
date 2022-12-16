@@ -1,4 +1,4 @@
-//#define _AMS_ADMOB
+#define _AMS_ADMOB
 
 using UnityEngine;
 using System;
@@ -232,7 +232,7 @@ namespace Virterix.AdMediation
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
-
+            
             ConfigureAdMob();
 
             OnWillInitialize();
@@ -395,12 +395,13 @@ namespace Virterix.AdMediation
             switch (adInstance.m_adType)
             {
                 case AdType.Banner:
+                    bool isBannerDisplayed = adMobAdInstance.m_bannerDisplayed;
                     adMobAdInstance.m_bannerDisplayed = false;
                     if (adInstance.State == AdState.Received && adInstance.m_adView != null)
                     {
                         BannerView bannerView = adInstance.m_adView as BannerView;
                         bannerView.Hide();
-                        if (adMobAdInstance.m_bannerDisplayed)
+                        if (isBannerDisplayed)
                             NotifyEvent(AdEvent.Hiding, adInstance);
                     }
                     break;
@@ -683,8 +684,6 @@ namespace Virterix.AdMediation
                     adInstance.State = AdState.Received;
                     break;
                 case AdEvent.PreparationFailed:
-                    adInstance.State = AdState.Uncertain;
-                    break;
                 case AdEvent.Hiding:
                     DestroyRewardVideo((AdMobAdInstanceData)adInstance); 
                     break;
