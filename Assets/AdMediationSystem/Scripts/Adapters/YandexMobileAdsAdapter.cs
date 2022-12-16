@@ -1,4 +1,4 @@
-#define _AMS_YANDEX_MOBILE_ADS
+//#define _AMS_YANDEX_MOBILE_ADS
 
 using System;
 using System.Collections;
@@ -469,6 +469,7 @@ namespace Virterix.AdMediation
             int screenWidth = (int)Screen.safeArea.width;
             return ScreenUtils.ConvertPixelsToDp(screenWidth);
         }
+#endif
         
         private void StartRefreshBannerProcess(YandexAdInstanceData adInstance)
         {
@@ -490,10 +491,11 @@ namespace Virterix.AdMediation
         private IEnumerator RefreshBanner(YandexAdInstanceData adInstance, float delay)
         {
             yield return new WaitForSecondsRealtime(delay);
+#if _AMS_YANDEX_MOBILE_ADS && !UNITY_EDITOR
             CreateBannerAd(adInstance, adInstance.CurrPlacement);
+#endif
             Prepare(adInstance, adInstance.CurrPlacement);
         }
-#endif
         
         //_______________________________________________________________________________
         #region Callback Event Methods
