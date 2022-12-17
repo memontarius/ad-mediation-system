@@ -494,14 +494,15 @@ namespace Virterix.AdMediation
             {
                 OnAdFailedLoad(unityAdInstance, sender, args);
             };
+            /*
             unityAdInstance.OnRefreshed = delegate(object sender, LoadErrorEventArgs args)
             {
                 OnAdRefreshed(unityAdInstance, sender, args);
-            };
+            };*/
             
             bannerAd.OnLoaded += unityAdInstance.OnLoaded;
             bannerAd.OnFailedLoad += unityAdInstance.OnFailedLoad;
-            bannerAd.OnRefreshed += unityAdInstance.OnRefreshed;
+            //bannerAd.OnRefreshed += unityAdInstance.OnRefreshed;
             return bannerAd;
         }
         
@@ -510,7 +511,7 @@ namespace Virterix.AdMediation
             unityAdInstance.State = AdState.Uncertain;
             unityAdInstance.BannerAd.OnLoaded -= unityAdInstance.OnLoaded;
             unityAdInstance.BannerAd.OnFailedLoad -= unityAdInstance.OnFailedLoad;
-            unityAdInstance.BannerAd.OnRefreshed -= unityAdInstance.OnRefreshed;
+            //unityAdInstance.BannerAd.OnRefreshed -= unityAdInstance.OnRefreshed;
             unityAdInstance.BannerAd.Dispose();
             unityAdInstance.BannerAd = null;
         }

@@ -131,7 +131,7 @@ MonoBehaviour:
         NetworkIdentifier: yandex
         InstanceIndex: 0
         InstanceName: Default
-        Replaced: 0
+        Replaced: 1
         PrepareOnExit: 0
         Percentage: 0
   IncentivizedMediators:
@@ -165,12 +165,22 @@ MonoBehaviour:
         Replaced: 0
         PrepareOnExit: 0
         Percentage: 100
+    - MaxPassages: 1
+      Units:
+      - NetworkName: Unity Ads
+        NetworkIndex: 1
+        NetworkIdentifier: unityads
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaced: 0
+        PrepareOnExit: 0
+        Percentage: 100
       - NetworkName: Yandex Mobile Ads
         NetworkIndex: 2
         NetworkIdentifier: yandex
         InstanceIndex: 0
         InstanceName: Default
-        Replaced: 0
+        Replaced: 1
         PrepareOnExit: 0
         Percentage: 0
   - AdvertisingType: 3

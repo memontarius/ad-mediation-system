@@ -243,6 +243,9 @@ namespace Virterix.AdMediation
         
         public override bool IsReady(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
+#if UNITY_EDITOR
+            return true;
+#endif
             bool isReady = false;
             if (adInstance != null)
             {
