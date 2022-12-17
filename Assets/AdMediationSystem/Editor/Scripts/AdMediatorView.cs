@@ -182,9 +182,9 @@ namespace Virterix.AdMediation.Editor
                         {
                             case FetchStrategyType.Sequence:
                                 paramsRect.x += paramsRect.width + 5;
-                                paramsRect.width = 75;
-                                var replacedProp = unitElement.FindPropertyRelative(nameof(AdUnit.Replaced));
-                                replacedProp.boolValue = EditorGUI.ToggleLeft(paramsRect, "Replaced", replacedProp.boolValue);
+                                paramsRect.width = 90;
+                                var replaceableProp = unitElement.FindPropertyRelative(nameof(AdUnit.Replaceable));
+                                replaceableProp.boolValue = EditorGUI.ToggleLeft(paramsRect, "Replaceable", replaceableProp.boolValue);
                                 break;
                             case FetchStrategyType.Random:
                                 paramsRect.x += paramsRect.width + 5;
@@ -217,7 +217,7 @@ namespace Virterix.AdMediation.Editor
                         rect.y += 1;
                         rect.width = 60;
                         rect.height = rect.height - 2;
-                        EditorGUI.LabelField(rect, new GUIContent("Max Pass", "Maximum number of tier passes until all networks return unsuccessful preparation (excluding replaceable units)."));
+                        EditorGUI.LabelField(rect, new GUIContent("Max Pass", "Maximum number of tier passes while at least one network has produced an ad impression (excluding replaceable units)."));
                         rect.x += 65;
                         rect.width = 35;
 

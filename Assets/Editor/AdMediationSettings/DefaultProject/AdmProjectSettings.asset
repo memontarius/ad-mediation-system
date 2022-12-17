@@ -36,7 +36,7 @@ MonoBehaviour:
         NetworkIdentifier: admob
         InstanceIndex: 0
         InstanceName: Default
-        Replaced: 0
+        Replaceable: 0
         PrepareOnExit: 0
         Percentage: 100
     - MaxPassages: 1
@@ -46,7 +46,7 @@ MonoBehaviour:
         NetworkIdentifier: unityads
         InstanceIndex: 0
         InstanceName: Default
-        Replaced: 0
+        Replaceable: 0
         PrepareOnExit: 0
         Percentage: 100
       - NetworkName: Yandex Mobile Ads
@@ -54,7 +54,7 @@ MonoBehaviour:
         NetworkIdentifier: yandex
         InstanceIndex: 0
         InstanceName: Default
-        Replaced: 0
+        Replaceable: 0
         PrepareOnExit: 0
         Percentage: 0
   - AdvertisingType: 1
@@ -74,7 +74,7 @@ MonoBehaviour:
         NetworkIdentifier: admob
         InstanceIndex: 1
         InstanceName: Top
-        Replaced: 0
+        Replaceable: 0
         PrepareOnExit: 0
         Percentage: 100
     - MaxPassages: 1
@@ -84,7 +84,7 @@ MonoBehaviour:
         NetworkIdentifier: unityads
         InstanceIndex: 1
         InstanceName: Top
-        Replaced: 0
+        Replaceable: 0
         PrepareOnExit: 0
         Percentage: 100
       - NetworkName: Yandex Mobile Ads
@@ -92,7 +92,7 @@ MonoBehaviour:
         NetworkIdentifier: yandex
         InstanceIndex: 1
         InstanceName: Top
-        Replaced: 0
+        Replaceable: 0
         PrepareOnExit: 0
         Percentage: 0
   InterstitialMediators:
@@ -113,7 +113,7 @@ MonoBehaviour:
         NetworkIdentifier: admob
         InstanceIndex: 0
         InstanceName: Default
-        Replaced: 0
+        Replaceable: 0
         PrepareOnExit: 1
         Percentage: 100
     - MaxPassages: 1
@@ -123,7 +123,7 @@ MonoBehaviour:
         NetworkIdentifier: unityads
         InstanceIndex: 0
         InstanceName: Default
-        Replaced: 0
+        Replaceable: 0
         PrepareOnExit: 0
         Percentage: 100
       - NetworkName: Yandex Mobile Ads
@@ -131,7 +131,7 @@ MonoBehaviour:
         NetworkIdentifier: yandex
         InstanceIndex: 0
         InstanceName: Default
-        Replaced: 1
+        Replaceable: 1
         PrepareOnExit: 0
         Percentage: 0
   IncentivizedMediators:
@@ -152,7 +152,7 @@ MonoBehaviour:
         NetworkIdentifier: admob
         InstanceIndex: 0
         InstanceName: Default
-        Replaced: 0
+        Replaceable: 0
         PrepareOnExit: 0
         Percentage: 100
     - MaxPassages: 1
@@ -162,7 +162,7 @@ MonoBehaviour:
         NetworkIdentifier: unityads
         InstanceIndex: 0
         InstanceName: Default
-        Replaced: 0
+        Replaceable: 0
         PrepareOnExit: 0
         Percentage: 100
     - MaxPassages: 1
@@ -172,7 +172,7 @@ MonoBehaviour:
         NetworkIdentifier: unityads
         InstanceIndex: 0
         InstanceName: Default
-        Replaced: 0
+        Replaceable: 0
         PrepareOnExit: 0
         Percentage: 100
       - NetworkName: Yandex Mobile Ads
@@ -180,7 +180,7 @@ MonoBehaviour:
         NetworkIdentifier: yandex
         InstanceIndex: 0
         InstanceName: Default
-        Replaced: 1
+        Replaceable: 1
         PrepareOnExit: 0
         Percentage: 0
   - AdvertisingType: 3
@@ -200,7 +200,7 @@ MonoBehaviour:
         NetworkIdentifier: admob
         InstanceIndex: 0
         InstanceName: Default
-        Replaced: 0
+        Replaceable: 0
         PrepareOnExit: 0
         Percentage: 100
       - NetworkName: Unity Ads
@@ -208,7 +208,7 @@ MonoBehaviour:
         NetworkIdentifier: unityads
         InstanceIndex: 0
         InstanceName: Default
-        Replaced: 0
+        Replaceable: 0
         PrepareOnExit: 0
         Percentage: 0
       - NetworkName: Yandex Mobile Ads
@@ -216,7 +216,7 @@ MonoBehaviour:
         NetworkIdentifier: yandex
         InstanceIndex: 0
         InstanceName: Default
-        Replaced: 0
+        Replaceable: 0
         PrepareOnExit: 0
         Percentage: 0
   IsIOS: 1

@@ -17,7 +17,7 @@ namespace Virterix.AdMediation.Editor
         public string NetworkIdentifier;
         public int InstanceIndex;
         public string InstanceName;
-        public bool Replaced;
+        public bool Replaceable;
         public bool PrepareOnExit;
         public int Percentage = 100;
     }

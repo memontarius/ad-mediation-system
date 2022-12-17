@@ -202,9 +202,9 @@ namespace Virterix.AdMediation.Editor
             switch (mediator.FetchStrategyType)
             {
                 case FetchStrategyType.Sequence:
-                    if (adUnit.Replaced)
+                    if (adUnit.Replaceable)
                     {
-                        jsonUnit.Add("replaced", adUnit.Replaced);
+                        jsonUnit.Add(SequenceFetchStrategy._REPLACEABLE_KEY, adUnit.Replaceable);
                     }
                     break;
                 case FetchStrategyType.Random:

@@ -6,11 +6,11 @@ namespace Virterix.AdMediation
 {
     public class SequenceFetchStrategy : IFetchStrategy
     {
-        private const string _REPLACED_KEY = "replaced";
+        public const string _REPLACEABLE_KEY = "replaceable";
 
         public class SequenceStrategyParams : BaseFetchStrategyParams
         {
-            public bool m_replaced;
+            public bool m_replaceable;
         }
 
         public int TierIndex => m_tierIndex;
@@ -31,9 +31,9 @@ namespace Virterix.AdMediation
         public static void SetupParameters(ref BaseFetchStrategyParams strategyParams, Dictionary<string, object> networkParams)
         {
             SequenceStrategyParams sequenceStrategyParams = strategyParams as SequenceStrategyParams;
-            if (networkParams.ContainsKey(_REPLACED_KEY))
+            if (networkParams.ContainsKey(_REPLACEABLE_KEY))
             {
-                sequenceStrategyParams.m_replaced = Convert.ToBoolean(networkParams[_REPLACED_KEY]);
+                sequenceStrategyParams.m_replaceable = Convert.ToBoolean(networkParams[_REPLACEABLE_KEY]);
             }
         }
 
@@ -92,7 +92,7 @@ namespace Virterix.AdMediation
                 {
                     restoredUnit = units[unitIndex];
                     sequenceParams = restoredUnit.FetchStrategyParams as SequenceStrategyParams;
-                    if (!sequenceParams.m_replaced || (tierIndex == m_tierIndex && unitIndex == m_unitIndex))
+                    if (!sequenceParams.m_replaceable || (tierIndex == m_tierIndex && unitIndex == m_unitIndex))
                     {
                         m_tierIndex = tierIndex;
                         m_unitIndex = unitIndex;
@@ -208,7 +208,7 @@ namespace Virterix.AdMediation
         private bool ResolveSkipUnit(AdUnit unit, AdUnit[] units, SequenceStrategyParams unitSequenceParams)
         {
             bool skip = unit.IsTimeout;
-            if (!skip && unitSequenceParams.m_replaced)
+            if (!skip && unitSequenceParams.m_replaceable)
             {
                 for (int i = 0; i < units.Length; i++)
                 {
@@ -226,7 +226,7 @@ namespace Virterix.AdMediation
         private bool ResolveMovingToNextTier(AdUnit[] units)
         {
             int unvalidCount = 0;
-            int replacedCount = 0;
+            int replaceableCount = 0;
             SequenceStrategyParams unitSequenceParams;
             AdUnit unit = null;
                 
@@ -234,15 +234,15 @@ namespace Virterix.AdMediation
             {
                 unit = units[unitIndex];
                 unitSequenceParams = unit.FetchStrategyParams as SequenceStrategyParams;
-                if (unitSequenceParams.m_replaced)
-                    replacedCount++;
+                if (unitSequenceParams.m_replaceable)
+                    replaceableCount++;
                 else
                 {
                     if (unit.IsTimeout || unit.AdInstance.WasLastPreparationFailed)
                         unvalidCount++;
                 }
             }
-            bool isMovingToNextTier = unvalidCount == (units.Length - replacedCount);
+            bool isMovingToNextTier = unvalidCount == (units.Length - replaceableCount);
             return isMovingToNextTier;
         }
     }
