@@ -2,7 +2,7 @@
 
 namespace Virterix.AdMediation.Editor
 {
-    public class AudienceNetworkView : BaseAdNetworkView
+    public sealed class AudienceNetworkView : BaseAdNetworkView
     {
         public AudienceNetworkView(AdMediationSettingsWindow settingsWindow, string name, string identifier) :
             base(settingsWindow, name, identifier)

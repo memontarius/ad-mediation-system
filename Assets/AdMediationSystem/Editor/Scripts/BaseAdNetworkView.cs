@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
@@ -485,6 +486,46 @@ namespace Virterix.AdMediation.Editor
 
         public virtual void WriteDefinitionInScript()
         {
+        }
+        
+        public void WriteDefinitionInScript(bool include, string macros, string filterToFind)
+        {
+            string[] findFolders = new[] { "Assets/AdMediationSystem/Scripts" };
+            string[] assets = AssetDatabase.FindAssets(filterToFind, findFolders);
+            
+            if (assets.Length == 1)
+            {
+                var assetLocalPath = AssetDatabase.GUIDToAssetPath(assets[0]).Remove(0, 6);
+                string scriptPath = string.Format("{0}/{1}", Application.dataPath, assetLocalPath);
+
+                string content = File.ReadAllText(scriptPath);
+                if (content.Length > 0)
+                {
+                    string defineMacros = string.Format("#define {0}", macros);
+                    string undefineMacros = string.Format("//#define {0}", macros);
+                    bool isWriteToFile = false;
+
+                    if (include)
+                    {
+                        if (content.Contains(undefineMacros))
+                        {
+                            content = content.Replace(undefineMacros, defineMacros);
+                            isWriteToFile = true;
+                        }
+                    }
+                    else
+                    {
+                        if (!content.Contains(undefineMacros))
+                        {
+                            content = content.Replace(defineMacros, undefineMacros);
+                            isWriteToFile = true;
+                        }
+                    }
+
+                    if (isWriteToFile)
+                        File.WriteAllText(scriptPath, content);
+                }
+            }
         }
     }
 }

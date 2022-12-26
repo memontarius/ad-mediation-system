@@ -6,10 +6,14 @@ using System.IO;
 
 namespace Virterix.AdMediation.Editor
 {
-    public class AdMobView : BaseAdNetworkView
+    public sealed class AdMobView : BaseAdNetworkView
     {
         public const string USE_MEDIATION_DEFMACROS = "_ADMOB_USE_MEDIATION";
+        private const string MEDIATION_FILE_FILTER = "AdMobMediationBehavior";
 
+        private const string USE_FAN_NETWORK_DEFMACROS = "_AMS_AUDIENCE_NETWORK";
+        private const string FAN_UTILS_FILE_FILTER = "AudienceNetworkMediationUtils";
+        
         private SerializedProperty _useMediationProp;
         private SerializedProperty _mediationNetworkFlagsProp;
         private string[] _mediationNetworkOptions;
@@ -38,14 +42,17 @@ namespace Virterix.AdMediation.Editor
             _mediationNetworkFlagsProp = _serializedSettings.FindProperty("_mediationNetworkFlags");
 
             bool defineUseMediationMacros = Enabled && _useMediationProp.boolValue;
-            WriteDefinitionInScript(defineUseMediationMacros, USE_MEDIATION_DEFMACROS);
+            WriteDefinitionInScript(defineUseMediationMacros, USE_MEDIATION_DEFMACROS, MEDIATION_FILE_FILTER);
 
             int flags = _mediationNetworkFlagsProp.intValue;
             for (int i = 0; i < _mediationNetworkOptions.Length; i++)
             {
                 bool enabled = (flags & (1 << i)) == (1 << i);
-                WriteDefinitionInScript(enabled, _mediationNetworkDefinitions[i]);
+                WriteDefinitionInScript(enabled, _mediationNetworkDefinitions[i], MEDIATION_FILE_FILTER);
             }
+
+            bool fanEnabled = Enabled && (_mediationNetworkFlagsProp.intValue & (1 << 0)) == (1 << 0);
+            WriteDefinitionInScript(fanEnabled, USE_FAN_NETWORK_DEFMACROS, FAN_UTILS_FILE_FILTER);
         }
 
         protected override BaseAdNetworkSettings CreateSettingsModel()
@@ -62,11 +69,14 @@ namespace Virterix.AdMediation.Editor
             bool activationChanged = base.DrawUI();
             if (activationChanged) {
                 if (this.Enabled) {
-                    WriteDefinitionInScript(_useMediationProp.boolValue, USE_MEDIATION_DEFMACROS);
+                    WriteDefinitionInScript(_useMediationProp.boolValue, USE_MEDIATION_DEFMACROS, MEDIATION_FILE_FILTER);
                 }
                 else {
-                    WriteDefinitionInScript(false, USE_MEDIATION_DEFMACROS);
+                    WriteDefinitionInScript(false, USE_MEDIATION_DEFMACROS, MEDIATION_FILE_FILTER);
                 }
+                
+                bool fanEnabled = Enabled && (_mediationNetworkFlagsProp.intValue & (1 << 0)) == (1 << 0);
+                WriteDefinitionInScript(fanEnabled, USE_FAN_NETWORK_DEFMACROS, FAN_UTILS_FILE_FILTER);
             }
             return activationChanged;
         }
@@ -76,8 +86,10 @@ namespace Virterix.AdMediation.Editor
             int flags = _mediationNetworkFlagsProp.intValue;
             for (int i = 0; i < _mediationNetworkOptions.Length; i++) {
                 bool enabled = (flags & (1 << i)) == (1 << i);
-                WriteDefinitionInScript(enabled, _mediationNetworkDefinitions[i]);
+                WriteDefinitionInScript(enabled, _mediationNetworkDefinitions[i], MEDIATION_FILE_FILTER);
             }
+            bool fanEnabled = Enabled && (_mediationNetworkFlagsProp.intValue & (1 << 0)) == (1 << 0);
+            WriteDefinitionInScript(fanEnabled, USE_FAN_NETWORK_DEFMACROS, FAN_UTILS_FILE_FILTER);
         }
         
         protected override void DrawSpecificSettings()
@@ -88,7 +100,7 @@ namespace Virterix.AdMediation.Editor
             bool changed = EditorGUI.EndChangeCheck();
 
             if (changed) {
-                WriteDefinitionInScript(_useMediationProp.boolValue, USE_MEDIATION_DEFMACROS);
+                WriteDefinitionInScript(_useMediationProp.boolValue, USE_MEDIATION_DEFMACROS, MEDIATION_FILE_FILTER);
                 AssetDatabase.Refresh();
             }
 
@@ -104,46 +116,6 @@ namespace Virterix.AdMediation.Editor
                 }
             }
             GUILayout.EndVertical();
-        }
-        
-        public void WriteDefinitionInScript(bool include, string macros)
-        {
-            string[] findFolders = new[] { "Assets/AdMediationSystem/Scripts" };
-            string[] assets = AssetDatabase.FindAssets("AdMobMediationBehavior", findFolders);
-            
-            if (assets.Length == 1)
-            {
-                var assetLocalPath = AssetDatabase.GUIDToAssetPath(assets[0]).Remove(0, 6);
-                string scriptPath = string.Format("{0}/{1}", Application.dataPath, assetLocalPath);
-
-                string content = File.ReadAllText(scriptPath);
-                if (content.Length > 0)
-                {
-                    string defineMacros = string.Format("#define {0}", macros);
-                    string undefineMacros = string.Format("//#define {0}", macros);
-                    bool isWriteToFile = false;
-
-                    if (include)
-                    {
-                        if (content.Contains(undefineMacros))
-                        {
-                            content = content.Replace(undefineMacros, defineMacros);
-                            isWriteToFile = true;
-                        }
-                    }
-                    else
-                    {
-                        if (!content.Contains(undefineMacros))
-                        {
-                            content = content.Replace(defineMacros, undefineMacros);
-                            isWriteToFile = true;
-                        }
-                    }
-
-                    if (isWriteToFile)
-                        File.WriteAllText(scriptPath, content);
-                }
-            }
         }
     }
 }
