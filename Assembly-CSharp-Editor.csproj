@@ -57,6 +57,7 @@
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Chartboost\ChartboostSettings.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AdMob\AdMobSettings.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\IronSource\IronSourceView.cs" />
+     <Compile Include="Assets\YandexMobileAds\Editor\PostprocessBuildPlayerYandexMobileAds.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Applovin\ApplovinView.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AdColony\AdColonySettings.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AudienceNetwork\AudienceNetworkView.cs" />
@@ -73,7 +74,6 @@
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\AdColony\AdColonyView.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\EditorAdType.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Chartboost\ChartboostView.cs" />
-     <Compile Include="Assets\YandexMobileAds\Editor\PostprocessBuildPlayerYandexMobileAds.cs" />
      <Compile Include="Assets\GooglePlayGames\Editor\GPGSStrings.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\AdMediatorView.cs" />
      <Compile Include="Assets\AdMediationSystem\Editor\Scripts\Networks\Vungle\VungleView.cs" />
@@ -423,8 +423,14 @@
      <Reference Include="GoogleMobileAds.Core">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Core.dll</HintPath>
      </Reference>
+     <Reference Include="GoogleMobileAds.Ump.Unity">
+     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Ump.Unity.dll</HintPath>
+     </Reference>
      <Reference Include="Google.VersionHandler">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\Google.VersionHandler.dll</HintPath>
+     </Reference>
+     <Reference Include="GoogleMobileAds.Ump">
+     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Ump.dll</HintPath>
      </Reference>
      <Reference Include="nunit.framework">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\PackageCache\com.unity.ext.nunit@1.0.6\net35\unity-custom\nunit.framework.dll</HintPath>

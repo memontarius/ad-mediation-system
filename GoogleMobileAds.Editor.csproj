@@ -51,14 +51,16 @@
      <Folder Include="Assets\GoogleMobileAds\Editor\Resources\DummyAds\AdImages" />
      <None Include="Assets\GoogleMobileAds\Editor\GoogleMobileAdsSKAdNetworkItems.xml" />
      <Folder Include="Assets\GoogleMobileAds\Editor\Resources\DummyAds\AppOpen" />
+     <None Include="Assets\GoogleMobileAds\Editor\GoogleUmpDependencies.xml" />
+     <None Include="Assets\GoogleMobileAds\Editor\AppLovinMediationDependencies.xml" />
      <Folder Include="Assets\GoogleMobileAds\Editor\Resources\DummyAds\AdInspector" />
+     <Folder Include="Assets\GoogleMobileAds\Editor\Resources\Ump" />
      <Folder Include="Assets\GoogleMobileAds\Editor\Resources\DummyAds\Rewarded" />
      <Folder Include="Assets\GoogleMobileAds\Editor\Resources\DummyAds" />
      <Folder Include="Assets\GoogleMobileAds\Editor\Resources\DummyAds\Interstitials" />
      <None Include="Assets\GoogleMobileAds\Editor\GoogleMobileAds.Editor.asmdef" />
      <Folder Include="Assets\GoogleMobileAds\Editor\Resources\DummyAds\Banners" />
      <None Include="Assets\GoogleMobileAds\Editor\GoogleMobileAdsDependencies.xml" />
-     <None Include="Assets\GoogleMobileAds\Editor\AppLovinMediationDependencies.xml" />
      <None Include="Assets\GoogleMobileAds\Editor\AdColonyMediationDependencies.xml" />
      <Folder Include="Assets\GoogleMobileAds\Editor" />
      <Reference Include="UnityEngine">
@@ -355,8 +357,14 @@
      <Reference Include="GoogleMobileAds.Core">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Core.dll</HintPath>
      </Reference>
+     <Reference Include="GoogleMobileAds.Ump.Unity">
+     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Ump.Unity.dll</HintPath>
+     </Reference>
      <Reference Include="Google.VersionHandler">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\Google.VersionHandler.dll</HintPath>
+     </Reference>
+     <Reference Include="GoogleMobileAds.Ump">
+     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Ump.dll</HintPath>
      </Reference>
      <Reference Include="nunit.framework">
      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\PackageCache\com.unity.ext.nunit@1.0.6\net35\unity-custom\nunit.framework.dll</HintPath>

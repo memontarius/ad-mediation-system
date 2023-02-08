@@ -17,3 +17,4 @@ MonoBehaviour:
   delayAppMeasurementInit: 1
   optimizeInitialization: 0
   optimizeAdLoading: 0
+  userTrackingUsageDescription: 

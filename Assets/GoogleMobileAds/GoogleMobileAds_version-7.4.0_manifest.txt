@@ -19,6 +19,7 @@ Assets/GoogleMobileAds/Editor/GoogleMobileAdsDependencies.xml
 Assets/GoogleMobileAds/Editor/GoogleMobileAdsSKAdNetworkItems.xml
 Assets/GoogleMobileAds/Editor/GoogleMobileAdsSettings.cs
 Assets/GoogleMobileAds/Editor/GoogleMobileAdsSettingsEditor.cs
+Assets/GoogleMobileAds/Editor/GoogleUmpDependencies.xml
 Assets/GoogleMobileAds/Editor/ManifestProcessor.cs
 Assets/GoogleMobileAds/Editor/PListProcessor.cs
 Assets/GoogleMobileAds/Editor/Resources/DummyAds/AdImages/1024x768.png
@@ -46,9 +47,15 @@ Assets/GoogleMobileAds/Editor/Resources/DummyAds/Interstitials/1024x768.prefab
 Assets/GoogleMobileAds/Editor/Resources/DummyAds/Interstitials/768x1024.prefab
 Assets/GoogleMobileAds/Editor/Resources/DummyAds/Rewarded/1024x768.prefab
 Assets/GoogleMobileAds/Editor/Resources/DummyAds/Rewarded/768x1024.prefab
+Assets/GoogleMobileAds/Editor/Resources/Ump/ConsentForm.png
+Assets/GoogleMobileAds/Editor/Resources/Ump/ConsentForm.prefab
 Assets/GoogleMobileAds/GoogleMobileAds.Android.dll
 Assets/GoogleMobileAds/GoogleMobileAds.Common.dll
 Assets/GoogleMobileAds/GoogleMobileAds.Core.dll
+Assets/GoogleMobileAds/GoogleMobileAds.Ump.Android.dll
+Assets/GoogleMobileAds/GoogleMobileAds.Ump.Unity.dll
+Assets/GoogleMobileAds/GoogleMobileAds.Ump.dll
+Assets/GoogleMobileAds/GoogleMobileAds.Ump.iOS.dll
 Assets/GoogleMobileAds/GoogleMobileAds.Unity.dll
 Assets/GoogleMobileAds/GoogleMobileAds.dll
 Assets/GoogleMobileAds/GoogleMobileAds.iOS.dll

@@ -14,6 +14,8 @@ namespace Virterix.AdMediation
 {
     public class YandexMobileAdsAdapter : AdNetworkAdapter
     {
+        private ScreenOrientation? _screenOrientation = null;
+        
         public enum YandexBannerSize
         {
             Flexible,
@@ -151,6 +153,24 @@ namespace Virterix.AdMediation
             base.InitializeAdInstanceData(adInstance, jsonAdInstance);
             if (adInstance.LoadingOnStart && adInstance.m_adType != AdType.Banner)
                 Prepare(adInstance, "");
+        }
+
+        private void Awake()
+        {
+            _screenOrientation = Screen.orientation;
+        }
+        
+        private void Update()
+        {
+            if (_screenOrientation != null && Screen.orientation != _screenOrientation.Value)
+            {
+                _screenOrientation = Screen.orientation;
+                foreach (AdInstance instance in m_adInstances)
+                {
+                    if (instance != null && instance.m_adType == AdType.Banner && !instance.m_bannerDisplayed)
+                        Hide(instance);
+                }
+            }
         }
 
         public override void Prepare(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
