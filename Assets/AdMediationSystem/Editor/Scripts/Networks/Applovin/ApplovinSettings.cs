@@ -11,7 +11,7 @@ namespace Virterix.AdMediation.Editor
         public override bool IsAppIdSupported => false;
         public override Type NetworkAdapterType => typeof(AppLovinAdapter);
         protected override string AdapterScriptName => "AppLovinAdapter";
-        protected override string AdapterDefinePreprocessorKey => "_AMS_APPLOVIN";
+        protected override string UsingAdapterPreprocessorDirective => "_AMS_APPLOVIN";
 
         public override string GetNetworkSDKVersion()
         {

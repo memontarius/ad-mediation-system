@@ -160,9 +160,10 @@ namespace Virterix.AdMediation
         protected IncentivizedReward m_lastReward;
         protected string m_currBannerPlacement;
 
+        public static bool SharedFullscreenAdShowing { get; protected set; }
         private static float s_waitResponseHandlingInterval;
         private WaitForSeconds _waitResponseIntervalInstruction;
-        private readonly WaitForSecondsRealtime _updateEventsIntervalInstruction = new WaitForSecondsRealtime(0.33f);
+        private readonly WaitForSecondsRealtime _updateEventsIntervalInstruction = new WaitForSecondsRealtime(0.25f);
 
         //_______________________________________________________________________________
         #region MonoBehavior Methods
@@ -284,6 +285,14 @@ namespace Virterix.AdMediation
             eventParam.m_adType = adType;
             eventParam.m_adInstance = adInstance;
             eventParam.m_adEvent = adEvent;
+
+            if (adType == AdType.Interstitial || adType == AdType.Incentivized)
+            {
+                if (adEvent == AdEvent.Showing)
+                    SharedFullscreenAdShowing = true;
+                else if (adEvent == AdEvent.Hiding)
+                    SharedFullscreenAdShowing = false;
+            }
             lock (m_events)
             {
                 m_events.Add(eventParam);

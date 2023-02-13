@@ -146,8 +146,9 @@ namespace Virterix.AdMediation
                     }
                 }
             }
+            AdMediationSystem.OnAdNetworkEvent += OnAdNetworkEvent;
         }
-
+        
         protected override void InitializeAdInstanceData(AdInstance adInstance, JSONValue jsonAdInstance)
         {
             base.InitializeAdInstanceData(adInstance, jsonAdInstance);
@@ -159,17 +160,27 @@ namespace Virterix.AdMediation
         {
             _screenOrientation = Screen.orientation;
         }
-        
+
+        private void OnDestroy()
+        {
+            AdMediationSystem.OnAdNetworkEvent -= OnAdNetworkEvent;
+        }
+
         private void Update()
         {
             if (_screenOrientation != null && Screen.orientation != _screenOrientation.Value)
             {
                 _screenOrientation = Screen.orientation;
-                foreach (AdInstance instance in m_adInstances)
-                {
-                    if (instance != null && instance.m_adType == AdType.Banner && !instance.m_bannerDisplayed)
-                        Hide(instance);
-                }
+                ForceHideAllHiddenBanners();
+            }
+        }
+
+        private void ForceHideAllHiddenBanners()
+        {
+            foreach (AdInstance instance in m_adInstances)
+            {
+                if (instance != null && instance.m_adType == AdType.Banner && !instance.m_bannerDisplayed)
+                    Hide(instance);
             }
         }
 
@@ -523,6 +534,12 @@ namespace Virterix.AdMediation
         //_______________________________________________________________________________
         #region Callback Event Methods
 
+        private void OnAdNetworkEvent(AdMediator mediator, AdNetworkAdapter networkAdapter, AdType adType, AdEvent adEvent, string adInstanceName)
+        {
+            if (adEvent == AdEvent.Hiding && (adType == AdType.Interstitial || adType == AdType.Incentivized))
+                ForceHideAllHiddenBanners();
+        }
+        
 #if _AMS_YANDEX_MOBILE_ADS
         private void OnAdLoaded(YandexAdInstanceData adInstance, object sender, EventArgs args)
         {

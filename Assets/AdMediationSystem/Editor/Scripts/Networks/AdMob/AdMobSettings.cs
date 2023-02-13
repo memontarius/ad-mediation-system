@@ -9,11 +9,21 @@ namespace Virterix.AdMediation.Editor
         public bool _useMediation;
         public int _mediationNetworkFlags;
 
+        public bool _useAppOpenAd;
+        public string _androidAppOpenAdUnitId;
+        public string _iOSAppOpenAdUnitId;
+        public int _appOpenAdDisplayMultiplicity;
+        
         public override Type NetworkAdapterType => typeof(AdMobAdapter);
 
         protected override string AdapterScriptName => "AdMobAdapter";
 
-        protected override string AdapterDefinePreprocessorKey => "_AMS_ADMOB";
+        protected override string[] AdditionalScriptPaths { get; } = 
+        {
+            "AdNetworkExtras/AdMob/AppOpenAdManager"
+        };
+
+        protected override string UsingAdapterPreprocessorDirective => "_AMS_ADMOB";
 
         public override string GetNetworkSDKVersion() => AdMobAdapter.GetSDKVersion();
 
@@ -24,7 +34,15 @@ namespace Virterix.AdMediation.Editor
         public override void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {
             AdMobAdapter.SetupNetworkNativeSettings(_iosAppId, _androidAppId);
-            ((AdMobAdapter)networkAdapter).m_useMediation = _useMediation;
+            AdMobAdapter adMobAdapter = (AdMobAdapter)networkAdapter;
+            adMobAdapter.m_useMediation = _useMediation;
+            adMobAdapter.m_useAppOpenAd = _useAppOpenAd;
+            if (_useAppOpenAd)
+            {
+                adMobAdapter.m_androidAppOpenAdId = _androidAppOpenAdUnitId;
+                adMobAdapter.m_iOSAppOpenAdId = _iOSAppOpenAdUnitId;
+                adMobAdapter.m_appOpenAdDisplayMultiplicity = _appOpenAdDisplayMultiplicity;
+            }
         }
 
         protected override AdInstanceParameters CreateBannerSpecificAdInstanceParameters(string projectName, string instanceName, 

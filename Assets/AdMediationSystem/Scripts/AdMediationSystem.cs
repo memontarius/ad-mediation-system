@@ -45,7 +45,7 @@ namespace Virterix.AdMediation
             public int[] maxPassages;
         }
 
-        public const string VERSION = "2.5.6";
+        public const string VERSION = "2.5.7";
         public const string AD_SETTINGS_FOLDER = "AdMediationSettings";
         public const string PREFAB_NAME = "AdMediationSystem";
         public const string PLACEMENT_DEFAULT_NAME = "Default";
@@ -209,6 +209,8 @@ namespace Virterix.AdMediation
             get { return PlatformName + "_settings"; }
         }
 
+        public static bool FullscreenAdShowing => AdNetworkAdapter.SharedFullscreenAdShowing;
+        
         private string DefaultSettingsFilePathInResources
         {
             get
@@ -460,7 +462,6 @@ namespace Virterix.AdMediation
             if (previousUserConsent != m_userPersonalisationConsent)
                 OnUserConsentToPersonalizedAdsChanged();
         }
-
         #endregion // Mediation ad networks
 
         //===============================================================================

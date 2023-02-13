@@ -24,7 +24,7 @@ namespace Virterix.AdMediation.Editor
             return settings;
         }
 
-        protected override void DrawSpecificSettings()
+        protected override void DrawSpecificSettings(AdMediationProjectSettings projectSettings)
         {
         }
 

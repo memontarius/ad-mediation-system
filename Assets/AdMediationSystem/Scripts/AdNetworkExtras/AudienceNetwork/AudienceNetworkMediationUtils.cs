@@ -16,7 +16,7 @@ namespace Virterix.AdMediation
 #endif
             public static void SetAdvertiserTrackingEnabled(bool advertiserTrackingEnabled)
             {
-#if  UNITY_IOS && _AMS_AUDIENCE_NETWORK
+#if UNITY_IOS && _AMS_AUDIENCE_NETWORK
                 FBAdSettingsBridgeSetAdvertiserTrackingEnabled(advertiserTrackingEnabled);
 #endif
             }

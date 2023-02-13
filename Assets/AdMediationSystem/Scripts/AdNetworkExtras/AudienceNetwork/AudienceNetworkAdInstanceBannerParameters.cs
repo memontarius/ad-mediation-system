@@ -12,17 +12,19 @@
 #if UNITY_EDITOR
         public static AdInstanceParameters CreateParameters()
         {
-            var parameters = CreateParameters<AudienceNetworkAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME);
+            var parameters =
+                CreateParameters<AudienceNetworkAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER,
+                    _PARAMETERS_FILE_NAME);
             return parameters;
         }
 
         public static AudienceNetworkAdInstanceBannerParameters CreateParameters(string projectName, string postfixName)
         {
-            var parameters = CreateParameters<AudienceNetworkAdInstanceBannerParameters>(projectName, _AD_INSTANCE_PARAMETERS_FOLDER,
+            var parameters = CreateParameters<AudienceNetworkAdInstanceBannerParameters>(projectName,
+                _AD_INSTANCE_PARAMETERS_FOLDER,
                 _PARAMETERS_FILE_NAME + postfixName);
             return parameters;
         }
 #endif
     }
 }
-

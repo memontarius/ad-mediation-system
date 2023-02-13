@@ -4,6 +4,8 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Boomlagoon.JSON;
+using GoogleMobileAds.Api;
+using GoogleMobileAds.Common;
 #if UNITY_EDITOR
 using System.Reflection;
 #endif
@@ -19,7 +21,7 @@ namespace Virterix.AdMediation
         public const string _INTERSTITIAL_ID_KEY = "interstitialId";
         public const string _REWARDED_ID_KEY = "rewardedId";
         public const string _APP_ID_KEY = "appId";
-
+        
         public enum AdMobBannerSize
         {
             SmartBanner,
@@ -82,9 +84,17 @@ namespace Virterix.AdMediation
 
         private const string UnderAgeOfConsentSaveKey = AdMediationSystem.PREFIX + "abmob.uac";
         private const string MaxContentRatingSaveKey = AdMediationSystem.PREFIX + "abmob.mcr";
-
+#if _AMS_ADMOB 
+        private AppOpenAdManager m_appOpenAdManager;
+#endif
+        private int m_appOpenAdDisplayCallCount;
+        
+        public bool m_useAppOpenAd;
+        public string m_androidAppOpenAdId;
+        public string m_iOSAppOpenAdId;
+        public int m_appOpenAdDisplayMultiplicity;
         public bool m_useMediation;
-
+        
         /// <summary>
         /// Should be assigned before initialization
         /// </summary>
@@ -165,7 +175,7 @@ namespace Virterix.AdMediation
             public EventHandler<Reward> onAdRewardVideoEarnedHandler;
             public EventHandler<AdValueEventArgs> onAdRewardVideoPaidHandler;
         }
-
+        
         private void OnApplicationPause(bool pause)
         {
 #if UNITY_IOS
@@ -237,9 +247,20 @@ namespace Virterix.AdMediation
 
             OnWillInitialize();
             MobileAds.Initialize(OnInitComplete);
+            if (m_useAppOpenAd)
+            {
+                string appOpenAdUnitId = m_androidAppOpenAdId;
+#if UNITY_IOS
+                appOpenAdUnitId = m_iOSAppOpenAdId;
+#endif
+                m_appOpenAdManager = new AppOpenAdManager(appOpenAdUnitId, Screen.orientation);
+                m_appOpenAdManager.LoadAd();
+                
+                AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
+            }
             OnDidInitialize();
         }
-
+        
         protected override void InitializeAdInstanceData(AdInstance adInstance, JSONValue jsonAdInstance)
         {
             base.InitializeAdInstanceData(adInstance, jsonAdInstance);
@@ -252,7 +273,7 @@ namespace Virterix.AdMediation
         }
 
         private AdMobMediationBehavior _adMobMediationBehavior;
-
+        
         private void ConfigureAdMob()
         {
             RequestConfiguration.Builder builder = new RequestConfiguration.Builder();
@@ -312,6 +333,14 @@ namespace Virterix.AdMediation
         {
             UnderAgeOfConsent = (AdMobTagForUnderAgeOfConsent)PlayerPrefs.GetInt(UnderAgeOfConsentSaveKey, (int)AdMobTagForUnderAgeOfConsent.Unspecified);
             MaxContentRating = (AdMobMaxAdContentRating)PlayerPrefs.GetInt(MaxContentRatingSaveKey, (int)AdMobMaxAdContentRating.Unspecified);
+        }
+
+        private void OnDestroy()
+        {
+            if (m_useAppOpenAd)
+            {
+                AppStateEventNotifier.AppStateChanged -= OnAppStateChanged;
+            }
         }
 
         public override void Prepare(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
@@ -700,7 +729,23 @@ namespace Virterix.AdMediation
             print("[AMS] AdMobAdapter.OnInitComplete()");
 #endif
         }
-
+        
+        private void OnAppStateChanged(AppState appState)
+        {
+            if (m_appOpenAdManager == null || SharedFullscreenAdShowing)
+                return;
+            
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log("[AMS] AdMobAdapter.OnAppStateChanged() App State is " + appState);
+#endif
+            if (appState == AppState.Foreground)
+            {
+                if (m_appOpenAdDisplayMultiplicity <= 1 || m_appOpenAdDisplayCallCount % m_appOpenAdDisplayMultiplicity != 0)
+                    m_appOpenAdManager.ShowAdIfAvailable();
+                m_appOpenAdDisplayCallCount++;
+            }
+        }
+        
         //------------------------------------------------------------------------
 #region Banner callback handlers
 
@@ -740,7 +785,7 @@ namespace Virterix.AdMediation
 #endif
         }
 
-        void HandleAdClosing(AdMobAdInstanceData adInstance, object sender, EventArgs args)
+        public void HandleAdClosing(AdMobAdInstanceData adInstance, object sender, EventArgs args)
         {
 #if AD_MEDIATION_DEBUG_MODE
             print("[AMS] AdMobAdapter.HandleAdClosing() " + " adInstance: " + adInstance.Name);

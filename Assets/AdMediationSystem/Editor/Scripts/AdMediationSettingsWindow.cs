@@ -734,7 +734,7 @@ namespace Virterix.AdMediation.Editor
             {
                 BaseAdNetworkView network = _networks[i];
                 GUILayout.BeginVertical("helpbox");
-                bool activationChanged = network.DrawUI();
+                bool activationChanged = network.DrawUI(_projectSettings);
                 if (activationChanged)
                 {
                     _networkEnabledStates[i] = network.Settings._enabled;

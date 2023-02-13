@@ -10,7 +10,7 @@ namespace Virterix.AdMediation.Editor
         public override bool IsAppIdSupported => false;
         public override Type NetworkAdapterType => typeof(YandexMobileAdsAdapter);
         protected override string AdapterScriptName => "YandexMobileAdsAdapter";
-        protected override string AdapterDefinePreprocessorKey => "_AMS_YANDEX_MOBILE_ADS";
+        protected override string UsingAdapterPreprocessorDirective => "_AMS_YANDEX_MOBILE_ADS";
         
         public override void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {

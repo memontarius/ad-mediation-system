@@ -127,7 +127,7 @@ namespace Virterix.AdMediation.Editor
             }
         }
 
-        public virtual bool DrawUI()
+        public virtual bool DrawUI(AdMediationProjectSettings projectSettings)
         {
             bool previousCollapsed = Collapsed;
             bool activationChanged = false;
@@ -161,7 +161,7 @@ namespace Virterix.AdMediation.Editor
                 _enabledProp.boolValue = Enabled;
                 DrawCommonSettings();
                 DrawPlatformSettings();               
-                DrawSpecificSettings();
+                DrawSpecificSettings(projectSettings);
                 DrawAdInstanceLists();
                 _serializedSettings.ApplyModifiedProperties();
                 EditorGUILayout.EndToggleGroup();
@@ -283,7 +283,7 @@ namespace Virterix.AdMediation.Editor
         {
         }
 
-        protected virtual void DrawSpecificSettings()
+        protected virtual void DrawSpecificSettings(AdMediationProjectSettings projectSettings)
         {
         }
 

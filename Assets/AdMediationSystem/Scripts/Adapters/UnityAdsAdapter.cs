@@ -279,6 +279,7 @@ namespace Virterix.AdMediation
                     case AdType.Interstitial:
                         try
                         {
+                            SharedFullscreenAdShowing = true;
                             unityAdInstance.InterstitialAd?.ShowAsync(m_interstitialShowOptions);
                         }
                         catch (ShowFailedException e)
@@ -289,6 +290,7 @@ namespace Virterix.AdMediation
                     case AdType.Incentivized:
                         try
                         {
+                            SharedFullscreenAdShowing = true;
                             unityAdInstance.RewardedAd?.ShowAsync(m_rewardedShowOptions);
                         }
                         catch (ShowFailedException e)

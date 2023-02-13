@@ -10,17 +10,19 @@ namespace Virterix.AdMediation
 #if UNITY_EDITOR
         public static AdInstanceParameters CreateParameters()
         {
-            var parameters = CreateParameters<AppLovinAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME);
+            var parameters =
+                CreateParameters<AppLovinAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER,
+                    _PARAMETERS_FILE_NAME);
             return parameters;
         }
 
         public static AppLovinAdInstanceBannerParameters CreateParameters(string projectName, string postfixName)
         {
-            var parameters = CreateParameters<AppLovinAdInstanceBannerParameters>(projectName, _AD_INSTANCE_PARAMETERS_FOLDER,
+            var parameters = CreateParameters<AppLovinAdInstanceBannerParameters>(projectName,
+                _AD_INSTANCE_PARAMETERS_FOLDER,
                 _PARAMETERS_FILE_NAME + postfixName);
             return parameters;
         }
 #endif
     }
 }
-

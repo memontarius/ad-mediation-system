@@ -19,6 +19,11 @@ namespace Virterix.AdMediation.Editor
         private string[] _mediationNetworkOptions;
         private string[] _mediationNetworkDefinitions;
 
+        private SerializedProperty _useAppOpenAdProp;
+        private SerializedProperty _androidAppOpenAdUnitIdProp;
+        private SerializedProperty _iOSAppOpenAdUnitIdProp;
+        private SerializedProperty _appOpenAdDisplayMultiplicityProp;
+        
         public AdMobView(AdMediationSettingsWindow settingsWindow, string name, string identifier) : 
             base(settingsWindow, name, identifier)
         {
@@ -41,6 +46,11 @@ namespace Virterix.AdMediation.Editor
             _useMediationProp = _serializedSettings.FindProperty("_useMediation");
             _mediationNetworkFlagsProp = _serializedSettings.FindProperty("_mediationNetworkFlags");
 
+            _useAppOpenAdProp = _serializedSettings.FindProperty("_useAppOpenAd");
+            _iOSAppOpenAdUnitIdProp = _serializedSettings.FindProperty("_iOSAppOpenAdUnitId");
+            _androidAppOpenAdUnitIdProp = _serializedSettings.FindProperty("_androidAppOpenAdUnitId");
+            _appOpenAdDisplayMultiplicityProp = _serializedSettings.FindProperty("_appOpenAdDisplayMultiplicity");
+            
             bool defineUseMediationMacros = Enabled && _useMediationProp.boolValue;
             WriteDefinitionInScript(defineUseMediationMacros, USE_MEDIATION_DEFMACROS, MEDIATION_FILE_FILTER);
 
@@ -65,8 +75,8 @@ namespace Virterix.AdMediation.Editor
         {
         }
 
-        public override bool DrawUI() {
-            bool activationChanged = base.DrawUI();
+        public override bool DrawUI(AdMediationProjectSettings projectSettings) {
+            bool activationChanged = base.DrawUI(projectSettings);
             if (activationChanged) {
                 if (this.Enabled) {
                     WriteDefinitionInScript(_useMediationProp.boolValue, USE_MEDIATION_DEFMACROS, MEDIATION_FILE_FILTER);
@@ -92,7 +102,7 @@ namespace Virterix.AdMediation.Editor
             WriteDefinitionInScript(fanEnabled, USE_FAN_NETWORK_DEFMACROS, FAN_UTILS_FILE_FILTER);
         }
         
-        protected override void DrawSpecificSettings()
+        protected override void DrawSpecificSettings(AdMediationProjectSettings projectSettings)
         {
             GUILayout.BeginVertical("box");
             EditorGUI.BeginChangeCheck();
@@ -114,6 +124,18 @@ namespace Virterix.AdMediation.Editor
                     WriteDefinitionInScript();
                     AssetDatabase.Refresh();
                 }
+            }
+            GUILayout.EndVertical();
+            
+            GUILayout.BeginVertical("box");
+            _useAppOpenAdProp.boolValue = EditorGUILayout.Toggle("Use App Open Ad", _useAppOpenAdProp.boolValue);
+            if (_useAppOpenAdProp.boolValue)
+            {
+                if (projectSettings.IsAndroid)
+                    EditorGUILayout.PropertyField(_androidAppOpenAdUnitIdProp, new GUIContent("Android Ad Unit ID"));
+                if (projectSettings.IsIOS)
+                    EditorGUILayout.PropertyField(_iOSAppOpenAdUnitIdProp, new GUIContent("iOS Ad Unit ID"));
+                EditorGUILayout.PropertyField(_appOpenAdDisplayMultiplicityProp, new GUIContent("Display Multiplicity"));
             }
             GUILayout.EndVertical();
         }

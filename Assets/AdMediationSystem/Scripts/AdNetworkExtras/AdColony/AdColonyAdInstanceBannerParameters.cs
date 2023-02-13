@@ -12,13 +12,16 @@ namespace Virterix.AdMediation
 #if UNITY_EDITOR
         public static AdInstanceParameters CreateParameters()
         {
-            var parameters = CreateParameters<AdColonyAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER, _PARAMETERS_FILE_NAME);
+            var parameters =
+                CreateParameters<AdColonyAdInstanceBannerParameters>(_AD_INSTANCE_PARAMETERS_FOLDER,
+                    _PARAMETERS_FILE_NAME);
             return parameters;
         }
 
         public static AdColonyAdInstanceBannerParameters CreateParameters(string projectName, string postfixName)
         {
-            var parameters = CreateParameters<AdColonyAdInstanceBannerParameters>(projectName, _AD_INSTANCE_PARAMETERS_FOLDER,
+            var parameters = CreateParameters<AdColonyAdInstanceBannerParameters>(projectName,
+                _AD_INSTANCE_PARAMETERS_FOLDER,
                 _PARAMETERS_FILE_NAME + postfixName);
             return parameters;
         }

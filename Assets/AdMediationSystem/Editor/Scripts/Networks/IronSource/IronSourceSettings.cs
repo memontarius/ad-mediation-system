@@ -33,7 +33,7 @@ namespace Virterix.AdMediation.Editor
         
         public override Type NetworkAdapterType => typeof(IronSourceAdapter);
         protected override string AdapterScriptName => "IronSourceAdapter";
-        protected override string AdapterDefinePreprocessorKey => "_AMS_IRONSOURCE";
+        protected override string UsingAdapterPreprocessorDirective => "_AMS_IRONSOURCE";
         public override bool IsCommonTimeoutSupported => true;
 
         public override bool IsAdSupported(AdType adType)

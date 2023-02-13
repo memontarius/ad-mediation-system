@@ -30,7 +30,7 @@ namespace Virterix.AdMediation.Editor
             return elementHeight;
         }
 
-        protected override void DrawSpecificSettings()
+        protected override void DrawSpecificSettings(AdMediationProjectSettings projectSettings)
         {
             GUILayout.BeginVertical("box");
             _sdkKeyProp.stringValue = EditorGUILayout.TextField("Sdk Key", _sdkKeyProp.stringValue);

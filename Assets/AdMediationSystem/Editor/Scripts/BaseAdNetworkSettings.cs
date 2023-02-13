@@ -78,7 +78,8 @@ namespace Virterix.AdMediation.Editor
         }
         
         protected virtual string AdapterScriptName { get; }
-        protected virtual string AdapterDefinePreprocessorKey { get; }
+        protected virtual string[] AdditionalScriptPaths { get; } = null;
+        protected virtual string UsingAdapterPreprocessorDirective { get; }
         public virtual string JsonAppIdKey { get { return "appId"; } }
         public virtual bool IsAppIdSupported { get; } = true;
         public virtual bool IsCommonTimeoutSupported { get; } = false;
@@ -137,13 +138,27 @@ namespace Virterix.AdMediation.Editor
         {
             string adapterPath = string.Format("{0}/{1}/{2}/{3}.cs", 
                 Application.dataPath, "AdMediationSystem", "/Scripts/Adapters", AdapterScriptName);
+            SetupPreprocessorDirective(adapterPath, UsingAdapterPreprocessorDirective);
+            
+            if (AdditionalScriptPaths != null)
+            {
+                foreach (var scriptPath in AdditionalScriptPaths)
+                {
+                    string path = string.Format("{0}/{1}/{2}/{3}.cs", 
+                        Application.dataPath, "AdMediationSystem", "Scripts", scriptPath);
+                    SetupPreprocessorDirective(path, UsingAdapterPreprocessorDirective);
+                }
+            }
+        }
 
+        private void SetupPreprocessorDirective(string adapterPath, string directive)
+        {
             string content = File.ReadAllText(adapterPath);
             if (content.Length > 0)
             {
-                string define = "#define " + AdapterDefinePreprocessorKey;
-                string undefine = "//#define " + AdapterDefinePreprocessorKey;
-                
+                string define = "#define " + directive;
+                string undefine = "//#define " + directive;
+
                 if (_enabled)
                 {
                     content = content.Replace(undefine, define);
@@ -155,6 +170,7 @@ namespace Virterix.AdMediation.Editor
                         content = content.Replace(define, undefine);
                     }
                 }
+
                 File.WriteAllText(adapterPath, content);
             }
         }
