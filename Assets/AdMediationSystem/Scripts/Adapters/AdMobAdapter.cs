@@ -88,6 +88,8 @@ namespace Virterix.AdMediation
         private AppOpenAdManager m_appOpenAdManager;
 #endif
         private int m_appOpenAdDisplayCallCount;
+        private AdMobMediationBehavior m_adMobMediationBehavior;
+        private bool m_wasAppStateEventNotifierSubscribe;
         
         public bool m_useAppOpenAd;
         public string m_androidAppOpenAdId;
@@ -257,6 +259,7 @@ namespace Virterix.AdMediation
                 m_appOpenAdManager.LoadAd();
                 
                 AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
+                m_wasAppStateEventNotifierSubscribe = true;
             }
             OnDidInitialize();
         }
@@ -271,14 +274,12 @@ namespace Virterix.AdMediation
             AdInstance adInstance = new AdMobAdInstanceData(this);
             return adInstance;
         }
-
-        private AdMobMediationBehavior _adMobMediationBehavior;
         
         private void ConfigureAdMob()
         {
             RequestConfiguration.Builder builder = new RequestConfiguration.Builder();
             if (m_useMediation) {
-                _adMobMediationBehavior = new AdMobMediationBehavior(this);
+                m_adMobMediationBehavior = new AdMobMediationBehavior(this);
             }
 
             if (AdMediationSystem.Instance.ChildrenMode != ChildDirectedMode.NotAssign)
@@ -337,7 +338,7 @@ namespace Virterix.AdMediation
 
         private void OnDestroy()
         {
-            if (m_useAppOpenAd)
+            if (m_useAppOpenAd && m_wasAppStateEventNotifierSubscribe)
             {
                 AppStateEventNotifier.AppStateChanged -= OnAppStateChanged;
             }
