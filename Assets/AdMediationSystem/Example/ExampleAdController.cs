@@ -1,4 +1,6 @@
-﻿using UnityEngine.UI;
+﻿using System;
+using UnityEngine;
+using UnityEngine.UI;
 using Virterix.AdMediation;
 
 public class ExampleAdController : BaseAdController
@@ -23,7 +25,7 @@ public class ExampleAdController : BaseAdController
         AdMediationSystem.Load("DefaultProject");
         m_adPersonalizedText.rectTransform.parent.GetComponent<Button>().interactable = false;
     }
-
+    
     private void OnMediationSystemInitialized()
     {
         m_adPersonalizedText.rectTransform.parent.GetComponent<Button>().interactable = true;

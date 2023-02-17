@@ -536,7 +536,7 @@ namespace Virterix.AdMediation
 
         private void OnAdNetworkEvent(AdMediator mediator, AdNetworkAdapter networkAdapter, AdType adType, AdEvent adEvent, string adInstanceName)
         {
-            if (adEvent == AdEvent.Hiding && (adType == AdType.Interstitial || adType == AdType.Incentivized))
+            if (adEvent == AdEvent.Hiding && AdMediationSystem.IsAdFullscreen(adType))
                 ForceHideAllHiddenBanners();
         }
         

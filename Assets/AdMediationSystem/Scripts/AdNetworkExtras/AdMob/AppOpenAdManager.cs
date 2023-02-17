@@ -14,21 +14,23 @@ namespace Virterix.AdMediation
         private static AppOpenAdManager s_instance;
         private readonly string _adUnitId;
         private readonly ScreenOrientation _screenOrientation;
+        private readonly AdNetworkAdapter _networkAdapter;
         
         private AppOpenAd _appOpenAd;
         private bool _isShowingAd = false;
         private DateTime _loadTime;
-
+        
         public static AppOpenAdManager Instance => s_instance;
         public int DisplayCount { get; private set; }
         
         private bool IsAdAvailable =>
             _appOpenAd != null && (DateTime.UtcNow - _loadTime).TotalMinutes < 240;
 
-        public AppOpenAdManager(string adUnitId, ScreenOrientation screenOrientation)
+        public AppOpenAdManager(AdNetworkAdapter networkAdapter, string adUnitId, ScreenOrientation screenOrientation)
         {
             _adUnitId = adUnitId;
             _screenOrientation = screenOrientation;
+            _networkAdapter = networkAdapter;
         }
         
         public void LoadAd()
@@ -59,6 +61,7 @@ namespace Virterix.AdMediation
             // Set the ad to null to indicate that AppOpenAdManager no longer has another ad to show.
             _appOpenAd = null;
             _isShowingAd = false;
+            AdMediationSystem.NotifyAdNetworkEvent(null, _networkAdapter, AdType.AppOpen, AdEvent.Hiding, AdInstance.AD_INSTANCE_DEFAULT_NAME);
             LoadAd();
         }
 
@@ -79,6 +82,7 @@ namespace Virterix.AdMediation
 #endif
             DisplayCount++;
             _isShowingAd = true;
+            AdMediationSystem.NotifyAdNetworkEvent(null, _networkAdapter, AdType.AppOpen, AdEvent.Showing, AdInstance.AD_INSTANCE_DEFAULT_NAME);
         }
 
         private void HandleAdImpressionRecorded()

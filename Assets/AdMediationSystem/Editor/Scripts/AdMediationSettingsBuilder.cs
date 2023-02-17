@@ -269,7 +269,7 @@ namespace Virterix.AdMediation.Editor
                     // Ad instances
                     if (!settings.IsTotallyAdInstanceUnsupported)
                     {
-                        jsonNetwork.Add("instances", CreateAdnstances(settings, platform));
+                        jsonNetwork.Add("instances", CreateAdInstances(settings, platform));
                     }
 
                     jsonNetworks.Add(jsonNetwork);
@@ -278,7 +278,7 @@ namespace Virterix.AdMediation.Editor
             return jsonNetworks;
         }
 
-        private static JSONArray CreateAdnstances(BaseAdNetworkSettings networkSettings, AppPlatform platform)
+        private static JSONArray CreateAdInstances(BaseAdNetworkSettings networkSettings, AppPlatform platform)
         {
             JSONArray jsonInstances = new JSONArray();
             AdInstanceGenerateDataContainer[] allAdInstanceDataHolders = networkSettings.GetAllAdInstanceDataHolders();

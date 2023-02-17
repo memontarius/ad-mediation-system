@@ -45,7 +45,7 @@ namespace Virterix.AdMediation
             public int[] maxPassages;
         }
 
-        public const string VERSION = "2.5.7";
+        public const string VERSION = "2.5.8";
         public const string AD_SETTINGS_FOLDER = "AdMediationSettings";
         public const string PREFAB_NAME = "AdMediationSystem";
         public const string PLACEMENT_DEFAULT_NAME = "Default";
@@ -116,7 +116,7 @@ namespace Virterix.AdMediation
         public ChildDirectedMode ChildrenMode => m_childrenMode;
         public bool IsTestModeEnabled => m_testModeEnabled;
         public string[] TestDevices => m_testDevices;
-        
+         
         /// <summary>
         /// Use a personal data of user. To CCPA and GDPR Compliance
         /// </summary>
@@ -369,6 +369,9 @@ namespace Virterix.AdMediation
         //===============================================================================
         #region Core methods
         //-------------------------------------------------------------------------------
+
+        public static bool IsAdFullscreen(AdType adType) => 
+            adType == AdType.Interstitial || adType == AdType.Incentivized || adType == AdType.AppOpen;
 
         public static string GetAdInstanceParametersPath(string projectPath)
         {

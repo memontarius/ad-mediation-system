@@ -255,7 +255,7 @@ namespace Virterix.AdMediation
 #if UNITY_IOS
                 appOpenAdUnitId = m_iOSAppOpenAdId;
 #endif
-                m_appOpenAdManager = new AppOpenAdManager(appOpenAdUnitId, Screen.orientation);
+                m_appOpenAdManager = new AppOpenAdManager(this, appOpenAdUnitId, Screen.orientation);
                 m_appOpenAdManager.LoadAd();
                 
                 AppStateEventNotifier.AppStateChanged += OnAppStateChanged;

@@ -5,6 +5,7 @@
         Unknown,
         Banner,
         Interstitial,
-        Incentivized
+        Incentivized,
+        AppOpen
     }
 }

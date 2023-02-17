@@ -44,7 +44,7 @@ namespace Virterix.AdMediation
 
         private void OnAdNetworkEvent(AdMediator mediator, AdNetworkAdapter network, AdType adType, AdEvent adEvent, string adInstanceName) 
         {
-            if (adType == AdType.Interstitial || adType == AdType.Incentivized) {
+            if (AdMediationSystem.IsAdFullscreen(adType)) {
                 switch (adEvent) {
                     case AdEvent.Showing:
                         if (adType == AdType.Interstitial) {
