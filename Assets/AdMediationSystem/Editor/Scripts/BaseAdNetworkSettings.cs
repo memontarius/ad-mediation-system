@@ -64,10 +64,10 @@ namespace Virterix.AdMediation.Editor
             get
             {
                 bool isTotallyUnsupported = true;
-                AdType[] adTypes = System.Enum.GetValues(typeof(AdType)) as AdType[];
+                AdType[] adTypes = Utils.SupportedMediationAdTypes;
                 foreach(var adType in adTypes)
                 {
-                    if (adType != AdType.Unknown && IsAdInstanceSupported(adType))
+                    if (IsAdInstanceSupported(adType))
                     {
                         isTotallyUnsupported = false;
                         break;

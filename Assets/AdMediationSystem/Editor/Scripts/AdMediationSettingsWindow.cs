@@ -478,11 +478,10 @@ namespace Virterix.AdMediation.Editor
 
         private void UpdateUnitSelectionInAllMediators()
         {
-            AdType[] adTypes = Enum.GetValues(typeof(AdType)) as AdType[];
+            AdType[] adTypes = Utils.SupportedMediationAdTypes;
             foreach (var adType in adTypes)
             {
-                if (adType != AdType.Unknown)
-                    UpdateUnitSelectionInMediators(adType);
+                UpdateUnitSelectionInMediators(adType);
             }
         }
 
@@ -785,10 +784,10 @@ namespace Virterix.AdMediation.Editor
             string iosAdSettingsPath = string.Format("{0}/{1}", path, "ios_settings.json");
             BaseAdNetworkSettings[] networksSettings = NetworkSettings;
 
-            var adTypes = Enum.GetValues(typeof(AdType)) as AdType[];
+            var adTypes = Utils.SupportedMediationAdTypes;
             foreach (var adType in adTypes)
             {
-                if (adType != AdType.Unknown)
+                if (AdMediationSettingsBuilder.IsMediationSupport(adType))
                     UpdateAdInstanceStorage(adType);
             }
             UpdateUnitSelectionInAllMediators();

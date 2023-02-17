@@ -4,22 +4,31 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
 using System.IO;
+using System.Linq;
 
 namespace Virterix.AdMediation.Editor
 {
     public static class Utils
     {
-        public static string[] AdTypes
+        public static AdType[] SupportedMediationAdTypes
         {
             get
             {
-                if (_adTypes == null)
-                    _adTypes = Enum.GetNames(typeof(AdType));
-                return _adTypes;
+                AdType[] adTypeArray = System.Enum.GetValues(typeof(AdType)) as AdType[];
+                List<AdType> adTypes = adTypeArray.ToList();
+                for (int i = 0; i < adTypes.Count; i++)
+                {
+                    if (!AdMediationSettingsBuilder.IsMediationSupport(adTypes[i]))
+                    {
+                        adTypes.Remove(adTypes[i]);
+                        i--;
+                            
+                    }
+                }
+                return adTypes.ToArray();
             }
         }
-        private static string[] _adTypes;
-
+        
         public static string[] EditorAdTypes
         {
             get

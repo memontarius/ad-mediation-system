@@ -13,6 +13,9 @@ namespace Virterix.AdMediation.Editor
         //-------------------------------------------------------------
         #region Helpers
 
+        public static bool IsMediationSupport(AdType adType) => 
+            adType != AdType.Unknown && adType != AdType.AppOpen;
+
         public static string GetAdProjectSettingsPath(string projectName, bool includeAssets)
         {
             string resourceFolder = "Resources";
@@ -377,22 +380,19 @@ namespace Virterix.AdMediation.Editor
 
         private static void FillNetworkHolder(GameObject networkHolder, AdMediationProjectSettings commonSettings, BaseAdNetworkSettings[] networksSettings)
         {
-            AdType[] adTypeArray = System.Enum.GetValues(typeof(AdType)) as AdType[];
-            List<AdType> adTypes = adTypeArray.ToList();
-            adTypes.Remove(AdType.Unknown);
-
+            AdType[] mediationAdTypes = Utils.SupportedMediationAdTypes;
             foreach (var settings in networksSettings)
             {
                 if (settings._enabled)
                 {
                     AdNetworkAdapter adapter = networkHolder.AddComponent(settings.NetworkAdapterType) as AdNetworkAdapter;
                     List<AdNetworkAdapter.AdParam> adSupportedParams = new List<AdNetworkAdapter.AdParam>();
-                    for (int i = 0; i < adTypes.Count; i++)
+                    for (int i = 0; i < mediationAdTypes.Length; i++)
                     {
-                        if (settings.IsAdSupported(adTypes[i]))
+                        if (settings.IsAdSupported(mediationAdTypes[i]))
                         {
                             var supportedParam = new AdNetworkAdapter.AdParam();
-                            supportedParam.m_adType = adTypes[i];
+                            supportedParam.m_adType = mediationAdTypes[i];
                             supportedParam.m_isCheckAvailabilityWhenPreparing = settings.IsCheckAvailabilityWhenPreparing(supportedParam.m_adType);
                             adSupportedParams.Add(supportedParam);
                         }
