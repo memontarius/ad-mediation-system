@@ -117,7 +117,7 @@ namespace Virterix.AdMediation
 
         public static string RESPONSE_WAIT_TIME_KEY = "responseWaitTime";
         public event Action<AdNetworkAdapter, AdType, AdEvent, AdInstance> OnEvent = delegate { };
-       
+        
         public string m_networkName;
         public AdParam[] m_adSupportParams;
         public float m_responseWaitTime = 30f;
@@ -164,7 +164,9 @@ namespace Virterix.AdMediation
         private static float s_waitResponseHandlingInterval;
         private WaitForSeconds _waitResponseIntervalInstruction;
         private readonly WaitForSecondsRealtime _updateEventsIntervalInstruction = new WaitForSecondsRealtime(0.25f);
-
+        
+        protected bool IsApplicationQuiting { get; private set; }
+        
         //_______________________________________________________________________________
         #region MonoBehavior Methods
         //-------------------------------------------------------------------------------
@@ -172,13 +174,12 @@ namespace Virterix.AdMediation
         {
             StartCoroutine(ProcessUpdateEvents());
         }
-
+        
         protected virtual void OnDisable()
         {
             StopAllCoroutines();
             UpdateEvents();
         }
-        
         #endregion MonoBehavior Methods
 
         //_______________________________________________________________________________
@@ -239,7 +240,7 @@ namespace Virterix.AdMediation
         public virtual bool Show(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME) { return false; }
 
         public virtual void Hide(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME) { }
-
+        
         public bool IsReady(AdType adType, string adInstanceName = AdInstance.AD_INSTANCE_DEFAULT_NAME)
         {
             AdInstance adInstance = GetAdInstance(adType, adInstanceName);

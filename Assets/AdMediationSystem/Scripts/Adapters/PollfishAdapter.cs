@@ -9,6 +9,8 @@ namespace Virterix.AdMediation
 {
     public class PollfishAdapter : AdNetworkAdapter
     {
+        public const string IDENTIFIER = "pollfish";
+        
         public enum SurveyPosition
         {
             TopLeft = 0,
@@ -50,8 +52,7 @@ namespace Virterix.AdMediation
         private AdInstance m_adInstance;
 
 #if _AMS_POLLFISH
-
-        private void Awake()
+        protected override void Awake()
         {
 #if !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS)
             Pollfish.SetEventObjectPollfish(this.gameObject.name);

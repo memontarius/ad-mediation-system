@@ -17,10 +17,7 @@ namespace Virterix.AdMediation
 {
     public class AdMobAdapter : AdNetworkAdapter
     {
-        public const string _BANNER_ID_KEY = "bannerId";
-        public const string _INTERSTITIAL_ID_KEY = "interstitialId";
-        public const string _REWARDED_ID_KEY = "rewardedId";
-        public const string _APP_ID_KEY = "appId";
+        public const string IDENTIFIER = "admob";
         
         public enum AdMobBannerSize
         {
@@ -96,7 +93,8 @@ namespace Virterix.AdMediation
         public string m_iOSAppOpenAdId;
         public int m_appOpenAdDisplayMultiplicity;
         public bool m_useMediation;
-        
+
+        public bool AppOpenAdDisabled { get; set; } = false;
         /// <summary>
         /// Should be assigned before initialization
         /// </summary>
@@ -123,7 +121,7 @@ namespace Virterix.AdMediation
                 path = UnityEditor.AssetDatabase.GUIDToAssetPath(foundAssets[0]);
             }
             ScriptableObject adMobSettings = UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
-    
+
             if (adMobSettings != null)
             {
                 Type settingsType = adMobSettings.GetType();
@@ -248,6 +246,7 @@ namespace Virterix.AdMediation
             ConfigureAdMob();
 
             OnWillInitialize();
+            AppOpenAdDisabled = AdMediationSystem.NonRewardAdsDisabled;
             MobileAds.Initialize(OnInitComplete);
             if (m_useAppOpenAd)
             {
@@ -338,7 +337,7 @@ namespace Virterix.AdMediation
 
         private void OnDestroy()
         {
-            if (m_useAppOpenAd && m_wasAppStateEventNotifierSubscribe)
+            if (m_wasAppStateEventNotifierSubscribe)
             {
                 AppStateEventNotifier.AppStateChanged -= OnAppStateChanged;
             }
@@ -733,7 +732,7 @@ namespace Virterix.AdMediation
         
         private void OnAppStateChanged(AppState appState)
         {
-            if (m_appOpenAdManager == null || SharedFullscreenAdShowing)
+            if (AppOpenAdDisabled || !enabled || m_appOpenAdManager == null || SharedFullscreenAdShowing)
                 return;
             
 #if AD_MEDIATION_DEBUG_MODE

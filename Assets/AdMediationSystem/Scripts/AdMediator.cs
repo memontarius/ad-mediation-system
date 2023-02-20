@@ -486,7 +486,7 @@ namespace Virterix.AdMediation
                     m_lastActiveUnitId = m_fetchStrategy.UnitIndex;
                 }
             }
-
+       
             switch (adEvent)
             {
                 case AdEvent.PreparationFailed:

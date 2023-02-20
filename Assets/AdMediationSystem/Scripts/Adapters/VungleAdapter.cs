@@ -9,6 +9,8 @@ namespace Virterix.AdMediation
 {
     public class VungleAdapter : AdNetworkAdapter
     {
+        public const string IDENTIFIER = "vungle";
+        
         private string m_appId;
 
 #if _AMS_VUNGLE

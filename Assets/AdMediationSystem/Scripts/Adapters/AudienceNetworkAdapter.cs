@@ -15,11 +15,13 @@ namespace Virterix.AdMediation
 {
     public class AudienceNetworkAdapter : AdNetworkAdapter
     {
-        public const string _BANNER_ID_KEY = "bannerId";
-        public const string _INTERSTITIAL_ID_KEY = "interstitialId";
-        public const string _REWARDED_ID_KEY = "rewardedId";
-        public const string _BANNER_REFRESH_TIME_KEY = "bannerRefreshTime";
-        public const string _REFRESH_TIME_KEY = "refreshTime";
+        public const string IDENTIFIER = "audiencenetwork";
+        
+        public const string BANNER_ID_KEY = "bannerId";
+        public const string INTERSTITIAL_ID_KEY = "interstitialId";
+        public const string REWARDED_ID_KEY = "rewardedId";
+        public const string BANNER_REFRESH_TIME_KEY = "bannerRefreshTime";
+        public const string REFRESH_TIME_KEY = "refreshTime";
 
         public enum AudienceNetworkBannerSize
         {
@@ -150,9 +152,9 @@ namespace Virterix.AdMediation
 
             if (adInstance.m_adType == AdType.Banner)
             {
-                if (jsonAdInstance.Obj.ContainsKey(_REFRESH_TIME_KEY))
+                if (jsonAdInstance.Obj.ContainsKey(REFRESH_TIME_KEY))
                 {
-                    audienceNetworkAdInstance.m_refreshTime = Convert.ToInt32(jsonAdInstance.Obj.GetNumber(_REFRESH_TIME_KEY));
+                    audienceNetworkAdInstance.m_refreshTime = Convert.ToInt32(jsonAdInstance.Obj.GetNumber(REFRESH_TIME_KEY));
                 }
             }
         }

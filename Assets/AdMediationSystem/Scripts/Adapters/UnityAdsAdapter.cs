@@ -15,6 +15,8 @@ namespace Virterix.AdMediation
 {
     public class UnityAdsAdapter : AdNetworkAdapter
     {
+        public const string IDENTIFIER = "unityads";
+        
         private string m_appId;
         private bool m_isBannerDisplayed;
         public Vector2 m_bannerHidingOffset = new Vector2(100000f, 100000f);
@@ -324,17 +326,23 @@ namespace Virterix.AdMediation
                         BannerAdAnchor bannerAnchor = ConvertToNativeBannerPosition(
                             (UnityBannerAnchor)GetBannerPosition(adInstance, mediator.m_placementName));
                         unityAdInstance.BannerAd?.SetPosition(bannerAnchor);
+                        
+                        Debug.Log($"UNITY Hide() IsAdBannerInstanceUsedInMediator: {adInstance.m_adId}");
+                        
                         wasShownInOtherPlacement = true;
                         break;
                     }
                 }
-
+                
                 if (!wasShownInOtherPlacement)
                 {
                     bool isBannerDisplayed = adInstance.m_bannerDisplayed;
                     adInstance.m_bannerDisplayed = false;
                     m_isBannerDisplayed = false;
                     unityAdInstance.BannerAd?.SetPosition(unityAdInstance.BannerAnchor, m_bannerHidingOffset);
+                    
+                    Debug.Log($"UNITY Hide() {unityAdInstance.BannerAd == null} m_isBannerDisplayed: {m_isBannerDisplayed} {adInstance.m_adId}");
+                    
                     if (isBannerDisplayed)
                         NotifyEvent(AdEvent.Hiding, adInstance);
                 }
@@ -554,7 +562,7 @@ namespace Virterix.AdMediation
             m_unityAdsInitialized = true;
             SetUserConsentToPersonalizedAds(AdMediationSystem.UserPersonalisationConsent);
             MediationService.Instance.ImpressionEventPublisher.OnImpression += OnInterstitialImpressionEvent;
-            foreach (var instance in m_adInstances)
+            foreach (AdInstance instance in m_adInstances)
             {
                 UnityAdInstanceData unityAdInstance = (UnityAdInstanceData)instance;
                 switch (unityAdInstance.m_adType)
@@ -569,6 +577,9 @@ namespace Virterix.AdMediation
                         unityAdInstance.BannerAd = CreateBannerAd(unityAdInstance);
                         break;
                 }
+                
+                if (AdMediationSystem.NonRewardAdsDisabled && instance.m_adType != AdType.Incentivized)
+                    continue;
                 
                 if (unityAdInstance.LoadingOnStart)
                     Prepare(unityAdInstance);

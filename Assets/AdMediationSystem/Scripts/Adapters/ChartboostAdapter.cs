@@ -12,6 +12,8 @@ namespace Virterix.AdMediation
 {
     public class ChartboostAdapter : AdNetworkAdapter
     {
+        public const string IDENTIFIER = "chartboost";
+        
         public int m_timeout;
 
         public static void SetupNetworkNativeSettings(string androidAppId, string androidAppSignatre, string iOSAppId, string iOSAppSignatre)

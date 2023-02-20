@@ -45,15 +45,13 @@ namespace Virterix.AdMediation
             public int[] maxPassages;
         }
 
-        public const string VERSION = "2.5.9";
+        public const string VERSION = "2.6.0";
         public const string AD_SETTINGS_FOLDER = "AdMediationSettings";
         public const string PREFAB_NAME = "AdMediationSystem";
         public const string PLACEMENT_DEFAULT_NAME = "Default";
         public const string PREFIX = "adm.";
-
         public const string AD_INSTANCE_PARAMETERS_ROOT_FOLDER = "AdInstanceParameters";
         public const string AD_INSTANCE_PARAMETERS_FILE_EXTENSION = ".asset";
-
         public const int DEFAULT_NETWORK_RESPONSE_WAIT_TIME = 30;
 
         public enum AdSettingsCompareMode
@@ -116,7 +114,36 @@ namespace Virterix.AdMediation
         public ChildDirectedMode ChildrenMode => m_childrenMode;
         public bool IsTestModeEnabled => m_testModeEnabled;
         public string[] TestDevices => m_testDevices;
-         
+
+        public static bool AdsDisabled
+        {
+            get => s_adsDisabled;
+            set
+            {
+                s_adsDisabled = value;
+                if (s_adsDisabled)
+                    HideAllBanners();
+                foreach (AdNetworkAdapter network  in Instance.m_networkAdapters)
+                    network.enabled = !s_adsDisabled;
+            }
+        }
+        private static bool s_adsDisabled;
+        
+        public static bool NonRewardAdsDisabled
+        {
+            get => s_nonRewardAdsDisabled;
+            set
+            {
+                s_nonRewardAdsDisabled = value;
+                if (s_nonRewardAdsDisabled)
+                    HideAllBanners();
+                AdMobAdapter adMob = Instance.GetNetwork<AdMobAdapter>(AdMobAdapter.IDENTIFIER);
+                if (adMob != null)
+                    adMob.AppOpenAdDisabled = s_nonRewardAdsDisabled;
+            }
+        }
+        private static bool s_nonRewardAdsDisabled;
+        
         /// <summary>
         /// Use a personal data of user. To CCPA and GDPR Compliance
         /// </summary>
@@ -395,6 +422,12 @@ namespace Virterix.AdMediation
             return foundNetwork;
         }
 
+        public T GetNetwork<T>(string networkName) where T: AdNetworkAdapter
+        {
+            T foundNetwork = GetNetwork(networkName) as T;
+            return foundNetwork;
+        }
+        
         public AdMediator GetMediator(AdType adType, string placementName = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
             AdMediator foundMediator = null;
@@ -433,7 +466,11 @@ namespace Virterix.AdMediation
         {
             AdMediator mediator = Instance.GetMediator(adType, placementName);
             if (mediator != null)
+            {
+                if (AdsDisabled || NonRewardAdsDisabled && mediator.m_adType != AdType.Incentivized)
+                    return;
                 mediator.Show();
+            }
             else
                 Debug.Log("[AMS] AdMediationSystem.Fetch() Not found mediator: " + adType.ToString());
         }
@@ -447,6 +484,15 @@ namespace Virterix.AdMediation
                 Debug.Log("[AMS] AdMediationSystem.Hide() Not found mediator " + adType.ToString());
         }
 
+        public static void HideAllBanners()
+        {
+            foreach (AdMediator mediator in Instance.m_mediators)
+            {
+                if (mediator.m_adType == AdType.Banner)
+                    mediator.Hide();
+            }
+        }
+        
         public static void NotifyAdNetworkEvent(AdMediator mediator, AdNetworkAdapter network, AdType adType, AdEvent adEvent, string adInstanceName)
         {
             OnAdNetworkEvent(mediator, network, adType, adEvent, adInstanceName);
@@ -600,17 +646,17 @@ namespace Virterix.AdMediation
         public static AdMediationSystem Load(string projectName)
         {
             GameObject prefab = null;
-
+            
             if (projectName.Length > 0)
             {
-                string prefabPath = string.Format("{0}/{1}/{2}", AD_SETTINGS_FOLDER, projectName, PREFAB_NAME);
+                string prefabPath = $"{AD_SETTINGS_FOLDER}/{projectName}/{PREFAB_NAME}";
                 prefab = Resources.Load<GameObject>(prefabPath);
             }
             else
             {
-                AdMediationSystem[] preafbs = Resources.LoadAll<AdMediationSystem>(AD_SETTINGS_FOLDER);
-                if (preafbs.Length > 0)
-                    prefab = preafbs[0].gameObject;
+                AdMediationSystem[] prefabs = Resources.LoadAll<AdMediationSystem>(AD_SETTINGS_FOLDER);
+                if (prefabs.Length > 0)
+                    prefab = prefabs[0].gameObject;
             }
 
             AdMediationSystem mediationSystem = null;
@@ -625,27 +671,28 @@ namespace Virterix.AdMediation
             return mediationSystem;
         }
 
-        public void Initialize()
+        public void Initialize(bool nonRewardAdsDisabled = false)
         {
             InitStatus = InitializedStatus.Initializing;
             m_networkAdapters = NetworkAdapters;
             AdMediator[] mediators = GetComponentsInChildren<AdMediator>(true);
             m_mediators.AddRange(mediators);
+            s_nonRewardAdsDisabled = nonRewardAdsDisabled;
             InitializeSettings();
         }
 
-        public void Initialize(bool isOnlyLoadingDefaultSettings)
+        public void Initialize(bool isOnlyLoadingDefaultSettings, bool nonRewardAdsDisabled = false)
         {
             m_isOnlyLoadingDefaultSettings = isOnlyLoadingDefaultSettings;
             if (InitStatus == InitializedStatus.None)
-                Initialize();
+                Initialize(nonRewardAdsDisabled);
         }
         
-        public void Initialize(bool isOnlyLoadingDefaultSettings, ChildDirectedMode childrenMode)
+        public void Initialize(bool isOnlyLoadingDefaultSettings, ChildDirectedMode childrenMode, bool nonRewardAdsDisabled = false)
         {
             m_childrenMode = childrenMode;
             if (InitStatus == InitializedStatus.None)
-                Initialize(isOnlyLoadingDefaultSettings);
+                Initialize(isOnlyLoadingDefaultSettings, nonRewardAdsDisabled);
         }
         
         private void InitializeSettings()

@@ -14,6 +14,8 @@ namespace Virterix.AdMediation
 {
     public class YandexMobileAdsAdapter : AdNetworkAdapter
     {
+        public const string IDENTIFIER = "yandex";
+        
         private ScreenOrientation? _screenOrientation = null;
         
         public enum YandexBannerSize
@@ -134,9 +136,12 @@ namespace Virterix.AdMediation
 #if _AMS_YANDEX_MOBILE_ADS && !UNITY_EDITOR
             if (AdMediationSystem.Instance.ChildrenMode != ChildDirectedMode.NotAssign)
                 MobileAds.SetAgeRestrictedUser(AdMediationSystem.Instance.ChildrenMode == ChildDirectedMode.Directed);
-#endif            
+#endif
             foreach (AdMediator mediator in AdMediationSystem.Instance.BannerMediators)
             {
+                if (AdMediationSystem.NonRewardAdsDisabled && mediator.m_adType != AdType.Incentivized)
+                    continue;
+                
                 for (int i = 0; i < mediator.TotalUnits; i++)
                 {
                     AdUnit unit = mediator.GetUnit(i);

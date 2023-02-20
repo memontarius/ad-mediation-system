@@ -4,13 +4,12 @@ namespace Virterix.AdMediation
 {
     public class BaseAdController : MonoBehaviour 
     {
-        [SerializeField] private bool m_isTimeScaleControl;
+        [SerializeField] private bool _UseTimeScaleControl;
 
-        public int InterstitialCount { get; set; }
-
-        private BaseAdController m_inheritor;
-        protected float m_lastTimeScale;
-        protected int m_interstitialCount;
+        public int InterstitialCount { get; protected set; }
+        
+        protected float _lastTimeScale;
+        private BaseAdController _inheritor;
 
         private void OnEnable() 
         {
@@ -36,32 +35,32 @@ namespace Virterix.AdMediation
 
         public T GetAdController<T>() where T : BaseAdController 
         {
-            if (m_inheritor == null) {
-                m_inheritor = FindObjectOfType<T>();
+            if (_inheritor == null) {
+                _inheritor = FindObjectOfType<T>();
             }
-            return m_inheritor as T;
+            return _inheritor as T;
         }
 
-        private void OnAdNetworkEvent(AdMediator mediator, AdNetworkAdapter network, AdType adType, AdEvent adEvent, string adInstanceName) 
+        private void OnAdNetworkEvent(AdMediator mediator, AdNetworkAdapter network, AdType adType, AdEvent adEvent, string adInstanceName)
         {
-            if (AdMediationSystem.IsAdFullscreen(adType)) {
+            if (AdMediationSystem.IsAdFullscreen(adType)) 
+            {
                 switch (adEvent) {
                     case AdEvent.Showing:
-                        if (adType == AdType.Interstitial) {
-                            m_interstitialCount++;
-                        }
+                        if (adType == AdType.Interstitial)
+                            InterstitialCount++;
 #if UNITY_IOS
                             AudioListener.volume = 0.0f;
 #endif
-                        if (m_isTimeScaleControl)
-                            m_lastTimeScale = Time.timeScale;
+                        if (_UseTimeScaleControl)
+                            _lastTimeScale = Time.timeScale;
                         break;
                     case AdEvent.Hiding:
 #if UNITY_IOS
                             AudioListener.volume = 1.0f;
 #endif
-                        if (m_isTimeScaleControl)
-                            Time.timeScale = m_lastTimeScale;
+                        if (_UseTimeScaleControl)
+                            Time.timeScale = _lastTimeScale;
                         break;
                 }
             }

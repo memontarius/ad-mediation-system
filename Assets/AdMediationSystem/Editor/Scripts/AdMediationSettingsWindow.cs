@@ -395,16 +395,16 @@ namespace Virterix.AdMediation.Editor
         {
             _networks.Clear();
 
-            AddNetwork(new AdMobView(this, "AdMob", "admob"));
-            AddNetwork(new AudienceNetworkView(this, "Audience Network", "audiencenetwork"));
-            AddNetwork(new UnityAdsView(this, "Unity Ads", "unityads"));
-            AddNetwork(new YandexMobileAdsView(this, "Yandex Mobile Ads", "yandex"));
-            AddNetwork(new ApplovinView(this, "AppLovin", "applovin"));
-            AddNetwork(new ChartboostView(this, "Chartboost", "chartboost"));
-            AddNetwork(new IronSourceView(this, "Iron Source", "ironsrc"));
-            AddNetwork(new AdColonyView(this, "AdColony", "adcolony"));
-            AddNetwork(new VungleView(this, "Vungle", "vungle"));
-            AddNetwork(new PollfishView(this, "Pollfish", "pollfish"));
+            AddNetwork(new AdMobView(this, "AdMob", AdMobAdapter.IDENTIFIER));
+            AddNetwork(new AudienceNetworkView(this, "Audience Network", AudienceNetworkAdapter.IDENTIFIER));
+            AddNetwork(new UnityAdsView(this, "Unity Ads", UnityAdsAdapter.IDENTIFIER));
+            AddNetwork(new YandexMobileAdsView(this, "Yandex Mobile Ads", YandexMobileAdsAdapter.IDENTIFIER));
+            AddNetwork(new ApplovinView(this, "AppLovin", AppLovinAdapter.IDENTIFIER));
+            AddNetwork(new ChartboostView(this, "Chartboost", ChartboostAdapter.IDENTIFIER));
+            AddNetwork(new IronSourceView(this, "Iron Source", IronSourceAdapter.IDENTIFIER));
+            AddNetwork(new AdColonyView(this, "AdColony", AdColonyAdapter.IDENTIFIER));
+            AddNetwork(new VungleView(this, "Vungle", VungleAdapter.IDENTIFIER));
+            AddNetwork(new PollfishView(this, "Pollfish", PollfishAdapter.IDENTIFIER));
             
             if (_networkEnabledStates == null)
             {

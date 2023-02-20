@@ -51,6 +51,17 @@ public class ExampleAdController : BaseAdController
         AdMediationSystem.Fetch(AdType.Banner, "Top");
     }
 
+    public void HideAllBanners()
+    {
+        AdMediationSystem.HideAllBanners();
+    }
+    
+    public void ToggleNonRewardAdsDisabledStatus(Text text)
+    {
+        AdMediationSystem.NonRewardAdsDisabled = !AdMediationSystem.NonRewardAdsDisabled;
+        text.text = AdMediationSystem.NonRewardAdsDisabled ? "Toggle To Enabled Non-Reward Ads" : "Toggle To Disabled Non-Reward Ads";
+    }
+    
     public void FetchInterstitial(string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
     {
         AdMediationSystem.Fetch(AdType.Interstitial, placement);

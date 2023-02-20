@@ -12,6 +12,8 @@ namespace Virterix.AdMediation
 {
     public class AdColonyAdapter : AdNetworkAdapter
     {
+        public const string IDENTIFIER = "adcolony";
+        
         public enum AdColonyAdSize
         {
             Banner = 0,

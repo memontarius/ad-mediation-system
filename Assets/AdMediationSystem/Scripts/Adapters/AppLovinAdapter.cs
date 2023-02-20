@@ -8,6 +8,8 @@ namespace Virterix.AdMediation
 {
     public class AppLovinAdapter : AdNetworkAdapter
     {
+        public const string IDENTIFIER = "applovin";
+        
         public enum AppLovinBannerPosition
         {
             TopLeft,
