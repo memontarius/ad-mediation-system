@@ -326,9 +326,6 @@ namespace Virterix.AdMediation
                         BannerAdAnchor bannerAnchor = ConvertToNativeBannerPosition(
                             (UnityBannerAnchor)GetBannerPosition(adInstance, mediator.m_placementName));
                         unityAdInstance.BannerAd?.SetPosition(bannerAnchor);
-                        
-                        Debug.Log($"UNITY Hide() IsAdBannerInstanceUsedInMediator: {adInstance.m_adId}");
-                        
                         wasShownInOtherPlacement = true;
                         break;
                     }
@@ -340,9 +337,6 @@ namespace Virterix.AdMediation
                     adInstance.m_bannerDisplayed = false;
                     m_isBannerDisplayed = false;
                     unityAdInstance.BannerAd?.SetPosition(unityAdInstance.BannerAnchor, m_bannerHidingOffset);
-                    
-                    Debug.Log($"UNITY Hide() {unityAdInstance.BannerAd == null} m_isBannerDisplayed: {m_isBannerDisplayed} {adInstance.m_adId}");
-                    
                     if (isBannerDisplayed)
                         NotifyEvent(AdEvent.Hiding, adInstance);
                 }

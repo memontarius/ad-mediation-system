@@ -681,7 +681,7 @@ namespace Virterix.AdMediation
             InitializeSettings();
         }
 
-        public void Initialize(bool isOnlyLoadingDefaultSettings, bool nonRewardAdsDisabled = false)
+        public void Initialize(bool isOnlyLoadingDefaultSettings, bool nonRewardAdsDisabled)
         {
             m_isOnlyLoadingDefaultSettings = isOnlyLoadingDefaultSettings;
             if (InitStatus == InitializedStatus.None)
