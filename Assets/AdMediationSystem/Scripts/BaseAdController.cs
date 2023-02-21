@@ -35,44 +35,59 @@ namespace Virterix.AdMediation
 
         public T GetAdController<T>() where T : BaseAdController 
         {
-            if (_inheritor == null) {
+            if (_inheritor == null)
                 _inheritor = FindObjectOfType<T>();
-            }
             return _inheritor as T;
         }
 
+        private void OnAdMediationSystemInitialized()
+        {
+            HandleAdMediationSystemInitializedEvent();
+        }
+        
         private void OnAdNetworkEvent(AdMediator mediator, AdNetworkAdapter network, AdType adType, AdEvent adEvent, string adInstanceName)
         {
             if (AdMediationSystem.IsAdFullscreen(adType)) 
             {
-                switch (adEvent) {
+                switch (adEvent) 
+                {
                     case AdEvent.Showing:
                         if (adType == AdType.Interstitial)
                             InterstitialCount++;
-#if UNITY_IOS
-                            AudioListener.volume = 0.0f;
-#endif
-                        if (_UseTimeScaleControl)
-                            _lastTimeScale = Time.timeScale;
+                        HandleFullscreenAdShowingEvent();
                         break;
                     case AdEvent.Hiding:
-#if UNITY_IOS
-                            AudioListener.volume = 1.0f;
-#endif
-                        if (_UseTimeScaleControl)
-                            Time.timeScale = _lastTimeScale;
+                        HandleFullscreenAdHidingEvent();
                         break;
                 }
             }
             HandleNetworkEvent(mediator, network, adType, adEvent, adInstanceName);
         }
 
+        protected virtual void HandleAdMediationSystemInitializedEvent() 
+        {
+        }
+        
         protected virtual void HandleNetworkEvent(AdMediator mediator, AdNetworkAdapter network, AdType adType, AdEvent adEvent, string adInstanceName) 
         {
         }
 
-        private void OnAdMediationSystemInitialized() 
+        protected virtual void HandleFullscreenAdShowingEvent() 
         {
+#if UNITY_IOS
+            AudioListener.volume = 0.0f;
+#endif
+            if (_UseTimeScaleControl)
+                _lastTimeScale = Time.timeScale;
+        }
+        
+        protected virtual void HandleFullscreenAdHidingEvent() 
+        {
+#if UNITY_IOS
+            AudioListener.volume = 1.0f;
+#endif
+            if (_UseTimeScaleControl)
+                Time.timeScale = _lastTimeScale;
         }
     }
 }

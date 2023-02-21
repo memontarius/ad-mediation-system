@@ -254,11 +254,14 @@ namespace Virterix.AdMediation
 #if UNITY_IOS
                 appOpenAdUnitId = m_iOSAppOpenAdId;
 #endif
-                m_appOpenAdManager = new AppOpenAdManager(this, appOpenAdUnitId, Screen.orientation);
-                m_appOpenAdManager.LoadAd();
-                
-                AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
-                m_wasAppStateEventNotifierSubscribe = true;
+                if (!string.IsNullOrEmpty(appOpenAdUnitId))
+                {
+                    m_appOpenAdManager = new AppOpenAdManager(this, appOpenAdUnitId, Screen.orientation);
+                    m_appOpenAdManager.LoadAd();
+
+                    AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
+                    m_wasAppStateEventNotifierSubscribe = true;
+                }
             }
             OnDidInitialize();
         }
@@ -655,7 +658,6 @@ namespace Virterix.AdMediation
                 requestBuilder.AddExtra("npa", "1");
                 requestBuilder.AddExtra("rdp", "1");
             }
-
             OnAdRequest(adType, new AdRequestBuilderContainer(requestBuilder));
             AdRequest request = requestBuilder.Build();
             return request;
@@ -736,11 +738,11 @@ namespace Virterix.AdMediation
                 return;
             
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log("[AMS] AdMobAdapter.OnAppStateChanged() App State is " + appState);
+            Debug.Log($"[AMS] AdMobAdapter.OnAppStateChanged() App State is {appState} appOpenAdDisplayCallCount: {m_appOpenAdDisplayCallCount}");
 #endif
             if (appState == AppState.Foreground)
             {
-                if (m_appOpenAdDisplayMultiplicity <= 1 || m_appOpenAdDisplayCallCount % m_appOpenAdDisplayMultiplicity != 0)
+                if (m_appOpenAdDisplayMultiplicity <= 1 || m_appOpenAdDisplayCallCount % m_appOpenAdDisplayMultiplicity == 0)
                     m_appOpenAdManager.ShowAdIfAvailable();
                 m_appOpenAdDisplayCallCount++;
             }
