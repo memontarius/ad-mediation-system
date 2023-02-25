@@ -84,9 +84,10 @@ namespace Virterix.AdMediation
 #if _AMS_ADMOB 
         private AppOpenAdManager m_appOpenAdManager;
 #endif
-        private int m_appOpenAdDisplayCallCount;
+        private int m_appStateForegroundCount;
         private AdMobMediationBehavior m_adMobMediationBehavior;
         private bool m_wasAppStateEventNotifierSubscribe;
+        private bool m_wasAppOpenAdDisplayed;
         
         public bool m_useAppOpenAd;
         public string m_androidAppOpenAdId;
@@ -738,13 +739,29 @@ namespace Virterix.AdMediation
                 return;
             
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log($"[AMS] AdMobAdapter.OnAppStateChanged() App State is {appState} appOpenAdDisplayCallCount: {m_appOpenAdDisplayCallCount}");
+            Debug.Log($"[AMS] AdMobAdapter.OnAppStateChanged() App State is {appState} appStateForegroundCount: {m_appStateForegroundCount}");
 #endif
             if (appState == AppState.Foreground)
             {
-                if (m_appOpenAdDisplayMultiplicity <= 1 || m_appOpenAdDisplayCallCount % m_appOpenAdDisplayMultiplicity == 0)
+#if UNITY_IOS 
+                if (m_wasAppOpenAdDisplayed)
+                {
+                    m_wasAppOpenAdDisplayed = false;
+                    return;
+                }
+                m_appStateForegroundCount++;
+#else
+                m_appStateForegroundCount++;
+#endif
+                if (m_appOpenAdDisplayMultiplicity <= 1 || (m_appStateForegroundCount - 1) % m_appOpenAdDisplayMultiplicity == 0)
+                {
+                    m_wasAppOpenAdDisplayed = true;
                     m_appOpenAdManager.ShowAdIfAvailable();
-                m_appOpenAdDisplayCallCount++;
+                }
+                else
+                {
+                    m_wasAppOpenAdDisplayed = false;
+                }
             }
         }
         

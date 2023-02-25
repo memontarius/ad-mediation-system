@@ -287,7 +287,7 @@ namespace Virterix.AdMediation
             eventParam.m_adInstance = adInstance;
             eventParam.m_adEvent = adEvent;
 
-            if (adType == AdType.Interstitial || adType == AdType.Incentivized)
+            if (AdMediationSystem.IsAdFullscreen(adType))
             {
                 if (adEvent == AdEvent.Showing)
                     SharedFullscreenAdShowing = true;
