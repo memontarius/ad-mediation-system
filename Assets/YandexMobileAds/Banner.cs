@@ -64,6 +64,7 @@ namespace YandexMobileAds
             this.adRequestFactory = new AdRequestCreator();
             this.client = YandexMobileAdsClientFactory.BuildBannerClient(blockId, adSize, position);
 
+            MainThreadDispatcher.initialize();
             ConfigureBannerEvents();
         }
 
@@ -106,7 +107,10 @@ namespace YandexMobileAds
             {
                 if (this.OnAdLoaded != null)
                 {
-                    this.OnAdLoaded(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnAdLoaded(this, args);
+                    });
                 }
             };
 
@@ -114,7 +118,10 @@ namespace YandexMobileAds
             {
                 if (this.OnAdFailedToLoad != null)
                 {
-                    this.OnAdFailedToLoad(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnAdFailedToLoad(this, args);
+                    });
                 }
             };
 
@@ -122,7 +129,10 @@ namespace YandexMobileAds
             {
                 if (this.OnReturnedToApplication != null)
                 {
-                    this.OnReturnedToApplication(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnReturnedToApplication(this, args);
+                    });
                 }
             };
 
@@ -130,7 +140,10 @@ namespace YandexMobileAds
             {
                 if (this.OnLeftApplication != null)
                 {
-                    this.OnLeftApplication(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnLeftApplication(this, args);
+                    });
                 }
             };
 
@@ -138,7 +151,10 @@ namespace YandexMobileAds
             {
                 if (this.OnAdClicked != null)
                 {
-                    this.OnAdClicked(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnAdClicked(this, args);
+                    });
                 }
             };
 
@@ -146,7 +162,10 @@ namespace YandexMobileAds
             {
                 if (this.OnImpression != null)
                 {
-                    this.OnImpression(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnImpression(this, args);
+                    });
                 }
             };
         }

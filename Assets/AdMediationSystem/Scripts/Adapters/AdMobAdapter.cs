@@ -4,13 +4,12 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Boomlagoon.JSON;
-using GoogleMobileAds.Api;
-using GoogleMobileAds.Common;
 #if UNITY_EDITOR
 using System.Reflection;
 #endif
 #if _AMS_ADMOB
 using GoogleMobileAds.Api;
+using GoogleMobileAds.Common;
 #endif
 
 namespace Virterix.AdMediation
@@ -248,6 +247,7 @@ namespace Virterix.AdMediation
 
             OnWillInitialize();
             AppOpenAdDisabled = AdMediationSystem.NonRewardAdsDisabled;
+            
             MobileAds.Initialize(OnInitComplete);
             if (m_useAppOpenAd)
             {
@@ -322,7 +322,6 @@ namespace Virterix.AdMediation
                 }
                 builder.SetMaxAdContentRating(MaxAdContentRating.G);
             }
-
             RequestConfiguration requestConfiguration = builder.build();
             MobileAds.SetRequestConfiguration(requestConfiguration);
         }
@@ -660,6 +659,7 @@ namespace Virterix.AdMediation
                 requestBuilder.AddExtra("rdp", "1");
             }
             OnAdRequest(adType, new AdRequestBuilderContainer(requestBuilder));
+            
             AdRequest request = requestBuilder.Build();
             return request;
         }

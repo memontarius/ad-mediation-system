@@ -154,16 +154,18 @@ namespace Virterix.AdMediation
         
         #endregion Properties
 
-        private List<EventParam> m_events = new List<EventParam>();
-        protected List<IAdInstanceParameters> m_adInstanceParameters = new List<IAdInstanceParameters>();
-        protected List<AdInstance> m_adInstances = new List<AdInstance>();
+        private Queue<EventParam> m_events = new();
+        protected List<IAdInstanceParameters> m_adInstanceParameters = new();
+        protected List<AdInstance> m_adInstances = new();
         protected IncentivizedReward m_lastReward;
         protected string m_currBannerPlacement;
-
+        private static AdInstance s_lastShowingFullscreenAdInstance;
+        private static AdNetworkAdapter s_lastShowingFullscreenNetwork;
+        
         public static bool SharedFullscreenAdShowing { get; protected set; }
         private static float s_waitResponseHandlingInterval;
         private WaitForSeconds _waitResponseIntervalInstruction;
-        private readonly WaitForSecondsRealtime _updateEventsIntervalInstruction = new WaitForSecondsRealtime(0.25f);
+        private readonly WaitForSecondsRealtime _updateEventsIntervalInstruction = new WaitForSecondsRealtime(0.2f);
         
         protected bool IsApplicationQuiting { get; private set; }
         
@@ -280,26 +282,44 @@ namespace Virterix.AdMediation
             return adSupportParam.m_isCheckAvailabilityWhenPreparing;
         }
 
-        public void AddEvent(AdType adType, AdEvent adEvent, AdInstance adInstance)
+        protected void AddEvent(AdType adType, AdEvent adEvent, AdInstance adInstance, bool instant = false)
         {
-            EventParam eventParam = new EventParam();
-            eventParam.m_adType = adType;
-            eventParam.m_adInstance = adInstance;
-            eventParam.m_adEvent = adEvent;
-
             if (AdMediationSystem.IsAdFullscreen(adType))
             {
                 if (adEvent == AdEvent.Showing)
+                {
                     SharedFullscreenAdShowing = true;
+                    s_lastShowingFullscreenAdInstance = adInstance;
+                    s_lastShowingFullscreenNetwork = this;
+                }
                 else if (adEvent == AdEvent.Hiding)
                     SharedFullscreenAdShowing = false;
             }
-            lock (m_events)
+            
+            if (instant)
+                NotifyEvent(adEvent, adInstance);
+            else
             {
-                m_events.Add(eventParam);
+                EventParam eventParam = new EventParam();
+                eventParam.m_adType = adType;
+                eventParam.m_adInstance = adInstance;
+                eventParam.m_adEvent = adEvent;
+                lock (m_events)
+                {
+                    m_events.Enqueue(eventParam);
+                }
             }
         }
-
+        
+        public static void UpdateLockingHiddenFullscreenState(bool userInteractsWithApp)
+        {
+            if (SharedFullscreenAdShowing && userInteractsWithApp &&
+                s_lastShowingFullscreenAdInstance != null && s_lastShowingFullscreenNetwork != null)
+            {
+                s_lastShowingFullscreenNetwork.AddEvent(s_lastShowingFullscreenAdInstance.m_adType, AdEvent.Hiding, s_lastShowingFullscreenAdInstance);
+            }
+        }
+        
         public virtual void NotifyEvent(AdEvent adEvent, AdInstance adInstance)
         {
             if (adInstance == null)
@@ -441,9 +461,9 @@ namespace Virterix.AdMediation
             if (m_events.Count == 0)
                 return;
             
-            for (int i = 0; i < m_events.Count; i++)
+            while (m_events.Count > 0)
             {
-                EventParam eventParam = m_events[i];
+                EventParam eventParam = m_events.Dequeue();
                 NotifyEvent(eventParam.m_adEvent, eventParam.m_adInstance);
             }
             m_events.Clear();

@@ -70,6 +70,14 @@ public class PostprocessBuildPlayerYandexMobileAds
             project.ReadFromString (File.ReadAllText (projectPath));
 
 #if UNITY_2020_1_OR_NEWER
+            var mainTarget = project.GetUnityMainTargetGuid ();
+            var bundlePath = "Pods/YandexMobileAds/static/YandexMobileAds.xcframework/YandexMobileAdsBundle.bundle";
+            var fileGuid = project.AddFile (bundlePath, bundlePath);
+            var resourcesBuildPhaseGuid = project.GetResourcesBuildPhaseByTarget (mainTarget);
+            project.AddFileToBuildSection (mainTarget, resourcesBuildPhaseGuid, fileGuid);
+#endif
+
+#if UNITY_2020_1_OR_NEWER
             var target = project.GetUnityFrameworkTargetGuid ();
 #else
             var target = project.TargetGuidByName ("Unity-iPhone");

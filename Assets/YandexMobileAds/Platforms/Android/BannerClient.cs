@@ -59,7 +59,7 @@ namespace YandexMobileAds.Platforms.Android
 
         public void Destroy()
         {
-            this.bannerView.Call("setUnityBannerListener", null);
+            this.bannerView.Call("clearUnityBannerListener");
             this.bannerView.Call("destroyBanner");
         }
 

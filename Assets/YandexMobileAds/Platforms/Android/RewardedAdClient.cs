@@ -60,7 +60,7 @@ namespace YandexMobileAds.Platforms.Android
 
         public void Destroy()
         {
-            this.rewardedAd.Call("setUnityRewardedAdListener", null);
+            this.rewardedAd.Call("clearUnityRewardedAdListener");
             this.rewardedAd.Call("destroyRewardedAd");
         }
 

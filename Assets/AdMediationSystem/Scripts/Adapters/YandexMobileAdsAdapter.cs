@@ -308,7 +308,10 @@ namespace Virterix.AdMediation
         {
 #if _AMS_YANDEX_MOBILE_ADS && !UNITY_EDITOR
             if (consent != PersonalisationConsent.Undefined)
+            {
                 MobileAds.SetUserConsent(consent == PersonalisationConsent.Accepted);
+                MobileAds.SetLocationConsent(consent == PersonalisationConsent.Accepted);
+            }
 #endif
         }
         

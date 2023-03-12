@@ -77,6 +77,7 @@ namespace YandexMobileAds
             this.adRequestFactory = new AdRequestCreator();
             this.client = YandexMobileAdsClientFactory.BuildInterstitialClient(blockId);
 
+            MainThreadDispatcher.initialize();
             ConfigureInterstitialEvents();
         }
 
@@ -126,7 +127,10 @@ namespace YandexMobileAds
                 this.loaded = true;
                 if (this.OnInterstitialLoaded != null)
                 {
-                    this.OnInterstitialLoaded(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnInterstitialLoaded(this, args);
+                    });
                 }
             };
 
@@ -134,7 +138,10 @@ namespace YandexMobileAds
             {
                 if (this.OnInterstitialFailedToLoad != null)
                 {
-                    this.OnInterstitialFailedToLoad(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnInterstitialFailedToLoad(this, args);
+                    });
                 }
             };
 
@@ -142,7 +149,10 @@ namespace YandexMobileAds
             {
                 if (this.OnReturnedToApplication != null)
                 {
-                    this.OnReturnedToApplication(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnReturnedToApplication(this, args);
+                    });
                 }
             };
 
@@ -150,7 +160,10 @@ namespace YandexMobileAds
             {
                 if (this.OnLeftApplication != null)
                 {
-                    this.OnLeftApplication(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnLeftApplication(this, args);
+                    });
                 }
             };
 
@@ -158,7 +171,10 @@ namespace YandexMobileAds
             {
                 if (this.OnAdClicked != null)
                 {
-                    this.OnAdClicked(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnAdClicked(this, args);
+                    });
                 }
             };
 
@@ -166,7 +182,10 @@ namespace YandexMobileAds
             {
                 if (this.OnInterstitialShown != null)
                 {
-                    this.OnInterstitialShown(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnInterstitialShown(this, args);
+                    });
                 }
             };
 
@@ -174,7 +193,10 @@ namespace YandexMobileAds
             {
                 if (this.OnInterstitialDismissed != null)
                 {
-                    this.OnInterstitialDismissed(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnInterstitialDismissed(this, args);
+                    });
                 }
             };
 
@@ -182,7 +204,10 @@ namespace YandexMobileAds
             {
                 if (this.OnImpression != null)
                 {
-                    this.OnImpression(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnImpression(this, args);
+                    });
                 }
             };
 
@@ -190,7 +215,10 @@ namespace YandexMobileAds
             {
                 if (this.OnInterstitialFailedToShow != null)
                 {
-                    this.OnInterstitialFailedToShow(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnInterstitialFailedToShow(this, args);
+                    });
                 }
             };
 

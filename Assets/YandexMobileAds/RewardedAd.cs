@@ -81,7 +81,8 @@ namespace YandexMobileAds
         {
             this.adRequestFactory = new AdRequestCreator();
             this.client = YandexMobileAdsClientFactory.BuildRewardedAdClient(blockId);
-
+            
+            MainThreadDispatcher.initialize();
             ConfigureRewardedAdEvents();
         }
 
@@ -131,7 +132,10 @@ namespace YandexMobileAds
                 this.loaded = true;
                 if (this.OnRewardedAdLoaded != null)
                 {
-                    this.OnRewardedAdLoaded(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnRewardedAdLoaded(this, args);
+                    });
                 }
             };
 
@@ -139,7 +143,10 @@ namespace YandexMobileAds
             {
                 if (this.OnRewardedAdFailedToLoad != null)
                 {
-                    this.OnRewardedAdFailedToLoad(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnRewardedAdFailedToLoad(this, args);
+                    });
                 }
             };
 
@@ -147,7 +154,10 @@ namespace YandexMobileAds
             {
                 if (this.OnReturnedToApplication != null)
                 {
-                    this.OnReturnedToApplication(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnReturnedToApplication(this, args);
+                    });
                 }
             };
 
@@ -155,7 +165,10 @@ namespace YandexMobileAds
             {
                 if (this.OnLeftApplication != null)
                 {
-                    this.OnLeftApplication(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnLeftApplication(this, args);
+                    });
                 }
             };
 
@@ -163,7 +176,10 @@ namespace YandexMobileAds
             {
                 if (this.OnAdClicked != null)
                 {
-                    this.OnAdClicked(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnAdClicked(this, args);
+                    });
                 }
             };
 
@@ -171,7 +187,10 @@ namespace YandexMobileAds
             {
                 if (this.OnRewardedAdShown != null)
                 {
-                    this.OnRewardedAdShown(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnRewardedAdShown(this, args);
+                    });
                 }
             };
 
@@ -179,7 +198,10 @@ namespace YandexMobileAds
             {
                 if (this.OnRewardedAdDismissed != null)
                 {
-                    this.OnRewardedAdDismissed(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnRewardedAdDismissed(this, args);
+                    });
                 }
             };
 
@@ -187,7 +209,10 @@ namespace YandexMobileAds
             {
                 if (this.OnImpression != null)
                 {
-                    this.OnImpression(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnImpression(this, args);
+                    });
                 }
             };
 
@@ -195,7 +220,10 @@ namespace YandexMobileAds
             {
                 if (this.OnRewardedAdFailedToShow != null)
                 {
-                    this.OnRewardedAdFailedToShow(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnRewardedAdFailedToShow(this, args);
+                    });
                 }
             };
 
@@ -203,7 +231,10 @@ namespace YandexMobileAds
             {
                 if (this.OnRewarded != null)
                 {
-                    this.OnRewarded(this, args);
+                    MainThreadDispatcher.EnqueueAction(() =>
+                    {
+                        this.OnRewarded(this, args);
+                    });
                 }
             };
         }

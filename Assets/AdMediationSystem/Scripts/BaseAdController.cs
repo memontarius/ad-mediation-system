@@ -1,14 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Virterix.AdMediation 
 {
     public class BaseAdController : MonoBehaviour 
     {
-        [SerializeField] private bool _UseTimeScaleControl;
-
         public int InterstitialCount { get; protected set; }
-        
-        protected float _lastTimeScale;
         private BaseAdController _inheritor;
 
         private void OnEnable() 
@@ -20,7 +17,19 @@ namespace Virterix.AdMediation
         {
             UnsubscribeEvents();
         }
-
+        
+        protected virtual bool GetUserInteractsWithApp()
+        {
+            bool userInteractsWithApp = false;
+#if ENABLE_INPUT_SYSTEM
+            if (UnityEngine.InputSystem.Touchscreen.current != null)
+                userInteractsWithApp = UnityEngine.InputSystem.Touchscreen.current.touches.Count > 0;
+#elif ENABLE_LEGACY_INPUT_MANAGER
+            userInteractsWithApp = Input.touches.Length > 0;
+#endif
+            return userInteractsWithApp;
+        }
+        
         protected virtual void SubscribeEvents()
         {
             AdMediationSystem.OnAdNetworkEvent += OnAdNetworkEvent;
@@ -39,7 +48,7 @@ namespace Virterix.AdMediation
                 _inheritor = FindObjectOfType<T>();
             return _inheritor as T;
         }
-
+        
         private void OnAdMediationSystemInitialized()
         {
             HandleAdMediationSystemInitializedEvent();
@@ -77,8 +86,6 @@ namespace Virterix.AdMediation
 #if UNITY_IOS
             AudioListener.volume = 0.0f;
 #endif
-            if (_UseTimeScaleControl)
-                _lastTimeScale = Time.timeScale;
         }
         
         protected virtual void HandleFullscreenAdHidingEvent() 
@@ -86,8 +93,6 @@ namespace Virterix.AdMediation
 #if UNITY_IOS
             AudioListener.volume = 1.0f;
 #endif
-            if (_UseTimeScaleControl)
-                Time.timeScale = _lastTimeScale;
         }
     }
 }

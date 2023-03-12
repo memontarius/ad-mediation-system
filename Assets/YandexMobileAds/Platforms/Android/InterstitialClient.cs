@@ -59,7 +59,7 @@ namespace YandexMobileAds.Platforms.Android
 
         public void Destroy()
         {
-            this.interstitial.Call("setUnityInterstitialListener", null);
+            this.interstitial.Call("clearUnityInterstitialListener");
             this.interstitial.Call("destroyInterstitial");
         }
 
