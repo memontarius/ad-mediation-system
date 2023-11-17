@@ -11,11 +11,19 @@ namespace YandexMobileAds.Base
 
         public AdRequest CreateAdRequest(AdRequest adRequest)
         {
+            if (adRequest == null)
+            {
+                return null;
+            }
+
             var parameters = adRequest.Parameters ?? new Dictionary<string, string>();
             parameters.Add(PluginTypeParameter, PluginType);
             parameters.Add(PluginVersionParameter, MobileAdsPackageInfo.PackageVersion);
 
-            return new AdRequest.Builder().WithAdRequest(adRequest).WithParameters(parameters).Build();
+            return new AdRequest.Builder()
+                .WithAdRequest(adRequest)
+                .WithParameters(parameters)
+                .Build();
         }
     }
 }

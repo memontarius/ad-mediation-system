@@ -9,7 +9,7 @@ namespace Virterix.AdMediation
 {
     public class PollfishAdapter : AdNetworkAdapter
     {
-        public const string IDENTIFIER = "pollfish";
+        public const string Identifier = "pollfish";
         
         public enum SurveyPosition
         {

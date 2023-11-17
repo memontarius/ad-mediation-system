@@ -7,7 +7,7 @@ namespace YandexMobileAds.Common
     internal class MainThreadDispatcher : MonoBehaviour
     {
         private static MainThreadDispatcher instance = null;
-        private static readonly Queue<Action> mainThreadQueue = new Queue<Action>();
+        private static readonly Queue<System.Action> mainThreadQueue = new Queue<System.Action>();
 
         private static bool IsRunning
         {
@@ -28,7 +28,7 @@ namespace YandexMobileAds.Common
             instance = obj.AddComponent<MainThreadDispatcher>();
         }
 
-        internal static void EnqueueAction(Action action)
+        internal static void EnqueueAction(System.Action action)
         {
             lock (mainThreadQueue)
             {
@@ -46,7 +46,7 @@ namespace YandexMobileAds.Common
             // dispatch actions on the main thread when the queue is not empty
             while (mainThreadQueue.Count > 0)
             {
-                Action dequeuedAction = null;
+                System.Action dequeuedAction = null;
                 lock (mainThreadQueue)
                 {
                     try

@@ -1,7 +1,7 @@
 ﻿/*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for iOS (C) 2020 YANDEX
+ * Version for iOS (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -12,24 +12,24 @@ using YandexMobileAds.Common;
 namespace YandexMobileAds.Platforms.iOS
 {
 #if (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-    public class ScreenClient : IScreenClient
+    internal class ScreenClient : IScreenClient
     {
 
-        private static ScreenClient instance;
+        private static ScreenClient _instance;
 
-        private static object lockObject = new object();
+        private static readonly object _lockObject = new object();
 
         public static ScreenClient GetInstance()
         {
-            if (instance == null)
+            if (_instance == null)
             {
-                lock (lockObject)
+                lock (_lockObject)
                 {
-                    if (instance == null)
-                        instance = new ScreenClient();
+                    if (_instance == null)
+                        _instance = new ScreenClient();
                 }
             }
-            return instance;
+            return _instance;
         }
 
         private ScreenClient() { }

@@ -1,7 +1,7 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for iOS (C) 2018 YANDEX
+ * Version for iOS (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -21,55 +21,61 @@
 @implementation YMAUnityRewardedAd
 
 - (instancetype)initWithClientRef:(YMAUnityRewardedAdClientRef *)clientRef
-                         adUnitID:(char *)adUnitID
+                         rewardedAd:(YMARewardedAd *)rewardedAd
 {
     self = [super init];
     if (self != nil) {
-        NSString *adUnitIDString = [[NSString alloc] initWithUTF8String:adUnitID];
-        _rewardedAd = [[YMARewardedAd alloc] initWithAdUnitID:adUnitIDString];
+        _rewardedAd = rewardedAd;
         _rewardedAd.delegate = self;
         _clientRef = clientRef;
     }
     return self;
 }
 
-- (void)loadWithRequest:(YMAAdRequest *)adRequest
+- (YMAAdInfo*)getInfo
 {
-    [self.rewardedAd loadWithRequest:adRequest];
+    return [self.rewardedAd adInfo];
 }
 
 - (void)show
 {
     UIViewController *viewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    [self.rewardedAd presentFromViewController:viewController];
+    [self.rewardedAd showFromViewController:viewController];
 }
 
-- (BOOL)isLoaded
-{
-    return self.rewardedAd.loaded;
-}
+#pragma mark Callbacks
 
-- (void)rewardedAdDidLoad:(YMARewardedAd *)rewardedAd
+- (void)rewardedAd:(YMARewardedAd *)rewardedAd didReward:(id<YMAReward>)reward
 {
-    if (self.didLoadAdCallback != NULL) {
-        self.didLoadAdCallback(self.clientRef);
+    if (self.didRewardCallback != NULL) {
+        char *type = [YMAUnityStringConverter copiedCStringFromObjCString:reward.type];
+        int amount = (int)reward.amount;
+        self.didRewardCallback(self.clientRef, amount, type);
     }
 }
 
-- (void)rewardedAdDidFailToLoad:(YMARewardedAd *)rewardedAd error:(NSError *)error
+- (void)rewardedAd:(YMARewardedAd *)rewardedAd didFailToShowWithError:(NSError *)error
 {
-    if (self.didFailToLoadAdCallback != NULL) {
+    if (self.didFailToShowCallback != NULL) {
         char *message = [YMAUnityStringConverter copiedCStringFromObjCString:error.localizedDescription];
-        self.didFailToLoadAdCallback(self.clientRef, message);
+        self.didFailToShowCallback(self.clientRef, message);
     }
 }
 
-- (void)rewardedAdWillLeaveApplication:(YMARewardedAd *)rewardedAd
+- (void)rewardedAdDidShow:(YMARewardedAd *)rewardedAd
 {
-    if (self.willLeaveApplicationCallback != NULL) {
-        self.willLeaveApplicationCallback(self.clientRef);
+    if (self.didShowCallback != NULL) {
+        self.didShowCallback(self.clientRef);
     }
 }
+
+- (void)rewardedAdDidDismiss:(YMARewardedAd *)rewardedAd
+{
+    if (self.didDismissCallback != NULL) {
+        self.didDismissCallback(self.clientRef);
+    }
+}
+
 
 - (void)rewardedAdDidClick:(YMARewardedAd *)rewardedAd
 {
@@ -78,22 +84,8 @@
     }
 }
 
-- (void)rewardedAdWillAppear:(YMARewardedAd *)rewardedAd
-{
-    if (self.willAppearCallback != NULL) {
-        self.willAppearCallback(self.clientRef);
-    }
-}
-
-- (void)rewardedAdDidDisappear:(YMARewardedAd *)rewardedAd
-{
-    if (self.didDismissCallback != NULL) {
-        self.didDismissCallback(self.clientRef);
-    }
-}
-
 - (void)rewardedAd:(YMARewardedAd *)rewardedAd
-        didTrackImpressionWithData:(nullable id<YMAImpressionData>)impressionData
+didTrackImpressionWithData:(nullable id<YMAImpressionData>)impressionData
 {
     if (self.didTrackImpressionCallback != NULL) {
         if (impressionData != nil) {
@@ -103,30 +95,6 @@
         else {
             self.didTrackImpressionCallback(self.clientRef, nil);
         }
-    }
-}
-
-- (void)rewardedAdDidFailToPresent:(YMARewardedAd *)rewardedAd error:(NSError *)error
-{
-    if (self.didFailToShowCallback != NULL) {
-        char *message = [YMAUnityStringConverter copiedCStringFromObjCString:error.localizedDescription];
-        self.didFailToShowCallback(self.clientRef, message);
-    }
-}
-
-- (void)rewardedAd:(YMARewardedAd *)rewardedAd willPresentScreen:(UIViewController *)viewController
-{
-    if (self.willPresentScreenCallback != NULL) {
-        self.willPresentScreenCallback(self.clientRef);
-    }
-}
-
-- (void)rewardedAd:(YMARewardedAd *)rewardedAd didReward:(id<YMAReward>)reward
-{
-    if (self.didRewardCallback != NULL) {
-        char *type = [YMAUnityStringConverter copiedCStringFromObjCString:reward.type];
-        int amount = (int)reward.amount;
-        self.didRewardCallback(self.clientRef, amount, type);
     }
 }
 

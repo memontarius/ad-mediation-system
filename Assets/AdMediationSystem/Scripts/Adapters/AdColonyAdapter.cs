@@ -12,7 +12,7 @@ namespace Virterix.AdMediation
 {
     public class AdColonyAdapter : AdNetworkAdapter
     {
-        public const string IDENTIFIER = "adcolony";
+        public const string Identifier = "adcolony";
         
         public enum AdColonyAdSize
         {

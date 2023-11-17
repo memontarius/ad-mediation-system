@@ -1,7 +1,7 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for iOS (C) 2018 YANDEX
+ * Version for iOS (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -11,65 +11,62 @@
 #import "YMAUnityInterstitial.h"
 #import "YMAUnityStringConverter.h"
 
-@interface YMAUnityInterstitial() <YMAInterstitialAdDelegate>
+@interface YMAUnityInterstitialAd() <YMAInterstitialAdDelegate>
 
-@property (nonatomic, assign, readonly) YMAUnityInterstitialClientRef *clientRef;
-@property (nonatomic, strong, readonly) YMAInterstitialAd *interstitial;
+@property (nonatomic, assign, readonly) YMAUnityInterstitialAdClientRef *clientRef;
+@property (nonatomic, strong, readonly) YMAInterstitialAd *interstitialAd;
 
 @end
 
-@implementation YMAUnityInterstitial
+@implementation YMAUnityInterstitialAd
 
-- (instancetype)initWithClientRef:(YMAUnityInterstitialClientRef *)clientRef
-                         adUnitID:(char *)adUnitID
+- (instancetype)initWithClientRef:(YMAUnityInterstitialAdClientRef *)clientRef
+                         interstitialAd:(YMAInterstitialAd *)interstitialAd
 {
     self = [super init];
     if (self != nil) {
-        NSString *adUnitIDStrig = [[NSString alloc] initWithUTF8String:adUnitID];
-        _interstitial = [[YMAInterstitialAd alloc] initWithAdUnitID:adUnitIDStrig];
-        _interstitial.delegate = self;
+        _interstitialAd = interstitialAd;
+        _interstitialAd.delegate = self;
         _clientRef = clientRef;
     }
     return self;
 }
 
-- (void)loadWithRequest:(YMAAdRequest *)adRequest
+- (YMAAdInfo*)getInfo
 {
-    [self.interstitial loadWithRequest:adRequest];
+    return [self.interstitialAd adInfo];
 }
 
 - (void)show
 {
     UIViewController *viewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    [self.interstitial presentFromViewController:viewController];
+    [self.interstitialAd showFromViewController:viewController];
 }
 
-- (BOOL)isLoaded
-{
-    return self.interstitial.loaded;
-}
+#pragma mark Callbacks
 
-- (void)interstitialAdDidLoad:(YMAInterstitialAd *)interstitial
+- (void)interstitialAd:(YMAInterstitialAd *)interstitialAd didFailToShowWithError:(NSError *)error
 {
-    if (self.didLoadAdCallback != NULL) {
-        self.didLoadAdCallback(self.clientRef);
-    }
-}
-
-- (void)interstitialAdDidFailToLoad:(YMAInterstitialAd *)interstitial error:(NSError *)error
-{
-    if (self.didFailToLoadAdCallback != NULL) {
+    if (self.didFailToShowCallback != NULL) {
         char *message = [YMAUnityStringConverter copiedCStringFromObjCString:error.localizedDescription];
-        self.didFailToLoadAdCallback(self.clientRef, message);
+        self.didFailToShowCallback(self.clientRef, message);
     }
 }
 
-- (void)interstitialWillLeaveApplication:(YMAInterstitialAd *)interstitial
+- (void)interstitialAdDidShow:(YMAInterstitialAd *)interstitialAd
 {
-    if (self.willLeaveApplicationCallback != NULL) {
-        self.willLeaveApplicationCallback(self.clientRef);
+    if (self.didShowCallback != NULL) {
+        self.didShowCallback(self.clientRef);
     }
 }
+
+- (void)interstitialAdDidDismiss:(YMAInterstitialAd *)interstitialAd
+{
+    if (self.didDismissCallback != NULL) {
+        self.didDismissCallback(self.clientRef);
+    }
+}
+
 
 - (void)interstitialAdDidClick:(YMAInterstitialAd *)interstitialAd
 {
@@ -78,22 +75,8 @@
     }
 }
 
-- (void)interstitialAdWillAppear:(YMAInterstitialAd *)interstitial
-{
-    if (self.willAppearCallback != NULL) {
-        self.willAppearCallback(self.clientRef);
-    }
-}
-
-- (void)interstitialAdDidDisappear:(YMAInterstitialAd *)interstitial
-{
-    if (self.didDismissCallback != NULL) {
-        self.didDismissCallback(self.clientRef);
-    }
-}
-
 - (void)interstitialAd:(YMAInterstitialAd *)interstitialAd
-        didTrackImpressionWithData:(nullable id<YMAImpressionData>)impressionData
+didTrackImpressionWithData:(nullable id<YMAImpressionData>)impressionData
 {
     if (self.didTrackImpressionCallback != NULL) {
         if (impressionData != nil) {
@@ -103,21 +86,6 @@
         else {
             self.didTrackImpressionCallback(self.clientRef, nil);
         }
-    }
-}
-
-- (void)interstitialAdDidFailToPresent:(YMAInterstitialAd *)interstitial error:(NSError *)error
-{
-    if (self.didFailToShowCallback != NULL) {
-        char *message = [YMAUnityStringConverter copiedCStringFromObjCString:error.localizedDescription];
-        self.didFailToShowCallback(self.clientRef, message);
-    }
-}
-
-- (void)interstitialAd:(YMAInterstitialAd *)interstitialAd willPresentScreen:(UIViewController *)webBrowser
-{
-    if (self.willPresentScreenCallback != NULL) {
-        self.willPresentScreenCallback(self.clientRef);
     }
 }
 

@@ -1,7 +1,7 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for Unity (C) 2018 YANDEX
+ * Version for Unity (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -12,77 +12,51 @@ using YandexMobileAds.Base;
 
 namespace YandexMobileAds.Common
 {
-    public interface IRewardedAdClient
+    internal interface IRewardedAdClient
     {
         /// <summary>
-        /// Event fired when rewarded ad has been received.
-        /// </summary>
-        event EventHandler<EventArgs> OnRewardedAdLoaded;
-
-        /// <summary>
-        /// Event fired when rewarded ad has failed to load.
-        /// </summary>
-        event EventHandler<AdFailureEventArgs> OnRewardedAdFailedToLoad;
-
-        /// <summary>
-        /// Event fired when returned to application.
-        /// </summary>
-        event EventHandler<EventArgs> OnReturnedToApplication;
-
-        /// <summary>
-        /// Event fired when rewarded ad is leaving application.
-        /// </summary>
-        event EventHandler<EventArgs> OnLeftApplication;
-
-        /// <summary>
-        /// Event fired when rewarded is clicked.
+        /// Event fired when the ad is clicked.
         /// </summary>
         event EventHandler<EventArgs> OnAdClicked;
 
         /// <summary>
-        /// Event fired when rewarded ad is shown.
+        /// Event fired when the ad is shown.
         /// </summary>
-        event EventHandler<EventArgs> OnRewardedAdShown;
+        event EventHandler<EventArgs> OnAdShown;
 
         /// <summary>
-        /// Event fired when rewarded ad is dismissed.
+        /// Event fired when the ad is dismissed.
         /// </summary>
-        event EventHandler<EventArgs> OnRewardedAdDismissed;
+        event EventHandler<EventArgs> OnAdDismissed;
 
         /// <summary>
-        /// Event fired when rewarded ad impression tracked.
+        /// Event fired when the ad impression tracked.
         /// </summary>
-        event EventHandler<ImpressionData> OnImpression;
+        event EventHandler<ImpressionData> OnAdImpression;
 
         /// <summary>
-        /// Event fired when rewarded ad has failed to show.
+        /// Event fired when the ad has failed to show.
         /// </summary>
-        event EventHandler<AdFailureEventArgs> OnRewardedAdFailedToShow;
+        event EventHandler<AdFailureEventArgs> OnAdFailedToShow;
 
         /// <summary>
-        /// Event fired when the rewarded ad has rewarded the user.
+        /// Event fired when the the ad has rewarded the user.
         /// </summary>
         event EventHandler<Reward> OnRewarded;
 
         /// <summary>
-        /// Loads new rewarded ad.
+        /// Returns information about loaded ad.
         /// </summary>
-        /// <param name="request"></param>
-        void LoadAd(AdRequest request);
+        /// <returns>an <see cref="AdInfo"/> object</returns>
+        AdInfo GetInfo();
 
         /// <summary>
-        /// Determines whether rewarded ad has loaded.
-        /// </summary>
-        /// <returns></returns>
-        bool IsLoaded();
-
-        /// <summary>
-        /// Shows RewardedAd.
+        /// Shows the ad.
         /// </summary>
         void Show();
 
         /// <summary>
-        /// Destroys RewardedAd.
+        /// Destroys the ad.
         /// </summary>
         void Destroy();
     }

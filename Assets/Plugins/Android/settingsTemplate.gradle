@@ -1,0 +1,60 @@
+pluginManagement {
+    repositories {
+        **ARTIFACTORYREPOSITORY**
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+
+include ':launcher', ':unityLibrary'
+**INCLUDES**
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories {
+        **ARTIFACTORYREPOSITORY**
+        google()
+        mavenCentral()
+// Android Resolver Repos Start
+        def unityProjectPath = $/file:///**DIR_UNITYPROJECT**/$.replace("\\", "/")
+        maven {
+            url "https://unity3ddist.jfrog.io/artifactory/unity-mediation-mvn-prod-local/" // Assets/Editor/MediationAdapterDependencies.xml:6
+        }
+        maven {
+            url "https://maven.google.com/" // Assets/YandexMobileAds/Editor/YandexMobileadsMediationDependencies.xml:26, Assets/GoogleMobileAds/Editor/GoogleMobileAdsDependencies.xml:7, Assets/GoogleMobileAds/Editor/GoogleUmpDependencies.xml:7, Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:20
+        }
+        maven {
+            url "https://android-sdk.is.com/" // Assets/YandexMobileAds/Editor/YandexMobileadsMediationDependencies.xml:26
+        }
+        maven {
+            url "https://artifact.bytedance.com/repository/pangle" // Assets/YandexMobileAds/Editor/YandexMobileadsMediationDependencies.xml:26
+        }
+        maven {
+            url "https://sdk.tapjoy.com/" // Assets/YandexMobileAds/Editor/YandexMobileadsMediationDependencies.xml:26
+        }
+        maven {
+            url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea" // Assets/YandexMobileAds/Editor/YandexMobileadsMediationDependencies.xml:26
+        }
+        maven {
+            url "https://cboost.jfrog.io/artifactory/chartboost-ads/" // Assets/YandexMobileAds/Editor/YandexMobileadsMediationDependencies.xml:26
+        }
+        maven {
+            url "https://repo1.maven.org/maven2/" // Assets/YandexMobileAds/Editor/YandexMobileadsMediationDependencies.xml:26
+        }
+        maven {
+            url "https://repo.maven.apache.org/maven2/" // Assets/GoogleMobileAds/Mediation/AdColony/Editor/AdColonyMediationDependencies.xml:24, Assets/GoogleMobileAds/Mediation/AppLovin/Editor/AppLovinMediationDependencies.xml:24
+        }
+        maven {
+            url (unityProjectPath + "/Assets/GeneratedLocalRepo/GooglePlayGames/Editor/m2repository") // Assets/GooglePlayGames/Editor/GooglePlayGamesPluginDependencies.xml:11
+        }
+        maven {
+            url "https://dl.google.com/dl/android/maven2/" // Assets/GoogleMobileAds/Mediation/AdColony/Editor/AdColonyMediationDependencies.xml:24, Assets/GoogleMobileAds/Mediation/AppLovin/Editor/AppLovinMediationDependencies.xml:24
+        }
+        mavenLocal()
+// Android Resolver Repos End
+        flatDir {
+            dirs "${project(':unityLibrary').projectDir}/libs"
+        }
+    }
+}

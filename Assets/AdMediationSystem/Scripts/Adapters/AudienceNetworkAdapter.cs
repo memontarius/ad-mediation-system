@@ -15,7 +15,7 @@ namespace Virterix.AdMediation
 {
     public class AudienceNetworkAdapter : AdNetworkAdapter
     {
-        public const string IDENTIFIER = "audiencenetwork";
+        public const string Identifier = "audiencenetwork";
         
         public const string BANNER_ID_KEY = "bannerId";
         public const string INTERSTITIAL_ID_KEY = "interstitialId";

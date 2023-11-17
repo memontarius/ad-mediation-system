@@ -1,7 +1,7 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for Unity (C) 2018 YANDEX
+ * Version for Unity (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -19,9 +19,6 @@ namespace YandexMobileAds
     /// </summary>
     public class Banner
     {
-        private AdRequestCreator adRequestFactory;
-        private IBannerClient client;
-
         /// <summary>
         /// Notifies that the banner is loaded. At this time, you can add banner if you haven’t done so yet.
         /// </summary>
@@ -31,7 +28,7 @@ namespace YandexMobileAds
         /// Notifies that the banner failed to load.
         /// </summary>
         public event EventHandler<AdFailureEventArgs> OnAdFailedToLoad;
-        
+
         /// <summary>
         /// Called when user returned to application after click.
         /// </summary>
@@ -53,16 +50,19 @@ namespace YandexMobileAds
         /// </summary>
         public event EventHandler<ImpressionData> OnImpression;
 
+        private readonly IBannerClient _client;
+        private readonly AdRequestCreator _adRequestFactory;
+
         /// <summary>
         /// Initializes an object of the Banner class to display the banner with the specified size.
-        /// <param name="blockId"> Unique ad placement ID created at partner interface. Example: R-M-DEMO-320x50.</param>
-        /// <param name="adSize"> The size of banner ad. <see cref="YandexMobileAds.Base.AdSize"/></param>
+        /// <param name="blockId"> A unique identifier in the R-M-XXXXXX-Y format, which is assigned in the Partner interface.</param>
+        /// <param name="adSize"> The size of banner ad. <see cref="YandexMobileAds.Base.BannerAdSize"/></param>
         /// <param name="position"> Banner position on screen <see cref="YandexMobileAds.Base.AdPosition"/></param>
         /// </summary>
-        public Banner(string blockId, AdSize adSize, AdPosition position)
+        public Banner(string blockId, BannerAdSize adSize, AdPosition position)
         {
-            this.adRequestFactory = new AdRequestCreator();
-            this.client = YandexMobileAdsClientFactory.BuildBannerClient(blockId, adSize, position);
+            this._adRequestFactory = new AdRequestCreator();
+            this._client = YandexMobileAdsClientFactory.BuildBannerClient(blockId, adSize, position);
 
             MainThreadDispatcher.initialize();
             ConfigureBannerEvents();
@@ -74,7 +74,7 @@ namespace YandexMobileAds
         /// <param name="request">Data for targeting.</param>
         public void LoadAd(AdRequest request)
         {
-            client.LoadAd(adRequestFactory.CreateAdRequest(request));
+            _client.LoadAd(_adRequestFactory.CreateAdRequest(request));
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace YandexMobileAds
         /// </summary>
         public void Hide()
         {
-            client.Hide();
+            _client.Hide();
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace YandexMobileAds
         /// </summary>
         public void Show()
         {
-            client.Show();
+            _client.Show();
         }
 
         /// <summary>
@@ -98,75 +98,117 @@ namespace YandexMobileAds
         /// </summary>
         public void Destroy()
         {
-            client.Destroy();
+            _client.Destroy();
         }
 
         private void ConfigureBannerEvents()
         {
-            this.client.OnAdLoaded += (sender, args) =>
+            this._client.OnAdLoaded += (sender, args) =>
             {
-                if (this.OnAdLoaded != null)
+                if (this.OnAdLoaded == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnAdLoaded(this, args);
-                    });
+                    return;
                 }
+
+                MainThreadDispatcher.EnqueueAction(() =>
+                {
+                    if (this.OnAdLoaded == null)
+                    {
+                        return;
+                    }
+
+                    this.OnAdLoaded(this, args);
+                });
             };
 
-            this.client.OnAdFailedToLoad += (sender, args) =>
+            this._client.OnAdFailedToLoad += (sender, args) =>
             {
-                if (this.OnAdFailedToLoad != null)
+                if (this.OnAdFailedToLoad == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnAdFailedToLoad(this, args);
-                    });
+                    return;
                 }
+
+                MainThreadDispatcher.EnqueueAction(() =>
+                {
+                    if (this.OnAdFailedToLoad == null)
+                    {
+                        return;
+                    }
+
+                    this.OnAdFailedToLoad(this, args);
+                });
             };
 
-            this.client.OnReturnedToApplication += (sender, args) =>
+            this._client.OnReturnedToApplication += (sender, args) =>
             {
-                if (this.OnReturnedToApplication != null)
+                if (this.OnReturnedToApplication == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnReturnedToApplication(this, args);
-                    });
+                    return;
                 }
+
+                MainThreadDispatcher.EnqueueAction(() =>
+                {
+                    if (this.OnReturnedToApplication == null)
+                    {
+                        return;
+                    }
+
+                    this.OnReturnedToApplication(this, args);
+                });
             };
 
-            this.client.OnLeftApplication += (sender, args) =>
+            this._client.OnLeftApplication += (sender, args) =>
             {
-                if (this.OnLeftApplication != null)
+                if (this.OnLeftApplication == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnLeftApplication(this, args);
-                    });
+                    return;
                 }
+
+                MainThreadDispatcher.EnqueueAction(() =>
+                {
+                    if (this.OnLeftApplication == null)
+                    {
+                        return;
+                    }
+
+                    this.OnLeftApplication(this, args);
+                });
             };
 
-            this.client.OnAdClicked += (sender, args) =>
+            this._client.OnAdClicked += (sender, args) =>
             {
-                if (this.OnAdClicked != null)
+                if (this.OnAdClicked == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnAdClicked(this, args);
-                    });
+                    return;
                 }
+
+                MainThreadDispatcher.EnqueueAction(() =>
+                {
+                    if (this.OnAdClicked == null)
+                    {
+                        return;
+                    }
+
+                    this.OnAdClicked(this, args);
+                });
             };
 
-            this.client.OnImpression += (sender, args) =>
+            this._client.OnImpression += (sender, args) =>
             {
-                if (this.OnImpression != null)
+                if (this.OnImpression == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnImpression(this, args);
-                    });
+                    return;
                 }
+
+                MainThreadDispatcher.EnqueueAction(() =>
+                {
+                    if (this.OnImpression == null)
+                    {
+                        return;
+                    }
+
+                    this.OnImpression(this, args);
+                });
             };
         }
     }

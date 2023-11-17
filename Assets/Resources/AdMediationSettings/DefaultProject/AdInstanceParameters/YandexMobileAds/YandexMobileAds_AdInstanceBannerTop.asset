@@ -18,5 +18,5 @@ MonoBehaviour:
     m_bannerPosition: 1
   m_bannerSize: 0
   m_prepareOnStart: 0
-  m_maxHeight: 100
+  m_maxHeight: 50
   m_refreshTime: 45

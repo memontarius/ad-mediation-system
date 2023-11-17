@@ -13,6 +13,9 @@ namespace Virterix.AdMediation.Editor
         public string _androidAppOpenAdUnitId;
         public string _iOSAppOpenAdUnitId;
         public int _appOpenAdDisplayMultiplicity;
+        public int _appOpenAdDisplayCooldown;
+        public int _appOpenAdLoadAttemptMaxNumber;
+        public string _appOpenAdAlternativeNetwork;
         
         public override Type NetworkAdapterType => typeof(AdMobAdapter);
 
@@ -20,7 +23,8 @@ namespace Virterix.AdMediation.Editor
 
         protected override string[] AdditionalScriptPaths { get; } = 
         {
-            "AdNetworkExtras/AdMob/AppOpenAdManager"
+            "AdNetworkExtras/AdMob/AdMobAppOpenAdManager",
+            "AdNetworkExtras/AdMob/AdMobConsentProvider"
         };
 
         protected override string UsingAdapterPreprocessorDirective => "_AMS_ADMOB";
@@ -42,6 +46,9 @@ namespace Virterix.AdMediation.Editor
                 adMobAdapter.m_androidAppOpenAdId = _androidAppOpenAdUnitId;
                 adMobAdapter.m_iOSAppOpenAdId = _iOSAppOpenAdUnitId;
                 adMobAdapter.m_appOpenAdDisplayMultiplicity = _appOpenAdDisplayMultiplicity;
+                adMobAdapter.m_appOpenAdDisplayCooldown = _appOpenAdDisplayCooldown;
+                adMobAdapter.m_appOpenAdLoadAttemptMaxNumber = _appOpenAdLoadAttemptMaxNumber;
+                adMobAdapter.m_appOpenAdAlternativeNetwork = _appOpenAdAlternativeNetwork;
             }
         }
 

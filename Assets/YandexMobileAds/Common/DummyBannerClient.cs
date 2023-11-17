@@ -1,7 +1,7 @@
 ﻿/*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for Unity (C) 2018 YANDEX
+ * Version for Unity (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -10,14 +10,13 @@
 using System;
 using System.Reflection;
 using YandexMobileAds.Base;
-using YandexMobileAds.Platforms;
 using UnityEngine;
 
 namespace YandexMobileAds.Common
 {
     public class DummyBannerClient : IBannerClient
     {
-        private static string TAG = "Dummy Banner ";
+        private const string TAG = "Dummy Banner ";
 
         public event EventHandler<EventArgs> OnAdLoaded;
         public event EventHandler<AdFailureEventArgs> OnAdFailedToLoad;

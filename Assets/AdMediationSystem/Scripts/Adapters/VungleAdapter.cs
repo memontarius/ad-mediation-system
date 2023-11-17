@@ -9,7 +9,7 @@ namespace Virterix.AdMediation
 {
     public class VungleAdapter : AdNetworkAdapter
     {
-        public const string IDENTIFIER = "vungle";
+        public const string Identifier = "vungle";
         
         private string m_appId;
 

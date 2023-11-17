@@ -41,26 +41,18 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <None Include="Assets\Plugins\Android\GoogleMobileAdsAdColonyMediation\AndroidManifest.xml" />
-     <Folder Include="Assets\Plugins\Android\GoogleMobileAdsAppLovinMediation" />
      <Folder Include="Assets\Plugins\Android" />
-     <Folder Include="Assets\Plugins\Android\GoogleMobileAdsPlugin.androidlib" />
-     <Folder Include="Assets\Plugins\Android\YandexMobileAdsPlugin.androidlib" />
-     <None Include="Assets\Plugins\Android\GoogleMobileAdsPlugin.androidlib\AndroidManifest.xml" />
-     <Folder Include="Assets\Plugins\Android\GoogleMobileAdsAdColonyMediation" />
      <Folder Include="Assets\Plugins\iOS" />
      <Folder Include="Assets\Plugins" />
-     <None Include="Assets\Plugins\Android\YandexMobileAdsPlugin.androidlib\AndroidManifest.xml" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
-     <None Include="Assets\Plugins\Android\GoogleMobileAdsAppLovinMediation\AndroidManifest.xml" />
      <Reference Include="UnityEngine">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.20f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
+     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
      </Reference>
      <Reference Include="UnityEngine.CoreModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.20f1\Editor\Data\Managed\UnityEngine\UnityEngine.CoreModule.dll</HintPath>
+     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.CoreModule.dll</HintPath>
      </Reference>
      <Reference Include="UnityEditor">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.20f1\Editor\Data\Managed\UnityEngine\UnityEditor.dll</HintPath>
+     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.dll</HintPath>
      </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

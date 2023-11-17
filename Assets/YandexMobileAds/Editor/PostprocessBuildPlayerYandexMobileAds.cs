@@ -1,7 +1,7 @@
 ﻿/*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for Unity (C) 2018 YANDEX
+ * Version for Unity (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -68,14 +68,6 @@ public class PostprocessBuildPlayerYandexMobileAds
 
             var project = new PBXProject ();
             project.ReadFromString (File.ReadAllText (projectPath));
-
-#if UNITY_2020_1_OR_NEWER
-            var mainTarget = project.GetUnityMainTargetGuid ();
-            var bundlePath = "Pods/YandexMobileAds/static/YandexMobileAds.xcframework/YandexMobileAdsBundle.bundle";
-            var fileGuid = project.AddFile (bundlePath, bundlePath);
-            var resourcesBuildPhaseGuid = project.GetResourcesBuildPhaseByTarget (mainTarget);
-            project.AddFileToBuildSection (mainTarget, resourcesBuildPhaseGuid, fileGuid);
-#endif
 
 #if UNITY_2020_1_OR_NEWER
             var target = project.GetUnityFrameworkTargetGuid ();

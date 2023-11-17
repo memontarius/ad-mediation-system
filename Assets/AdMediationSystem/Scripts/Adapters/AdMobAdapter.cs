@@ -8,16 +8,18 @@ using Boomlagoon.JSON;
 using System.Reflection;
 #endif
 #if _AMS_ADMOB
+using System.Collections;
 using GoogleMobileAds.Api;
 using GoogleMobileAds.Common;
+using GoogleMobileAds.Ump.Api;
 #endif
 
 namespace Virterix.AdMediation
 {
     public class AdMobAdapter : AdNetworkAdapter
     {
-        public const string IDENTIFIER = "admob";
-        
+        public const string Identifier = "admob";
+
         public enum AdMobBannerSize
         {
             SmartBanner,
@@ -38,7 +40,7 @@ namespace Virterix.AdMediation
             BottomRight
         }
 
-        public enum AdMobTagForUnderAgeOfConsent 
+        public enum AdMobTagForUnderAgeOfConsent
         {
             Unspecified = 0,
             False,
@@ -54,18 +56,22 @@ namespace Virterix.AdMediation
             T
         }
 
-        public struct AdRequestBuilderContainer {
+        public struct AdRequestContainer
+        {
 #if _AMS_ADMOB
-            public AdRequestBuilderContainer(AdRequest.Builder builder) {
-                _builder = builder;
+            public AdRequestContainer(AdRequest request)
+            {
+                _request = request;
             }
-            public readonly AdRequest.Builder _builder;
+            public readonly AdRequest _request;
 #endif
         }
 
-        public struct InitializationStatusContainer {
+        public struct InitializationStatusContainer
+        {
 #if _AMS_ADMOB
-            public InitializationStatusContainer(InitializationStatus status) {
+            public InitializationStatusContainer(InitializationStatus status)
+            {
                 _status = status;
             }
             public readonly InitializationStatus _status;
@@ -75,23 +81,26 @@ namespace Virterix.AdMediation
         public event Action OnWillInitialize = delegate { };
         public event Action OnDidInitialize = delegate { };
 
-        public event Action<AdType, AdRequestBuilderContainer> OnAdRequest = delegate { };
+        public event Action<AdType, AdRequestContainer> OnAdRequest = delegate { };
         public event Action<InitializationStatusContainer> OnInitializationComplete = delegate { };
 
         private const string UnderAgeOfConsentSaveKey = AdMediationSystem.PREFIX + "abmob.uac";
         private const string MaxContentRatingSaveKey = AdMediationSystem.PREFIX + "abmob.mcr";
-#if _AMS_ADMOB 
-        private AppOpenAdManager m_appOpenAdManager;
-#endif
+        private AdMobConsentProvider _consentProvider;
         private int m_appStateForegroundCount;
         private AdMobMediationBehavior m_adMobMediationBehavior;
         private bool m_wasAppStateEventNotifierSubscribe;
-        private bool m_wasAppOpenAdDisplayed;
+        private float m_appOpenAdLastShowingTime;
+        private int m_appOpenAdLoadAttemptCount;
+        private IAppOpenAdManager m_alternativeOpenAdManager;
         
         public bool m_useAppOpenAd;
         public string m_androidAppOpenAdId;
         public string m_iOSAppOpenAdId;
         public int m_appOpenAdDisplayMultiplicity;
+        public int m_appOpenAdDisplayCooldown;
+        public int m_appOpenAdLoadAttemptMaxNumber = 4;
+        public string m_appOpenAdAlternativeNetwork;
         public bool m_useMediation;
 
         public bool AppOpenAdDisabled { get; set; } = false;
@@ -108,7 +117,7 @@ namespace Virterix.AdMediation
 
         protected override string AdInstanceParametersFolder
         {
-            get {  return AdMobAdInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER; }
+            get { return AdMobAdInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER; }
         }
 
         public static void SetupNetworkNativeSettings(string iOSAppId, string androidAppId)
@@ -125,7 +134,7 @@ namespace Virterix.AdMediation
             if (adMobSettings != null)
             {
                 Type settingsType = adMobSettings.GetType();
-                
+
                 PropertyInfo prop = settingsType.GetProperty("GoogleMobileAdsAndroidAppId");
                 prop.SetValue(adMobSettings, androidAppId);
 
@@ -154,6 +163,30 @@ namespace Virterix.AdMediation
             return version;
         }
 
+        public void ShowConsentOptionsForm()
+        {
+#if _AMS_ADMOB
+            if (_consentProvider == null)
+                return;
+
+            _consentProvider.ShowPrivacyOptionsForm((string message) => {
+#if AD_MEDIATION_DEBUG_MODE
+                Debug.Log($"[AMS] AdMobAdapter.ShowConsentOptionsForm Complete: {message}");
+#endif
+            });
+#endif
+        }
+        
+        public void ResetConsentInformation()
+        {
+#if _AMS_ADMOB
+            if (_consentProvider != null) {
+                _consentProvider.ResetConsentInformation();
+                _consentProvider.LoadForm();
+            }
+#endif
+        }
+        
 #if _AMS_ADMOB
         public class AdMobAdInstanceData : AdInstance
         {
@@ -166,16 +199,17 @@ namespace Virterix.AdMediation
             {
             }
 
-            public EventHandler<EventArgs> onAdLoadedHandler;
-            public EventHandler<AdFailedToLoadEventArgs> onAdFailedToLoadHandler;
-            public EventHandler<EventArgs> onAdOpeningHandler;
-            public EventHandler<AdErrorEventArgs> onAdRewardVideoFailedToShowHandler;
-            public EventHandler<EventArgs> onAdClosedHandler;
+            public Action onAdLoadedHandler;
+            public Action<LoadAdError> onAdFailedToLoadHandler;
+            public Action onAdOpeningHandler;
+            public Action<AdError> onAdFailedToOpenHandler;
+            public Action<AdError> onAdRewardVideoFailedToShowHandler;
+            public Action onAdClosedHandler;
             public EventHandler<AdFailedToLoadEventArgs> onAdRewardVideoFailedToLoadHandler;
             public EventHandler<Reward> onAdRewardVideoEarnedHandler;
             public EventHandler<AdValueEventArgs> onAdRewardVideoPaidHandler;
         }
-        
+
         private void OnApplicationPause(bool pause)
         {
 #if UNITY_IOS
@@ -238,33 +272,38 @@ namespace Virterix.AdMediation
             }
             return admobAdPosition;
         }
-        
+
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
             base.InitializeParameters(parameters, jsonAdInstances);
-            
-            ConfigureAdMob();
 
-            OnWillInitialize();
+            RequestConfiguration requetConfig = ConfigureAdMob();
+
             AppOpenAdDisabled = AdMediationSystem.NonRewardAdsDisabled;
+            MobileAds.RaiseAdEventsOnUnityMainThread = true;
             
-            MobileAds.Initialize(OnInitComplete);
-            if (m_useAppOpenAd)
+            _consentProvider = new AdMobConsentProvider();
+             
+            if (AdMediationSystem.Instance.IsTestModeEnabled)
             {
-                string appOpenAdUnitId = m_androidAppOpenAdId;
-#if UNITY_IOS
-                appOpenAdUnitId = m_iOSAppOpenAdId;
-#endif
-                if (!string.IsNullOrEmpty(appOpenAdUnitId))
-                {
-                    m_appOpenAdManager = new AppOpenAdManager(this, appOpenAdUnitId, Screen.orientation);
-                    m_appOpenAdManager.LoadAd();
-
-                    AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
-                    m_wasAppStateEventNotifierSubscribe = true;
-                }
+                requetConfig.TestDeviceIds = new List<string>(AdMediationSystem.Instance.TestDevices);
             }
-            OnDidInitialize();
+
+            if (m_useAppOpenAd && !HasAppOpenAdManager) {
+                AppOpenAdManager = CreateAppOpenAdManager();
+            }
+
+            _consentProvider.GatherConsent((string message) =>
+                {
+#if AD_MEDIATION_DEBUG_MODE
+                    Debug.Log($"[AMS] AdMobAdapter GatherConsent was complete with message: {message}. CanRequestAds: {_consentProvider.CanRequestAds}");
+#endif
+                    OnWillInitialize();
+                    MobileAds.Initialize(OnInitComplete);
+                    StartCoroutine(RequestAppOpenAd(AppOpenAdManager, 30));
+                    OnDidInitialize();
+                },
+                requetConfig.TestDeviceIds);
         }
         
         protected override void InitializeAdInstanceData(AdInstance adInstance, JSONValue jsonAdInstance)
@@ -277,35 +316,37 @@ namespace Virterix.AdMediation
             AdInstance adInstance = new AdMobAdInstanceData(this);
             return adInstance;
         }
-        
-        private void ConfigureAdMob()
+
+        private RequestConfiguration ConfigureAdMob()
         {
-            RequestConfiguration.Builder builder = new RequestConfiguration.Builder();
-            if (m_useMediation) {
+            RequestConfiguration requestConfiguration = new RequestConfiguration();
+            if (m_useMediation)
+            {
                 m_adMobMediationBehavior = new AdMobMediationBehavior(this);
             }
 
             if (AdMediationSystem.Instance.ChildrenMode != ChildDirectedMode.NotAssign)
             {
                 var isChildDirected = AdMediationSystem.Instance.ChildrenMode == ChildDirectedMode.Directed ?
-                        TagForChildDirectedTreatment.True:
+                        TagForChildDirectedTreatment.True :
                         TagForChildDirectedTreatment.False;
-                builder.SetTagForChildDirectedTreatment(isChildDirected);
+                requestConfiguration.TagForChildDirectedTreatment = isChildDirected;
             }
 
-            if (AdMediationSystem.Instance.IsTestModeEnabled)
-                builder.SetTestDeviceIds(new List<string>(AdMediationSystem.Instance.TestDevices));
+            if (AdMediationSystem.Instance.IsTestModeEnabled) {
+                requestConfiguration.TestDeviceIds = new List<string>(AdMediationSystem.Instance.TestDevices);
+            }
 
             if (UnderAgeOfConsent != AdMobTagForUnderAgeOfConsent.Unspecified)
             {
                 var tagConsent = UnderAgeOfConsent == AdMobTagForUnderAgeOfConsent.True ? TagForUnderAgeOfConsent.True : TagForUnderAgeOfConsent.False;
-                builder.SetTagForUnderAgeOfConsent(tagConsent);
+                requestConfiguration.TagForUnderAgeOfConsent = tagConsent;
             }
 
             if (MaxContentRating != AdMobMaxAdContentRating.Unspecified)
             {
                 MaxAdContentRating maxAdContentRating = MaxAdContentRating.Unspecified;
-                switch(MaxContentRating)
+                switch (MaxContentRating)
                 {
                     case AdMobMaxAdContentRating.G:
                         maxAdContentRating = MaxAdContentRating.G;
@@ -320,10 +361,11 @@ namespace Virterix.AdMediation
                         maxAdContentRating = MaxAdContentRating.T;
                         break;
                 }
-                builder.SetMaxAdContentRating(MaxAdContentRating.G);
+                requestConfiguration.MaxAdContentRating = maxAdContentRating;
             }
-            RequestConfiguration requestConfiguration = builder.build();
+
             MobileAds.SetRequestConfiguration(requestConfiguration);
+            return requestConfiguration;
         }
 
         public void SaveContentConfig()
@@ -331,7 +373,7 @@ namespace Virterix.AdMediation
             PlayerPrefs.SetInt(UnderAgeOfConsentSaveKey, (int)UnderAgeOfConsent);
             PlayerPrefs.SetInt(MaxContentRatingSaveKey, (int)MaxContentRating);
         }
-        
+
         public void RestoreContentConfig()
         {
             UnderAgeOfConsent = (AdMobTagForUnderAgeOfConsent)PlayerPrefs.GetInt(UnderAgeOfConsentSaveKey, (int)AdMobTagForUnderAgeOfConsent.Unspecified);
@@ -350,7 +392,7 @@ namespace Virterix.AdMediation
         {
             AdMobAdInstanceData adMobAdInstance = adInstance as AdMobAdInstanceData;
             adInstance.CurrPlacement = placement;
-            
+
             if (!IsReady(adMobAdInstance))
             {
                 AdType adType = adInstance.m_adType;
@@ -378,7 +420,7 @@ namespace Virterix.AdMediation
             AdMobAdInstanceData adMobAdInstance = adInstance as AdMobAdInstanceData;
             if (adMobAdInstance == null)
                 return false;
-            
+
             AdType adType = adInstance.m_adType;
             bool isAdAvailable = IsReady(adInstance, placement);
             bool isPreviousBannerDisplayed = adMobAdInstance.m_bannerDisplayed;
@@ -386,7 +428,7 @@ namespace Virterix.AdMediation
             if (adType == AdType.Banner)
                 adMobAdInstance.m_bannerDisplayed = true;
             adMobAdInstance.CurrPlacement = placement;
-            
+
             if (isAdAvailable)
             {
                 switch (adType)
@@ -411,7 +453,10 @@ namespace Virterix.AdMediation
                         break;
                     case AdType.Incentivized:
                         RewardedAd rewardedAd = adInstance.m_adView as RewardedAd;
-                        rewardedAd?.Show();
+                        rewardedAd?.Show((Reward reward) =>
+                        {
+                            HandleRewardVideoEarned(adMobAdInstance, reward);
+                        });
                         break;
                 }
             }
@@ -423,7 +468,7 @@ namespace Virterix.AdMediation
             AdMobAdInstanceData adMobAdInstance = adInstance as AdMobAdInstanceData;
             if (adMobAdInstance == null)
                 return;
-            
+
             switch (adInstance.m_adType)
             {
                 case AdType.Banner:
@@ -447,16 +492,20 @@ namespace Virterix.AdMediation
 #endif
             AdType adType = adInstance.m_adType;
             bool isReady = adInstance.State == AdState.Received;
-            
-            switch (adType)
+
+            if (adInstance.m_adView != null)
             {
-                case AdType.Incentivized:
-                    if (adInstance.m_adView != null)
-                    {
+                switch (adType)
+                {
+                    case AdType.Interstitial:  
+                        InterstitialAd interstitialAd = adInstance.m_adView as InterstitialAd;
+                        isReady = interstitialAd.CanShowAd();
+                        break;
+                    case AdType.Incentivized:
                         RewardedAd rewardedAd = adInstance.m_adView as RewardedAd;
-                        isReady = rewardedAd.IsLoaded();
-                    }
-                    break;
+                        isReady = rewardedAd.CanShowAd();
+                        break;
+                }
             }
 
             return isReady;
@@ -471,35 +520,23 @@ namespace Virterix.AdMediation
 
             AdMobAdInstanceBannerParameters bannerParams = adInstance.m_adInstanceParams as AdMobAdInstanceBannerParameters;
             AdPosition bannerPosition = ConvertToNativeBannerPosition((AdMobBannerPosition)GetBannerPosition(adInstance, placement));
-            
+
             BannerView bannerView = new BannerView(adInstance.m_adId, ConvertToNativeBannerSize(bannerParams.m_bannerSize), bannerPosition);
             adInstance.m_adView = bannerView;
             bannerView.Hide();
 
             // Register for ad events.
-            adInstance.onAdLoadedHandler = delegate (object sender, EventArgs args)
+            adInstance.onAdLoadedHandler = delegate ()
             {
-                HandleAdLoaded(adInstance, sender, args);
+                HandleAdLoaded(adInstance);
             };
-            bannerView.OnAdLoaded += adInstance.onAdLoadedHandler;
+            bannerView.OnBannerAdLoaded += adInstance.onAdLoadedHandler;
 
-            adInstance.onAdFailedToLoadHandler = delegate (object sender, AdFailedToLoadEventArgs args)
+            adInstance.onAdFailedToLoadHandler = delegate (LoadAdError adError)
             {
-                HandleAdFailedToLoad(adInstance, sender, args);
+                HandleAdFailedToLoad(adInstance, adError);
             };
-            bannerView.OnAdFailedToLoad += adInstance.onAdFailedToLoadHandler;
-
-            adInstance.onAdOpeningHandler = delegate (object sender, EventArgs args)
-            {
-                HandleAdOpened(adInstance, sender, args);
-            };
-            bannerView.OnAdOpening += adInstance.onAdOpeningHandler;
-
-            adInstance.onAdClosedHandler = delegate (object sender, EventArgs args)
-            {
-                HandleAdClosed(adInstance, sender, args);
-            };
-            bannerView.OnAdClosed += adInstance.onAdClosedHandler;
+            bannerView.OnBannerAdLoadFailed += adInstance.onAdFailedToLoadHandler;
 
             // Load a banner ad.
             bannerView.LoadAd(CreateAdRequest(AdType.Banner));
@@ -512,10 +549,8 @@ namespace Virterix.AdMediation
                 BannerView bannerView = adInstance.m_adView as BannerView;
                 adInstance.m_adView = null;
 
-                bannerView.OnAdLoaded -= adInstance.onAdLoadedHandler;
-                bannerView.OnAdFailedToLoad -= adInstance.onAdFailedToLoadHandler;
-                bannerView.OnAdOpening -= adInstance.onAdOpeningHandler;
-                bannerView.OnAdClosed -= adInstance.onAdClosedHandler;
+                bannerView.OnBannerAdLoaded -= adInstance.onAdLoadedHandler;
+                bannerView.OnBannerAdLoadFailed -= adInstance.onAdFailedToLoadHandler;
 
                 bannerView.Destroy();
                 adInstance.State = AdState.Unavailable;
@@ -528,36 +563,41 @@ namespace Virterix.AdMediation
 
             adInstance.State = AdState.Loading;
 
-            // Create an interstitial.
-            InterstitialAd interstitial = new InterstitialAd(adInstance.m_adId);
-            adInstance.m_adView = interstitial;
+            // Load an interstitial ad
+            InterstitialAd.Load(adInstance.m_adId, CreateAdRequest(AdType.Interstitial),
+                (InterstitialAd ad, LoadAdError loadAdError) =>
+                {
+                    if (loadAdError != null || ad == null)
+                    {
+                        HandleInterstitialFailedToLoad(adInstance, loadAdError);
+                        return;
+                    }
+                    else
+                    {
+                        adInstance.m_adView = ad;
 
-            // Register for ad events.
-            adInstance.onAdLoadedHandler = delegate (object sender, EventArgs args)
-            {
-                HandleInterstitialLoaded(adInstance, sender, args);
-            };
-            interstitial.OnAdLoaded += adInstance.onAdLoadedHandler;
+                        adInstance.onAdOpeningHandler = delegate ()
+                        {
+                            HandleInterstitialOpened(adInstance);
+                        };
+                        ad.OnAdFullScreenContentOpened += adInstance.onAdOpeningHandler;
 
-            adInstance.onAdFailedToLoadHandler = delegate (object sender, AdFailedToLoadEventArgs args)
-            {
-                HandleInterstitialFailedToLoad(adInstance, sender, args);
-            };
-            interstitial.OnAdFailedToLoad += adInstance.onAdFailedToLoadHandler;
+                        adInstance.onAdClosedHandler = delegate ()
+                        {
+                            HandleInterstitialClosed(adInstance);
+                        };
+                        ad.OnAdFullScreenContentClosed += adInstance.onAdClosedHandler;
 
-            adInstance.onAdOpeningHandler = delegate (object sender, EventArgs args)
-            {
-                HandleInterstitialOpened(adInstance, sender, args);
-            };
-            interstitial.OnAdOpening += adInstance.onAdOpeningHandler;
+                        adInstance.onAdFailedToOpenHandler = delegate (AdError adError)
+                        {
+                            HandleInterstitialOpenFailed(adInstance, adError);
+                        };
+                        ad.OnAdFullScreenContentFailed += adInstance.onAdFailedToOpenHandler;
 
-            adInstance.onAdClosedHandler = delegate (object sender, EventArgs args)
-            {
-                HandleInterstitialClosed(adInstance, sender, args);
-            };
-            interstitial.OnAdClosed += adInstance.onAdClosedHandler;
-
-            interstitial.LoadAd(CreateAdRequest(AdType.Interstitial));
+                        HandleInterstitialLoaded(adInstance);
+                        return;
+                    }
+                });
         }
 
         private void DestroyInterstitial(AdMobAdInstanceData adInstance)
@@ -567,10 +607,9 @@ namespace Virterix.AdMediation
                 InterstitialAd interstitial = adInstance.m_adView as InterstitialAd;
                 adInstance.m_adView = null;
 
-                interstitial.OnAdLoaded -= adInstance.onAdLoadedHandler;
-                interstitial.OnAdFailedToLoad -= adInstance.onAdFailedToLoadHandler;
-                interstitial.OnAdOpening -= adInstance.onAdOpeningHandler;
-                interstitial.OnAdClosed -= adInstance.onAdClosedHandler;
+                interstitial.OnAdFullScreenContentOpened -= adInstance.onAdOpeningHandler;
+                interstitial.OnAdFullScreenContentClosed -= adInstance.onAdClosedHandler;
+                interstitial.OnAdFullScreenContentFailed -= adInstance.onAdFailedToOpenHandler;
 
                 interstitial.Destroy();
                 adInstance.State = AdState.Uncertain;
@@ -582,52 +621,43 @@ namespace Virterix.AdMediation
             DestroyRewardVideo(adInstance);
 
             adInstance.State = AdState.Loading;
-            RewardedAd rewardedAd = new RewardedAd(adInstance.m_adId);
-            adInstance.m_adView = rewardedAd;
 
-            adInstance.onAdLoadedHandler = delegate (object sender, EventArgs args)
-            {
-                HandleRewardVideoLoaded(adInstance, sender, args);
-            };
-            rewardedAd.OnAdLoaded += adInstance.onAdLoadedHandler;
+            RewardedAd.Load(adInstance.m_adId, CreateAdRequest(AdType.Incentivized),
+                    (RewardedAd ad, LoadAdError loadError) =>
+                    {
+                        if (loadError != null)
+                        {
+                            HandleRewardVideoFailedToLoad(adInstance, loadError);
+                            return;
+                        }
+                        else if (ad == null)
+                        {
+                            HandleRewardVideoFailedToLoad(adInstance, loadError);
+                            return;
+                        }
 
-            adInstance.onAdRewardVideoFailedToLoadHandler = delegate (object sender, AdFailedToLoadEventArgs args)
-            {
-                HandleRewardVideoFailedToLoad(adInstance, sender, args);
-            };
-            rewardedAd.OnAdFailedToLoad += adInstance.onAdRewardVideoFailedToLoadHandler;
+                        adInstance.m_adView = ad;
 
-            adInstance.onAdOpeningHandler = delegate (object sender, EventArgs args)
-            {
-                HandleRewardVideoOpened(adInstance, sender, args);
-            };
-            rewardedAd.OnAdOpening += adInstance.onAdOpeningHandler;
+                        adInstance.onAdOpeningHandler = delegate ()
+                        {
+                            HandleRewardVideoOpened(adInstance);
+                        };
+                        ad.OnAdFullScreenContentOpened += adInstance.onAdOpeningHandler;
 
-            adInstance.onAdRewardVideoFailedToShowHandler = delegate (object sender, AdErrorEventArgs args)
-            {
-                HandleRewardVideoFailedToShow(adInstance, sender, args);
-            };
-            rewardedAd.OnAdFailedToShow += adInstance.onAdRewardVideoFailedToShowHandler;
+                        adInstance.onAdClosedHandler = delegate ()
+                        {
+                            HandleRewardVideoClosed(adInstance);
+                        };
+                        ad.OnAdFullScreenContentClosed += adInstance.onAdClosedHandler;
 
-            adInstance.onAdClosedHandler = delegate (object sender, EventArgs args)
-            {
-                HandleRewardVideoClosed(adInstance, sender, args);
-            };
-            rewardedAd.OnAdClosed += adInstance.onAdClosedHandler;
+                        adInstance.onAdRewardVideoFailedToShowHandler = delegate (AdError adError)
+                        {
+                            HandleRewardVideoFailedToShow(adInstance, adError);
+                        };
+                        ad.OnAdFullScreenContentFailed += adInstance.onAdRewardVideoFailedToShowHandler;
 
-            adInstance.onAdRewardVideoEarnedHandler = delegate (object sender, Reward reward)
-            {
-                HandleRewardVideoEarned(adInstance, sender, reward);
-            };
-            rewardedAd.OnUserEarnedReward += adInstance.onAdRewardVideoEarnedHandler;
-
-            adInstance.onAdRewardVideoPaidHandler = delegate (object sender, AdValueEventArgs args)
-            {
-                HandleRewardVideoPaidEvent(adInstance, sender, args);
-            };
-            rewardedAd.OnPaidEvent += adInstance.onAdRewardVideoPaidHandler;
-
-            rewardedAd.LoadAd(CreateAdRequest(AdType.Incentivized));
+                        HandleRewardVideoLoaded(adInstance);
+                    });
         }
 
         private void DestroyRewardVideo(AdMobAdInstanceData adInstance)
@@ -635,15 +665,11 @@ namespace Virterix.AdMediation
             if (adInstance.m_adView != null)
             {
                 RewardedAd rewardedAd = adInstance.m_adView as RewardedAd;
-                rewardedAd.OnAdLoaded -= adInstance.onAdLoadedHandler;
-                rewardedAd.OnAdFailedToLoad -= adInstance.onAdRewardVideoFailedToLoadHandler;
-                rewardedAd.OnAdOpening -= adInstance.onAdOpeningHandler;
-                rewardedAd.OnAdFailedToShow -= adInstance.onAdRewardVideoFailedToShowHandler;
-                rewardedAd.OnAdClosed -= adInstance.onAdClosedHandler;
-                rewardedAd.OnUserEarnedReward -= adInstance.onAdRewardVideoEarnedHandler;
-                rewardedAd.OnPaidEvent -= adInstance.onAdRewardVideoPaidHandler;
-                adInstance.m_adView = null;
+                rewardedAd.OnAdFullScreenContentOpened += adInstance.onAdOpeningHandler;
+                rewardedAd.OnAdFullScreenContentClosed += adInstance.onAdClosedHandler;
+                rewardedAd.OnAdFullScreenContentFailed += adInstance.onAdRewardVideoFailedToShowHandler;
 
+                adInstance.m_adView = null;
                 adInstance.State = AdState.Uncertain;
             }
         }
@@ -651,19 +677,50 @@ namespace Virterix.AdMediation
         // Returns an ad request with custom ad targeting.
         private AdRequest CreateAdRequest(AdType adType)
         {
-            AdRequest.Builder requestBuilder = new AdRequest.Builder();
+            AdRequest request = new AdRequest();
 
             if (AdMediationSystem.UserPersonalisationConsent == PersonalisationConsent.Denied)
             {
-                requestBuilder.AddExtra("npa", "1");
-                requestBuilder.AddExtra("rdp", "1");
+                request.Extras.Add("npa", "1");
+                request.Extras.Add("rdp", "1");
             }
-            OnAdRequest(adType, new AdRequestBuilderContainer(requestBuilder));
-            
-            AdRequest request = requestBuilder.Build();
+            OnAdRequest(adType, new AdRequestContainer(request));
+
             return request;
         }
 
+        protected override IAppOpenAdManager CreateAppOpenAdManager()
+        {
+            IAppOpenAdManager manager = null;
+  
+            string appOpenAdUnitId = m_androidAppOpenAdId;
+#if UNITY_IOS
+                appOpenAdUnitId = m_iOSAppOpenAdId;
+#endif
+            if (!string.IsNullOrEmpty(appOpenAdUnitId)) {
+                m_alternativeOpenAdManager = m_appOpenAdAlternativeNetwork == "" 
+                    ? null 
+                    : AdMediationSystem.Instance.GetNetwork(m_appOpenAdAlternativeNetwork).AppOpenAdManager;
+                
+                manager = new AdMobAppOpenAdManager(this, appOpenAdUnitId);
+                AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
+                m_wasAppStateEventNotifierSubscribe = true;
+
+                if (m_alternativeOpenAdManager != null) {
+                    m_alternativeOpenAdManager.LoadComplete += HandleOpenAdLoadComplete;
+                }
+                manager.LoadComplete += HandleOpenAdLoadComplete;
+            }
+
+            return manager;
+        }
+        
+        private IEnumerator RequestAppOpenAd(IAppOpenAdManager appOpenAdManager, float delay)
+        {
+            yield return new WaitForSecondsRealtime(delay);
+            appOpenAdManager.LoadAd();
+        }
+        
         public override void NotifyEvent(AdEvent adEvent, AdInstance adInstance)
         {
             switch (adInstance.m_adType)
@@ -693,7 +750,7 @@ namespace Virterix.AdMediation
                     break;
             }
         }
-        
+
         private void HandleInterstitialEvents(AdEvent adEvent, AdInstance adInstance)
         {
             switch (adEvent)
@@ -717,11 +774,11 @@ namespace Virterix.AdMediation
                     break;
                 case AdEvent.PreparationFailed:
                 case AdEvent.Hiding:
-                    DestroyRewardVideo((AdMobAdInstanceData)adInstance); 
+                    DestroyRewardVideo((AdMobAdInstanceData)adInstance);
                     break;
             }
         }
-        
+
         //------------------------------------------------------------------------
         // AdMob Callbacks
         private void OnInitComplete(InitializationStatus initStatus)
@@ -732,14 +789,15 @@ namespace Virterix.AdMediation
             print("[AMS] AdMobAdapter.OnInitComplete()");
 #endif
         }
-        
+
         private void OnAppStateChanged(AppState appState)
         {
-            if (AppOpenAdDisabled || !enabled || m_appOpenAdManager == null || SharedFullscreenAdShowing)
+            if (AppOpenAdDisabled || !enabled || AppOpenAdManager == null || SharedFullscreenAdShowing) {
                 return;
-            
+            }
+
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log($"[AMS] AdMobAdapter.OnAppStateChanged() App State is {appState} appStateForegroundCount: {m_appStateForegroundCount}");
+            Debug.Log($"[AMS] AdMobAdapter.OnAppStateChanged() App State is {appState} Foreground Count: {m_appStateForegroundCount} Passed Time Last Showing: {(Time.realtimeSinceStartup - m_appOpenAdLastShowingTime)}");
 #endif
             if (appState == AppState.Foreground)
             {
@@ -753,22 +811,41 @@ namespace Virterix.AdMediation
 #else
                 m_appStateForegroundCount++;
 #endif
-                if (m_appOpenAdDisplayMultiplicity <= 1 || (m_appStateForegroundCount - 1) % m_appOpenAdDisplayMultiplicity == 0)
+                if (Time.realtimeSinceStartup - m_appOpenAdLastShowingTime > m_appOpenAdDisplayCooldown &&
+                    (m_appOpenAdDisplayMultiplicity <= 1 || (m_appStateForegroundCount - 1) % m_appOpenAdDisplayMultiplicity == 0))
                 {
-                    m_wasAppOpenAdDisplayed = true;
-                    m_appOpenAdManager.ShowAdIfAvailable();
+                    AppOpenAdManager.ShowAdIfAvailable();
+                    m_appOpenAdLastShowingTime = Time.realtimeSinceStartup;
                 }
-                else
-                {
-                    m_wasAppOpenAdDisplayed = false;
+            }
+        }
+        
+        private void HandleOpenAdLoadComplete(bool success)
+        {
+            if (m_appOpenAdLoadAttemptCount >= m_appOpenAdLoadAttemptMaxNumber) {
+                return;
+            }
+            
+            m_appOpenAdLoadAttemptCount++;
+            
+            if (success) {
+                m_appOpenAdLoadAttemptCount = 0;
+            }
+            else {
+                if (m_alternativeOpenAdManager != null && m_appOpenAdLoadAttemptCount % 2 == 1) {
+                    float delay = m_appOpenAdLoadAttemptCount == 1 ? 10 : m_appOpenAdLoadAttemptCount * 90;
+                    StartCoroutine(RequestAppOpenAd(m_alternativeOpenAdManager, delay));
+                }
+                else {
+                    StartCoroutine(RequestAppOpenAd(AppOpenAdManager, m_appOpenAdLoadAttemptCount * 90));
                 }
             }
         }
         
         //------------------------------------------------------------------------
-#region Banner callback handlers
+        #region Banner callback handlers
 
-        public void HandleAdLoaded(AdMobAdInstanceData adInstance, object sender, EventArgs args)
+        public void HandleAdLoaded(AdMobAdInstanceData adInstance)
         {
 #if AD_MEDIATION_DEBUG_MODE
             print("[AMS] AdMobAdapter.HandleAdLoaded() " + " adInstance: " + adInstance.Name + " isVisibled: " + adInstance.m_bannerDisplayed);
@@ -789,10 +866,10 @@ namespace Virterix.AdMediation
             }
         }
 
-        public void HandleAdFailedToLoad(AdMobAdInstanceData adInstance, object sender, AdFailedToLoadEventArgs args)
+        public void HandleAdFailedToLoad(AdMobAdInstanceData adInstance, LoadAdError adError)
         {
 #if AD_MEDIATION_DEBUG_MODE
-            print("[AMS] AdMobAdapter.HandleAdFailedToLoad() " + " adInstance: " + adInstance.Name + " message: " + args.LoadAdError.GetMessage());
+            print("[AMS] AdMobAdapter.HandleAdFailedToLoad() " + " adInstance: " + adInstance.Name + " message: " + adError.GetMessage());
 #endif
             AddEvent(AdType.Banner, AdEvent.PreparationFailed, adInstance);
         }
@@ -818,12 +895,12 @@ namespace Virterix.AdMediation
 #endif
         }
 
-#endregion // Banner callback handlers
+        #endregion // Banner callback handlers
 
         //------------------------------------------------------------------------
-#region Interstitial callback handlers
+        #region Interstitial callback handlers
 
-        public void HandleInterstitialLoaded(AdMobAdInstanceData adInstance, object sender, EventArgs args)
+        public void HandleInterstitialLoaded(AdMobAdInstanceData adInstance)
         {
 #if AD_MEDIATION_DEBUG_MODE
             print("[AMS] AdMobAdapter.HandleInterstitialLoaded()");
@@ -831,15 +908,16 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Interstitial, AdEvent.Prepared, adInstance);
         }
 
-        public void HandleInterstitialFailedToLoad(AdMobAdInstanceData adInstance, object sender, AdFailedToLoadEventArgs args)
+        public void HandleInterstitialFailedToLoad(AdMobAdInstanceData adInstance, LoadAdError loadAdError)
         {
 #if AD_MEDIATION_DEBUG_MODE
-            print("[AMS] AdMobAdapter.HandleInterstitialFailedToLoad() message: " + args.LoadAdError.GetMessage());
+            if (loadAdError != null)
+                print("[AMS] AdMobAdapter.HandleInterstitialFailedToLoad() message: " + loadAdError.GetMessage());
 #endif
             AddEvent(AdType.Interstitial, AdEvent.PreparationFailed, adInstance);
         }
 
-        public void HandleInterstitialOpened(AdMobAdInstanceData adInstance, object sender, EventArgs args)
+        public void HandleInterstitialOpened(AdMobAdInstanceData adInstance)
         {
 #if AD_MEDIATION_DEBUG_MODE
             print("[AMS] AdMobAdapter.HandleInterstitialOpened()");
@@ -854,7 +932,7 @@ namespace Virterix.AdMediation
 #endif
         }
 
-        public void HandleInterstitialClosed(AdMobAdInstanceData adInstance, object sender, EventArgs args)
+        public void HandleInterstitialClosed(AdMobAdInstanceData adInstance)
         {
 #if AD_MEDIATION_DEBUG_MODE
             print("[AMS] AdMobAdapter.HandleInterstitialClosed()");
@@ -862,12 +940,22 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Interstitial, AdEvent.Hiding, adInstance);
         }
 
-#endregion // Interstitial callback handlers
+        public void HandleInterstitialOpenFailed(AdMobAdInstanceData adInstance, AdError adErorr)
+        {
+#if AD_MEDIATION_DEBUG_MODE
+            if (adErorr != null)
+                print("[AMS] AdMobAdapter.HandleInterstitialOpenFailed() message: " + adErorr.GetMessage());
+#endif
+            DestroyInterstitial(adInstance);
+            AddEvent(AdType.Interstitial, AdEvent.PreparationFailed, adInstance);
+        }
+
+        #endregion // Interstitial callback handlers
 
         //------------------------------------------------------------------------
-#region Reward Video callback handlers
+        #region Reward Video callback handlers
 
-        public void HandleRewardVideoLoaded(AdMobAdInstanceData adInstance, object sender, EventArgs args)
+        public void HandleRewardVideoLoaded(AdMobAdInstanceData adInstance)
         {
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoLoaded()");
@@ -875,23 +963,25 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Incentivized, AdEvent.Prepared, adInstance);
         }
 
-        public void HandleRewardVideoFailedToLoad(AdMobAdInstanceData adInstance, object sender, AdFailedToLoadEventArgs args)
+        public void HandleRewardVideoFailedToLoad(AdMobAdInstanceData adInstance, LoadAdError loadError)
         {
 #if AD_MEDIATION_DEBUG_MODE
-            MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoFailedToLoad() message: " + args.LoadAdError.GetMessage());
+            if (loadError != null)
+                MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoFailedToLoad() message: " + loadError.GetMessage());
 #endif
             AddEvent(AdType.Incentivized, AdEvent.PreparationFailed, adInstance);
         }
 
-        public void HandleRewardVideoFailedToShow(AdMobAdInstanceData adInstance, object sender, AdErrorEventArgs args)
+        public void HandleRewardVideoFailedToShow(AdMobAdInstanceData adInstance, AdError adError)
         {
 #if AD_MEDIATION_DEBUG_MODE
-            MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoFailedToLoad() message: " + args.Message);
+            if (adError != null)
+                MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoFailedToLoad() message: " + adError.GetMessage());
 #endif
             AddEvent(AdType.Incentivized, AdEvent.Hiding, adInstance);
         }
 
-        public void HandleRewardVideoOpened(AdMobAdInstanceData adInstance, object sender, EventArgs args)
+        public void HandleRewardVideoOpened(AdMobAdInstanceData adInstance)
         {
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoOpened()");
@@ -899,14 +989,14 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Incentivized, AdEvent.Showing, adInstance);
         }
 
-        public void HandleRewardVideoStarted(AdMobAdInstanceData adInstance, object sender, EventArgs args)
+        public void HandleRewardVideoStarted(AdMobAdInstanceData adInstance, EventArgs args)
         {
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoStarted()");
 #endif
         }
 
-        public void HandleRewardVideoClosed(AdMobAdInstanceData adInstance, object sender, EventArgs args)
+        public void HandleRewardVideoClosed(AdMobAdInstanceData adInstance)
         {
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoClosed()");
@@ -914,7 +1004,7 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Incentivized, AdEvent.Hiding, adInstance);
         }
 
-        public void HandleRewardVideoEarned(AdMobAdInstanceData adInstance, object sender, Reward reward)
+        public void HandleRewardVideoEarned(AdMobAdInstanceData adInstance, Reward reward)
         {
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoEarned() " + reward.Amount.ToString() + " " + reward.Type);
@@ -924,14 +1014,14 @@ namespace Virterix.AdMediation
             AddEvent(AdType.Incentivized, AdEvent.IncentivizationCompleted, adInstance);
         }
 
-        private void HandleRewardVideoPaidEvent(AdMobAdInstanceData adInstance, object sender, AdValueEventArgs args)
+        private void HandleRewardVideoPaidEvent(AdMobAdInstanceData adInstance, AdValueEventArgs args)
         {
 #if AD_MEDIATION_DEBUG_MODE
             MonoBehaviour.print("[AMS] AdMobAdapter.HandleRewardVideoPaidEvent()");
 #endif
         }
 
-#endregion // Reward Video callback handlers
+        #endregion // Reward Video callback handlers
 
 #endif
     }

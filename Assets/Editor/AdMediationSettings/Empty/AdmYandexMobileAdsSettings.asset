@@ -22,3 +22,6 @@ MonoBehaviour:
   _bannerAdInstances: []
   _interstitialAdInstances: []
   _rewardAdInstances: []
+  _useAppOpenAd: 0
+  _androidAppOpenAdUnitId: 
+  _iOSAppOpenAdUnitId: 

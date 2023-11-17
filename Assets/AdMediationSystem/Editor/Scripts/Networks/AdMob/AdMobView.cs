@@ -23,6 +23,9 @@ namespace Virterix.AdMediation.Editor
         private SerializedProperty _androidAppOpenAdUnitIdProp;
         private SerializedProperty _iOSAppOpenAdUnitIdProp;
         private SerializedProperty _appOpenAdDisplayMultiplicityProp;
+        private SerializedProperty _appOpenAdDisplayCooldownProp;
+        private SerializedProperty _appOpenAdLoadAttemptMaxNumberProp;
+        private SerializedProperty _appOpenAdAlternativeNetworkProp;
         
         public AdMobView(AdMediationSettingsWindow settingsWindow, string name, string identifier) : 
             base(settingsWindow, name, identifier)
@@ -50,6 +53,9 @@ namespace Virterix.AdMediation.Editor
             _iOSAppOpenAdUnitIdProp = _serializedSettings.FindProperty("_iOSAppOpenAdUnitId");
             _androidAppOpenAdUnitIdProp = _serializedSettings.FindProperty("_androidAppOpenAdUnitId");
             _appOpenAdDisplayMultiplicityProp = _serializedSettings.FindProperty("_appOpenAdDisplayMultiplicity");
+            _appOpenAdDisplayCooldownProp = _serializedSettings.FindProperty("_appOpenAdDisplayCooldown");
+            _appOpenAdLoadAttemptMaxNumberProp = _serializedSettings.FindProperty("_appOpenAdLoadAttemptMaxNumber");
+            _appOpenAdAlternativeNetworkProp = _serializedSettings.FindProperty("_appOpenAdAlternativeNetwork");
             
             bool defineUseMediationMacros = Enabled && _useMediationProp.boolValue;
             WriteDefinitionInScript(defineUseMediationMacros, USE_MEDIATION_DEFMACROS, MEDIATION_FILE_FILTER);
@@ -136,6 +142,9 @@ namespace Virterix.AdMediation.Editor
                 if (projectSettings.IsIOS)
                     EditorGUILayout.PropertyField(_iOSAppOpenAdUnitIdProp, new GUIContent("iOS Ad Unit ID"));
                 EditorGUILayout.PropertyField(_appOpenAdDisplayMultiplicityProp, new GUIContent("Display Multiplicity"));
+                EditorGUILayout.PropertyField(_appOpenAdDisplayCooldownProp, new GUIContent("Display Cooldown"));
+                EditorGUILayout.PropertyField(_appOpenAdLoadAttemptMaxNumberProp, new GUIContent("Load Attempt Max"));
+                EditorGUILayout.PropertyField(_appOpenAdAlternativeNetworkProp, new GUIContent("Alternative Network"));
             }
             GUILayout.EndVertical();
         }

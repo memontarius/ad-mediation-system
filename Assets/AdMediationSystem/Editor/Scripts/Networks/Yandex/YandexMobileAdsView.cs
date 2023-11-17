@@ -6,6 +6,10 @@ namespace Virterix.AdMediation.Editor
 {
     public class YandexMobileAdsView: BaseAdNetworkView
     {
+        private SerializedProperty _useAppOpenAdProp;
+        private SerializedProperty _androidAppOpenAdUnitIdProp;
+        private SerializedProperty _iOSAppOpenAdUnitIdProp;
+        
         protected override InstanceElementHeight CreateInstanceElementHeight(AdType adType)
         {
             var elementHeight = base.CreateInstanceElementHeight(adType);
@@ -16,6 +20,10 @@ namespace Virterix.AdMediation.Editor
             base(settingsWindow, name, identifier)
         {
             BannerTypes = Enum.GetNames(typeof(YandexMobileAdsAdapter.YandexBannerSize));
+            
+            _useAppOpenAdProp = _serializedSettings.FindProperty("_useAppOpenAd");
+            _iOSAppOpenAdUnitIdProp = _serializedSettings.FindProperty("_iOSAppOpenAdUnitId");
+            _androidAppOpenAdUnitIdProp = _serializedSettings.FindProperty("_androidAppOpenAdUnitId");
         }
 
         protected override BaseAdNetworkSettings CreateSettingsModel()
@@ -26,6 +34,16 @@ namespace Virterix.AdMediation.Editor
 
         protected override void DrawSpecificSettings(AdMediationProjectSettings projectSettings)
         {
+            GUILayout.BeginVertical("box");
+            _useAppOpenAdProp.boolValue = EditorGUILayout.Toggle("Use App Open Ad", _useAppOpenAdProp.boolValue);
+            if (_useAppOpenAdProp.boolValue)
+            {
+                if (projectSettings.IsAndroid)
+                    EditorGUILayout.PropertyField(_androidAppOpenAdUnitIdProp, new GUIContent("Android Ad Unit ID"));
+                if (projectSettings.IsIOS)
+                    EditorGUILayout.PropertyField(_iOSAppOpenAdUnitIdProp, new GUIContent("iOS Ad Unit ID"));
+            }
+            GUILayout.EndVertical();
         }
 
         protected override int GetBannerSizeDropdownRightPadding(int bannerType)
@@ -36,7 +54,7 @@ namespace Virterix.AdMediation.Editor
         protected override void DrawBannerSpecificSettings(Rect rect, SerializedProperty element, float elementWidth, int bannerType)
         {
             float addX = 0;
-            if (bannerType == 0)
+            if (bannerType is 0 or 2)
             {
                 addX = Mathf.Clamp(elementWidth - 90, 0, 2800);
                 EditorGUI.LabelField(new Rect(rect.x + addX - 175, rect.y, 80, EditorGUIUtility.singleLineHeight),

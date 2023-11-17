@@ -1,7 +1,7 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for Android (C) 2018 YANDEX
+ * Version for Android (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -14,89 +14,102 @@ using UnityEngine;
 
 namespace YandexMobileAds.Platforms.Android
 {
-    public class RewardedAdClient : AndroidJavaProxy, IRewardedAdClient
+    internal class RewardedAdClient : AndroidJavaProxy, IRewardedAdClient
     {
-        private AndroidJavaObject rewardedAd;
-        
-        public event EventHandler<EventArgs> OnRewardedAdLoaded;
-        public event EventHandler<AdFailureEventArgs> OnRewardedAdFailedToLoad;
-        public event EventHandler<EventArgs> OnReturnedToApplication;
-        public event EventHandler<EventArgs> OnLeftApplication;
+
+        public const string UnityRewardedAdListenerClassName =
+            "com.yandex.mobile.ads.unity.wrapper.rewarded.UnityRewardedAdListener";
+
         public event EventHandler<EventArgs> OnAdClicked;
-        public event EventHandler<EventArgs> OnRewardedAdShown;
-        public event EventHandler<EventArgs> OnRewardedAdDismissed;
-        public event EventHandler<ImpressionData> OnImpression;
-        public event EventHandler<AdFailureEventArgs> OnRewardedAdFailedToShow;
+        public event EventHandler<EventArgs> OnAdShown;
+        public event EventHandler<EventArgs> OnAdDismissed;
+        public event EventHandler<ImpressionData> OnAdImpression;
+        public event EventHandler<AdFailureEventArgs> OnAdFailedToShow;
         public event EventHandler<Reward> OnRewarded;
 
-        public RewardedAdClient(string blockId) : base(Utils.UnityRewardedAdListenerClassName)
+        private AndroidJavaObject _rewarded;
+        private readonly AdInfo _adInfo;
+
+        public RewardedAdClient(AndroidJavaObject rewarded) : base(UnityRewardedAdListenerClassName)
         {
-            AndroidJavaClass playerClass = new AndroidJavaClass(Utils.UnityActivityClassName);
+            if (rewarded == null)
+            {
+                return;
+            }
 
-            AndroidJavaObject activity =
-                playerClass.GetStatic<AndroidJavaObject>("currentActivity");
+            this._rewarded = rewarded;
 
-            this.rewardedAd = new AndroidJavaObject(
-                Utils.RewardedAdClassName,
-                activity,
-                blockId);
-            this.rewardedAd.Call("setUnityRewardedAdListener", this);
+            AndroidJavaObject adInfoObject = NativeApi.GetInfo(rewarded);
+            if (adInfoObject != null)
+            {
+
+                this._adInfo = AdInfoFactory.CreateAdInfo(adInfoObject);
+            }
+
+            NativeApi.SetUnityRewardedAdListener(rewarded, this);
         }
 
-        public void LoadAd(AdRequest request)
+        public AdInfo GetInfo()
         {
-            this.rewardedAd.Call("loadAd", Utils.GetAdRequestJavaObject(request));
-        }
-
-        public bool IsLoaded()
-        {
-            return this.rewardedAd.Call<bool>("isRewardedAdLoaded");
+            return this._adInfo;
         }
 
         public void Show()
         {
-            this.rewardedAd.Call("showRewardedAd");
+            if (_rewarded == null)
+            {
+                return;
+            }
+
+            AndroidJavaObject activity = Utils.GetCurrentActivity();
+            NativeApi.Show(_rewarded, activity);
         }
 
         public void Destroy()
         {
-            this.rewardedAd.Call("clearUnityRewardedAdListener");
-            this.rewardedAd.Call("destroyRewardedAd");
+            this.OnAdClicked = null;
+            this.OnAdShown = null;
+            this.OnAdDismissed = null;
+            this.OnAdImpression = null;
+            this.OnAdFailedToShow = null;
+            this.OnRewarded = null;
+
+            if (_rewarded == null)
+            {
+                return;
+            }
+
+            NativeApi.DestroyRewardedAd(_rewarded);
         }
 
-        public void onRewardedAdLoaded()
+        #region  UnityRewardedAdListener implementation
+#pragma warning disable IDE1006
+
+        public void onAdShown()
         {
-            if (this.OnRewardedAdLoaded != null)
+            if (this.OnAdShown != null)
             {
-                this.OnRewardedAdLoaded(this, EventArgs.Empty);
+                this.OnAdShown(this, EventArgs.Empty);
             }
         }
 
-        public void onRewardedAdFailedToLoad(string errorReason)
+        public void onAdFailedToShow(string errorDescription)
         {
-            if (this.OnRewardedAdFailedToLoad != null)
+            if (this.OnAdFailedToShow != null)
             {
                 AdFailureEventArgs args = new AdFailureEventArgs()
                 {
-                    Message = errorReason
+                    Message = errorDescription
                 };
-                this.OnRewardedAdFailedToLoad(this, args);
+                this.OnAdFailedToShow(this, args);
             }
         }
 
-        public void onReturnedToApplication()
+        public void onAdDismissed()
         {
-            if (this.OnReturnedToApplication != null)
+            if (this.OnAdDismissed != null)
             {
-                this.OnReturnedToApplication(this, EventArgs.Empty);
-            }
-        }
-
-        public void onLeftApplication()
-        {
-            if (this.OnLeftApplication != null)
-            {
-                this.OnLeftApplication(this, EventArgs.Empty);
+                this.OnAdDismissed(this, EventArgs.Empty);
             }
         }
 
@@ -108,40 +121,12 @@ namespace YandexMobileAds.Platforms.Android
             }
         }
 
-        public void onRewardedAdShown()
+        public void onAdImpression(string rawImpressionData)
         {
-            if (this.OnRewardedAdShown != null)
-            {
-                this.OnRewardedAdShown(this, EventArgs.Empty);
-            }
-        }
-
-        public void onRewardedAdDismissed()
-        {
-            if (this.OnRewardedAdDismissed != null)
-            {
-                this.OnRewardedAdDismissed(this, EventArgs.Empty);
-            }
-        }
-
-        public void onImpression(string rawImpressionData)
-        {
-            if (this.OnImpression != null)
+            if (this.OnAdImpression != null)
             {
                 ImpressionData impressionData = new ImpressionData(rawImpressionData);
-                this.OnImpression(this, impressionData);
-            }
-        }
-
-        public void onRewardedAdFailedToShow(string errorReason)
-        {
-            if (this.OnRewardedAdFailedToShow != null)
-            {
-                AdFailureEventArgs args = new AdFailureEventArgs()
-                {
-                    Message = errorReason
-                };
-                this.OnRewardedAdFailedToShow(this, args);
+                this.OnAdImpression(this, impressionData);
             }
         }
 
@@ -151,6 +136,36 @@ namespace YandexMobileAds.Platforms.Android
             {
                 Reward reward = new Reward(amount, type);
                 this.OnRewarded(this, reward);
+            }
+        }
+#pragma warning restore IDE1006
+        #endregion
+
+        private static class NativeApi
+        {
+            public static void SetUnityRewardedAdListener(AndroidJavaObject rewardedAd, object listener)
+            {
+                rewardedAd.Call("setUnityRewardedAdListener", listener);
+            }
+
+            public static void ClearUnityRewardedListener(AndroidJavaObject rewardedAd)
+            {
+                rewardedAd.Call("clearUnityRewardedAdListener");
+            }
+
+            public static AndroidJavaObject GetInfo(AndroidJavaObject rewardedAd)
+            {
+                return rewardedAd.Call<AndroidJavaObject>("getInfo");
+            }
+
+            public static void Show(AndroidJavaObject rewardedAd, AndroidJavaObject activity)
+            {
+                rewardedAd.Call("show", activity);
+            }
+
+            public static void DestroyRewardedAd(AndroidJavaObject rewardedAd)
+            {
+                rewardedAd.Call("destroyRewardedAd");
             }
         }
     }

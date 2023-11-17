@@ -8,7 +8,7 @@ namespace Virterix.AdMediation
 {
     public class AppLovinAdapter : AdNetworkAdapter
     {
-        public const string IDENTIFIER = "applovin";
+        public const string Identifier = "applovin";
         
         public enum AppLovinBannerPosition
         {

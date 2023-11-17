@@ -1,7 +1,7 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for iOS (C) 2018 YANDEX
+ * Version for iOS (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -16,13 +16,13 @@
 
 char *YMAUnityCreateBannerView(YMAUnityBannerClientRef *clientRef,
                                char *adUnitID,
-                               char *adSizeID,
+                               char *bannerAdSizeID,
                                YMAUnityAdPosition position)
 {
-    YMAAdSize *adSize = [[YMAUnityObjectsStorage sharedInstance] objectWithID:adSizeID];
+    YMABannerAdSize *bannerAdSize = [[YMAUnityObjectsStorage sharedInstance] objectWithID:bannerAdSizeID];
     YMAUnityBanner *banner = [[YMAUnityBanner alloc] initWithClientRef:clientRef
                                                               adUnitID:adUnitID
-                                                                adSize:adSize
+                                                                adSize:bannerAdSize
                                                               position:position];
     const char *objectID = [YMAUnityObjectIDProvider IDForObject:banner];
     [[YMAUnityObjectsStorage sharedInstance] setObject:banner withID:objectID];

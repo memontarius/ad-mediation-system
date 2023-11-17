@@ -1,7 +1,7 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for iOS (C) 2019 YANDEX
+ * Version for iOS (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -14,25 +14,20 @@ using System.Collections.Generic;
 namespace YandexMobileAds.Platforms.iOS
 {
     #if (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-    
-    public class AdSizeClient : IDisposable
+
+    internal class AdSizeClient: IDisposable
     {
         public string ObjectId { get; private set; }
 
-        public AdSizeClient(AdSize adSize)
+        public double Width { get; private set; }
+
+        public double Height { get; private set; }
+
+        public AdSizeClient(string objectId)
         {
-            if (adSize.AdSizeType == AdSizeType.Sticky)
-            {
-                this.ObjectId = AdSizeBridge.YMAUnityCreateStickyAdSize(adSize.Width);
-            }
-            else if (adSize.AdSizeType == AdSizeType.Flexible)
-            {
-                this.ObjectId = AdSizeBridge.YMAUnityCreateFlexibleAdSizeWithSize(adSize.Width, adSize.Height);
-            }
-            else if (adSize.AdSizeType == AdSizeType.Fixed)
-            {
-                this.ObjectId = AdSizeBridge.YMAUnityCreateFixedAdSize(adSize.Width, adSize.Height);
-            }
+            this.ObjectId = objectId;
+            this.Width = AdSizeBridge.YMAUnityAdSizeGetWidth(this.ObjectId);
+            this.Height = AdSizeBridge.YMAUnityAdSizeGetHeight(this.ObjectId);
         }
 
         public void Destroy()

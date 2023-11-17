@@ -12,7 +12,7 @@ namespace Virterix.AdMediation
 {
     public class IronSourceAdapter : AdNetworkAdapter
     {
-        public const string IDENTIFIER = "ironsrc";
+        public const string Identifier = "ironsrc";
         
         [Flags]
         public enum IrnSrcAdType

@@ -1,7 +1,7 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for iOS (C) 2019 YANDEX
+ * Version for iOS (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -21,7 +21,7 @@ namespace YandexMobileAds.Platforms.iOS
             string adUnitId, string adSizeId, int position);
 
         [DllImport("__Internal")]
-        internal static extern void YMAUnityLoadBannerView(string objectId, 
+        internal static extern void YMAUnityLoadBannerView(string objectId,
                                                            string adRequestId);
 
         [DllImport("__Internal")]
@@ -41,6 +41,6 @@ namespace YandexMobileAds.Platforms.iOS
             BannerClient.YMAUnityAdViewWillLeaveApplicationCallback willLeaveCallback,
             BannerClient.YMAUnityAdViewDidClickCallback didClickCallback);
     }
-    
+
     #endif
 }

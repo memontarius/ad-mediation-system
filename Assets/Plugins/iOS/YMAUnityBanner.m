@@ -23,13 +23,13 @@
 
 - (instancetype)initWithClientRef:(YMAUnityBannerClientRef *)clientRef
                          adUnitID:(char *)adUnitID
-                           adSize:(YMAAdSize *)adSize
+                           adSize:(YMABannerAdSize *)bannerAdSize
                          position:(YMAUnityAdPosition)position
 {
     self = [super init];
     if (self != nil) {
         NSString *adUnitIDString = [[NSString alloc] initWithUTF8String:adUnitID];
-        _adView = [[YMAAdView alloc] initWithAdUnitID:adUnitIDString adSize:adSize];
+        _adView = [[YMAAdView alloc] initWithAdUnitID:adUnitIDString adSize:bannerAdSize];
         _adView.delegate = self;
         _position = position;
         _clientRef = clientRef;

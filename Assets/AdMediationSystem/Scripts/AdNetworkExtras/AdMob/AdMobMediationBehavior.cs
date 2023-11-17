@@ -20,7 +20,7 @@ using GoogleMobileAds.Api.Mediation.AppLovin;
 using GoogleMobileAds.Api.Mediation.Chartboost;
 #endif
 #if _ADMOB_MEDIATION_ADCOLONY
-using GoogleMobileAds.Api.Mediation.AdColony;
+using GoogleMobileAds.Mediation.AdColony.Api;
 #endif
 
 #if _ADMOB_MEDIATION_UNITYADS
@@ -84,8 +84,10 @@ namespace Virterix.AdMediation
 #endif
 
 #if _ADMOB_MEDIATION_ADCOLONY
-                AdColonyAppOptions.SetGDPRRequired(userAccepts);
-                AdColonyAppOptions.SetGDPRConsentString(userAccepts ? "1" : "0");
+                AdColonyAppOptions.SetPrivacyFrameworkRequired(AdColonyPrivacyFramework.GDPR, userAccepts);
+                AdColonyAppOptions.SetPrivacyConsentString(AdColonyPrivacyFramework.GDPR, userAccepts ? "1" : "0");
+                AdColonyAppOptions.SetPrivacyFrameworkRequired(AdColonyPrivacyFramework.CCPA, userAccepts);
+                AdColonyAppOptions.SetPrivacyConsentString(AdColonyPrivacyFramework.CCPA, userAccepts ? "1" : "0");
 #endif
 
 #if _ADMOB_MEDIATION_UNITYADS
@@ -143,12 +145,12 @@ namespace Virterix.AdMediation
         }
 
 #if _ADMOB_USE_MEDIATION
-        private void OnAdRequest(AdType adType, AdMobAdapter.AdRequestBuilderContainer requestBuilder)
+        private void OnAdRequest(AdType adType, AdMobAdapter.AdRequestContainer requestContainer)
         {
 #if _ADMOB_MEDIATION_ADCOLONY
             if (adType == AdType.Incentivized)
             {
-                requestBuilder._builder.AddMediationExtras(_adColonyExtras);
+                requestContainer._request.MediationExtras.Add(_adColonyExtras);
             }
 #endif
         }

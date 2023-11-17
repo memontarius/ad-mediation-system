@@ -13,10 +13,15 @@ MonoBehaviour:
   m_Name: AdmProjectSettings
   m_EditorClassIdentifier: 
   InitializeOnStart: 1
-  EnableTestMode: 0
+  EnableTestMode: 1
   EnableExtraLogging: 1
   ChildrenMode: 0
-  TestDevices: []
+  TestDevices:
+  - 9AACAECC39C6EF1FA598CCA87F934C22
+  - 5EB1BBB2E7CD5270A30BF828F75C61F7
+  - 41E7A09625CD83FCEF0BE76C9337DFEE
+  - 5C9C819D5920CE715FAAD9C35039CF35
+  - E3C6555C6FC2EBB07036646673CFE37A
   BannerMediators: []
   InterstitialMediators: []
   IncentivizedMediators: []

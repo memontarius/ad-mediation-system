@@ -1,3 +1,12 @@
+/*
+ * This file is a part of the Yandex Advertising Network
+ *
+ * Version for Android (C) 2023 YANDEX
+ *
+ * You may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
+ */
+
 using UnityEngine;
 using YandexMobileAds.Base;
 
@@ -5,28 +14,24 @@ namespace YandexMobileAds.Platforms.Android
 {
     internal class AdSizeUtils
     {
-        public const string AdSizeClassName = "com.yandex.mobile.ads.banner.AdSize";
-        public const string FlexibleSizeMethodName = "flexibleSize";
-        public const string StickySizeMethodName = "stickySize";
-
-        public static AndroidJavaObject GetAdSizeJavaObject(AdSize adSize)
+        public static AdSize CreateAdSize(AndroidJavaObject adSizeJavaObject)
         {
-            AndroidJavaClass adSizeClass = new AndroidJavaClass(AdSizeClassName);
-            AndroidJavaObject adSizeJavaObject = null;
-            if (adSize.AdSizeType == AdSizeType.Sticky)
+            int Width = NativeApi.GetWidth(adSizeJavaObject);
+            int Height = NativeApi.GetHeight(adSizeJavaObject);
+            return new AdSize(Width, Height);
+        }
+
+        private static class NativeApi
+        {
+            public static int GetWidth(AndroidJavaObject adSizeJavaObject)
             {
-                adSizeJavaObject = adSizeClass.CallStatic<AndroidJavaObject>(StickySizeMethodName, adSize.Width);
-            }
-            else if (adSize.AdSizeType == AdSizeType.Flexible)
-            {
-                adSizeJavaObject = adSizeClass.CallStatic<AndroidJavaObject>(FlexibleSizeMethodName, adSize.Width, adSize.Height);
-            }
-            else if (adSize.AdSizeType == AdSizeType.Fixed)
-            {
-                adSizeJavaObject = new AndroidJavaObject(AdSizeClassName, adSize.Width, adSize.Height);
+                return adSizeJavaObject.Call<int>("getWidth");
             }
 
-            return adSizeJavaObject;
+            public static int GetHeight(AndroidJavaObject adSizeJavaObject)
+            {
+                return adSizeJavaObject.Call<int>("getHeight");
+            }
         }
     }
 }

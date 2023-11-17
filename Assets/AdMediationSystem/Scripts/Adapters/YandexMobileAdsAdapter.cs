@@ -14,16 +14,21 @@ namespace Virterix.AdMediation
 {
     public class YandexMobileAdsAdapter : AdNetworkAdapter
     {
-        public const string IDENTIFIER = "yandex";
+        public const string Identifier = "yandex";
+
+        public bool m_useAppOpenAd;
+        public string m_androidAppOpenAdId;
+        public string m_iOSAppOpenAdId;
         
         private ScreenOrientation? _screenOrientation = null;
-        
+
         public enum YandexBannerSize
         {
-            Flexible,
-            Sticky
+            Inline,
+            Sticky,
+            Fixed
         }
-            
+
         public enum YandexBannerPosition
         {
             TopLeft,
@@ -43,34 +48,42 @@ namespace Virterix.AdMediation
             {
             }
 
-            public YandexAdInstanceData(AdNetworkAdapter network, AdType adType, string adID, string name = AdInstance.AD_INSTANCE_DEFAULT_NAME) :
+            public YandexAdInstanceData(AdNetworkAdapter network, AdType adType, string adID,
+                string name = AdInstance.AD_INSTANCE_DEFAULT_NAME) :
                 base(network, adType, adID, name)
             {
             }
-            
+
             public float BannerRefreshTime;
             public Coroutine ProcessBannerRefreshing;
             public float BannerDisplayTime;
             public float BannerLastShowingTime;
 
             public bool IsBannerRefreshProcessRunning => ProcessBannerRefreshing != null;
-            
+
 #if _AMS_YANDEX_MOBILE_ADS
             public Interstitial Interstitial;
             public RewardedAd RewardedAd;
             public Banner Banner;
             public AdPosition BannerPosition;
+            public bool HasCallbacksInitialized;
             
-            public EventHandler<EventArgs> OnLoaded;
-            public EventHandler<AdFailureEventArgs> OnFailedLoad;
+            public EventHandler<EventArgs> OnBannerLoaded;
+            public EventHandler<AdFailureEventArgs> OnBannerFailedLoad;
+            public EventHandler<EventArgs> OnBannerLeftApplication;
+            public EventHandler<EventArgs> OnBannerReturnedToApplication;
+
             public EventHandler<EventArgs> OnShowed;
             public EventHandler<AdFailureEventArgs> OnFailedShow;
             public EventHandler<EventArgs> OnClosed;
             public EventHandler<Reward> OnRewarded;
 #endif
         }
-        
+
 #if _AMS_YANDEX_MOBILE_ADS
+        private InterstitialAdLoader _interstitialAdLoader;
+        private RewardedAdLoader _rewardedAdLoader;
+        
         public static AdPosition ConvertToNativeBannerPosition(int bannerPosition)
         {
             return ConvertToNativeBannerPosition((YandexBannerPosition)bannerPosition);
@@ -79,8 +92,7 @@ namespace Virterix.AdMediation
         public static AdPosition ConvertToNativeBannerPosition(YandexBannerPosition bannerPosition)
         {
             AdPosition nativeBannerPosition = AdPosition.BottomCenter;
-            switch(bannerPosition)
-            {
+            switch (bannerPosition) {
                 case YandexBannerPosition.Center:
                     nativeBannerPosition = AdPosition.Center;
                     break;
@@ -108,14 +120,15 @@ namespace Virterix.AdMediation
                 case YandexBannerPosition.TopRight:
                     nativeBannerPosition = AdPosition.TopRight;
                     break;
-            } 
+            }
+
             return nativeBannerPosition;
         }
 #endif
 
         protected override string AdInstanceParametersFolder =>
             YandexAdInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER;
-
+        
         public override bool UseSingleBannerInstance => false;
 
         public override bool RequiredWaitingInitializationResponse => true;
@@ -128,39 +141,72 @@ namespace Virterix.AdMediation
 #endif
             return version;
         }
-        
+
         protected override void InitializeParameters(Dictionary<string, string> parameters, JSONArray jsonAdInstances)
         {
-            base.InitializeParameters(parameters, jsonAdInstances);
-        
-#if _AMS_YANDEX_MOBILE_ADS && !UNITY_EDITOR
-            if (AdMediationSystem.Instance.ChildrenMode != ChildDirectedMode.NotAssign)
+#if _AMS_YANDEX_MOBILE_ADS
+#if !UNITY_EDITOR
+            if (AdMediationSystem.Instance.ChildrenMode != ChildDirectedMode.NotAssign) {
                 MobileAds.SetAgeRestrictedUser(AdMediationSystem.Instance.ChildrenMode == ChildDirectedMode.Directed);
+            }
 #endif
-            foreach (AdMediator mediator in AdMediationSystem.Instance.BannerMediators)
-            {
-                if (AdMediationSystem.NonRewardAdsDisabled && mediator.m_adType != AdType.Incentivized)
+            _interstitialAdLoader = new InterstitialAdLoader();
+            _interstitialAdLoader.OnAdLoaded += HandleInterstitialAdLoaded;
+            _interstitialAdLoader.OnAdFailedToLoad += HandleAdFailedToLoad;
+
+            _rewardedAdLoader = new RewardedAdLoader();
+            _rewardedAdLoader.OnAdLoaded += HandleRewardedAdLoaded;
+            _rewardedAdLoader.OnAdFailedToLoad += HandleAdFailedToLoad;
+#endif
+
+            base.InitializeParameters(parameters, jsonAdInstances);
+
+            foreach (AdMediator mediator in AdMediationSystem.Instance.BannerMediators) {
+                if (AdMediationSystem.NonRewardAdsDisabled && mediator.m_adType != AdType.Incentivized) {
                     continue;
-                
-                for (int i = 0; i < mediator.TotalUnits; i++)
-                {
+                }
+
+                for (int i = 0; i < mediator.TotalUnits; i++) {
                     AdUnit unit = mediator.GetUnit(i);
-                    if (unit.AdInstance.LoadingOnStart && unit.AdNetwork == this && unit.AdInstance.State == AdState.Uncertain)
-                    {
+                    if (unit.AdInstance.LoadingOnStart && unit.AdNetwork == this &&
+                        unit.AdInstance.State == AdState.Uncertain) {
                         Prepare(unit.AdInstance, mediator.m_placementName);
                     }
                 }
             }
+            
+            if (m_useAppOpenAd && !HasAppOpenAdManager) {
+                AppOpenAdManager = CreateAppOpenAdManager();
+            }
+            
             AdMediationSystem.OnAdNetworkEvent += OnAdNetworkEvent;
         }
-        
+
+        protected override IAppOpenAdManager CreateAppOpenAdManager()
+        {
+            IAppOpenAdManager manager = null;
+            
+            string openAdUnitId = m_androidAppOpenAdId;
+#if UNITY_IOS
+            openAdUnitId = m_iOSAppOpenAdId;
+#endif
+            if (!string.IsNullOrEmpty(openAdUnitId)) {
+#if _AMS_YANDEX_MOBILE_ADS
+                manager = new YandexAppOpenAdManager(this, openAdUnitId);
+#endif
+            }
+
+            return manager;
+        }
+
         protected override void InitializeAdInstanceData(AdInstance adInstance, JSONValue jsonAdInstance)
         {
             base.InitializeAdInstanceData(adInstance, jsonAdInstance);
-            if (adInstance.LoadingOnStart && adInstance.m_adType != AdType.Banner)
+            if (adInstance.LoadingOnStart && adInstance.m_adType != AdType.Banner) {
                 Prepare(adInstance, "");
+            }
         }
-
+        
         private void Awake()
         {
             _screenOrientation = Screen.orientation;
@@ -171,19 +217,9 @@ namespace Virterix.AdMediation
             AdMediationSystem.OnAdNetworkEvent -= OnAdNetworkEvent;
         }
 
-        private void Update()
-        {
-            if (_screenOrientation != null && Screen.orientation != _screenOrientation.Value)
-            {
-                _screenOrientation = Screen.orientation;
-                ForceHideAllHiddenBanners();
-            }
-        }
-
         private void ForceHideAllHiddenBanners()
         {
-            foreach (AdInstance instance in m_adInstances)
-            {
+            foreach (AdInstance instance in m_adInstances) {
                 if (instance != null && instance.m_adType == AdType.Banner && !instance.m_bannerDisplayed)
                     Hide(instance);
             }
@@ -193,24 +229,20 @@ namespace Virterix.AdMediation
         {
             AdType adType = adInstance.m_adType;
             adInstance.CurrPlacement = placement;
-            
-            if (!IsReady(adInstance) && adInstance.State != AdState.Loading)
-            {
+
+            if (!IsReady(adInstance) && adInstance.State != AdState.Loading) {
                 adInstance.State = AdState.Loading;
                 YandexAdInstanceData yandexAdInstance = (YandexAdInstanceData)adInstance;
-                
-#if _AMS_YANDEX_MOBILE_ADS && !UNITY_EDITOR
-                switch (adType)
-                {
+
+#if _AMS_YANDEX_MOBILE_ADS
+                switch (adType) {
                     case AdType.Interstitial:
                         if (yandexAdInstance.Interstitial == null)
-                            CreateInterstitialAd(yandexAdInstance);
-                        yandexAdInstance.Interstitial.LoadAd(CreateRequest());
+                            RequestInterstitialAd(yandexAdInstance);
                         break;
                     case AdType.Incentivized:
                         if (yandexAdInstance.RewardedAd == null)
-                            CreateRewardAd(yandexAdInstance);
-                        yandexAdInstance.RewardedAd.LoadAd(CreateRequest());
+                            RequestRewardAd(yandexAdInstance);
                         break;
                     case AdType.Banner:
                         if (yandexAdInstance.Banner == null)
@@ -227,7 +259,7 @@ namespace Virterix.AdMediation
         {
             return new AdRequest.Builder().Build();
         }
-#endif    
+#endif
 
         public override bool Show(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
@@ -235,65 +267,61 @@ namespace Virterix.AdMediation
             YandexAdInstanceData yandexAdInstance = (YandexAdInstanceData)adInstance;
             adInstance.CurrPlacement = placement;
             bool wasBannerDisplay = adInstance.m_bannerDisplayed;
-            
+
             if (adType == AdType.Banner)
                 adInstance.m_bannerDisplayed = true;
-            
-            if (IsReady(adInstance))
-            {
+
+            if (IsReady(adInstance)) {
                 ShowYandexAd(yandexAdInstance);
-                if (adType == AdType.Banner)
-                {
-                    if (!wasBannerDisplay)
-                    {
+                if (adType == AdType.Banner) {
+                    if (!wasBannerDisplay) {
                         yandexAdInstance.BannerLastShowingTime = Time.unscaledTime;
                         StartRefreshBannerProcess(yandexAdInstance);
                     }
+
                     AddEvent(adInstance.m_adType, AdEvent.Showing, adInstance);
                 }
+
                 return true;
             }
+
             return false;
         }
-        
+
         public override void Hide(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
-            if (adInstance.m_adType == AdType.Banner)
-            {
+            if (adInstance.m_adType == AdType.Banner) {
                 YandexAdInstanceData yandexAdInstance = (YandexAdInstanceData)adInstance;
                 bool wasBannerDisplay = yandexAdInstance.m_bannerDisplayed;
                 yandexAdInstance.m_bannerDisplayed = false;
-#if _AMS_YANDEX_MOBILE_ADS && !UNITY_EDITOR
+#if _AMS_YANDEX_MOBILE_ADS
                 yandexAdInstance.Banner?.Hide();
 #endif
-                if (yandexAdInstance.IsBannerRefreshProcessRunning)
-                {
+                if (yandexAdInstance.IsBannerRefreshProcessRunning) {
                     StopRefreshBannerProcess(yandexAdInstance);
                     yandexAdInstance.BannerDisplayTime += Time.unscaledTime - yandexAdInstance.BannerLastShowingTime;
                 }
-                
+
                 if (wasBannerDisplay)
                     NotifyEvent(AdEvent.Hiding, adInstance);
             }
         }
-        
+
         public override bool IsReady(AdInstance adInstance, string placement = AdMediationSystem.PLACEMENT_DEFAULT_NAME)
         {
 #if UNITY_EDITOR
-            return true;
-#endif
+            return false;
+#else
             bool isReady = false;
-            if (adInstance != null)
-            {
+            if (adInstance != null) {
                 YandexAdInstanceData yandexAdInstance = (YandexAdInstanceData)adInstance;
-#if _AMS_YANDEX_MOBILE_ADS && !UNITY_EDITOR
-                switch (adInstance.m_adType)
-                {
+#if _AMS_YANDEX_MOBILE_ADS
+                switch (adInstance.m_adType) {
                     case AdType.Interstitial:
-                        isReady = yandexAdInstance.Interstitial != null && yandexAdInstance.Interstitial.IsLoaded();
+                        isReady = yandexAdInstance.Interstitial != null;
                         break;
                     case AdType.Incentivized:
-                        isReady = yandexAdInstance.RewardedAd != null && yandexAdInstance.RewardedAd.IsLoaded();
+                        isReady = yandexAdInstance.RewardedAd != null;
                         break;
                     case AdType.Banner:
                         isReady = yandexAdInstance.Banner != null && yandexAdInstance.State == AdState.Received;
@@ -301,20 +329,21 @@ namespace Virterix.AdMediation
                 }
 #endif
             }
+
             return isReady;
+#endif
         }
-        
+
         protected override void SetUserConsentToPersonalizedAds(PersonalisationConsent consent)
         {
-#if _AMS_YANDEX_MOBILE_ADS && !UNITY_EDITOR
-            if (consent != PersonalisationConsent.Undefined)
-            {
+#if _AMS_YANDEX_MOBILE_ADS
+            if (consent != PersonalisationConsent.Undefined) {
                 MobileAds.SetUserConsent(consent == PersonalisationConsent.Accepted);
                 MobileAds.SetLocationConsent(consent == PersonalisationConsent.Accepted);
             }
 #endif
         }
-        
+
         protected override AdInstance CreateAdInstanceData(JSONValue jsonAdInstance)
         {
             AdInstance adInstance = new YandexAdInstanceData(this);
@@ -323,111 +352,90 @@ namespace Virterix.AdMediation
 
         private void ShowYandexAd(YandexAdInstanceData yandexAdInstance)
         {
-#if _AMS_YANDEX_MOBILE_ADS && !UNITY_EDITOR        
-            switch (yandexAdInstance.m_adType)
-            {
+#if _AMS_YANDEX_MOBILE_ADS
+            switch (yandexAdInstance.m_adType) {
                 case AdType.Interstitial:
-                    yandexAdInstance.Interstitial.Show();
-                    break; 
+                    yandexAdInstance.Interstitial?.Show();
+                    break;
                 case AdType.Incentivized:
-                    yandexAdInstance.RewardedAd.Show();
+                    yandexAdInstance.RewardedAd?.Show();
                     break;
                 case AdType.Banner:
-                    yandexAdInstance.Banner.Show();
+                    yandexAdInstance.Banner?.Show();
                     break;
             }
 #endif
         }
-        
+
 #if _AMS_YANDEX_MOBILE_ADS
-        private Interstitial CreateInterstitialAd(YandexAdInstanceData yandexAdInstance)
+        private AdRequestConfiguration CreateAdRequest(string adUnitId)
+        {
+            return new AdRequestConfiguration.Builder(adUnitId).Build();
+        }
+
+        private void RequestInterstitialAd(YandexAdInstanceData yandexAdInstance)
         {
             DestroyInterstitialAd(yandexAdInstance);
-            
-            yandexAdInstance.Interstitial = new Interstitial(yandexAdInstance.m_adId);;
-            yandexAdInstance.OnLoaded = delegate(object sender, EventArgs args)
-            {
-                OnAdLoaded(yandexAdInstance, sender, args);
-            };
-            yandexAdInstance.OnFailedLoad = delegate(object sender, AdFailureEventArgs args)
-            {
-                OnAdFailedToLoad(yandexAdInstance, sender, args);
-            };
-            yandexAdInstance.OnShowed = delegate(object sender, EventArgs args)
-            {
-                OnAdShowed(yandexAdInstance, sender, args);
-            };
-            yandexAdInstance.OnFailedShow = delegate(object sender, AdFailureEventArgs args)
-            {
-                OnAdFailedToShow(yandexAdInstance, sender, args);
-            };
-            yandexAdInstance.OnClosed = delegate(object sender, EventArgs args)
-            { 
-                OnAdClosed(yandexAdInstance, sender, args);
-            };
-            
-            yandexAdInstance.Interstitial.OnInterstitialLoaded += yandexAdInstance.OnLoaded;
-            yandexAdInstance.Interstitial.OnInterstitialFailedToLoad += yandexAdInstance.OnFailedLoad;
-            yandexAdInstance.Interstitial.OnInterstitialShown += yandexAdInstance.OnShowed;
-            yandexAdInstance.Interstitial.OnInterstitialFailedToShow += yandexAdInstance.OnFailedShow;
-            yandexAdInstance.Interstitial.OnInterstitialDismissed += yandexAdInstance.OnClosed;
-            return yandexAdInstance.Interstitial;
+
+            if (!yandexAdInstance.HasCallbacksInitialized) {
+                yandexAdInstance.HasCallbacksInitialized = true;
+                yandexAdInstance.OnShowed = delegate(object sender, EventArgs args)
+                {
+                    OnAdShowed(yandexAdInstance, sender, args);
+                };
+                yandexAdInstance.OnFailedShow = delegate(object sender, AdFailureEventArgs args)
+                {
+                    OnAdFailedToShow(yandexAdInstance, sender, args);
+                };
+                yandexAdInstance.OnClosed = delegate(object sender, EventArgs args)
+                {
+                    OnAdClosed(yandexAdInstance, sender, args);
+                };
+            }
+
+            _interstitialAdLoader.LoadAd(CreateAdRequest(yandexAdInstance.m_adId));
         }
-        
+
         private void DestroyInterstitialAd(YandexAdInstanceData yandexAdInstance)
         {
             yandexAdInstance.State = AdState.Uncertain;
             if (yandexAdInstance.Interstitial == null)
                 return;
-            
-            yandexAdInstance.Interstitial.OnInterstitialLoaded -= yandexAdInstance.OnLoaded;
-            yandexAdInstance.Interstitial.OnInterstitialFailedToLoad -= yandexAdInstance.OnFailedLoad;
-            yandexAdInstance.Interstitial.OnInterstitialShown -= yandexAdInstance.OnShowed;
-            yandexAdInstance.Interstitial.OnInterstitialFailedToShow -= yandexAdInstance.OnFailedShow;
-            yandexAdInstance.Interstitial.OnInterstitialDismissed -= yandexAdInstance.OnClosed;
-            
+
+            yandexAdInstance.Interstitial.OnAdShown -= yandexAdInstance.OnShowed;
+            yandexAdInstance.Interstitial.OnAdFailedToShow -= yandexAdInstance.OnFailedShow;
+            yandexAdInstance.Interstitial.OnAdDismissed -= yandexAdInstance.OnClosed;
+
             yandexAdInstance.Interstitial.Destroy();
             yandexAdInstance.Interstitial = null;
         }
 
-        private RewardedAd CreateRewardAd(YandexAdInstanceData yandexAdInstance)
+        private void RequestRewardAd(YandexAdInstanceData yandexAdInstance)
         {
             DestroyRewardAd(yandexAdInstance);
-            
-            yandexAdInstance.RewardedAd =  new RewardedAd(yandexAdInstance.m_adId);
-            yandexAdInstance.OnLoaded = delegate(object sender, EventArgs args)
-            {
-                OnAdLoaded(yandexAdInstance, sender, args);
-            };
-            yandexAdInstance.OnFailedLoad = delegate(object sender, AdFailureEventArgs args)
-            {
-                OnAdFailedToLoad(yandexAdInstance, sender, args);
-            };
-            yandexAdInstance.OnShowed = delegate(object sender, EventArgs args)
-            {
-                OnAdShowed(yandexAdInstance, sender, args);
-            };
-            yandexAdInstance.OnFailedShow = delegate(object sender, AdFailureEventArgs args)
-            {
-                OnAdFailedToShow(yandexAdInstance, sender, args);
-            };
-            yandexAdInstance.OnClosed = delegate(object sender, EventArgs args)
-            { 
-                OnAdClosed(yandexAdInstance, sender, args);
-            };
-            yandexAdInstance.OnRewarded = delegate(object sender, Reward reward)
-            { 
-                OnUserRewarded(yandexAdInstance, sender, reward);
-            };
-            
-            yandexAdInstance.RewardedAd.OnRewardedAdLoaded += yandexAdInstance.OnLoaded;
-            yandexAdInstance.RewardedAd.OnRewardedAdFailedToLoad += yandexAdInstance.OnFailedLoad;
-            yandexAdInstance.RewardedAd.OnRewardedAdShown += yandexAdInstance.OnShowed;
-            yandexAdInstance.RewardedAd.OnRewardedAdFailedToShow += yandexAdInstance.OnFailedShow;
-            yandexAdInstance.RewardedAd.OnRewardedAdDismissed += yandexAdInstance.OnClosed;
-            yandexAdInstance.RewardedAd.OnRewarded += yandexAdInstance.OnRewarded;
-            
-            return yandexAdInstance.RewardedAd;
+
+            if (!yandexAdInstance.HasCallbacksInitialized) {
+                yandexAdInstance.HasCallbacksInitialized = true;
+
+                yandexAdInstance.OnShowed = delegate(object sender, EventArgs args)
+                {
+                    OnAdShowed(yandexAdInstance, sender, args);
+                };
+                yandexAdInstance.OnFailedShow = delegate(object sender, AdFailureEventArgs args)
+                {
+                    OnAdFailedToShow(yandexAdInstance, sender, args);
+                };
+                yandexAdInstance.OnClosed = delegate(object sender, EventArgs args)
+                {
+                    OnAdClosed(yandexAdInstance, sender, args);
+                };
+                yandexAdInstance.OnRewarded = delegate(object sender, Reward reward)
+                {
+                    OnUserRewarded(yandexAdInstance, sender, reward);
+                };
+            }
+
+            _rewardedAdLoader.LoadAd(CreateAdRequest(yandexAdInstance.m_adId));
         }
 
         private void DestroyRewardAd(YandexAdInstanceData yandexAdInstance)
@@ -435,14 +443,12 @@ namespace Virterix.AdMediation
             yandexAdInstance.State = AdState.Uncertain;
             if (yandexAdInstance.RewardedAd == null)
                 return;
-            
-            yandexAdInstance.RewardedAd.OnRewardedAdLoaded -= yandexAdInstance.OnLoaded;
-            yandexAdInstance.RewardedAd.OnRewardedAdFailedToLoad -= yandexAdInstance.OnFailedLoad;
-            yandexAdInstance.RewardedAd.OnRewardedAdShown -= yandexAdInstance.OnShowed;
-            yandexAdInstance.RewardedAd.OnRewardedAdFailedToShow -= yandexAdInstance.OnFailedShow;
-            yandexAdInstance.RewardedAd.OnRewardedAdDismissed -= yandexAdInstance.OnClosed;
+
+            yandexAdInstance.RewardedAd.OnAdShown -= yandexAdInstance.OnShowed;
+            yandexAdInstance.RewardedAd.OnAdFailedToShow -= yandexAdInstance.OnFailedShow;
+            yandexAdInstance.RewardedAd.OnAdDismissed -= yandexAdInstance.OnClosed;
             yandexAdInstance.RewardedAd.OnRewarded -= yandexAdInstance.OnRewarded;
-            
+
             yandexAdInstance.RewardedAd.Destroy();
             yandexAdInstance.RewardedAd = null;
         }
@@ -450,50 +456,72 @@ namespace Virterix.AdMediation
         private Banner CreateBannerAd(YandexAdInstanceData yandexAdInstance, string placementName)
         {
             DestroyBanner(yandexAdInstance);
-            
-            YandexAdInstanceBannerParameters bannerParams = (YandexAdInstanceBannerParameters)yandexAdInstance.m_adInstanceParams;
-            yandexAdInstance.BannerPosition = ConvertToNativeBannerPosition(GetBannerPosition(yandexAdInstance, placementName));
-            AdSize bannerMaxSize = null;
-            
-            if (bannerParams.m_bannerSize == YandexBannerSize.Flexible)
-                bannerMaxSize = AdSize.FlexibleSize(GetScreenWidthDp(), bannerParams.m_maxHeight);
-            else if (bannerParams.m_bannerSize == YandexBannerSize.Sticky)
-                bannerMaxSize = AdSize.StickySize(GetScreenWidthDp());
+
+            YandexAdInstanceBannerParameters bannerParams =
+                (YandexAdInstanceBannerParameters)yandexAdInstance.m_adInstanceParams;
+            yandexAdInstance.BannerPosition =
+                ConvertToNativeBannerPosition(GetBannerPosition(yandexAdInstance, placementName));
+            BannerAdSize bannerMaxSize = null;
+
+            if (bannerParams.m_bannerSize == YandexBannerSize.Inline) {
+                bannerMaxSize = BannerAdSize.InlineSize(GetScreenWidthDp(), bannerParams.m_maxHeight);
+            }
+            else if (bannerParams.m_bannerSize == YandexBannerSize.Sticky) {
+                bannerMaxSize = BannerAdSize.StickySize(GetScreenWidthDp());
+            }
+            else if (bannerParams.m_bannerSize == YandexBannerSize.Fixed) {
+                bannerMaxSize = BannerAdSize.FixedSize(GetScreenWidthDp(), bannerParams.m_maxHeight);
+            }
             
             yandexAdInstance.BannerRefreshTime = bannerParams.m_refreshTime;
             yandexAdInstance.BannerDisplayTime = 0.0f;
-            yandexAdInstance.Banner = new Banner(yandexAdInstance.m_adId, bannerMaxSize, yandexAdInstance.BannerPosition);
-            yandexAdInstance.OnLoaded = delegate(object sender, EventArgs args)
+            yandexAdInstance.Banner =
+                new Banner(yandexAdInstance.m_adId, bannerMaxSize, yandexAdInstance.BannerPosition);
+            
+            yandexAdInstance.OnBannerLoaded = delegate(object sender, EventArgs args)
             {
                 OnAdLoaded(yandexAdInstance, sender, args);
             };
-            yandexAdInstance.OnFailedLoad = delegate(object sender, AdFailureEventArgs args)
+            yandexAdInstance.OnBannerFailedLoad = delegate(object sender, AdFailureEventArgs args)
             {
                 OnAdFailedToLoad(yandexAdInstance, sender, args);
             };
-            
-            yandexAdInstance.Banner.OnAdLoaded += yandexAdInstance.OnLoaded;
-            yandexAdInstance.Banner.OnAdFailedToLoad += yandexAdInstance.OnFailedLoad;
+            yandexAdInstance.OnBannerLeftApplication = delegate(object sender, EventArgs args)
+            {
+                OnBannerLeftApplication(yandexAdInstance, sender, args);
+            };
+            yandexAdInstance.OnBannerReturnedToApplication = delegate(object sender, EventArgs args)
+            {
+                OnBannerReturnedToApplication(yandexAdInstance, sender, args);
+            };
+
+            yandexAdInstance.Banner.OnAdLoaded += yandexAdInstance.OnBannerLoaded;
+            yandexAdInstance.Banner.OnAdFailedToLoad += yandexAdInstance.OnBannerFailedLoad;
+            yandexAdInstance.Banner.OnLeftApplication += yandexAdInstance.OnBannerLeftApplication;
+            yandexAdInstance.Banner.OnReturnedToApplication += yandexAdInstance.OnBannerReturnedToApplication;
+
             return yandexAdInstance.Banner;
         }
-        
+
         private void DestroyBanner(YandexAdInstanceData yandexAdInstance)
         {
             yandexAdInstance.State = AdState.Uncertain;
             StopRefreshBannerProcess(yandexAdInstance);
             if (yandexAdInstance.Banner == null)
                 return;
-            
-            yandexAdInstance.Banner.OnAdLoaded -= yandexAdInstance.OnLoaded;
-            yandexAdInstance.Banner.OnAdFailedToLoad -= yandexAdInstance.OnFailedLoad;
+
+            yandexAdInstance.Banner.OnAdLoaded -= yandexAdInstance.OnBannerLoaded;
+            yandexAdInstance.Banner.OnAdFailedToLoad -= yandexAdInstance.OnBannerFailedLoad;
+            yandexAdInstance.Banner.OnLeftApplication -= yandexAdInstance.OnBannerLeftApplication;
+            yandexAdInstance.Banner.OnReturnedToApplication -= yandexAdInstance.OnBannerReturnedToApplication;
+
             yandexAdInstance.Banner.Destroy();
             yandexAdInstance.Banner = null;
         }
 
         private void DestroyYandexAd(YandexAdInstanceData adInstance)
         {
-            switch (adInstance.m_adType)
-            {
+            switch (adInstance.m_adType) {
                 case AdType.Interstitial:
                     DestroyInterstitialAd(adInstance);
                     break;
@@ -505,14 +533,14 @@ namespace Virterix.AdMediation
                     break;
             }
         }
-        
+
         private int GetScreenWidthDp()
         {
             int screenWidth = (int)Screen.safeArea.width;
             return ScreenUtils.ConvertPixelsToDp(screenWidth);
         }
 #endif
-        
+
         private void StartRefreshBannerProcess(YandexAdInstanceData adInstance)
         {
             StopRefreshBannerProcess(adInstance);
@@ -523,13 +551,12 @@ namespace Virterix.AdMediation
 
         private void StopRefreshBannerProcess(YandexAdInstanceData adInstance)
         {
-            if (adInstance.ProcessBannerRefreshing != null)
-            {
+            if (adInstance.ProcessBannerRefreshing != null) {
                 StopCoroutine(adInstance.ProcessBannerRefreshing);
                 adInstance.ProcessBannerRefreshing = null;
             }
         }
-        
+
         private IEnumerator RefreshBanner(YandexAdInstanceData adInstance, float delay)
         {
             yield return new WaitForSecondsRealtime(delay);
@@ -538,35 +565,78 @@ namespace Virterix.AdMediation
 #endif
             Prepare(adInstance, adInstance.CurrPlacement);
         }
-        
+
         //_______________________________________________________________________________
+
         #region Callback Event Methods
 
-        private void OnAdNetworkEvent(AdMediator mediator, AdNetworkAdapter networkAdapter, AdType adType, AdEvent adEvent, string adInstanceName)
+        private void OnAdNetworkEvent(AdMediator mediator, AdNetworkAdapter networkAdapter, AdType adType,
+            AdEvent adEvent, string adInstanceName)
         {
-            if (adEvent == AdEvent.Hiding && AdMediationSystem.IsAdFullscreen(adType))
-                ForceHideAllHiddenBanners();
         }
-        
+
 #if _AMS_YANDEX_MOBILE_ADS
+
+        public void HandleRewardedAdLoaded(object sender, RewardedAdLoadedEventArgs args)
+        {
+            YandexAdInstanceData adInstance =
+                (YandexAdInstanceData)GetAdInstanceByAdId(args.RewardedAd.GetInfo().AdUnitId);
+
+            adInstance.RewardedAd = args.RewardedAd;
+            adInstance.State = AdState.Received;
+
+            adInstance.RewardedAd.OnAdShown += adInstance.OnShowed;
+            adInstance.RewardedAd.OnAdFailedToShow += adInstance.OnFailedShow;
+            adInstance.RewardedAd.OnAdDismissed += adInstance.OnClosed;
+            adInstance.RewardedAd.OnRewarded += adInstance.OnRewarded;
+
+            AddEvent(adInstance.m_adType, AdEvent.Prepared, adInstance);
+        }
+
+        public void HandleInterstitialAdLoaded(object sender, InterstitialAdLoadedEventArgs args)
+        {
+            YandexAdInstanceData adInstance =
+                (YandexAdInstanceData)GetAdInstanceByAdId(args.Interstitial.GetInfo().AdUnitId);
+
+            adInstance.Interstitial = args.Interstitial;
+            adInstance.State = AdState.Received;
+
+            adInstance.Interstitial.OnAdShown += adInstance.OnShowed;
+            adInstance.Interstitial.OnAdFailedToShow += adInstance.OnFailedShow;
+            adInstance.Interstitial.OnAdDismissed += adInstance.OnClosed;
+
+            AddEvent(adInstance.m_adType, AdEvent.Prepared, adInstance);
+        }
+
+        public void HandleAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
+        {
+            YandexAdInstanceData adInstance = (YandexAdInstanceData)GetAdInstanceByAdId(args.AdUnitId);
+
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log($"[AMS] YandexMobileAds Failed To Load. {adInstance.m_adType} Message: {args.Message}");
+#endif
+            DestroyYandexAd(adInstance);
+            AddEvent(adInstance.m_adType, AdEvent.PreparationFailed, adInstance);
+        }
+
         private void OnAdLoaded(YandexAdInstanceData adInstance, object sender, EventArgs args)
         {
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log($"[AMS] YandexMobileAds Loaded. {adInstance.m_adType} Displayed: {adInstance.m_bannerDisplayed}");
 #endif
             adInstance.State = AdState.Received;
-            if (adInstance.m_adType == AdType.Banner)
-            {
-                if (adInstance.m_bannerDisplayed)
-                {
+            if (adInstance.m_adType == AdType.Banner) {
+                if (adInstance.m_bannerDisplayed) {
                     adInstance.Banner.Show();
                     adInstance.BannerLastShowingTime = Time.unscaledTime;
                     if (adInstance.ProcessBannerRefreshing == null)
                         StartRefreshBannerProcess(adInstance);
                 }
-                else
+                else {
                     adInstance.Banner.Hide();
+                }
             }
+
             AddEvent(adInstance.m_adType, AdEvent.Prepared, adInstance);
         }
 
@@ -595,7 +665,7 @@ namespace Virterix.AdMediation
             DestroyYandexAd(adInstance);
             AddEvent(adInstance.m_adType, AdEvent.Hiding, adInstance);
         }
-        
+
         private void OnAdFailedToShow(YandexAdInstanceData adInstance, object sender, AdFailureEventArgs args)
         {
 #if AD_MEDIATION_DEBUG_MODE
@@ -604,7 +674,7 @@ namespace Virterix.AdMediation
             DestroyYandexAd(adInstance);
             AddEvent(adInstance.m_adType, AdEvent.PreparationFailed, adInstance);
         }
-        
+
         private void OnUserRewarded(YandexAdInstanceData adInstance, object sender, Reward reward)
         {
 #if AD_MEDIATION_DEBUG_MODE
@@ -613,6 +683,21 @@ namespace Virterix.AdMediation
             AddEvent(adInstance.m_adType, AdEvent.IncentivizationCompleted, adInstance);
         }
 #endif
+
+        private void OnBannerLeftApplication(YandexAdInstanceData adInstance, object sender, EventArgs args)
+        {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log($"[AMS] YandexMobileAds Banner Left Application");
+#endif
+        }
+
+        private void OnBannerReturnedToApplication(YandexAdInstanceData adInstance, object sender, EventArgs args)
+        {
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log($"[AMS] YandexMobileAds Banner Returned To Application");
+#endif
+        }
+        
         #endregion
     }
 }

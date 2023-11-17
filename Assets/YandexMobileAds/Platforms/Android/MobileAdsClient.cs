@@ -1,58 +1,55 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for iOS (C) 2019 YANDEX
+ * Version for iOS (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
  */
 
 using UnityEngine;
-using YandexMobileAds.Base;
 using YandexMobileAds.Common;
-using System;
 
 namespace YandexMobileAds.Platforms.Android
 {
     public class MobileAdsClient : AndroidJavaProxy, IMobileAdsClient
     {
-        private static MobileAdsClient instance;
-
-        private static object lockObject = new object();
+        private static MobileAdsClient _instance;
+        private static readonly object _lockObject = new object();
 
         public static MobileAdsClient GetInstance()
         {
-            if (instance == null)
+            if (_instance == null)
             {
-                lock (lockObject)
+                lock (_lockObject)
                 {
-                    if (instance == null)
-                        instance = new MobileAdsClient();
+                    if (_instance == null)
+                        _instance = new MobileAdsClient();
                 }
             }
-            return instance;
+            return _instance;
         }
 
-        private AndroidJavaClass mobileAdsClass;
+        private readonly AndroidJavaClass _mobileAdsClass;
 
         private MobileAdsClient() : base(Utils.MobileAdsClassName)
         {
-            this.mobileAdsClass = new AndroidJavaClass(Utils.MobileAdsClassName);
+            this._mobileAdsClass = new AndroidJavaClass(Utils.MobileAdsClassName);
         }
 
         public void SetUserConsent(bool consent)
         {
-            this.mobileAdsClass.CallStatic("setUserConsent", consent);
+            this._mobileAdsClass.CallStatic("setUserConsent", consent);
         }
 
         public void SetLocationConsent(bool consent)
         {
-            this.mobileAdsClass.CallStatic("setLocationConsent", consent);
+            this._mobileAdsClass.CallStatic("setLocationConsent", consent);
         }
 
         public void SetAgeRestrictedUser(bool ageRestrictedUser)
         {
-            this.mobileAdsClass.CallStatic("setAgeRestrictedUser", ageRestrictedUser);
+            this._mobileAdsClass.CallStatic("setAgeRestrictedUser", ageRestrictedUser);
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿/*
+/*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for iOS (C) 2018 YANDEX
+ * Version for iOS (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -15,87 +15,61 @@ using YandexMobileAds.Common;
 namespace YandexMobileAds.Platforms.iOS
 {
     #if (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-    
-    public class RewardedAdClient : IRewardedAdClient, IDisposable
+
+    internal class RewardedAdClient : IRewardedAdClient, IDisposable
     {
-        private readonly IntPtr selfPointer;
+        internal delegate void YMAUnityRewardedAdDidRewardCallback(IntPtr bannerClient, int amount, string type);
+
+        internal delegate void YMAUnityRewardedAdDidFailToShowCallback(IntPtr bannerClient, string error);
+
+        internal delegate void YMAUnityRewardedAdDidShowCallback(IntPtr bannerClient);
+
+        internal delegate void YMAUnityRewardedAdDidDismissCallback(IntPtr bannerClient);
+
+        internal delegate void YMAUnityRewardedAdDidClickCallback(IntPtr bannerClient);
+
+        internal delegate void YMAUnityRewardedAdDidTrackImpressionCallback(
+            IntPtr bannerClient,
+            string rawImpressionData);
+
+        public event EventHandler<Reward> OnRewarded;
+        public event EventHandler<AdFailureEventArgs> OnAdFailedToShow;
+        public event EventHandler<EventArgs> OnAdShown;
+        public event EventHandler<EventArgs> OnAdDismissed;
+        public event EventHandler<EventArgs> OnAdClicked;
+        public event EventHandler<ImpressionData> OnAdImpression;
 
         public string ObjectId { get; private set; }
 
-        internal delegate void YMAUnityRewardedAdDidLoadAdCallback(
-            IntPtr rewardedAdClient);
+        private readonly IntPtr _selfPointer;
+        private readonly AdInfo _adInfo;
 
-        internal delegate void YMAUnityRewardedAdDidFailToLoadAdCallback(
-            IntPtr rewardedAdClient, string error);
-
-        internal delegate void YMAUnityRewardedAdWillPresentScreenCallback(
-            IntPtr rewardedAdClient);
-
-        internal delegate void YMAUnityRewardedAdWillLeaveApplicationCallback(
-            IntPtr rewardedAdClient);
-
-        internal delegate void YMAUnityRewardedAdDidClickCallback(
-            IntPtr rewardedAdClient);
-
-        internal delegate void YMAUnityRewardedAdWillAppearCallback(
-            IntPtr rewardedAdClient);
-
-        internal delegate void YMAUnityRewardedAdDidDismissCallback(
-            IntPtr rewardedAdClient);
-
-        internal delegate void YMAUnityRewardedAdDidImpressionTrackedCallback(
-            IntPtr rewardedAdClient, string rawImpressionData);
-
-        internal delegate void YMAUnityRewardedAdDidFailToShowCallback(
-            IntPtr rewardedAdClient, string error);
-
-        internal delegate void YMAUnityRewardedAdDidRewardCallback(
-            IntPtr rewardedAdClient, int amount, string type);
-
-        public event EventHandler<EventArgs> OnRewardedAdLoaded;
-        public event EventHandler<AdFailureEventArgs> OnRewardedAdFailedToLoad;
-        public event EventHandler<EventArgs> OnReturnedToApplication;
-        public event EventHandler<EventArgs> OnLeftApplication;
-        public event EventHandler<EventArgs> OnAdClicked;
-        public event EventHandler<EventArgs> OnRewardedAdShown;
-        public event EventHandler<EventArgs> OnRewardedAdDismissed;
-        public event EventHandler<ImpressionData> OnImpression;
-        public event EventHandler<AdFailureEventArgs> OnRewardedAdFailedToShow;
-        public event EventHandler<Reward> OnRewarded;
-
-        public RewardedAdClient(string blockId)
+        public RewardedAdClient(string rewardedAdObjectId)
         {
-            this.selfPointer = GCHandle.ToIntPtr(GCHandle.Alloc(this));
+            this._selfPointer = GCHandle.ToIntPtr(GCHandle.Alloc(this));
             this.ObjectId = RewardedAdBridge.YMAUnityCreateRewardedAd(
-                this.selfPointer, blockId);
+                this._selfPointer, rewardedAdObjectId);
             RewardedAdBridge.YMAUnitySetRewardedAdCallbacks(
                 this.ObjectId,
-                RewardedAdDidLoadAdCallback,
-                RewardedAdDidFailToLoadAdCallback,
-                RewardedAdWillPresentScreenCallback,
-                RewardedAdWillLeaveApplicationCallback,
-                RewardedAdDidClickCallback,
-                RewardedAdWillAppearCallback,
+                RewardedAdDidRewardCallback,
+                RewardedDidFailToShowCallback,
+                RewardedAdDidShowCallback,
                 RewardedAdDidDismissCallback,
-                RewardedAdDidImpressionTracked,
-                RewardedAdDidFailToShowCallback,
-                RewardedAdDidRewardCallback);
+                RewardedAdDidClickCallback,
+                RewardedAdDidTrackImpressionCallback);
+
+            string adInfoObjectId = RewardedAdBridge.YMAUnityGetRewardedInfo(this.ObjectId);
+            AdInfoClient adInfoClient = new AdInfoClient(adInfoObjectId);
+            this._adInfo = new AdInfo(
+                adInfoClient.AdUnitId,
+                adInfoClient.AdSize
+            );
+            adInfoClient.Destroy();
         }
 
-        public void LoadAd(AdRequest request)
+        public AdInfo GetInfo()
         {
-            AdRequestClient adRequest = null;
-            if (request != null)
-            {
-                adRequest = new AdRequestClient(request);
-            }
-            RewardedAdBridge.YMAUnityLoadRewardedAd(
-                this.ObjectId, adRequest.ObjectId);
-        }
-
-        public bool IsLoaded()
-        {
-            return RewardedAdBridge.YMAUnityIsRewardedAdLoaded(this.ObjectId);
+            return this._adInfo;
         }
 
         public void Show()
@@ -105,7 +79,14 @@ namespace YandexMobileAds.Platforms.iOS
 
         public void Destroy()
         {
-            ObjectBridge.YMAUnityDestroyObject(this.ObjectId);
+            this.OnAdShown = null;
+            this.OnAdClicked = null;
+            this.OnAdDismissed = null;
+            this.OnAdFailedToShow = null;
+            this.OnAdImpression = null;
+            this.OnRewarded = null;
+
+            RewardedAdBridge.YMAUnityDestroyRewardedAd(this.ObjectId);
         }
 
         public void Dispose()
@@ -118,132 +99,14 @@ namespace YandexMobileAds.Platforms.iOS
             this.Destroy();
         }
 
-        private static RewardedAdClient IntPtrToRewardedAdClient(
-            IntPtr rewardedAdClient)
+        private static RewardedAdClient IntPtrToRewardedAdClient(IntPtr rewardedAdClient)
         {
             GCHandle handle = GCHandle.FromIntPtr(rewardedAdClient);
             return handle.Target as RewardedAdClient;
         }
 
-        #region RewardedAd callback methods
+        #region Rewarded callback methods
 
-        [MonoPInvokeCallback(typeof(YMAUnityRewardedAdDidLoadAdCallback))]
-        private static void RewardedAdDidLoadAdCallback(
-            IntPtr rewardedAdClient)
-        {
-            RewardedAdClient client = IntPtrToRewardedAdClient(
-                rewardedAdClient);
-            if (client.OnRewardedAdLoaded != null)
-            {
-                client.OnRewardedAdLoaded(client, EventArgs.Empty);
-            }
-        }
-
-        [MonoPInvokeCallback(typeof(YMAUnityRewardedAdDidFailToLoadAdCallback))]
-        private static void RewardedAdDidFailToLoadAdCallback(
-            IntPtr rewardedAdClient, string error)
-        {
-            RewardedAdClient client = IntPtrToRewardedAdClient(
-                rewardedAdClient);
-            if (client.OnRewardedAdFailedToLoad != null)
-            {
-                AdFailureEventArgs args = new AdFailureEventArgs()
-                {
-                    Message = error
-                };
-                client.OnRewardedAdFailedToLoad(client, args);
-            }
-        }
-
-        [MonoPInvokeCallback(typeof(YMAUnityRewardedAdWillPresentScreenCallback))]
-        private static void RewardedAdWillPresentScreenCallback(
-            IntPtr rewardedAdClient)
-        {
-            RewardedAdClient client = IntPtrToRewardedAdClient(
-                rewardedAdClient);
-            if (client.OnLeftApplication != null)
-            {
-                client.OnLeftApplication(client, EventArgs.Empty);
-            }
-        }
-
-        [MonoPInvokeCallback(typeof(YMAUnityRewardedAdWillLeaveApplicationCallback))]
-        private static void RewardedAdWillLeaveApplicationCallback(
-            IntPtr rewardedAdClient)
-        {
-            RewardedAdClient client = IntPtrToRewardedAdClient(
-                rewardedAdClient);
-            if (client.OnLeftApplication != null)
-            {
-                client.OnLeftApplication(client, EventArgs.Empty);
-            }
-        }
-
-        [MonoPInvokeCallback(typeof(YMAUnityRewardedAdDidClickCallback))]
-        private static void RewardedAdDidClickCallback(
-            IntPtr rewardedAdClient)
-        {
-            RewardedAdClient client = IntPtrToRewardedAdClient(
-                rewardedAdClient);
-            if (client.OnAdClicked != null)
-            {
-                client.OnAdClicked(client, EventArgs.Empty);
-            }
-        }
-
-        [MonoPInvokeCallback(typeof(YMAUnityRewardedAdWillAppearCallback))]
-        private static void RewardedAdWillAppearCallback(
-            IntPtr rewardedAdClient)
-        {
-            RewardedAdClient client = IntPtrToRewardedAdClient(
-                rewardedAdClient);
-            if (client.OnRewardedAdShown != null)
-            {
-                client.OnRewardedAdShown(client, EventArgs.Empty);
-            }
-        }
-
-        [MonoPInvokeCallback(typeof(YMAUnityRewardedAdDidDismissCallback))]
-        private static void RewardedAdDidDismissCallback(
-            IntPtr rewardedAdClient)
-        {
-            RewardedAdClient client = IntPtrToRewardedAdClient(
-                rewardedAdClient);
-            if (client.OnRewardedAdDismissed != null)
-            {
-                client.OnRewardedAdDismissed(client, EventArgs.Empty);
-            }
-        }
-
-        [MonoPInvokeCallback(typeof(YMAUnityRewardedAdDidImpressionTrackedCallback))]
-        private static void RewardedAdDidImpressionTracked(
-            IntPtr rewardedAdClient, string rawImpressionData)
-        {
-            RewardedAdClient client = IntPtrToRewardedAdClient(
-                rewardedAdClient);
-            if (client.OnImpression != null)
-            {
-                ImpressionData impressionData = new ImpressionData(rawImpressionData == null ? "" : rawImpressionData);
-                client.OnImpression(client, impressionData);
-            }
-        }
-
-        [MonoPInvokeCallback(typeof(YMAUnityRewardedAdDidFailToShowCallback))]
-        private static void RewardedAdDidFailToShowCallback(
-            IntPtr rewardedAdClient, string error)
-        {
-            RewardedAdClient client = IntPtrToRewardedAdClient(
-                rewardedAdClient);
-            if (client.OnRewardedAdFailedToShow != null)
-            {
-                AdFailureEventArgs args = new AdFailureEventArgs()
-                {
-                    Message = error
-                };
-                client.OnRewardedAdFailedToShow(client, args);
-            }
-        }
-       
         [MonoPInvokeCallback(typeof(YMAUnityRewardedAdDidRewardCallback))]
         private static void RewardedAdDidRewardCallback(
             IntPtr rewardedAdClient, int amount, string type)
@@ -253,6 +116,69 @@ namespace YandexMobileAds.Platforms.iOS
             if (client.OnRewarded != null)
             {
                 client.OnRewarded(client, reward);
+            }
+        }
+
+
+        [MonoPInvokeCallback(typeof(YMAUnityRewardedAdDidFailToShowCallback))]
+        private static void RewardedDidFailToShowCallback(
+            IntPtr rewardedAdClient, string error)
+        {
+            RewardedAdClient client = IntPtrToRewardedAdClient(
+                rewardedAdClient);
+            if (client.OnAdFailedToShow != null)
+            {
+                AdFailureEventArgs args = new AdFailureEventArgs()
+                {
+                    Message = error
+                };
+                client.OnAdFailedToShow(client, args);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(YMAUnityRewardedAdDidShowCallback))]
+        private static void RewardedAdDidShowCallback(IntPtr rewardedAdClient)
+        {
+            RewardedAdClient client = IntPtrToRewardedAdClient(
+                rewardedAdClient);
+            if (client.OnAdShown != null)
+            {
+                client.OnAdShown(client, EventArgs.Empty);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(YMAUnityRewardedAdDidDismissCallback))]
+        private static void RewardedAdDidDismissCallback(IntPtr rewardedAdClient)
+        {
+            RewardedAdClient client = IntPtrToRewardedAdClient(
+                rewardedAdClient);
+            if (client.OnAdDismissed != null)
+            {
+                client.OnAdDismissed(client, EventArgs.Empty);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(YMAUnityRewardedAdDidClickCallback))]
+        private static void RewardedAdDidClickCallback(
+            IntPtr rewardedAdClient)
+        {
+            RewardedAdClient client = IntPtrToRewardedAdClient(rewardedAdClient);
+            if (client.OnAdClicked != null)
+            {
+                client.OnAdClicked(client, EventArgs.Empty);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(YMAUnityRewardedAdDidTrackImpressionCallback))]
+        private static void RewardedAdDidTrackImpressionCallback(
+            IntPtr rewardedAdClient, string rawImpressionData)
+        {
+            RewardedAdClient client = IntPtrToRewardedAdClient(
+                rewardedAdClient);
+            if (client.OnAdImpression != null)
+            {
+                ImpressionData impressionData = new ImpressionData(rawImpressionData == null ? "" : rawImpressionData);
+                client.OnAdImpression(client, impressionData);
             }
         }
 

@@ -1,7 +1,7 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for iOS (C) 2019 YANDEX
+ * Version for iOS (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -15,13 +15,9 @@ using YandexMobileAds.Common;
 namespace YandexMobileAds.Platforms.iOS
 {
     #if (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-    
+
     public class BannerClient : IBannerClient, IDisposable
     {
-        private IntPtr selfPointer;
-
-        public string ObjectId { get; private set; }
-
         internal delegate void YMAUnityAdViewDidReceiveAdCallback(
             IntPtr bannerClient);
 
@@ -50,13 +46,16 @@ namespace YandexMobileAds.Platforms.iOS
         public event EventHandler<EventArgs> OnAdClicked;
         public event EventHandler<ImpressionData> OnImpression;
 
-        public BannerClient(string blockId, AdSize adSize, AdPosition position)
-        {
-            this.selfPointer = GCHandle.ToIntPtr(GCHandle.Alloc(this));
+        public string ObjectId { get; private set; }
 
-            AdSizeClient adSizeClient = new AdSizeClient(adSize);
+        private readonly IntPtr _selfPointer;
+
+        internal BannerClient(string blockId, BannerAdSizeClient adSizeClient, AdPosition position)
+        {
+            this._selfPointer = GCHandle.ToIntPtr(GCHandle.Alloc(this));
+
             this.ObjectId = BannerBridge.YMAUnityCreateBannerView(
-                this.selfPointer, blockId, adSizeClient.ObjectId,
+                this._selfPointer, blockId, adSizeClient.ObjectId,
                 (int)position);
             BannerBridge.YMAUnitySetBannerCallbacks(
                 this.ObjectId,
@@ -69,15 +68,17 @@ namespace YandexMobileAds.Platforms.iOS
                     AdViewDidClickCallback);
         }
 
-        public void LoadAd(AdRequest request)
+        public void LoadAd(AdRequest adRequest)
         {
-            AdRequestClient adRequest = null; 
-            if (request != null)
-            {
-                adRequest = new AdRequestClient(request);   
+            if (adRequest == null) {
+                AdViewDidFailToReceiveAdWithErrorCallback(
+                    _selfPointer,
+                    Constants.AdRequestConfigurationIsNullErrorMessage);
+                return;
             }
-            BannerBridge.YMAUnityLoadBannerView(
-                this.ObjectId, adRequest.ObjectId);
+
+            AdRequestClient adRequestClient = new AdRequestClient(adRequest);
+            BannerBridge.YMAUnityLoadBannerView(this.ObjectId, adRequestClient.ObjectId);
         }
 
         public void Show()

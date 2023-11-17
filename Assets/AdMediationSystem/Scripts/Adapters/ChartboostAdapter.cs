@@ -12,7 +12,7 @@ namespace Virterix.AdMediation
 {
     public class ChartboostAdapter : AdNetworkAdapter
     {
-        public const string IDENTIFIER = "chartboost";
+        public const string Identifier = "chartboost";
         
         public int m_timeout;
 

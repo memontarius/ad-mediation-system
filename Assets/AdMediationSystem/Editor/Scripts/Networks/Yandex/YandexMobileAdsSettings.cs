@@ -5,6 +5,10 @@ namespace Virterix.AdMediation.Editor
 {
     public class YandexMobileAdsSettings: BaseAdNetworkSettings
     {
+        public bool _useAppOpenAd;
+        public string _androidAppOpenAdUnitId;
+        public string _iOSAppOpenAdUnitId;
+        
         public override bool IsAdSupported(AdType adType) => true;
         public override bool IsCheckAvailabilityWhenPreparing(AdType adType) => true;
         public override bool IsAppIdSupported => false;
@@ -12,8 +16,21 @@ namespace Virterix.AdMediation.Editor
         protected override string AdapterScriptName => "YandexMobileAdsAdapter";
         protected override string UsingAdapterPreprocessorDirective => "_AMS_YANDEX_MOBILE_ADS";
         
+        protected override string[] AdditionalScriptPaths { get; } = 
+        {
+            "AdNetworkExtras/Yandex/YandexAppOpenAdManager"
+        };
+        
         public override void SetupNetworkAdapter(AdMediationProjectSettings settings, Component networkAdapter)
         {
+            YandexMobileAdsAdapter yandexAdapter = (YandexMobileAdsAdapter)networkAdapter;
+            yandexAdapter.m_useAppOpenAd = _useAppOpenAd;
+            
+            if (_useAppOpenAd)
+            {
+                yandexAdapter.m_androidAppOpenAdId = _androidAppOpenAdUnitId;
+                yandexAdapter.m_iOSAppOpenAdId = _iOSAppOpenAdUnitId;
+            }
         }
         
         public override string GetNetworkSDKVersion() => YandexMobileAdsAdapter.GetSDKVersion();

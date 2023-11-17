@@ -1,7 +1,7 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for Unity (C) 2018 YANDEX
+ * Version for Unity (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -13,7 +13,8 @@ using System.Collections.Generic;
 namespace YandexMobileAds.Base
 {
     /// <summary>
-    /// A class with data for a targeted ad request.
+    /// Contains targeting information used to fetch an ad.
+    /// new instance should be created using <see cref="AdRequestConfiguration.Builder"/>.
     /// </summary>
     public class AdRequest
     {
@@ -43,6 +44,11 @@ namespace YandexMobileAds.Base
         public Location Location { get; private set; }
 
         /// <summary>
+        /// Preferred theme.
+        /// </summary>
+        public AdTheme AdTheme { get; private set; }
+
+        /// <summary>
         /// A set of arbitrary input parameters.
         /// </summary>
         public Dictionary<string, string> Parameters { get; private set; }
@@ -59,6 +65,7 @@ namespace YandexMobileAds.Base
 
             this.Gender = builder.Gender;
             this.Location = builder.Location;
+            this.AdTheme = builder.AdTheme;
 
             if (builder.Parameters != null)
             {
@@ -81,6 +88,8 @@ namespace YandexMobileAds.Base
             internal string Gender { get; private set; }
 
             internal Location Location { get; private set; }
+
+            internal AdTheme AdTheme { get; private set; }
 
             internal Dictionary<string, string> Parameters { get; private set; }
 
@@ -140,6 +149,17 @@ namespace YandexMobileAds.Base
             }
 
             /// <summary>
+            /// Sets preferred theme.
+            /// </summary>
+            /// <param name="preferredTheme">preferred ad theme</param>
+            /// <returns>this <see cref="AdRequestConfiguration.Builder"/> with preferred theme.</returns>
+            public Builder WithAdTheme(AdTheme preferredTheme)
+            {
+                this.AdTheme = preferredTheme;
+                return this;
+            }
+
+            /// <summary>
             /// AdRequest Builder initialized with custom Parameters.
             /// </summary>
             /// <param name="parameters">A set of arbitrary input parameters.</param>
@@ -157,13 +177,14 @@ namespace YandexMobileAds.Base
             /// <returns>AdRequest Builder.</returns>
             public Builder WithAdRequest(AdRequest adRequest)
             {
-                if (adRequest != null) 
+                if (adRequest != null)
                 {
                     this.ContextQuery = adRequest.ContextQuery;
                     this.ContextTags = adRequest.ContextTags;
                     this.Parameters = adRequest.Parameters;
                     this.Location = adRequest.Location;
                     this.Age = adRequest.Age;
+                    this.AdTheme = adRequest.AdTheme;
                     this.Gender = adRequest.Gender;
                 }
                 return this;
@@ -175,7 +196,7 @@ namespace YandexMobileAds.Base
             /// <returns>AdRequest Builder.</returns>
             public AdRequest Build()
             {
-                if (this.Parameters == null) 
+                if (this.Parameters == null)
                 {
                     this.Parameters = new Dictionary<string, string>();
                 }

@@ -1,7 +1,7 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for Android (C) 2018 YANDEX
+ * Version for Android (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -14,90 +14,73 @@ using UnityEngine;
 
 namespace YandexMobileAds.Platforms.Android
 {
-    public class InterstitialClient : AndroidJavaProxy, IInterstitialClient
+    internal class InterstitialClient : AndroidJavaProxy, IInterstitialClient
     {
-        private AndroidJavaObject interstitial;
+        private const string UnityInterstitialAdListenerClassName =
+            "com.yandex.mobile.ads.unity.wrapper.interstitial.UnityInterstitialAdListener";
 
-        public event EventHandler<EventArgs> OnInterstitialLoaded;
-        public event EventHandler<AdFailureEventArgs> OnInterstitialFailedToLoad;
-        public event EventHandler<EventArgs> OnReturnedToApplication;
-        public event EventHandler<EventArgs> OnLeftApplication;
         public event EventHandler<EventArgs> OnAdClicked;
-        public event EventHandler<EventArgs> OnInterstitialShown;
-        public event EventHandler<EventArgs> OnInterstitialDismissed;
-        public event EventHandler<ImpressionData> OnImpression;
-        public event EventHandler<AdFailureEventArgs> OnInterstitialFailedToShow;
+        public event EventHandler<EventArgs> OnAdShown;
+        public event EventHandler<EventArgs> OnAdDismissed;
+        public event EventHandler<ImpressionData> OnAdImpression;
+        public event EventHandler<AdFailureEventArgs> OnAdFailedToShow;
 
-        public InterstitialClient(string blockId) : base(Utils.UnityInterstitialAdListenerClassName)
+        private AndroidJavaObject _interstitial;
+        private readonly AdInfo _adInfo;
+
+        public InterstitialClient(AndroidJavaObject interstitial) : base(UnityInterstitialAdListenerClassName)
         {
-            AndroidJavaClass playerClass = new AndroidJavaClass(Utils.UnityActivityClassName);
+            if (interstitial == null)
+            {
+                return;
+            }
 
-            AndroidJavaObject activity =
-                playerClass.GetStatic<AndroidJavaObject>("currentActivity");
+            this._interstitial = interstitial;
 
-            this.interstitial = new AndroidJavaObject(
-                Utils.InterstitialClassName,
-                activity,
-                blockId);
-            this.interstitial.Call("setUnityInterstitialListener", this);
+            AndroidJavaObject adInfoObject = NativeApi.GetInfo(interstitial);
+            if (adInfoObject != null)
+            {
+
+                this._adInfo = AdInfoFactory.CreateAdInfo(adInfoObject);
+            }
+
+            NativeApi.SetUnityInterstitialAdListener(interstitial, this);
         }
 
-        public void LoadAd(AdRequest request)
+        public AdInfo GetInfo()
         {
-            this.interstitial.Call("loadAd", Utils.GetAdRequestJavaObject(request));
-        }
-
-        public bool IsLoaded()
-        {
-            return this.interstitial.Call<bool>("isInterstitialLoaded");
+            return this._adInfo;
         }
 
         public void Show()
         {
-            this.interstitial.Call("showInterstitial");
+            if (_interstitial == null)
+            {
+                return;
+            }
+
+            AndroidJavaObject activity = Utils.GetCurrentActivity();
+            NativeApi.Show(_interstitial, activity);
         }
 
         public void Destroy()
         {
-            this.interstitial.Call("clearUnityInterstitialListener");
-            this.interstitial.Call("destroyInterstitial");
+            this.OnAdClicked = null;
+            this.OnAdShown = null;
+            this.OnAdDismissed = null;
+            this.OnAdImpression = null;
+            this.OnAdFailedToShow = null;
+
+            if (_interstitial == null)
+            {
+                return;
+            }
+
+            NativeApi.DestroyInterstitialAd(_interstitial);
         }
 
-        public void onInterstitialLoaded()
-        {
-            if (this.OnInterstitialLoaded != null)
-            {
-                this.OnInterstitialLoaded(this, EventArgs.Empty);
-            }
-        }
-
-        public void onInterstitialFailedToLoad(string errorReason)
-        {
-            if (this.OnInterstitialFailedToLoad != null)
-            {
-                AdFailureEventArgs args = new AdFailureEventArgs()
-                {
-                    Message = errorReason
-                };
-                this.OnInterstitialFailedToLoad(this, args);
-            }
-        }
-
-        public void onReturnedToApplication()
-        {
-            if (this.OnReturnedToApplication != null)
-            {
-                this.OnReturnedToApplication(this, EventArgs.Empty);
-            }
-        }
-
-        public void onLeftApplication()
-        {
-            if (this.OnLeftApplication != null)
-            {
-                this.OnLeftApplication(this, EventArgs.Empty);
-            }
-        }
+#pragma warning disable IDE1006
+        #region UnityInterstitialAdListener implementation
 
         public void onAdClicked()
         {
@@ -107,40 +90,70 @@ namespace YandexMobileAds.Platforms.Android
             }
         }
 
-        public void onInterstitialShown()
+        public void onAdShown()
         {
-            if (this.OnInterstitialShown != null)
+            if (this.OnAdShown != null)
             {
-                this.OnInterstitialShown(this, EventArgs.Empty);
+                this.OnAdShown(this, EventArgs.Empty);
             }
         }
 
-        public void onInterstitialDismissed()
+        public void onAdDismissed()
         {
-            if (this.OnInterstitialDismissed != null)
+            if (this.OnAdDismissed != null)
             {
-                this.OnInterstitialDismissed(this, EventArgs.Empty);
+                this.OnAdDismissed(this, EventArgs.Empty);
             }
         }
-        
-        public void onImpression(string rawImpressionData)
+
+        public void onAdImpression(string rawImpressionData)
         {
-            if (this.OnImpression != null)
+            if (this.OnAdImpression != null)
             {
                 ImpressionData impressionData = new ImpressionData(rawImpressionData);
-                this.OnImpression(this, impressionData);
+                this.OnAdImpression(this, impressionData);
             }
         }
 
-        public void onInterstitialFailedToShow(string errorReason)
+        public void onAdFailedToShow(string errorDescription)
         {
-            if (this.OnInterstitialFailedToShow != null)
+            if (this.OnAdFailedToShow != null)
             {
                 AdFailureEventArgs args = new AdFailureEventArgs()
                 {
-                    Message = errorReason
+                    Message = errorDescription
                 };
-                this.OnInterstitialFailedToShow(this, args);
+                this.OnAdFailedToShow(this, args);
+            }
+        }
+        #endregion
+#pragma warning restore IDE1006
+
+        private static class NativeApi
+        {
+            public static void SetUnityInterstitialAdListener(AndroidJavaObject interstitialAd, object listener)
+            {
+                interstitialAd.Call("setUnityInterstitialAdListener", listener);
+            }
+
+            public static void ClearUnityInterstitialAdListener(AndroidJavaObject interstitialAd)
+            {
+                interstitialAd.Call("clearUnityInterstitialAdListener");
+            }
+
+            public static AndroidJavaObject GetInfo(AndroidJavaObject interstitialAd)
+            {
+                return interstitialAd.Call<AndroidJavaObject>("getInfo");
+            }
+
+            public static void Show(AndroidJavaObject interstitialAd, AndroidJavaObject activity)
+            {
+                interstitialAd.Call("show", activity);
+            }
+
+            public static void DestroyInterstitialAd(AndroidJavaObject interstitialAd)
+            {
+                interstitialAd.Call("destroyInterstitialAd");
             }
         }
     }

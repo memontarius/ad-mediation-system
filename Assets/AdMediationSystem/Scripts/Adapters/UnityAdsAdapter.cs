@@ -15,7 +15,7 @@ namespace Virterix.AdMediation
 {
     public class UnityAdsAdapter : AdNetworkAdapter
     {
-        public const string IDENTIFIER = "unityads";
+        public const string Identifier = "unityads";
         
         private string m_appId;
         private bool m_isBannerDisplayed;

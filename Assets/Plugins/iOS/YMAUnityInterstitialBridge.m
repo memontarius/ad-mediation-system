@@ -1,69 +1,72 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for iOS (C) 2018 YANDEX
+ * Version for iOS (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
  */
 
+#import <YandexMobileAds/YandexMobileAds.h>
 #import "YMAUnityInterstitial.h"
 #import "YMAUnityObjectsStorage.h"
 #import "YMAUnityStringConverter.h"
 #import "YMAUnityObjectIDProvider.h"
 
-char *YMAUnityCreateInterstitial(YMAUnityInterstitialClientRef *clientRef, char *adUnitID)
+char *YMAUnityCreateInterstitialAd(YMAUnityInterstitialAdClientRef *clientRef, char *interstitialAdObjectID)
 {
-    YMAUnityInterstitial *interstitial = [[YMAUnityInterstitial alloc] initWithClientRef:clientRef
-                                                                                adUnitID:adUnitID];
-    const char *objectID = [YMAUnityObjectIDProvider IDForObject:interstitial];
-    [[YMAUnityObjectsStorage sharedInstance] setObject:interstitial withID:objectID];
-    return [YMAUnityStringConverter copiedCString:objectID];
+    YMAUnityObjectsStorage *objectStorage = [YMAUnityObjectsStorage sharedInstance];
+    YMAInterstitialAd *interstitialAd = [objectStorage objectWithID:interstitialAdObjectID];
+
+    YMAUnityInterstitialAd *unityInterstitialAd = [[YMAUnityInterstitialAd alloc] initWithClientRef:clientRef
+                                                                                interstitialAd:interstitialAd];
+    const char *unityInterstitialAdObjectID = [YMAUnityObjectIDProvider IDForObject:unityInterstitialAd];
+    [objectStorage setObject:unityInterstitialAd withID:unityInterstitialAdObjectID];
+    [objectStorage removeObjectWithID:interstitialAdObjectID];
+
+    return [YMAUnityStringConverter copiedCString:unityInterstitialAdObjectID];
 }
 
-void YMAUnitySetInterstitialCallbacks(char *objectID,
-                                      YMAUnityInterstitialDidLoadAdCallback didLoadAdCallback,
-                                      YMAUnityInterstitialDidFailToLoadAdCallback didFailToLoadAdCallback,
-                                      YMAUnityInterstitialWillPresentScreenCallback willPresentScreenCallback,
-                                      YMAUnityInterstitialWillLeaveApplicationCallback willLeaveApplicationCallback,
-                                      YMAUnityInterstitialDidClickCallback didClickCallback,
-                                      YMAUnityInterstitialWillAppearCallback willAppearCallback,
-                                      YMAUnityInterstitialDidDismissCallback didDismissCallback,
-                                      YMAUnityInterstitialDidTrackImpressionCallback didTrackImpressionCallback,
-                                      YMAUnityInterstitialDidFailToShowCallback didFailToShowCallback)
+void YMAUnitySetInterstitialAdCallbacks(char *unityInterstitialAdObjectID,
+                                      YMAUnityInterstitialAdDidFailToShowCallback didFailToShowCallback,
+                                      YMAUnityInterstitialAdDidShowCallback didShowCallback,
+                                      YMAUnityInterstitialAdDidDismissCallback didDismissCallback,
+                                      YMAUnityInterstitialAdDidClickCallback didClickCallback,
+                                      YMAUnityInterstitialAdDidTrackImpressionCallback didTrackImpressionCallback)
 {
-    YMAUnityInterstitial *interstitial = [[YMAUnityObjectsStorage sharedInstance] objectWithID:objectID];
-    interstitial.didLoadAdCallback = didLoadAdCallback;
-    interstitial.didFailToLoadAdCallback = didFailToLoadAdCallback;
-    interstitial.willPresentScreenCallback = willPresentScreenCallback;
-    interstitial.willLeaveApplicationCallback = willLeaveApplicationCallback;
-    interstitial.didClickCallback = didClickCallback;
-    interstitial.willAppearCallback = willAppearCallback;
-    interstitial.didDismissCallback = didDismissCallback;
-    interstitial.didTrackImpressionCallback = didTrackImpressionCallback;
-    interstitial.didFailToShowCallback = didFailToShowCallback;
+    YMAUnityInterstitialAd *unityInterstitialAd = [[YMAUnityObjectsStorage sharedInstance] objectWithID:unityInterstitialAdObjectID];
+
+    unityInterstitialAd.didFailToShowCallback = didFailToShowCallback;
+    unityInterstitialAd.didShowCallback = didShowCallback;
+    unityInterstitialAd.didDismissCallback = didDismissCallback;
+    unityInterstitialAd.didClickCallback = didClickCallback;
+    unityInterstitialAd.didTrackImpressionCallback = didTrackImpressionCallback;
 }
 
-void YMAUnityLoadInterstitial(char *objectID, char *adRequestID)
+char *YMAUnityGetInterstitialInfo(char *unityInterstitialAdObjectID)
 {
-    YMAAdRequest *adRequest = [[YMAUnityObjectsStorage sharedInstance] objectWithID:adRequestID];
-    YMAUnityInterstitial *interstitial = [[YMAUnityObjectsStorage sharedInstance] objectWithID:objectID];
-    [interstitial loadWithRequest:adRequest];
+    YMAUnityObjectsStorage *objectStorage = [YMAUnityObjectsStorage sharedInstance];
+    YMAUnityInterstitialAd *unityInterstitialAd = [objectStorage objectWithID:unityInterstitialAdObjectID];
+    YMAAdInfo *adInfo = [unityInterstitialAd getInfo];
+
+    const char *adInfoObjectID = [YMAUnityObjectIDProvider IDForObject:adInfo];
+    [[YMAUnityObjectsStorage sharedInstance] setObject:adInfo withID:adInfoObjectID];
+
+    return [YMAUnityStringConverter copiedCString:adInfoObjectID];
 }
 
-void YMAUnityShowInterstitial(char *objectID)
+void YMAUnityShowInterstitialAd(char *unityInterstitialAdObjectID)
 {
-    YMAUnityInterstitial *interstitial = [[YMAUnityObjectsStorage sharedInstance] objectWithID:objectID];
-    [interstitial show];
+    YMAUnityInterstitialAd *unityInterstitialAd = [[YMAUnityObjectsStorage sharedInstance] objectWithID:unityInterstitialAdObjectID];
+    [unityInterstitialAd show];
 }
 
-BOOL YMAUnityIsInterstitialLoaded(char *objectID)
+void YMAUnityDestroyInterstitialAd(char *unityInterstitialAdObjectID)
 {
-    YMAUnityInterstitial *interstitial = [[YMAUnityObjectsStorage sharedInstance] objectWithID:objectID];
-    return interstitial.isLoaded;
-}
-
-void YMAUnityDestroyInterstitial(char *objectID)
-{
-    [[YMAUnityObjectsStorage sharedInstance] removeObjectWithID:objectID];
+    YMAUnityInterstitialAd *unityInterstitialAd = [[YMAUnityObjectsStorage sharedInstance] objectWithID:unityInterstitialAdObjectID];
+    unityInterstitialAd.didFailToShowCallback = NULL;
+    unityInterstitialAd.didClickCallback = NULL;
+    unityInterstitialAd.didDismissCallback = NULL;
+    unityInterstitialAd.didTrackImpressionCallback = NULL;
+    [[YMAUnityObjectsStorage sharedInstance] removeObjectWithID:unityInterstitialAdObjectID];
 }

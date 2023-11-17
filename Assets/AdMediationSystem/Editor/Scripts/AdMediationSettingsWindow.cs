@@ -395,16 +395,16 @@ namespace Virterix.AdMediation.Editor
         {
             _networks.Clear();
 
-            AddNetwork(new AdMobView(this, "AdMob", AdMobAdapter.IDENTIFIER));
-            AddNetwork(new AudienceNetworkView(this, "Audience Network", AudienceNetworkAdapter.IDENTIFIER));
-            AddNetwork(new UnityAdsView(this, "Unity Ads", UnityAdsAdapter.IDENTIFIER));
-            AddNetwork(new YandexMobileAdsView(this, "Yandex Mobile Ads", YandexMobileAdsAdapter.IDENTIFIER));
-            AddNetwork(new ApplovinView(this, "AppLovin", AppLovinAdapter.IDENTIFIER));
-            AddNetwork(new ChartboostView(this, "Chartboost", ChartboostAdapter.IDENTIFIER));
-            AddNetwork(new IronSourceView(this, "Iron Source", IronSourceAdapter.IDENTIFIER));
-            AddNetwork(new AdColonyView(this, "AdColony", AdColonyAdapter.IDENTIFIER));
-            AddNetwork(new VungleView(this, "Vungle", VungleAdapter.IDENTIFIER));
-            AddNetwork(new PollfishView(this, "Pollfish", PollfishAdapter.IDENTIFIER));
+            AddNetwork(new AdMobView(this, "AdMob", AdMobAdapter.Identifier));
+            AddNetwork(new AudienceNetworkView(this, "Audience Network", AudienceNetworkAdapter.Identifier));
+            AddNetwork(new UnityAdsView(this, "Unity Ads", UnityAdsAdapter.Identifier));
+            AddNetwork(new YandexMobileAdsView(this, "Yandex Mobile Ads", YandexMobileAdsAdapter.Identifier));
+            AddNetwork(new ApplovinView(this, "AppLovin", AppLovinAdapter.Identifier));
+            AddNetwork(new ChartboostView(this, "Chartboost", ChartboostAdapter.Identifier));
+            AddNetwork(new IronSourceView(this, "Iron Source", IronSourceAdapter.Identifier));
+            AddNetwork(new AdColonyView(this, "AdColony", AdColonyAdapter.Identifier));
+            AddNetwork(new VungleView(this, "Vungle", VungleAdapter.Identifier));
+            AddNetwork(new PollfishView(this, "Pollfish", PollfishAdapter.Identifier));
             
             if (_networkEnabledStates == null)
             {

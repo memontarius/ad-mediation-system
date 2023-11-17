@@ -28,3 +28,6 @@ MonoBehaviour:
   _androidAppOpenAdUnitId: 
   _iOSAppOpenAdUnitId: 
   _appOpenAdDisplayMultiplicity: 0
+  _appOpenAdDisplayCooldown: 0
+  _appOpenAdLoadAttemptMaxNumber: 0
+  _appOpenAdAlternativeNetwork: 

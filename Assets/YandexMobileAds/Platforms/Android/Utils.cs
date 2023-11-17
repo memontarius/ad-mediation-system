@@ -1,7 +1,7 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for Android (C) 2019 YANDEX
+ * Version for Android (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -10,17 +10,19 @@
 using UnityEngine;
 using System.Collections.Generic;
 using YandexMobileAds.Base;
+using System;
 
 namespace YandexMobileAds.Platforms.Android
 {
     internal class Utils
     {
         public const string AdRequestBuilderClassName = "com.yandex.mobile.ads.common.AdRequest$Builder";
+        public const string AdRequestConfigurationBuilderClassName = "com.yandex.mobile.ads.common.AdRequestConfiguration$Builder";
 
-        public const string BannerViewClassName = "com.yandex.mobile.ads.unity.wrapper.banner.BannerWrapper";
+        public const string BannerViewClassName = "com.yandex.mobile.ads.unity.wrapper.banner.BannerAdWrapper";
 
         public const string InterstitialClassName =
-            "com.yandex.mobile.ads.unity.wrapper.interstitial.InterstitialWrapper";
+            "com.yandex.mobile.ads.unity.wrapper.interstitial.InterstitialAdWrapper";
 
         public const string RewardedAdClassName =
             "com.yandex.mobile.ads.unity.wrapper.rewarded.RewardedAdWrapper";
@@ -30,62 +32,172 @@ namespace YandexMobileAds.Platforms.Android
         public const string MobileAdsClassName = "com.yandex.mobile.ads.common.MobileAds";
 
         public const string UnityBannerAdListenerClassName =
-            "com.yandex.mobile.ads.unity.wrapper.banner.UnityBannerListener";
+            "com.yandex.mobile.ads.unity.wrapper.banner.UnityBannerAdListener";
 
         public const string UnityInterstitialAdListenerClassName =
-            "com.yandex.mobile.ads.unity.wrapper.interstitial.UnityInterstitialListener";
+            "com.yandex.mobile.ads.unity.wrapper.interstitial.UnityInterstitialAdListener";
 
         public const string UnityRewardedAdListenerClassName =
             "com.yandex.mobile.ads.unity.wrapper.rewarded.UnityRewardedAdListener";
 
         public const string UnityActivityClassName = "com.unity3d.player.UnityPlayer";
 
-        public static AndroidJavaObject GetAdRequestJavaObject(AdRequest request)
+        public const string AdThemeClassName = "com.yandex.mobile.ads.common.AdTheme";
+
+        public static AndroidJavaObject GetAdRequestJavaObject(AdRequest adRequest)
         {
-            if (request == null)
+            if (adRequest == null)
             {
                 return null;
             }
 
             AndroidJavaObject adRequestBuilder = new AndroidJavaObject(AdRequestBuilderClassName);
 
-            if (request.ContextQuery != null)
+            if (adRequest.ContextQuery != null)
             {
-                adRequestBuilder.Call<AndroidJavaObject>("setContextQuery", request.ContextQuery);
+                adRequestBuilder.Call<AndroidJavaObject>(
+                    "setContextQuery",
+                    adRequest.ContextQuery
+                );
             }
 
-            if (request.ContextTags != null)
-			{
+            if (adRequest.ContextTags != null)
+            {
                 adRequestBuilder.Call<AndroidJavaObject>("setContextTags",
-                    stringListToJavaStringArrayList(request.ContextTags));
+                    stringListToJavaStringArrayList(adRequest.ContextTags));
             }
-            
-            if (request.Location != null)
+
+            if (adRequest.Location != null)
             {
                 adRequestBuilder.Call<AndroidJavaObject>("setLocation",
-                    locationToJavaLocation(request.Location));
+                    locationToJavaLocation(adRequest.Location));
             }
 
-            Dictionary<string, string> parameters = request.Parameters;
+            Dictionary<string, string> parameters = adRequest.Parameters;
             if (parameters != null)
             {
                 adRequestBuilder.Call<AndroidJavaObject>("setParameters",
                     dictionaryToJavaHashMap(parameters));
             }
 
-            if (request.Age != null)
+            if (adRequest.Age != null)
             {
                 adRequestBuilder.Call<AndroidJavaObject>("setAge",
-                    request.Age);
+                    adRequest.Age);
             }
 
-            if (request.Gender != null)
+            if (adRequest.Gender != null)
             {
                 adRequestBuilder.Call<AndroidJavaObject>("setGender",
-                    request.Gender);
+                    adRequest.Gender);
+            }
+
+            if (adRequest.AdTheme != AdTheme.None)
+            {
+                AndroidJavaClass adThemeEnum = new AndroidJavaClass(AdThemeClassName);
+                AndroidJavaObject enumEntry;
+
+                if (adRequest.AdTheme == AdTheme.Light)
+                {
+                    enumEntry = adThemeEnum.GetStatic<AndroidJavaObject>("LIGHT");
+
+                }
+                else
+                {
+                    enumEntry = adThemeEnum.GetStatic<AndroidJavaObject>("DARK");
+                }
+
+                adRequestBuilder.Call<AndroidJavaObject>("setPreferredTheme", enumEntry);
             }
 
             return adRequestBuilder.Call<AndroidJavaObject>("build");
+        }
+
+        public static AndroidJavaObject GetAdRequestConfigurationJavaObject(AdRequestConfiguration adRequestConfiguration)
+        {
+            if (adRequestConfiguration == null)
+            {
+                return null;
+            }
+
+            if (adRequestConfiguration.AdUnitId == null)
+            {
+                return null;
+            }
+
+            AndroidJavaObject adRequestConfigurationBuilder = new AndroidJavaObject(
+                AdRequestConfigurationBuilderClassName,
+                adRequestConfiguration.AdUnitId
+            );
+
+            if (adRequestConfiguration.ContextQuery != null)
+            {
+                adRequestConfigurationBuilder.Call<AndroidJavaObject>(
+                    "setContextQuery",
+                    adRequestConfiguration.ContextQuery
+                );
+            }
+
+            if (adRequestConfiguration.ContextTags != null)
+            {
+                adRequestConfigurationBuilder.Call<AndroidJavaObject>("setContextTags",
+                    stringListToJavaStringArrayList(adRequestConfiguration.ContextTags));
+            }
+
+            if (adRequestConfiguration.Location != null)
+            {
+                adRequestConfigurationBuilder.Call<AndroidJavaObject>("setLocation",
+                    locationToJavaLocation(adRequestConfiguration.Location));
+            }
+
+            Dictionary<string, string> parameters = adRequestConfiguration.Parameters;
+            if (parameters != null)
+            {
+                adRequestConfigurationBuilder.Call<AndroidJavaObject>("setParameters",
+                    dictionaryToJavaHashMap(parameters));
+            }
+
+            if (adRequestConfiguration.Age != null)
+            {
+                adRequestConfigurationBuilder.Call<AndroidJavaObject>("setAge",
+                    adRequestConfiguration.Age);
+            }
+
+            if (adRequestConfiguration.Gender != null)
+            {
+                adRequestConfigurationBuilder.Call<AndroidJavaObject>("setGender",
+                    adRequestConfiguration.Gender);
+            }
+
+            if (adRequestConfiguration.AdTheme != AdTheme.None)
+            {
+                AndroidJavaClass adThemeEnum = new AndroidJavaClass(AdThemeClassName);
+                AndroidJavaObject enumEntry;
+
+                if (adRequestConfiguration.AdTheme == AdTheme.Light)
+                {
+                    enumEntry = adThemeEnum.GetStatic<AndroidJavaObject>("LIGHT");
+
+                }
+                else
+                {
+                    enumEntry = adThemeEnum.GetStatic<AndroidJavaObject>("DARK");
+                }
+
+                adRequestConfigurationBuilder.Call<AndroidJavaObject>("setPreferredTheme", enumEntry);
+            }
+
+
+            return adRequestConfigurationBuilder.Call<AndroidJavaObject>("build");
+        }
+
+        public static AndroidJavaObject GetCurrentActivity()
+        {
+            AndroidJavaClass playerClass = new AndroidJavaClass(UnityActivityClassName);
+            AndroidJavaObject activity =
+                playerClass.GetStatic<AndroidJavaObject>("currentActivity");
+
+            return activity;
         }
 
         private static AndroidJavaObject dictionaryToJavaHashMap(Dictionary<string, string> parameters)
@@ -106,7 +218,7 @@ namespace YandexMobileAds.Platforms.Android
 
             locationObject.Call("setLatitude", location.Latitude);
             locationObject.Call("setLongitude", location.Longitude);
-            locationObject.Call("setAccuracy", (float) location.HorizontalAccuracy);
+            locationObject.Call("setAccuracy", (float)location.HorizontalAccuracy);
 
             return locationObject;
         }
@@ -117,7 +229,7 @@ namespace YandexMobileAds.Platforms.Android
 
             foreach (string item in list)
             {
-                javaList.Call<bool>("add", new object[] {item});
+                javaList.Call<bool>("add", new object[] { item });
             }
 
             return javaList;

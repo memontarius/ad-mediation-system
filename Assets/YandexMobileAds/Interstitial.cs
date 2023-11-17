@@ -1,7 +1,7 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for Unity (C) 2018 YANDEX
+ * Version for Unity (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -10,106 +10,86 @@
 using System;
 using YandexMobileAds.Base;
 using YandexMobileAds.Common;
-using YandexMobileAds.Platforms;
 
 namespace YandexMobileAds
 {
     /// <summary>
-    /// A class for loading an interstitial ad.
+    /// Full-screen interstitial ad.
     /// </summary>
     public class Interstitial
     {
-        private AdRequestCreator adRequestFactory;
-        private IInterstitialClient client;
-        private volatile bool loaded;
+        private const string AdAlreadyPresentedErrorMessage =
+                "Interstitial ad was already presented. Single Interstitial ad can be presented just once.";
 
         /// <summary>
-        /// Notifies that the ad loaded successfully.
+        /// Notifies that the interstitial ad has been shown.
         /// </summary>
-        public event EventHandler<EventArgs> OnInterstitialLoaded;
+        public event EventHandler<EventArgs> OnAdShown;
 
         /// <summary>
-        /// Notifies that the ad failed to load.
+        /// Notifies that the rewarded ad failed to show.
         /// </summary>
-        public event EventHandler<AdFailureEventArgs> OnInterstitialFailedToLoad;
+        public event EventHandler<AdFailureEventArgs> OnAdFailedToShow;
 
         /// <summary>
-        /// Called when user returned to application after click.
+        /// Notifies that the rewarded ad has been dismissed.
         /// </summary>
-        public event EventHandler<EventArgs> OnReturnedToApplication;
+        public event EventHandler<EventArgs> OnAdDismissed;
 
         /// <summary>
-        /// Notifies that the app will run in the background now because the user clicked the ad and is switching to a different application (Phone, App Store, and so on).
-        /// </summary>
-        public event EventHandler<EventArgs> OnLeftApplication;
-
-        /// <summary>
-        /// Notifies that the user has clicked on the ad.
+        /// Notifies that the user clicked on the ad.
         /// </summary>
         public event EventHandler<EventArgs> OnAdClicked;
 
         /// <summary>
-        /// Called after the full-screen ad appears.
+        /// Notifies that an impression was observed
         /// </summary>
-        public event EventHandler<EventArgs> OnInterstitialShown;
+        public event EventHandler<ImpressionData> OnAdImpression;
 
-        /// <summary>
-        /// Called after hiding the full-screen ad.
-        /// </summary>
-        public event EventHandler<EventArgs> OnInterstitialDismissed;
+        private IInterstitialClient _client;
+        private bool _adShown;
 
-        /// <summary>
-        /// Notifies delegate when an impression was tracked.
-        /// </summary>
-        public event EventHandler<ImpressionData> OnImpression;
-
-        /// <summary>
-        /// Notifies that the ad can’t be displayed.
-        /// </summary>
-        public event EventHandler<AdFailureEventArgs> OnInterstitialFailedToShow;
-
-        /// <summary>
-        /// Initializes an object of the YMAInterstitialAd class with a full-screen ad.
-        /// </summary>
-        /// <param name="blockId"> Unique ad placement ID created at partner interface. Example: R-M-DEMO-240x400-context.</param>
-        public Interstitial(string blockId)
+        internal Interstitial(IInterstitialClient client)
         {
-            this.adRequestFactory = new AdRequestCreator();
-            this.client = YandexMobileAdsClientFactory.BuildInterstitialClient(blockId);
+            this._client = client;
+            this._adShown = false;
 
             MainThreadDispatcher.initialize();
-            ConfigureInterstitialEvents();
+            ConfigureInterstitialEvents(this._client);
         }
 
         /// <summary>
-        /// Preloads the ad by setting the data for targeting.
+        /// Returns base information about loaded Ad.
         /// </summary>
-        /// <param name="request">Data for targeting.</param>
-        public void LoadAd(AdRequest request)
+        /// <returns><see cref="AdInfo"/> information about loaded Ad.</returns>
+        public AdInfo GetInfo()
         {
-            this.loaded = false;
-            client.LoadAd(adRequestFactory.CreateAdRequest(request));
+            return this._client.GetInfo();
         }
 
         /// <summary>
-        /// Notifies that the ad is loaded and ready to be displayed.
-        /// After the property takes the YES value, the OnInterstitialLoaded delegate method is called.
-        /// </summary>
-        /// <returns>
-        /// true if this interstitial ad has been successfully loaded
-        /// and is ready to be shown, otherwise false.
-        /// </returns>
-        public bool IsLoaded()
-        {
-            return loaded;
-        }
-
-        /// <summary>
-        /// Shows interstitial ad, only if it has been loaded.
+        /// Shows the interstitial ad. Single interstitial ad can be showed just once.
         /// </summary>
         public void Show()
         {
-            client.Show();
+            if (_client == null)
+            {
+                return;
+            }
+
+            if (_adShown == true)
+            {
+                AdFailureEventArgs args = new AdFailureEventArgs()
+                {
+                    Message = AdAlreadyPresentedErrorMessage
+                };
+                this.OnAdFailedToShow(this, args);
+
+                return;
+            }
+
+            _adShown = true;
+            _client.Show();
         }
 
         /// <summary>
@@ -117,109 +97,115 @@ namespace YandexMobileAds
         /// </summary>
         public void Destroy()
         {
-            client.Destroy();
+            _adShown = true;
+            if (_client != null)
+            {
+                _client.Destroy();
+            }
+            _client = null;
+
+            this.OnAdShown = null;
+            this.OnAdFailedToShow = null;
+            this.OnAdImpression = null;
+            this.OnAdClicked = null;
+            this.OnAdDismissed = null;
         }
 
-        private void ConfigureInterstitialEvents()
+        private void ConfigureInterstitialEvents(IInterstitialClient client)
         {
-            this.client.OnInterstitialLoaded += (sender, args) =>
+            if (client == null)
             {
-                this.loaded = true;
-                if (this.OnInterstitialLoaded != null)
+                return;
+            }
+
+            client.OnAdClicked += (sender, args) =>
+            {
+                if (this.OnAdClicked == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnInterstitialLoaded(this, args);
-                    });
+                    return;
                 }
+
+                MainThreadDispatcher.EnqueueAction(() =>
+                {
+                    if (this.OnAdClicked == null)
+                    {
+                        return;
+                    }
+
+                    this.OnAdClicked(this, args);
+                });
             };
 
-            this.client.OnInterstitialFailedToLoad += (sender, args) =>
+            client.OnAdShown += (sender, args) =>
             {
-                if (this.OnInterstitialFailedToLoad != null)
+                if (this.OnAdShown == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnInterstitialFailedToLoad(this, args);
-                    });
+                    return;
                 }
+
+                MainThreadDispatcher.EnqueueAction(() =>
+                {
+                    if (this.OnAdShown == null)
+                    {
+                        return;
+                    }
+
+                    this.OnAdShown(this, args);
+                });
             };
 
-            this.client.OnReturnedToApplication += (sender, args) =>
+            client.OnAdDismissed += (sender, args) =>
             {
-                if (this.OnReturnedToApplication != null)
+                if (this.OnAdDismissed == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnReturnedToApplication(this, args);
-                    });
+                    return;
                 }
+
+                MainThreadDispatcher.EnqueueAction(() =>
+                {
+                    if (this.OnAdDismissed == null)
+                    {
+                        return;
+                    }
+
+                    this.OnAdDismissed(this, args);
+                });
             };
 
-            this.client.OnLeftApplication += (sender, args) =>
+            client.OnAdImpression += (sender, args) =>
             {
-                if (this.OnLeftApplication != null)
+                if (this.OnAdImpression == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnLeftApplication(this, args);
-                    });
+                    return;
                 }
+
+                MainThreadDispatcher.EnqueueAction(() =>
+                {
+                    if (this.OnAdImpression == null)
+                    {
+                        return;
+                    }
+
+                    this.OnAdImpression(this, args);
+                });
             };
 
-            this.client.OnAdClicked += (sender, args) =>
+            client.OnAdFailedToShow += (sender, args) =>
             {
-                if (this.OnAdClicked != null)
+                if (this.OnAdFailedToShow == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnAdClicked(this, args);
-                    });
+                    return;
                 }
-            };
 
-            this.client.OnInterstitialShown += (sender, args) =>
-            {
-                if (this.OnInterstitialShown != null)
+                MainThreadDispatcher.EnqueueAction(() =>
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
+                    if (this.OnAdFailedToShow == null)
                     {
-                        this.OnInterstitialShown(this, args);
-                    });
-                }
-            };
+                        return;
+                    }
 
-            this.client.OnInterstitialDismissed += (sender, args) =>
-            {
-                if (this.OnInterstitialDismissed != null)
-                {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnInterstitialDismissed(this, args);
-                    });
-                }
-            };
-
-            this.client.OnImpression += (sender, args) =>
-            {
-                if (this.OnImpression != null)
-                {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnImpression(this, args);
-                    });
-                }
-            };
-
-            this.client.OnInterstitialFailedToShow += (sender, args) =>
-            {
-                if (this.OnInterstitialFailedToShow != null)
-                {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnInterstitialFailedToShow(this, args);
-                    });
-                }
+                    this.OnAdFailedToShow(this, args);
+                });
             };
 
         }

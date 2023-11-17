@@ -297,52 +297,50 @@ namespace Virterix.AdMediation
         
         private bool ShowAnyReadyNetwork()
         {
-            if (m_totalUnits == 0)
+            if (m_totalUnits == 0) {
                 return false;
+            }
 
             int currTierIndex = m_currUnit != null ? m_currUnit.TierIndex : 0;
             int currUnitIndex = m_currUnit != null ? m_currUnit.Index : 0;
-
+            int startUnitIndex = currUnitIndex + 1;
+            
             AdUnit readyUnit = null;
             AdUnit[] units = null;
             int readyTierIndex = 0;
             int readyUnitIndex = 0;
-
-            for (int tierIndex = currTierIndex; ; tierIndex++)
-            {
-                if (tierIndex >= m_tiers.Length)
+            bool isFindNext = true;
+            
+            for (int tierIndex = currTierIndex; isFindNext; tierIndex++) {
+                
+                if (tierIndex >= m_tiers.Length) {
                     tierIndex = 0;
-
+                }
+                
                 units = m_tiers[tierIndex];
-                bool isEnded = false;
-
-                for (int unitIndex = currUnitIndex + 1; ; unitIndex++)
-                {
-                    if (unitIndex >= units.Length)
-                        unitIndex = 0;
- 
+                
+                for (int unitIndex = startUnitIndex; isFindNext && unitIndex < units.Length; unitIndex++) {
+                    
                     readyUnit = units[unitIndex];
+                    
                     if (readyUnit.IsReady)
                     {
                         readyTierIndex = tierIndex;
                         readyUnitIndex = unitIndex;
-                        isEnded = true;
+                        isFindNext = false;
                         break;
                     }
-                    else
-                    {
+                    
+                    bool isCurrentUnit = tierIndex == currTierIndex && unitIndex == currUnitIndex;
+                    if (isCurrentUnit) {
+                        isFindNext = false;
                         readyUnit = null;
                     }
-
-                    isEnded = tierIndex == currTierIndex && unitIndex == currUnitIndex;
-                    if (isEnded)
-                        break;
                 }
 
-                if (isEnded)
-                    break;
+                startUnitIndex = 0;
             }
-
+            
             if (readyUnit != null)
             {
                 SetCurrentUnit(readyUnit);

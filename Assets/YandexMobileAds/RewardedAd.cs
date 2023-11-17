@@ -1,7 +1,7 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for Unity (C) 2018 YANDEX
+ * Version for Unity (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -10,111 +10,91 @@
 using System;
 using YandexMobileAds.Base;
 using YandexMobileAds.Common;
-using YandexMobileAds.Platforms;
 
 namespace YandexMobileAds
 {
     /// <summary>
-    /// A class is responsible for loading rewarded video ads.
+    /// Full-screen rewarded ad.
     /// </summary>
     public class RewardedAd
     {
-        private AdRequestCreator adRequestFactory;
-        private IRewardedAdClient client;
-        private volatile bool loaded;
+        private const string AdAlreadyPresentedErrorMessage =
+                "Rewarded ad was already presented. Single Rewarded ad can be presented just once.";
 
         /// <summary>
-        /// Notifies that the ad has been loaded successfully.
+        /// Notifies that the rewarded ad has been shown.
         /// </summary>
-        public event EventHandler<EventArgs> OnRewardedAdLoaded;
+        public event EventHandler<EventArgs> OnAdShown;
 
         /// <summary>
-        /// Notifies that the ad failed to load.
+        /// Notifies that the rewarded ad failed to show.
         /// </summary>
-        public event EventHandler<AdFailureEventArgs> OnRewardedAdFailedToLoad;
+        public event EventHandler<AdFailureEventArgs> OnAdFailedToShow;
 
         /// <summary>
-        /// Called when user returned to application after click.
+        /// Notifies that the rewarded ad has been dismissed.
         /// </summary>
-        public event EventHandler<EventArgs> OnReturnedToApplication;
+        public event EventHandler<EventArgs> OnAdDismissed;
 
         /// <summary>
-        /// Notifies that the app will run in the background now because the user clicked on the ad and is about to switch to a different app.
-        /// </summary>
-        public event EventHandler<EventArgs> OnLeftApplication;
-
-        /// <summary>
-        /// Notifies that the user has clicked on the ad.
+        /// Notifies that the user clicked on the ad.
         /// </summary>
         public event EventHandler<EventArgs> OnAdClicked;
 
         /// <summary>
-        /// Called after the rewarded ad appears.
+        /// Notifies that an impression was observed
         /// </summary>
-        public event EventHandler<EventArgs> OnRewardedAdShown;
+        public event EventHandler<ImpressionData> OnAdImpression;
 
         /// <summary>
-        /// Called after hiding the rewarded ad.
-        /// </summary>
-        public event EventHandler<EventArgs> OnRewardedAdDismissed;
-
-        /// <summary>
-        /// Notifies delegate when an impression was tracked.
-        /// </summary>
-        public event EventHandler<ImpressionData> OnImpression;
-
-        /// <summary>
-        /// Notifies that the ad can’t be displayed.
-        /// </summary>
-        public event EventHandler<AdFailureEventArgs> OnRewardedAdFailedToShow;
-
-        /// <summary>
-        /// Notifies that the user should be rewarded for viewing an ad (impression counted).
+        /// Notifies that the user can be rewarded.
         /// </summary>
         public event EventHandler<Reward> OnRewarded;
 
-        /// <summary>
-        /// Initializes an object of the YMARewardedAd class with a rewarded ad.
-        /// </summary>
-        /// <param name="blockId">A unique identifier in the R-M-XXXXXX-Y format, which is assigned in the Partner interface.</param>
-        public RewardedAd(string blockId)
+        private IRewardedAdClient _client;
+        private bool _adShown;
+
+        internal RewardedAd(IRewardedAdClient client)
         {
-            this.adRequestFactory = new AdRequestCreator();
-            this.client = YandexMobileAdsClientFactory.BuildRewardedAdClient(blockId);
-            
+            this._client = client;
+            this._adShown = false;
+
             MainThreadDispatcher.initialize();
-            ConfigureRewardedAdEvents();
+            ConfigureRewardedAdEvents(this._client);
         }
 
         /// <summary>
-        /// Preloads the ad by setting the data for targeting.
+        /// Returns base information about loaded Ad.
         /// </summary>
-        /// <param name="request">Data for targeting</param>
-        public void LoadAd(AdRequest request)
+        /// <returns><see cref="AdInfo"/> information about loaded Ad.</returns>
+        public AdInfo GetInfo()
         {
-            this.loaded = false;
-            client.LoadAd(adRequestFactory.CreateAdRequest(request));
+            return this._client.GetInfo();
         }
 
         /// <summary>
-        /// Notifies that the ad is loaded and ready to be displayed.
-        /// After the property takes the YES value, the OnRewardedAdLoaded delegate method is called.
-        /// </summary>
-        /// <returns>
-        /// true if this rewarded ad has been successfully loaded
-        /// and is ready to be shown, otherwise false.
-        /// </returns>
-        public bool IsLoaded()
-        {
-            return loaded;
-        }
-
-        /// <summary>
-        /// Shows rewarded ad, only if it has been loaded.
+        /// Shows the rewarded ad. Single rewarded ad can be showed just once.
         /// </summary>
         public void Show()
         {
-            client.Show();
+            if (_client == null)
+            {
+                return;
+            }
+
+            if (_adShown == true)
+            {
+                AdFailureEventArgs args = new AdFailureEventArgs()
+                {
+                    Message = AdAlreadyPresentedErrorMessage
+                };
+                this.OnAdFailedToShow(this, args);
+
+                return;
+            }
+
+            _adShown = true;
+            _client.Show();
         }
 
         /// <summary>
@@ -122,120 +102,136 @@ namespace YandexMobileAds
         /// </summary>
         public void Destroy()
         {
-            client.Destroy();
+            _adShown = false;
+
+            if (_client != null)
+            {
+                _client.Destroy();
+            }
+
+            _client = null;
+
+            this.OnAdShown = null;
+            this.OnAdFailedToShow = null;
+            this.OnAdImpression = null;
+            this.OnAdClicked = null;
+            this.OnAdDismissed = null;
+            this.OnRewarded = null;
         }
 
-        private void ConfigureRewardedAdEvents()
+        private void ConfigureRewardedAdEvents(IRewardedAdClient client)
         {
-            this.client.OnRewardedAdLoaded += (sender, args) =>
+            if (client == null)
             {
-                this.loaded = true;
-                if (this.OnRewardedAdLoaded != null)
+                return;
+            }
+
+            client.OnAdShown += (sender, args) =>
+            {
+                if (this.OnAdShown == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnRewardedAdLoaded(this, args);
-                    });
+                    return;
                 }
+
+                MainThreadDispatcher.EnqueueAction(() =>
+                {
+                    if (this.OnAdShown == null)
+                    {
+                        return;
+                    }
+
+                    this.OnAdShown(this, args);
+                });
             };
 
-            this.client.OnRewardedAdFailedToLoad += (sender, args) =>
+            client.OnAdFailedToShow += (sender, args) =>
             {
-                if (this.OnRewardedAdFailedToLoad != null)
+                if (this.OnAdFailedToShow == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnRewardedAdFailedToLoad(this, args);
-                    });
+                    return;
                 }
+
+                MainThreadDispatcher.EnqueueAction(() =>
+                {
+                    if (this.OnAdFailedToShow == null)
+                    {
+                        return;
+                    }
+
+                    this.OnAdFailedToShow(this, args);
+                });
             };
 
-            this.client.OnReturnedToApplication += (sender, args) =>
+            client.OnAdDismissed += (sender, args) =>
             {
-                if (this.OnReturnedToApplication != null)
+                if (this.OnAdDismissed == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnReturnedToApplication(this, args);
-                    });
+                    return;
                 }
+
+                MainThreadDispatcher.EnqueueAction(() =>
+                {
+                    if (this.OnAdDismissed == null)
+                    {
+                        return;
+                    }
+
+                    this.OnAdDismissed(this, args);
+                });
             };
 
-            this.client.OnLeftApplication += (sender, args) =>
+            client.OnAdImpression += (sender, args) =>
             {
-                if (this.OnLeftApplication != null)
+                if (this.OnAdImpression == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnLeftApplication(this, args);
-                    });
+                    return;
                 }
+
+                MainThreadDispatcher.EnqueueAction(() =>
+                {
+                    if (this.OnAdImpression == null)
+                    {
+                        return;
+                    }
+
+                    this.OnAdImpression(this, args);
+                });
             };
 
-            this.client.OnAdClicked += (sender, args) =>
+            client.OnAdClicked += (sender, args) =>
             {
-                if (this.OnAdClicked != null)
+                if (this.OnAdClicked == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnAdClicked(this, args);
-                    });
+                    return;
                 }
+
+                MainThreadDispatcher.EnqueueAction(() =>
+                {
+                    if (this.OnAdClicked == null)
+                    {
+                        return;
+                    }
+
+                    this.OnAdClicked(this, args);
+                });
             };
 
-            this.client.OnRewardedAdShown += (sender, args) =>
+            client.OnRewarded += (sender, args) =>
             {
-                if (this.OnRewardedAdShown != null)
+                if (this.OnRewarded == null)
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnRewardedAdShown(this, args);
-                    });
+                    return;
                 }
-            };
 
-            this.client.OnRewardedAdDismissed += (sender, args) =>
-            {
-                if (this.OnRewardedAdDismissed != null)
+                MainThreadDispatcher.EnqueueAction(() =>
                 {
-                    MainThreadDispatcher.EnqueueAction(() =>
+                    if (this.OnRewarded == null)
                     {
-                        this.OnRewardedAdDismissed(this, args);
-                    });
-                }
-            };
+                        return;
+                    }
 
-            this.client.OnImpression += (sender, args) =>
-            {
-                if (this.OnImpression != null)
-                {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnImpression(this, args);
-                    });
-                }
-            };
-
-            this.client.OnRewardedAdFailedToShow += (sender, args) =>
-            {
-                if (this.OnRewardedAdFailedToShow != null)
-                {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnRewardedAdFailedToShow(this, args);
-                    });
-                }
-            };
-
-            this.client.OnRewarded += (sender, args) =>
-            {
-                if (this.OnRewarded != null)
-                {
-                    MainThreadDispatcher.EnqueueAction(() =>
-                    {
-                        this.OnRewarded(this, args);
-                    });
-                }
+                    this.OnRewarded(this, args);
+                });
             };
         }
     }

@@ -33,7 +33,7 @@ MonoBehaviour:
     _iosId: 
     _timeout: 120
     _loadingOnStart: 0
-    _bannerMaxHeight: 100
+    _bannerMaxHeight: 50
     _bannerType: 0
     _bannerRefreshTime: 45
   _interstitialAdInstances:
@@ -54,3 +54,6 @@ MonoBehaviour:
     _bannerMaxHeight: 0
     _bannerType: 0
     _bannerRefreshTime: 0
+  _useAppOpenAd: 1
+  _androidAppOpenAdUnitId: R-M-2098103-5
+  _iOSAppOpenAdUnitId: demo-appopenad-yandex

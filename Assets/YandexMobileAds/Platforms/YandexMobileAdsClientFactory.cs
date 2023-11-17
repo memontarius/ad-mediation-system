@@ -1,7 +1,7 @@
 /*
  * This file is a part of the Yandex Advertising Network
  *
- * Version for Unity (C) 2018 YANDEX
+ * Version for Unity (C) 2023 YANDEX
  *
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
@@ -9,52 +9,94 @@
 
 using YandexMobileAds.Common;
 using YandexMobileAds.Base;
-using YandexMobileAds.Platforms.Android;
+using System;
 
 namespace YandexMobileAds.Platforms
 {
     public class YandexMobileAdsClientFactory
     {
-        public static IBannerClient BuildBannerClient(string blockId, AdSize adSize, AdPosition position)
+
+        internal static IBannerAdSizeClient BuildBannerAdSizeClient(int width, int height, BannerAdSizeType bannerAdSizeType)
         {
             #if UNITY_EDITOR
-                return new YandexMobileAds.Common.DummyBannerClient();
+                return new DummyBannerAdSizeClient(width, height);
             #elif UNITY_ANDROID
-                return new YandexMobileAds.Platforms.Android.BannerClient(blockId, adSize, position);
+                return YandexMobileAds.Platforms.Android.BannerAdSizeUtils.GetBannerAdSizeClient(width, height, bannerAdSizeType);
             #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-                return new YandexMobileAds.Platforms.iOS.BannerClient(blockId, adSize, position);
+                return new YandexMobileAds.Platforms.iOS.BannerAdSizeClient(width, height, bannerAdSizeType);
             #else
-                return new YandexMobileAds.Common.DummyBannerClient();
+                return new DummyBannerAdSizeClient(width, height);
             #endif
         }
 
-        public static IInterstitialClient BuildInterstitialClient(string blockId)
+        internal static IBannerClient BuildBannerClient(string blockId, BannerAdSize adSize, AdPosition position)
         {
             #if UNITY_EDITOR
-                return new YandexMobileAds.Common.DummyInterstitialClient();
+                return new DummyBannerClient();
             #elif UNITY_ANDROID
-                return new YandexMobileAds.Platforms.Android.InterstitialClient(blockId);
+                var adSizeClient = (YandexMobileAds.Platforms.Android.BannerAdSizeClient) adSize.GetClient();
+                return new YandexMobileAds.Platforms.Android.BannerClient(blockId, adSizeClient, position);
             #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-                return new YandexMobileAds.Platforms.iOS.InterstitialClient(blockId);
+                var adSizeClient = (YandexMobileAds.Platforms.iOS.BannerAdSizeClient) adSize.GetClient();
+                return new YandexMobileAds.Platforms.iOS.BannerClient(blockId, adSizeClient, position);
             #else
-                return new YandexMobileAds.Common.DummyInterstitialClient();
+                return new DummyBannerClient();
             #endif
         }
 
-        public static IRewardedAdClient BuildRewardedAdClient(string blockId)
+        internal static IInterstitialAdLoaderClient BuildInterstitialAdLoaderClient()
         {
             #if UNITY_EDITOR
-                return new YandexMobileAds.Common.DummyRewardedAdClient();
+                return new DummyInterstitialAdLoaderClient();
             #elif UNITY_ANDROID
-                return new YandexMobileAds.Platforms.Android.RewardedAdClient(blockId);
+                return new YandexMobileAds.Platforms.Android.InterstitialAdLoaderClient();
             #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
-                return new YandexMobileAds.Platforms.iOS.RewardedAdClient(blockId);
+                return new YandexMobileAds.Platforms.iOS.InterstitialAdLoaderClient();
             #else
-                return new YandexMobileAds.Common.DummyRewardedAdClient();
+                return new DummyInterstitialAdLoaderClient();
             #endif
         }
 
-        public static IMobileAdsClient CreateMobileAdsClient()
+        internal static IRewardedAdLoaderClient BuildRewardedAdLoaderClient()
+        {
+            #if UNITY_EDITOR
+                return new DummyRewardedAdLoaderClient();
+            #elif UNITY_ANDROID
+                return new YandexMobileAds.Platforms.Android.RewardedAdLoaderClient();
+            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+                return new YandexMobileAds.Platforms.iOS.RewardedAdLoaderClient();
+            #else
+                return new DummyRewardedAdLoaderClient();
+            #endif
+        }
+
+        internal static IAppOpenAdLoaderClient BuildAppOpenAdLoaderClient()
+        {
+            #if UNITY_EDITOR
+                return new DummyAppOpenAdLoaderClient();
+            #elif UNITY_ANDROID
+                return new YandexMobileAds.Platforms.Android.AppOpenAdLoaderClient();
+            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+                return new YandexMobileAds.Platforms.iOS.AppOpenAdLoaderClient();
+            #else
+                return new DummyAppOpenAdLoaderClient();
+            #endif
+        }
+
+        internal static IAppStateObserverClient BuildAppStateObserverClient()
+        {
+            #if UNITY_EDITOR
+                return YandexMobileAds.Common.AppStateObserverClient.Instance;
+            #elif UNITY_ANDROID
+                return new YandexMobileAds.Platforms.Android.AppStateObserverClient();
+            #elif (UNITY_5 && UNITY_IOS) || UNITY_IPHONE
+                return YandexMobileAds.Common.AppStateObserverClient.Instance;
+            #else
+                return YandexMobileAds.Common.AppStateObserverClient.Instance;
+            #endif
+        }
+
+        internal static IMobileAdsClient CreateMobileAdsClient()
         {
             #if UNITY_EDITOR
                 return new YandexMobileAds.Common.DummyMobileAdsClient();
@@ -67,7 +109,7 @@ namespace YandexMobileAds.Platforms
             #endif
         }
 
-        public static IScreenClient CreateScreenClient()
+        internal static IScreenClient CreateScreenClient()
         {
             #if UNITY_EDITOR
                 return new YandexMobileAds.Common.DummyScreenClient();
