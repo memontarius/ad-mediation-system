@@ -264,6 +264,7 @@ namespace Virterix.AdMediation.Editor
         {
             int result = selectedNetworkId;
             string currNetworkName = selectedNetworkId < activeNetworks.Length ? activeNetworks[selectedNetworkId] : "";
+            
             if (selectedNetworkName.Length > 0 && currNetworkName != selectedNetworkName)
             {
                 for (int i = 0; i < activeNetworks.Length; i++)
@@ -275,6 +276,9 @@ namespace Virterix.AdMediation.Editor
                     }
                 }
             }
+            
+            result = result < activeNetworks.Length ? result : activeNetworks.Length - 1;
+            
             return result;
         }
 
@@ -349,29 +353,32 @@ namespace Virterix.AdMediation.Editor
 
         public void UpdateUnitPopupSelections()
         {
+            _settingsWindow.GetActiveNetworks(_adType, ref _activeNetworks);
+            string[] activeNetworks = _activeNetworks.ToArray();
+            
             for (int tierIndex = 0; tierIndex < _tierListProp.arraySize; tierIndex++)
             {
                 var tier = _tierListProp.GetArrayElementAtIndex(tierIndex);
                 var units = tier.FindPropertyRelative(nameof(AdTier.Units));
-
+                
+                if (activeNetworks.Length == 0) {
+                    units.ClearArray();
+                    continue;
+                }
+                
                 for (int unitIndex = 0; unitIndex < units.arraySize; unitIndex++)
                 {
                     var unit = units.GetArrayElementAtIndex(unitIndex);
                     var networkNameProp = unit.FindPropertyRelative(nameof(AdUnit.NetworkName));
                     var networkIndexProp = unit.FindPropertyRelative(nameof(AdUnit.NetworkIndex));
                     var networkIdentifierProp = unit.FindPropertyRelative(nameof(AdUnit.NetworkIdentifier));
-
-                    _settingsWindow.GetActiveNetworks(_adType, ref _activeNetworks);
-                    string[] activeNetworks = _activeNetworks.ToArray();
-
+                    
                     int solvedNetworkIndex = ResolveSelectedNetworkIndex(networkIndexProp.intValue, networkNameProp.stringValue, activeNetworks);
-                    if (solvedNetworkIndex != networkIndexProp.intValue)
-                    {
-                        networkIndexProp.intValue = solvedNetworkIndex;
-                        networkNameProp.stringValue = activeNetworks[solvedNetworkIndex];
-                        networkIdentifierProp.stringValue = _settingsWindow.GetNetworkIndentifier(networkNameProp.stringValue);
-                    }
-
+                    
+                    networkIndexProp.intValue = solvedNetworkIndex;
+                    networkNameProp.stringValue = activeNetworks[solvedNetworkIndex];
+                    networkIdentifierProp.stringValue = _settingsWindow.GetNetworkIndentifier(networkNameProp.stringValue);
+                    
                     string currNetworkName = networkNameProp.stringValue;
                     string[] adInstanceNames = { };
                     if (!string.IsNullOrEmpty(currNetworkName))

@@ -102,16 +102,18 @@ MonoBehaviour:
         InstanceIndex: 0
         InstanceName: Default
         Replaceable: 0
-        PrepareOnExit: 1
+        PrepareOnExit: 0
         Percentage: 100
+    - MaxPassages: 1
+      Units:
       - NetworkName: Yandex Mobile Ads
         NetworkIndex: 1
         NetworkIdentifier: yandex
         InstanceIndex: 0
         InstanceName: Default
         Replaceable: 0
-        PrepareOnExit: 1
-        Percentage: 0
+        PrepareOnExit: 0
+        Percentage: 100
   IncentivizedMediators:
   - AdvertisingType: 3
     Name: Default
@@ -163,6 +165,8 @@ MonoBehaviour:
         Replaceable: 0
         PrepareOnExit: 0
         Percentage: 100
+    - MaxPassages: 1
+      Units:
       - NetworkName: Yandex Mobile Ads
         NetworkIndex: 1
         NetworkIdentifier: yandex
@@ -170,7 +174,7 @@ MonoBehaviour:
         InstanceName: Default
         Replaceable: 0
         PrepareOnExit: 0
-        Percentage: 0
+        Percentage: 100
   IsIOS: 1
   IsAndroid: 1
   EnableUnityRemoteConfigProvider: 0

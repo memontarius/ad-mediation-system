@@ -45,7 +45,7 @@ namespace Virterix.AdMediation
             public int[] maxPassages;
         }
 
-        public const string VERSION = "2.6.7";
+        public const string VERSION = "2.6.8";
         public const string AD_SETTINGS_FOLDER = "AdMediationSettings";
         public const string PREFAB_NAME = "AdMediationSystem";
         public const string PLACEMENT_DEFAULT_NAME = "Default";
@@ -859,16 +859,13 @@ namespace Virterix.AdMediation
 
                                 networkAdapter = GetNetwork(networkName);
                                 AdType unitAdType = adType;
-                                if (networkAdapter == null || !networkAdapter.enabled) {
-                                    continue;
-                                }
-
+                                
                                 bool isPrepareOnExit = false;
                                 if (jsonNetworkUnits.Obj.ContainsKey(unitAdPrepareOnExitKey)) {
                                     isPrepareOnExit = jsonNetworkUnits.Obj.GetBoolean(unitAdPrepareOnExitKey);
                                 }
 
-                                // If the network enabled and support this type of advertising then add it to list 
+                                // If the network exists then add it to list, otherwise is error
                                 if (networkAdapter != null) {
                                     // Parse ad unit parameters
                                     foreach (KeyValuePair<string, JSONValue> pairValue in jsonNetworkUnits.Obj) {
@@ -890,9 +887,7 @@ namespace Virterix.AdMediation
                                     arrUnits[unitIndex] = unit;
                                 }
                                 else {
-                                    Debug.LogWarning(
-                                        "[AMS] AdMediationSystem.SetupNetworkParameters() Not found network adapter: " +
-                                        networkName);
+                                    Debug.LogError($"[AMS] AdMediationSystem.SetupNetworkParameters() Not found network adapter: {networkName}");
                                 }
 
                                 dictUnitParams.Clear();

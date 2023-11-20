@@ -47,9 +47,11 @@
   <ItemGroup>
      <Compile Include="Assets\GoogleMobileAds\Editor\ManifestProcessor.cs" />
      <Compile Include="Assets\GoogleMobileAds\Editor\GoogleMobileAdsSettings.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Editor\Utils.cs" />
      <Compile Include="Assets\GoogleMobileAds\Editor\GoogleMobileAdsSettingsEditor.cs" />
      <Compile Include="Assets\GoogleMobileAds\Editor\BuildPreProcessor.cs" />
      <Compile Include="Assets\GoogleMobileAds\Editor\PListProcessor.cs" />
+     <Compile Include="Assets\GoogleMobileAds\Editor\GradleProcessor.cs" />
      <Compile Include="Assets\GoogleMobileAds\Editor\EditorPathUtils.cs" />
      <None Include="Assets\GoogleMobileAds\Editor\GoogleMobileAdsSKAdNetworkItems.xml" />
      <Folder Include="Assets\GoogleMobileAds\Editor\Resources\PlaceholderAds\Interstitials" />

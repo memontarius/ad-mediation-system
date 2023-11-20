@@ -316,7 +316,6 @@
      <Folder Include="Assets\ConsolePro\Remote" />
      <Folder Include="Assets\AdMediationSystem\Scripts\Adapters" />
      <Folder Include="Assets\GeneratedLocalRepo" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation" />
      <Folder Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AdColony" />
      <Folder Include="Assets\GoogleMobileAds\Mediation\AppLovin\Platforms\iOS" />
      <Folder Include="Assets\GoogleMobileAds\Mediation\AppLovin" />
@@ -351,7 +350,6 @@
      <Folder Include="Assets\GooglePlayGames\BasicApi\Nearby" />
      <Folder Include="Assets\GooglePlayGames\BasicApi" />
      <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Plugins" />
-     <None Include="Assets\GoogleMobileAds\GoogleMobileAds_version-8.5.3_manifest.txt" />
      <Folder Include="Assets\AdMediationSystem" />
      <Folder Include="Assets\GoogleMobileAds\Mediation\AppLovin\Platforms" />
      <Folder Include="Assets\GooglePlayGames\BasicApi\SavedGame" />
@@ -363,6 +361,8 @@
      <Folder Include="Assets\YandexMobileAds\Platforms\iOS" />
      <Folder Include="Assets\Resources" />
      <Folder Include="Assets\AdMediationSystem\Example" />
+     <Folder Include="Assets\GoogleMobileAds\Mediation" />
+     <None Include="Assets\GoogleMobileAds\GoogleMobileAds_version-8.6.0_manifest.txt" />
      <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Platforms\iOS" />
      <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Common\AdColony" />
      <Folder Include="Assets\ConsolePro\Remote\LiteNetLib" />

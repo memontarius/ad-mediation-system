@@ -610,10 +610,14 @@ namespace Virterix.AdMediation
 
         public void HandleAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
         {
-            YandexAdInstanceData adInstance = (YandexAdInstanceData)GetAdInstanceByAdId(args.AdUnitId);
-
+            YandexAdInstanceData adInstance = GetAdInstanceByAdId(args.AdUnitId) as YandexAdInstanceData;
+            if (adInstance == null) {
+                Debug.LogError("[AMS] YandexMobileAds HandleAdFailedToLoad() Instance not found!");
+                return;
+            }
+            
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log($"[AMS] YandexMobileAds Failed To Load. {adInstance.m_adType} Message: {args.Message}");
+            Debug.Log($"[AMS] YandexMobileAds Failed To Load. {adInstance?.m_adType ?? AdType.Unknown} AdUnitId:{args.AdUnitId} Message: {args.Message}");
 #endif
             DestroyYandexAd(adInstance);
             AddEvent(adInstance.m_adType, AdEvent.PreparationFailed, adInstance);

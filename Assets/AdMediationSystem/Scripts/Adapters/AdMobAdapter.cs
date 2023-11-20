@@ -149,7 +149,7 @@ namespace Virterix.AdMediation
             else
             {
                 GoogleMobileAds.Editor.GoogleMobileAdsSettingsEditor.OpenInspector();
-                Debug.LogWarning("AdMob Settings not found! Try again!");
+                Debug.LogWarning("[AMS] AdMob Settings not found! Try again!");
             }
 #endif
         }
@@ -698,10 +698,18 @@ namespace Virterix.AdMediation
                 appOpenAdUnitId = m_iOSAppOpenAdId;
 #endif
             if (!string.IsNullOrEmpty(appOpenAdUnitId)) {
-                m_alternativeOpenAdManager = m_appOpenAdAlternativeNetwork == "" 
-                    ? null 
-                    : AdMediationSystem.Instance.GetNetwork(m_appOpenAdAlternativeNetwork).AppOpenAdManager;
-                
+                m_alternativeOpenAdManager = null;
+
+                if (m_appOpenAdAlternativeNetwork != "") {
+                    var alternativeNetwork = AdMediationSystem.Instance.GetNetwork(m_appOpenAdAlternativeNetwork);
+                    if (alternativeNetwork != null) {
+                        m_alternativeOpenAdManager = alternativeNetwork.AppOpenAdManager;
+                    }
+                    else {
+                        Debug.LogError($"[AMS] Alternative network ({m_appOpenAdAlternativeNetwork}) for AppOpen ad not found");
+                    }
+                }
+
                 manager = new AdMobAppOpenAdManager(this, appOpenAdUnitId);
                 AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
                 m_wasAppStateEventNotifierSubscribe = true;

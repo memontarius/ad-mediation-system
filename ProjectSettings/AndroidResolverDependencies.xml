@@ -3,8 +3,8 @@
     <package>androidx.lifecycle:lifecycle-process:2.4.1</package>
     <package>com.google.ads.mediation:adcolony:4.8.0.2</package>
     <package>com.google.ads.mediation:applovin:11.11.3.0</package>
-    <package>com.google.android.gms:play-services-ads:[22.3.0]</package>
     <package>com.google.android.gms:play-services-ads:22.3.0</package>
+    <package>com.google.android.gms:play-services-ads:22.5.0</package>
     <package>com.google.android.ump:user-messaging-platform:2.1.0</package>
     <package>com.google.games:gpgs-plugin-support:0.10.14</package>
     <package>com.unity3d.mediation:mediation-sdk:[1.0,2.0[</package>
