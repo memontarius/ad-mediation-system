@@ -115,6 +115,9 @@ namespace Virterix.AdMediation
 
         public override bool RequiredWaitingInitializationResponse => true;
 
+        public AdMobConsentProvider.RequirementStatus ConsentRequirementStatus => 
+            _consentProvider?.PrivacyRequirementStatus ?? AdMobConsentProvider.RequirementStatus.Unknown;
+
         protected override string AdInstanceParametersFolder
         {
             get { return AdMobAdInstanceBannerParameters._AD_INSTANCE_PARAMETERS_FOLDER; }
