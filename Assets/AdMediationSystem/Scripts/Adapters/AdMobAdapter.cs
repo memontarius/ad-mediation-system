@@ -102,7 +102,8 @@ namespace Virterix.AdMediation
         public int m_appOpenAdLoadAttemptMaxNumber = 4;
         public string m_appOpenAdAlternativeNetwork;
         public bool m_useMediation;
-
+        public bool m_autoConsent;
+        
         public bool AppOpenAdDisabled { get; set; } = false;
         /// <summary>
         /// Should be assigned before initialization
@@ -115,8 +116,7 @@ namespace Virterix.AdMediation
 
         public override bool RequiredWaitingInitializationResponse => true;
 
-        public AdMobConsentProvider.RequirementStatus ConsentRequirementStatus => 
-            _consentProvider?.PrivacyRequirementStatus ?? AdMobConsentProvider.RequirementStatus.Unknown;
+        public AdMobConsentProvider ConsentProvider => _consentProvider ?? new AdMobConsentProvider();
 
         protected override string AdInstanceParametersFolder
         {
@@ -285,8 +285,6 @@ namespace Virterix.AdMediation
             AppOpenAdDisabled = AdMediationSystem.NonRewardAdsDisabled;
             MobileAds.RaiseAdEventsOnUnityMainThread = true;
             
-            _consentProvider = new AdMobConsentProvider();
-             
             if (AdMediationSystem.Instance.IsTestModeEnabled)
             {
                 requetConfig.TestDeviceIds = new List<string>(AdMediationSystem.Instance.TestDevices);
@@ -296,17 +294,20 @@ namespace Virterix.AdMediation
                 AppOpenAdManager = CreateAppOpenAdManager();
             }
 
-            _consentProvider.GatherConsent((string message) =>
-                {
+            if (m_autoConsent) {
+                ConsentProvider.GatherConsent((string message) =>
+                    {
 #if AD_MEDIATION_DEBUG_MODE
-                    Debug.Log($"[AMS] AdMobAdapter GatherConsent was complete with message: {message}. CanRequestAds: {_consentProvider.CanRequestAds}");
+                        Debug.Log($"[AMS] AdMobAdapter GatherConsent was complete with message: {message}. CanRequestAds: {ConsentProvider.CanRequestAds}");
 #endif
-                    OnWillInitialize();
-                    MobileAds.Initialize(OnInitComplete);
-                    StartCoroutine(RequestAppOpenAd(AppOpenAdManager, 30));
-                    OnDidInitialize();
-                },
-                requetConfig.TestDeviceIds);
+                        InitializeAdMob();
+                    },
+                    requetConfig.TestDeviceIds);
+            }
+            else {
+                _consentProvider = ConsentProvider;
+                InitializeAdMob();
+            }
         }
         
         protected override void InitializeAdInstanceData(AdInstance adInstance, JSONValue jsonAdInstance)
@@ -314,6 +315,14 @@ namespace Virterix.AdMediation
             base.InitializeAdInstanceData(adInstance, jsonAdInstance);
         }
 
+        private void InitializeAdMob()
+        {
+            OnWillInitialize();
+            MobileAds.Initialize(OnInitComplete);
+            StartCoroutine(RequestAppOpenAd(AppOpenAdManager, 30));
+            OnDidInitialize();
+        }
+        
         protected override AdInstance CreateAdInstanceData(JSONValue jsonAdInstance)
         {
             AdInstance adInstance = new AdMobAdInstanceData(this);

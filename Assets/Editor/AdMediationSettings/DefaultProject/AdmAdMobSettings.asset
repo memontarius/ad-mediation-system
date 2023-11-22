@@ -56,6 +56,7 @@ MonoBehaviour:
     _bannerRefreshTime: 0
   _useMediation: 1
   _mediationNetworkFlags: 20
+  _autoConsent: 1
   _useAppOpenAd: 1
   _androidAppOpenAdUnitId: ca-app-pub-1726624045989422/6640751117
   _iOSAppOpenAdUnitId: ca-app-pub-3940256099942544/5662855259

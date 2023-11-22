@@ -24,6 +24,7 @@ MonoBehaviour:
   _rewardAdInstances: []
   _useMediation: 0
   _mediationNetworkFlags: 0
+  _autoConsent: 1
   _useAppOpenAd: 0
   _androidAppOpenAdUnitId: 
   _iOSAppOpenAdUnitId: 

@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Virterix.AdMediation.Editor
 {
@@ -8,13 +9,14 @@ namespace Virterix.AdMediation.Editor
     {
         public bool _useMediation;
         public int _mediationNetworkFlags;
-
+        public bool _autoConsent = true;
+        
         public bool _useAppOpenAd;
         public string _androidAppOpenAdUnitId;
         public string _iOSAppOpenAdUnitId;
-        public int _appOpenAdDisplayMultiplicity;
-        public int _appOpenAdDisplayCooldown;
-        public int _appOpenAdLoadAttemptMaxNumber;
+        public int _appOpenAdDisplayMultiplicity = 1;
+        public int _appOpenAdDisplayCooldown = 90;
+        public int _appOpenAdLoadAttemptMaxNumber = 4;
         public string _appOpenAdAlternativeNetwork;
         
         public override Type NetworkAdapterType => typeof(AdMobAdapter);
@@ -39,6 +41,7 @@ namespace Virterix.AdMediation.Editor
         {
             AdMobAdapter.SetupNetworkNativeSettings(_iosAppId, _androidAppId);
             AdMobAdapter adMobAdapter = (AdMobAdapter)networkAdapter;
+            adMobAdapter.m_autoConsent = _autoConsent;
             adMobAdapter.m_useMediation = _useMediation;
             adMobAdapter.m_useAppOpenAd = _useAppOpenAd;
             if (_useAppOpenAd)

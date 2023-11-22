@@ -14,6 +14,7 @@ namespace Virterix.AdMediation.Editor
         private const string USE_FAN_NETWORK_DEFMACROS = "_AMS_AUDIENCE_NETWORK";
         private const string FAN_UTILS_FILE_FILTER = "AudienceNetworkMediationUtils";
         
+        private SerializedProperty _autoConsentProp;
         private SerializedProperty _useMediationProp;
         private SerializedProperty _mediationNetworkFlagsProp;
         private string[] _mediationNetworkOptions;
@@ -46,6 +47,7 @@ namespace Virterix.AdMediation.Editor
             };
 
             BannerTypes = Enum.GetNames(typeof(AdMobAdapter.AdMobBannerSize));
+            _autoConsentProp = _serializedSettings.FindProperty("_autoConsent");
             _useMediationProp = _serializedSettings.FindProperty("_useMediation");
             _mediationNetworkFlagsProp = _serializedSettings.FindProperty("_mediationNetworkFlags");
 
@@ -112,6 +114,8 @@ namespace Virterix.AdMediation.Editor
         {
             GUILayout.BeginVertical("box");
             EditorGUI.BeginChangeCheck();
+            
+            _autoConsentProp.boolValue = EditorGUILayout.Toggle("Auto Consent", _autoConsentProp.boolValue);
             _useMediationProp.boolValue = EditorGUILayout.Toggle("Use Mediation", _useMediationProp.boolValue);
             bool changed = EditorGUI.EndChangeCheck();
 

@@ -68,7 +68,7 @@ namespace Virterix.AdMediation
         /// which will run all startup logic including loading any required
         /// updates and displaying any required forms.
         /// </summary>
-        public void GatherConsent(Action<string> onComplete, List<string> testDeviceIds)
+        public void GatherConsent(Action<string> onComplete, List<string> testDeviceIds = null)
         {
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AdMobConsentProvider] Gathering consent.");
@@ -87,7 +87,7 @@ namespace Virterix.AdMediation
                 {
                     // For debugging consent settings by geography.
                     DebugGeography = DebugGeography.Disabled,
-                    TestDeviceHashedIds = testDeviceIds,
+                    TestDeviceHashedIds = testDeviceIds ?? new List<string>(),
                 };
             }
 

@@ -26,6 +26,15 @@ public class ExampleAdController : BaseAdController
         m_adPersonalizedText.rectTransform.parent.GetComponent<Button>().interactable = false;
     }
 
+    private void StartManualConsent()
+    {
+        AdMobAdapter adMobAdapter = AdMediationSystem.Instance.GetNetwork<AdMobAdapter>();
+        adMobAdapter.ConsentProvider.GatherConsent(message =>
+        {
+            AdMediationSystem.Instance.Initialize();
+        }, null);
+    }
+
     private void OnMediationSystemInitialized()
     {
         m_adPersonalizedText.rectTransform.parent.GetComponent<Button>().interactable = true;
