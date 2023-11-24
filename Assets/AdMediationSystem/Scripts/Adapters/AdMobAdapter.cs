@@ -116,7 +116,16 @@ namespace Virterix.AdMediation
 
         public override bool RequiredWaitingInitializationResponse => true;
 
-        public AdMobConsentProvider ConsentProvider => _consentProvider ?? new AdMobConsentProvider();
+        public AdMobConsentProvider ConsentProvider
+        {
+            get
+            {
+                if (_consentProvider == null) {
+                    _consentProvider = new AdMobConsentProvider();
+                }
+                return _consentProvider;
+            }
+        }
 
         protected override string AdInstanceParametersFolder
         {
@@ -169,8 +178,9 @@ namespace Virterix.AdMediation
         public void ShowConsentOptionsForm()
         {
 #if _AMS_ADMOB
-            if (_consentProvider == null)
+            if (_consentProvider == null) {
                 return;
+            }
 
             _consentProvider.ShowPrivacyOptionsForm((string message) => {
 #if AD_MEDIATION_DEBUG_MODE
@@ -212,14 +222,7 @@ namespace Virterix.AdMediation
             public EventHandler<Reward> onAdRewardVideoEarnedHandler;
             public EventHandler<AdValueEventArgs> onAdRewardVideoPaidHandler;
         }
-
-        private void OnApplicationPause(bool pause)
-        {
-#if UNITY_IOS
-                MobileAds.SetiOSAppPauseOnBackground(pause);
-#endif
-        }
-
+        
         public static AdSize ConvertToNativeBannerSize(AdMobBannerSize bannerSize)
         {
             AdSize admobAdSize = AdSize.Banner;
@@ -280,16 +283,17 @@ namespace Virterix.AdMediation
         {
             base.InitializeParameters(parameters, jsonAdInstances);
 
-            RequestConfiguration requetConfig = ConfigureAdMob();
+            RequestConfiguration requestConfig = ConfigureAdMob();
 
             AppOpenAdDisabled = AdMediationSystem.NonRewardAdsDisabled;
             MobileAds.RaiseAdEventsOnUnityMainThread = true;
+            MobileAds.SetiOSAppPauseOnBackground(true);
             
             if (AdMediationSystem.Instance.IsTestModeEnabled)
             {
-                requetConfig.TestDeviceIds = new List<string>(AdMediationSystem.Instance.TestDevices);
+                requestConfig.TestDeviceIds = new List<string>(AdMediationSystem.Instance.TestDevices);
             }
-
+            
             if (m_useAppOpenAd && !HasAppOpenAdManager) {
                 AppOpenAdManager = CreateAppOpenAdManager();
             }
@@ -302,7 +306,7 @@ namespace Virterix.AdMediation
 #endif
                         InitializeAdMob();
                     },
-                    requetConfig.TestDeviceIds);
+                    requestConfig.TestDeviceIds);
             }
             else {
                 _consentProvider = ConsentProvider;

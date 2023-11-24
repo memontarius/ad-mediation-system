@@ -24,6 +24,9 @@ namespace Virterix.AdMediation
             NotRequired,
             Required
         }
+
+        public event Action OnConsentFormLoaded = null;
+        public event Action OnConsentFormShown = null;
         
         /// <summary>
         /// If true, it is safe to call MobileAds.Initialize() and load Ads.
@@ -98,6 +101,7 @@ namespace Virterix.AdMediation
             ConsentInformation.Update(requestParameters, (FormError updateError) =>
             {
                 if (updateError != null) {
+                    LoadForm();
                     onComplete(updateError.Message);
                     return;
                 }
@@ -122,8 +126,9 @@ namespace Virterix.AdMediation
                         }
                     }
                     // Form showing succeeded.
-                    else if (onComplete != null) {
-                        onComplete(null);
+                    else {
+                        OnConsentFormShown?.Invoke();
+                        onComplete?.Invoke(null);
                     }
                 });
             });
@@ -162,8 +167,9 @@ namespace Virterix.AdMediation
                     }
                 }
                 // Form showing succeeded.
-                else if (onComplete != null) {
-                    onComplete(null);
+                else {
+                    OnConsentFormShown?.Invoke();
+                    onComplete?.Invoke(null);
                     LoadForm();
                 }
             });
@@ -187,7 +193,14 @@ namespace Virterix.AdMediation
 #if _AMS_ADMOB
             ConsentForm.Load((ConsentForm form, FormError formError) =>
             {
-                ConsentFormState = FormState.Loaded;
+                if (formError == null) {
+                    ConsentFormState = FormState.Loaded;
+                    OnConsentFormLoaded?.Invoke();
+                }
+                else {
+                    ConsentFormState = FormState.Undefined;
+                }
+                
                 onComplete?.Invoke(formError?.ErrorCode ?? -1);
             });
 #endif
