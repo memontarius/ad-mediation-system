@@ -45,7 +45,7 @@ namespace Virterix.AdMediation
             public int[] maxPassages;
         }
 
-        public const string VERSION = "2.6.9";
+        public const string VERSION = "2.7.0";
         public const string AD_SETTINGS_FOLDER = "AdMediationSettings";
         public const string PREFAB_NAME = "AdMediationSystem";
         public const string PLACEMENT_DEFAULT_NAME = "Default";
@@ -88,7 +88,8 @@ namespace Virterix.AdMediation
         [SerializeField] private string m_projectName;
         [SerializeField] private bool m_isOnlyLoadingDefaultSettings = true;
 
-        [Tooltip("Compare settings loaded from server")] [SerializeField]
+        [Tooltip("Compare settings loaded from server")]
+        [SerializeField]
         private AdSettingsCompareMode m_settingsCompareMode;
 
         [SerializeField] private AdRemoteSettingsProvider m_remoteSettingsProvider;
@@ -110,8 +111,7 @@ namespace Virterix.AdMediation
         /// Callback all events of advertising networks.
         /// 5th parameter is the ad instance name
         /// </summary>
-        public static event Action<AdMediator, AdNetworkAdapter, AdType, AdEvent, string> OnAdNetworkEvent = delegate
-        {
+        public static event Action<AdMediator, AdNetworkAdapter, AdType, AdEvent, string> OnAdNetworkEvent = delegate {
         };
 
         public static event Action OnUserConsentToPersonalizedAdsChanged = delegate { };
@@ -130,8 +130,7 @@ namespace Virterix.AdMediation
         public static bool AdsDisabled
         {
             get => s_adsDisabled;
-            set
-            {
+            set {
                 s_adsDisabled = value;
                 if (s_adsDisabled) {
                     HideAllBanners();
@@ -148,8 +147,7 @@ namespace Virterix.AdMediation
         public static bool NonRewardAdsDisabled
         {
             get => s_nonRewardAdsDisabled;
-            set
-            {
+            set {
                 s_nonRewardAdsDisabled = value;
                 if (s_nonRewardAdsDisabled) {
                     HideAllBanners();
@@ -169,8 +167,7 @@ namespace Virterix.AdMediation
         /// </summary>
         public static PersonalisationConsent UserPersonalisationConsent
         {
-            get
-            {
+            get {
                 if (!m_wasUserConsentRestored) {
                     m_wasUserConsentRestored = true;
                     m_userPersonalisationConsent =
@@ -189,8 +186,7 @@ namespace Virterix.AdMediation
 
         public string PlatformName
         {
-            get
-            {
+            get {
                 if (string.IsNullOrEmpty(m_platformName)) {
                     m_platformName = m_platformInEditor.ToString();
                     switch (Application.platform) {
@@ -211,8 +207,7 @@ namespace Virterix.AdMediation
 
         public InternetChecker InternetChecker
         {
-            get
-            {
+            get {
                 if (m_internetChecker == null)
                     m_internetChecker = InternetChecker.Create();
                 return m_internetChecker;
@@ -223,8 +218,7 @@ namespace Virterix.AdMediation
 
         public static string AdInstanceParametersPath
         {
-            get
-            {
+            get {
                 string path = GetAdInstanceParametersPath(AdMediationSystem.Instance.m_projectName);
                 return path;
             }
@@ -235,8 +229,7 @@ namespace Virterix.AdMediation
 
         public AdMediator[] BannerMediators
         {
-            get
-            {
+            get {
                 if (m_bannerMediators == null)
                     m_bannerMediators = GetAllMediators(AdType.Banner);
                 return m_bannerMediators;
@@ -255,8 +248,7 @@ namespace Virterix.AdMediation
 
         private string DefaultSettingsFilePathInResources
         {
-            get
-            {
+            get {
                 string settingsFilePath = AD_SETTINGS_FOLDER + "/" + m_projectName + "/" + SettingsFileName;
                 return settingsFilePath;
             }
@@ -265,8 +257,7 @@ namespace Virterix.AdMediation
         // Path to settings file
         private string SettingsFilePath
         {
-            get
-            {
+            get {
                 string settingsFilePath = Application.persistentDataPath + "/" + SettingsFileName + ".json";
                 return settingsFilePath;
             }
@@ -275,8 +266,7 @@ namespace Virterix.AdMediation
         // Returns settings version
         private int CurrSettingsVersion
         {
-            get
-            {
+            get {
                 int settingsVersion = -1;
                 if (m_currSettings != null) {
                     if (m_currSettings.ContainsKey(SETTINGS_VERSION_PARAM_KEY)) {
@@ -293,8 +283,7 @@ namespace Virterix.AdMediation
 
         private AdNetworkAdapter[] NetworkAdapters
         {
-            get
-            {
+            get {
                 if (m_networkAdapters == null)
                     m_networkAdapters = GetComponentsInChildren<AdNetworkAdapter>(true);
                 return m_networkAdapters;
@@ -312,21 +301,24 @@ namespace Virterix.AdMediation
         private void Awake()
         {
             m_userPersonalisationConsent = UserPersonalisationConsent;
-            if (m_remoteSettingsProvider != null)
+            if (m_remoteSettingsProvider != null) {
                 m_remoteSettingsProvider.OnSettingsReceived += OnRemoteSettingsReceived;
+            }
             DontDestroyOnLoad(this.gameObject);
         }
 
         private void Start()
         {
-            if (m_initializeOnStart)
+            if (m_initializeOnStart) {
                 Initialize();
+            }
         }
 
         private void OnDestroy()
         {
-            if (m_remoteSettingsProvider != null)
+            if (m_remoteSettingsProvider != null) {
                 m_remoteSettingsProvider.OnSettingsReceived -= OnRemoteSettingsReceived;
+            }
         }
 
         #endregion MonoBehaviour methods
@@ -628,8 +620,9 @@ namespace Virterix.AdMediation
             int requiredInitializationResponseQuantity = 0;
 
             foreach (AdNetworkAdapter network in m_networkAdapters) {
-                if (network.RequiredWaitingInitializationResponse)
+                if (network.RequiredWaitingInitializationResponse) {
                     requiredInitializationResponseQuantity++;
+                }
             }
 
             int initializationResponseCount = requiredInitializationResponseQuantity;
@@ -640,14 +633,16 @@ namespace Virterix.AdMediation
                 passedTime += period;
                 initializationResponseCount = requiredInitializationResponseQuantity;
                 foreach (AdNetworkAdapter network in m_networkAdapters) {
-                    if (network.RequiredWaitingInitializationResponse && network.WasInitializationResponse)
+                    if (network.RequiredWaitingInitializationResponse && network.WasInitializationResponse) {
                         initializationResponseCount--;
+                    }
                 }
             }
 
             foreach (AdMediator mediator in m_mediators) {
-                if (mediator.m_fetchOnStart)
+                if (mediator.m_fetchOnStart) {
                     mediator.Fetch();
+                }
             }
 
             OnAllNetworksInitializeResponseReceived?.Invoke();
@@ -689,6 +684,10 @@ namespace Virterix.AdMediation
 
         public void Initialize(bool nonRewardAdsDisabled = false)
         {
+            if (InitStatus != InitializedStatus.None) {
+                Debug.LogError("[AMS] Initialize has already been called");
+            }
+
             InitStatus = InitializedStatus.Initializing;
             m_networkAdapters = NetworkAdapters;
             AdMediator[] mediators = GetComponentsInChildren<AdMediator>(true);
@@ -859,7 +858,7 @@ namespace Virterix.AdMediation
 
                                 networkAdapter = GetNetwork(networkName);
                                 AdType unitAdType = adType;
-                                
+
                                 bool isPrepareOnExit = false;
                                 if (jsonNetworkUnits.Obj.ContainsKey(unitAdPrepareOnExitKey)) {
                                     isPrepareOnExit = jsonNetworkUnits.Obj.GetBoolean(unitAdPrepareOnExitKey);

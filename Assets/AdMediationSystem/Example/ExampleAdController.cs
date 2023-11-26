@@ -26,6 +26,11 @@ public class ExampleAdController : BaseAdController
         m_adPersonalizedText.rectTransform.parent.GetComponent<Button>().interactable = false;
     }
 
+    private void Start()
+    {
+        StartManualConsent();
+    }
+
     private void StartManualConsent()
     {
         AdMobAdapter adMobAdapter = AdMediationSystem.Instance.GetNetwork<AdMobAdapter>();
@@ -49,7 +54,9 @@ public class ExampleAdController : BaseAdController
     private void OnAllNetworksInitializeResponseReceived()
     {
         //FetchAllAds();
-        Debug.Log("AllNetworksInitializeResponseReceived");
+        AdMobAdapter adMobAdapter = AdMediationSystem.Instance.GetNetwork<AdMobAdapter>();
+
+        Debug.Log($"AllNetworksInitializeResponseReceived ClientConsentStatus:{adMobAdapter.ConsentProvider.ClientConsentStatus}");
     }
 
     public void FetchAllAds()

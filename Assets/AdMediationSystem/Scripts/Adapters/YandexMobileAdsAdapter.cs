@@ -8,6 +8,7 @@ using UnityEngine;
 #if _AMS_YANDEX_MOBILE_ADS
 using YandexMobileAds;
 using YandexMobileAds.Base;
+using static UnityEngine.UI.CanvasScaler;
 #endif
 
 namespace Virterix.AdMediation
@@ -20,8 +21,6 @@ namespace Virterix.AdMediation
         public string m_androidAppOpenAdId;
         public string m_iOSAppOpenAdId;
         
-        private ScreenOrientation? _screenOrientation = null;
-
         public enum YandexBannerSize
         {
             Inline,
@@ -131,8 +130,6 @@ namespace Virterix.AdMediation
         
         public override bool UseSingleBannerInstance => false;
 
-        public override bool RequiredWaitingInitializationResponse => true;
-
         public static string GetSDKVersion()
         {
             string version = string.Empty;
@@ -168,18 +165,16 @@ namespace Virterix.AdMediation
 
                 for (int i = 0; i < mediator.TotalUnits; i++) {
                     AdUnit unit = mediator.GetUnit(i);
-                    if (unit.AdInstance.LoadingOnStart && unit.AdNetwork == this &&
-                        unit.AdInstance.State == AdState.Uncertain) {
+                    if (unit.AdInstance.LoadingOnStart && unit.AdNetwork == this && unit.AdInstance.State == AdState.Uncertain) {
+                        
                         Prepare(unit.AdInstance, mediator.m_placementName);
                     }
                 }
             }
-            
+
             if (m_useAppOpenAd && !HasAppOpenAdManager) {
                 AppOpenAdManager = CreateAppOpenAdManager();
             }
-            
-            AdMediationSystem.OnAdNetworkEvent += OnAdNetworkEvent;
         }
 
         protected override IAppOpenAdManager CreateAppOpenAdManager()
@@ -207,21 +202,13 @@ namespace Virterix.AdMediation
             }
         }
         
-        private void Awake()
-        {
-            _screenOrientation = Screen.orientation;
-        }
-
-        private void OnDestroy()
-        {
-            AdMediationSystem.OnAdNetworkEvent -= OnAdNetworkEvent;
-        }
-
         private void ForceHideAllHiddenBanners()
         {
             foreach (AdInstance instance in m_adInstances) {
                 if (instance != null && instance.m_adType == AdType.Banner && !instance.m_bannerDisplayed)
+                {
                     Hide(instance);
+                }
             }
         }
 
@@ -569,11 +556,6 @@ namespace Virterix.AdMediation
         //_______________________________________________________________________________
 
         #region Callback Event Methods
-
-        private void OnAdNetworkEvent(AdMediator mediator, AdNetworkAdapter networkAdapter, AdType adType,
-            AdEvent adEvent, string adInstanceName)
-        {
-        }
 
 #if _AMS_YANDEX_MOBILE_ADS
 

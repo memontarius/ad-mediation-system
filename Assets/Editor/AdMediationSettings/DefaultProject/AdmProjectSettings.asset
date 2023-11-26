@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 020f93c8651de7646badc5e14f92513d, type: 3}
   m_Name: AdmProjectSettings
   m_EditorClassIdentifier: 
-  InitializeOnStart: 1
+  InitializeOnStart: 0
   EnableTestMode: 1
   EnableExtraLogging: 1
   ChildrenMode: 0
