@@ -175,7 +175,7 @@ namespace Virterix.AdMediation
             return version;
         }
 
-        public void ShowConsentOptionsForm()
+        public void ShowConsentOptionsForm(bool autoFormLoading = true)
         {
 #if _AMS_ADMOB
             if (_consentProvider == null) {
@@ -186,7 +186,7 @@ namespace Virterix.AdMediation
 #if AD_MEDIATION_DEBUG_MODE
                 Debug.Log($"[AMS] AdMobAdapter.ShowConsentOptionsForm Complete: {message}");
 #endif
-            });
+            }, autoFormLoading);
 #endif
         }
         
@@ -305,8 +305,7 @@ namespace Virterix.AdMediation
                         Debug.Log($"[AMS] AdMobAdapter GatherConsent was complete with message: {message}. CanRequestAds: {ConsentProvider.CanRequestAds}");
 #endif
                         InitializeAdMob();
-                    },
-                    requestConfig.TestDeviceIds);
+                    });
             }
             else {
                 _consentProvider = ConsentProvider;

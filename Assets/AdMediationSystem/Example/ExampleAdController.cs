@@ -37,7 +37,7 @@ public class ExampleAdController : BaseAdController
         adMobAdapter.ConsentProvider.GatherConsent(message =>
         {
             AdMediationSystem.Instance.Initialize();
-        }, null);
+        });
     }
 
     private void OnMediationSystemInitialized()

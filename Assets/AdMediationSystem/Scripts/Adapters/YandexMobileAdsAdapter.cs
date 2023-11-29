@@ -166,7 +166,6 @@ namespace Virterix.AdMediation
                 for (int i = 0; i < mediator.TotalUnits; i++) {
                     AdUnit unit = mediator.GetUnit(i);
                     if (unit.AdInstance.LoadingOnStart && unit.AdNetwork == this && unit.AdInstance.State == AdState.Uncertain) {
-                        
                         Prepare(unit.AdInstance, mediator.m_placementName);
                     }
                 }

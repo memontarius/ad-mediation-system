@@ -38,11 +38,9 @@ namespace Virterix.AdMediation
 
         public ConsentStatus ClientConsentStatus
         {
-            get
-            {
+            get {
 #if _AMS_ADMOB
-                switch (ConsentInformation.ConsentStatus)
-                {
+                switch (ConsentInformation.ConsentStatus) {
                     case GoogleMobileAds.Ump.Api.ConsentStatus.Unknown:
                     default:
                         return ConsentStatus.Unknown;
@@ -64,8 +62,7 @@ namespace Virterix.AdMediation
         /// </summary>
         public bool CanRequestAds
         {
-            get
-            {
+            get {
 #if _AMS_ADMOB
                 return ConsentInformation.ConsentStatus == GoogleMobileAds.Ump.Api.ConsentStatus.Obtained ||
                        ConsentInformation.ConsentStatus == GoogleMobileAds.Ump.Api.ConsentStatus.NotRequired;
@@ -77,11 +74,9 @@ namespace Virterix.AdMediation
 
         public RequirementStatus PrivacyRequirementStatus
         {
-            get
-            {
+            get {
 #if _AMS_ADMOB
-                switch (ConsentInformation.PrivacyOptionsRequirementStatus)
-                {
+                switch (ConsentInformation.PrivacyOptionsRequirementStatus) {
                     case PrivacyOptionsRequirementStatus.Unknown:
                     default:
                         return RequirementStatus.Unknown;
@@ -103,7 +98,7 @@ namespace Virterix.AdMediation
         /// which will run all startup logic including loading any required
         /// updates and displaying any required forms.
         /// </summary>
-        public void GatherConsent(Action<string> onComplete, List<string> testDeviceIds = null)
+        public void GatherConsent(Action<string> onComplete, bool autoFormLoading = true)
         {
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AdMobConsentProvider] Gathering consent.");
@@ -112,19 +107,18 @@ namespace Virterix.AdMediation
 #if _AMS_ADMOB
             var requestParameters = new ConsentRequestParameters();
 
-            if (AdMediationSystem.Instance.ChildrenMode != ChildDirectedMode.NotAssign)
-            {
+            if (AdMediationSystem.Instance.ChildrenMode != ChildDirectedMode.NotAssign) {
                 requestParameters.TagForUnderAgeOfConsent =
                     AdMediationSystem.Instance.ChildrenMode == ChildDirectedMode.NotDirected;
             }
 
-            if (AdMediationSystem.Instance.IsTestModeEnabled)
-            {
-                requestParameters.ConsentDebugSettings = new ConsentDebugSettings
-                {
+            if (AdMediationSystem.Instance.IsTestModeEnabled) {
+                List<string> testDeviceIds = new List<string>(AdMediationSystem.Instance.TestDevices);
+
+                requestParameters.ConsentDebugSettings = new ConsentDebugSettings {
                     // For debugging consent settings by geography.
                     DebugGeography = DebugGeography.Disabled,
-                    TestDeviceHashedIds = testDeviceIds ?? new List<string>(),
+                    TestDeviceHashedIds = testDeviceIds,
                 };
             }
 
@@ -132,40 +126,43 @@ namespace Virterix.AdMediation
             // IAB Certified consent management platform) as one solution to capture
             // consent for users in GDPR impacted countries. This is an example and
             // you can choose another consent management platform to capture consent.
-            ConsentInformation.Update(requestParameters, (FormError updateError) =>
-            {
-                if (updateError != null)
-                {
-                    LoadForm();
+            ConsentInformation.Update(requestParameters, (FormError updateError) => {
+                ConsentFormState = FormState.Undefined;
+
+                if (updateError != null) {
+                    if (autoFormLoading) {
+                        LoadForm();
+                    }
+
                     onComplete(updateError.Message);
                     return;
                 }
 
                 // Determine the consent-related action to take based on the ConsentStatus.
-                if (CanRequestAds)
-                {
+                if (CanRequestAds) {
                     // Consent has already been gathered or not required.
                     // Return control back to the user.
-                    LoadForm();
+                    if (autoFormLoading) {
+                        LoadForm();
+                    }
+
                     onComplete(null);
                     return;
                 }
 
                 // Consent not obtained and is required.
                 // Load the initial consent request form for the user.
-                ConsentForm.LoadAndShowConsentFormIfRequired((FormError showError) =>
-                {
-                    if (showError != null)
-                    {
+                ConsentForm.LoadAndShowConsentFormIfRequired((FormError showError) => {
+                    ConsentFormState = FormState.Undefined;
+
+                    if (showError != null) {
                         // Form showing failed.
-                        if (onComplete != null)
-                        {
+                        if (onComplete != null) {
                             onComplete(showError.Message);
                         }
                     }
                     // Form showing succeeded.
-                    else
-                    {
+                    else {
                         OnConsentFormShown?.Invoke();
                         onComplete?.Invoke(null);
                     }
@@ -181,38 +178,38 @@ namespace Virterix.AdMediation
         /// Your app needs to allow the user to change their consent status at any time.
         /// Load another form and store it to allow the user to change their consent status
         /// </remarks>
-        public void ShowPrivacyOptionsForm(Action<string> onComplete, bool autoLoading = true)
+        public void ShowPrivacyOptionsForm(Action<string> onComplete, bool autoFormLoading = true)
         {
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AdMobConsentProvider] Showing privacy options form.");
 #endif
 
 #if _AMS_ADMOB
-            ConsentForm.ShowPrivacyOptionsForm((FormError showError) =>
-            {
+            ConsentForm.ShowPrivacyOptionsForm((FormError showError) => {
 #if AD_MEDIATION_DEBUG_MODE
                 Debug.Log("[AdMobConsentProvider] Options form dismissed");
 #endif
+                ConsentFormState = FormState.Undefined;
 
-                if (showError != null)
-                {
+                if (showError != null) {
 #if AD_MEDIATION_DEBUG_MODE
                     Debug.Log(
                         $"[AdMobConsentProvider] Options form show error. ErrorCode: {showError.ErrorCode} Message: {showError.Message} ConsentFormState: {ConsentFormState}");
 #endif
                     onComplete?.Invoke(showError.Message);
 
-                    if (showError.ErrorCode == 7 && ConsentFormState != FormState.Loading)
-                    {
+                    if (autoFormLoading && showError.ErrorCode == 7 && ConsentFormState != FormState.Loading) {
                         LoadForm();
                     }
                 }
                 // Form showing succeeded.
-                else
-                {
+                else {
                     OnConsentFormShown?.Invoke();
                     onComplete?.Invoke(null);
-                    LoadForm();
+
+                    if (autoFormLoading) {
+                        LoadForm();
+                    }
                 }
             });
 #endif
@@ -233,15 +230,12 @@ namespace Virterix.AdMediation
         {
             ConsentFormState = FormState.Loading;
 #if _AMS_ADMOB
-            ConsentForm.Load((ConsentForm form, FormError formError) =>
-            {
-                if (formError == null)
-                {
+            ConsentForm.Load((ConsentForm form, FormError formError) => {
+                if (formError == null) {
                     ConsentFormState = FormState.Loaded;
                     OnConsentFormLoaded?.Invoke();
                 }
-                else
-                {
+                else {
                     ConsentFormState = FormState.Undefined;
                 }
 
