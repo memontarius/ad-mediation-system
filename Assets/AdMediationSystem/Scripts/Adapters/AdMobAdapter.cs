@@ -322,7 +322,9 @@ namespace Virterix.AdMediation
         {
             OnWillInitialize();
             MobileAds.Initialize(OnInitComplete);
-            StartCoroutine(RequestAppOpenAd(AppOpenAdManager, 30));
+            if (m_useAppOpenAd) {
+                StartCoroutine(RequestAppOpenAd(AppOpenAdManager, 30));
+            }
             OnDidInitialize();
         }
         
@@ -712,7 +714,7 @@ namespace Virterix.AdMediation
 #if UNITY_IOS
                 appOpenAdUnitId = m_iOSAppOpenAdId;
 #endif
-            if (!string.IsNullOrEmpty(appOpenAdUnitId)) {
+            if (m_useAppOpenAd && !string.IsNullOrEmpty(appOpenAdUnitId)) {
                 m_alternativeOpenAdManager = null;
 
                 if (m_appOpenAdAlternativeNetwork != "") {
@@ -815,7 +817,7 @@ namespace Virterix.AdMediation
 
         private void OnAppStateChanged(AppState appState)
         {
-            if (AppOpenAdDisabled || !enabled || AppOpenAdManager == null || SharedFullscreenAdShowing) {
+            if (AppOpenAdDisabled || !enabled || !HasAppOpenAdManager || SharedFullscreenAdShowing) {
                 return;
             }
 

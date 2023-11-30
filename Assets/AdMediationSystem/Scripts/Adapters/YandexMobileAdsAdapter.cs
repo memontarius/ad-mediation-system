@@ -184,7 +184,7 @@ namespace Virterix.AdMediation
 #if UNITY_IOS
             openAdUnitId = m_iOSAppOpenAdId;
 #endif
-            if (!string.IsNullOrEmpty(openAdUnitId)) {
+            if (m_useAppOpenAd && !string.IsNullOrEmpty(openAdUnitId)) {
 #if _AMS_YANDEX_MOBILE_ADS
                 manager = new YandexAppOpenAdManager(this, openAdUnitId);
 #endif
