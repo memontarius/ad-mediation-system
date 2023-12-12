@@ -10,9 +10,10 @@ namespace Virterix.AdMediation
 {
     public class YandexAppOpenAdManager: IAppOpenAdManager
     {
-        public bool IsAdAvailable =>
-            _appOpenAd != null;
+        public bool IsAdAvailable => _appOpenAd != null;
 
+        public bool IsOpened { get; private set; }
+        
         public Action<bool> LoadComplete { get; set; }
         
         private AppOpenAdLoader _appOpenAdLoader;
@@ -41,12 +42,17 @@ namespace Virterix.AdMediation
 
         public bool ShowAdIfAvailable()
         {
-            if (IsAdAvailable)
-            {
-                _appOpenAd.Show();
-                return true;
+#if AD_MEDIATION_DEBUG_MODE
+            Debug.Log($"[AMS] YandexAppOpenAdManager ShowAdIfAvailable _adUnitId:{_adUnitId}");
+#endif
+            
+            if (!IsAdAvailable || IsOpened) {
+                return false;
             }
-            return false;
+            
+            IsOpened = true;
+            _appOpenAd.Show();
+            return true;
         }
 
         private void RequestAppOpenAd()
@@ -65,6 +71,7 @@ namespace Virterix.AdMediation
         {
             if (_appOpenAd != null)
             {
+                IsOpened = false;
                 _appOpenAd.OnAdClicked -= HandleAdClicked;
                 _appOpenAd.OnAdShown -= HandleAdShown;
                 _appOpenAd.OnAdFailedToShow -= HandleAdFailedToShow;

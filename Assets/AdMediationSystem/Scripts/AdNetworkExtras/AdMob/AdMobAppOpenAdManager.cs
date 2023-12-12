@@ -16,10 +16,12 @@ namespace Virterix.AdMediation
         private readonly AdNetworkAdapter _networkAdapter;
         
         private AppOpenAd _appOpenAd;
-        private bool _isShowingAd = false;
         private DateTime _loadTime;
       
         public static AdMobAppOpenAdManager Instance => s_instance;
+        
+        public bool IsOpened { get; private set; }
+        
         public int DisplayCount { get; private set; }
         
         public Action<bool> LoadComplete { get; set; }
@@ -47,12 +49,13 @@ namespace Virterix.AdMediation
         public bool ShowAdIfAvailable()
         {
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log($"[AMS] AdMobAppOpenAdManager ShowAdIfAvailable() IsAdAvailable:{IsAdAvailable}");
+            Debug.Log($"[AMS] AdMobAppOpenAdManager ShowAdIfAvailable IsAdAvailable:{IsAdAvailable}");
 #endif
-            if (!IsAdAvailable || _isShowingAd) {
+            if (!IsAdAvailable || IsOpened) {
                 return false;
             }
 
+            IsOpened = true;
             _appOpenAd.Show();
             return true;
         }
@@ -70,6 +73,7 @@ namespace Virterix.AdMediation
                 
                 _appOpenAd.Destroy();
                 _appOpenAd = null;
+                IsOpened = false;
             }
         }
         
@@ -80,7 +84,7 @@ namespace Virterix.AdMediation
 #endif
             // Set the ad to null to indicate that AppOpenAdManager no longer has another ad to show.
             _appOpenAd = null;
-            _isShowingAd = false;
+            IsOpened = false;
             AdMediationSystem.NotifyAdNetworkEvent(null, _networkAdapter, AdType.AppOpen, AdEvent.Hiding, AdInstance.AD_INSTANCE_DEFAULT_NAME);
             LoadAd();
         }
@@ -101,7 +105,7 @@ namespace Virterix.AdMediation
             Debug.Log("[AMS] AdMobAppOpenAdManager Displayed app open ad");
 #endif
             DisplayCount++;
-            _isShowingAd = true;
+            IsOpened = true;
             AdMediationSystem.NotifyAdNetworkEvent(null, _networkAdapter, AdType.AppOpen, AdEvent.Showing, AdInstance.AD_INSTANCE_DEFAULT_NAME);
         }
 

@@ -55,5 +55,5 @@ MonoBehaviour:
     _bannerType: 0
     _bannerRefreshTime: 0
   _useAppOpenAd: 1
-  _androidAppOpenAdUnitId: R-M-2098103-5
+  _androidAppOpenAdUnitId: demo-appopenad-yandex
   _iOSAppOpenAdUnitId: demo-appopenad-yandex

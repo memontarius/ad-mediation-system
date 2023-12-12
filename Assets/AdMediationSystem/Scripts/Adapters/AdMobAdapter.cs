@@ -90,7 +90,7 @@ namespace Virterix.AdMediation
         private int m_appStateForegroundCount;
         private AdMobMediationBehavior m_adMobMediationBehavior;
         private bool m_wasAppStateEventNotifierSubscribe;
-        private float m_appOpenAdLastShowingTime;
+        private float m_appOpenAdLastAttemptToShowTime;
         private int m_appOpenAdLoadAttemptCount;
         private IAppOpenAdManager m_alternativeOpenAdManager;
         
@@ -822,25 +822,29 @@ namespace Virterix.AdMediation
             }
 
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log($"[AMS] AdMobAdapter.OnAppStateChanged() App State is {appState} Foreground Count: {m_appStateForegroundCount} Passed Time Last Showing: {(Time.realtimeSinceStartup - m_appOpenAdLastShowingTime)}");
+            Debug.Log($"[AMS] AdMobAdapter.OnAppStateChanged() App State is {appState} Foreground Count: {m_appStateForegroundCount} Passed Time Last Attempt to Show: {(Time.realtimeSinceStartup - m_appOpenAdLastAttemptToShowTime)}");
 #endif
             if (appState == AppState.Foreground)
             {
-#if UNITY_IOS 
-                if (m_wasAppOpenAdDisplayed)
-                {
-                    m_wasAppOpenAdDisplayed = false;
+                if (AppOpenAdManager.IsOpened || m_alternativeOpenAdManager is { IsOpened: true }) {
                     return;
                 }
+#if UNITY_IOS
                 m_appStateForegroundCount++;
 #else
                 m_appStateForegroundCount++;
 #endif
-                if (Time.realtimeSinceStartup - m_appOpenAdLastShowingTime > m_appOpenAdDisplayCooldown &&
+                if (Time.realtimeSinceStartup - m_appOpenAdLastAttemptToShowTime > m_appOpenAdDisplayCooldown &&
                     (m_appOpenAdDisplayMultiplicity <= 1 || (m_appStateForegroundCount - 1) % m_appOpenAdDisplayMultiplicity == 0))
                 {
-                    AppOpenAdManager.ShowAdIfAvailable();
-                    m_appOpenAdLastShowingTime = Time.realtimeSinceStartup;
+                    if (AppOpenAdManager.IsAdAvailable) {
+                        AppOpenAdManager.ShowAdIfAvailable();
+                    }
+                    else {
+                        m_alternativeOpenAdManager?.ShowAdIfAvailable();
+                    }
+                    
+                    m_appOpenAdLastAttemptToShowTime = Time.realtimeSinceStartup;
                 }
             }
         }
