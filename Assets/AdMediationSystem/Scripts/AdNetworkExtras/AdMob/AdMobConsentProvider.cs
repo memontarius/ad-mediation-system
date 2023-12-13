@@ -117,7 +117,7 @@ namespace Virterix.AdMediation
 
                 requestParameters.ConsentDebugSettings = new ConsentDebugSettings {
                     // For debugging consent settings by geography.
-                    DebugGeography = DebugGeography.Disabled,
+                    DebugGeography = DebugGeography.EEA,
                     TestDeviceHashedIds = testDeviceIds,
                 };
             }
@@ -130,12 +130,20 @@ namespace Virterix.AdMediation
                 ConsentFormState = FormState.Undefined;
 
                 if (updateError != null) {
+#if AD_MEDIATION_DEBUG_MODE
+                    Debug.Log($"[AdMobConsentProvider] Consent update failed ErrorCode:{updateError.ErrorCode} Message:{updateError.Message}");
+#endif
                     if (autoFormLoading) {
                         LoadForm();
                     }
 
                     onComplete(updateError.Message);
                     return;
+                }
+                else {
+#if AD_MEDIATION_DEBUG_MODE
+                    Debug.Log($"[AdMobConsentProvider] Consent update successfully CanRequestAds:{CanRequestAds}");
+#endif
                 }
 
                 // Determine the consent-related action to take based on the ConsentStatus.
@@ -156,6 +164,9 @@ namespace Virterix.AdMediation
                     ConsentFormState = FormState.Undefined;
 
                     if (showError != null) {
+#if AD_MEDIATION_DEBUG_MODE
+                        Debug.Log($"[AdMobConsentProvider] LoadAndShowConsentFormIfRequired ShowError ErrorCode:{showError.ErrorCode} Message:{showError.Message}");
+#endif
                         // Form showing failed.
                         if (onComplete != null) {
                             onComplete(showError.Message);
@@ -236,6 +247,9 @@ namespace Virterix.AdMediation
                     OnConsentFormLoaded?.Invoke();
                 }
                 else {
+#if AD_MEDIATION_DEBUG_MODE
+                    Debug.Log($"[AdMobConsentProvider] LoadForm Failed ErrorCode:{formError.ErrorCode} Message:{formError.Message}");
+#endif
                     ConsentFormState = FormState.Undefined;
                 }
 
