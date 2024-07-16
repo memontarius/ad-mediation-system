@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Boomlagoon.JSON;
-using Unity.Services.Core;
 using Debug = UnityEngine.Debug;
 #if _AMS_UNITY_ADS
+using Unity.Services.Core;
 using System.Collections;
 using Unity.Services.Mediation;
 #endif

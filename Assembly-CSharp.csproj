@@ -26,7 +26,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\Bin\Debug\Assembly-CSharp\</OutputPath>
-    <DefineConstants>UNITY_2022_3_6;UNITY_2022_3;UNITY_2022;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_2021_1_OR_NEWER;UNITY_2021_2_OR_NEWER;UNITY_2021_3_OR_NEWER;UNITY_2022_1_OR_NEWER;UNITY_2022_2_OR_NEWER;UNITY_2022_3_OR_NEWER;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_EDITOR_GAME_SERVICES;ENABLE_UNITY_GAME_SERVICES_ANALYTICS_SUPPORT;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_GENERATE_NATIVE_PLUGINS_FOR_ASSEMBLIES_API;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_RUNTIME_PERMISSIONS;ENABLE_ENGINE_CODE_STRIPPING;ENABLE_ONSCREEN_KEYBOARD;ENABLE_MANAGED_UNITYTLS;INCLUDE_DYNAMIC_GI;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;ENABLE_VIDEO;ENABLE_ACCELERATOR_CLIENT_DEBUGGING;ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION;ENABLE_NAVIGATION_HEIGHTMESH_RUNTIME_SUPPORT;ENABLE_NAVIGATION_UI_REQUIRES_PACKAGE;PLATFORM_ANDROID;TEXTCORE_1_0_OR_NEWER;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;UNITY_CAN_SHOW_SPLASH_SCREEN;UNITY_HAS_GOOGLEVR;UNITY_HAS_TANGO;ENABLE_SPATIALTRACKING;ENABLE_ETC_COMPRESSION;PLATFORM_EXTENDS_VULKAN_DEVICE;PLATFORM_HAS_MULTIPLE_SWAPCHAINS;UNITY_ANDROID_SUPPORTS_SHADOWFILES;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_STANDARD_2_0;NET_STANDARD;NET_STANDARD_2_1;NETSTANDARD;NETSTANDARD2_1;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_INPUT_SYSTEM;ENABLE_LEGACY_INPUT_MANAGER;TEXTCORE_FONT_ENGINE_1_5_OR_NEWER;AD_MEDIATION_DEBUG_MODE;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <DefineConstants>UNITY_2022_3_37;UNITY_2022_3;UNITY_2022;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_2021_1_OR_NEWER;UNITY_2021_2_OR_NEWER;UNITY_2021_3_OR_NEWER;UNITY_2022_1_OR_NEWER;UNITY_2022_2_OR_NEWER;UNITY_2022_3_OR_NEWER;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_EDITOR_GAME_SERVICES;ENABLE_UNITY_GAME_SERVICES_ANALYTICS_SUPPORT;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_GENERATE_NATIVE_PLUGINS_FOR_ASSEMBLIES_API;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_RUNTIME_PERMISSIONS;ENABLE_ENGINE_CODE_STRIPPING;ENABLE_ONSCREEN_KEYBOARD;ENABLE_MANAGED_UNITYTLS;INCLUDE_DYNAMIC_GI;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;ENABLE_VIDEO;ENABLE_ACCELERATOR_CLIENT_DEBUGGING;ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION;ENABLE_NAVIGATION_HEIGHTMESH_RUNTIME_SUPPORT;ENABLE_NAVIGATION_UI_REQUIRES_PACKAGE;PLATFORM_ANDROID;TEXTCORE_1_0_OR_NEWER;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;UNITY_CAN_SHOW_SPLASH_SCREEN;UNITY_HAS_GOOGLEVR;UNITY_HAS_TANGO;ENABLE_SPATIALTRACKING;ENABLE_ETC_COMPRESSION;PLATFORM_EXTENDS_VULKAN_DEVICE;PLATFORM_HAS_MULTIPLE_SWAPCHAINS;UNITY_ANDROID_SUPPORTS_SHADOWFILES;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_STANDARD_2_0;NET_STANDARD;NET_STANDARD_2_1;NETSTANDARD;NETSTANDARD2_1;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_INPUT_SYSTEM;ENABLE_LEGACY_INPUT_MANAGER;TEXTCORE_FONT_ENGINE_1_5_OR_NEWER;AD_MEDIATION_DEBUG_MODE;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169,0649</NoWarn>
@@ -41,1073 +41,984 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
-    <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
+    <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
+    <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\YandexMobileAds\Common\IBannerClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\Android\InterstitialClient.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\ScorePageToken.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\IAppOpenAdClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AppOpenAdBridge.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\BaseChannel.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\DummyInterstitialAdLoaderClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\Android\MobileAdsClient.cs" />
-     <Compile Include="Assets\GoogleMobileAds\Mediation\AppLovin\Platforms\iOS\AppLovinClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\DummyScreenClient.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\AudienceNetworkAdapter.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\Android\RewardedAdClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\ScreenClient.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Common\TimeSnapshot.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\DummyAppOpenAdLoaderClient.cs" />
-     <Compile Include="Assets\GoogleMobileAds\Mediation\AppLovin\Platforms\Android\AppLovinClient.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\CRC32C.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\MonoPInvokeCallbackAttribute.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AdColony\AdColonyAdInstanceBannerParameters.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AdInfoClient.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\Yandex\YandexAdInstanceBannerParameters.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\ListClient.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\ConsoleProRemoteServer.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\Android\BannerAdSizeClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\Android\AppStateObserverClient.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\ReliableChannel.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\DummyRewardedAdLoaderClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\LocationBridge.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\AdRequestConfigurationFactory.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\Gender.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Common\JSONObject.cs" />
-     <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidHelperFragment.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\BannerAdSizeBridge.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\BannerAdSize.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdUtils.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\AdRequestConfiguration.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\INearbyConnectionClient.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\NetDataReader.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\IronSource\IronSourceAdInstanceBannerParameters.cs" />
-     <Compile Include="Assets\GooglePlayGames\OurUtils\Misc.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\ListBridge.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\Achievement.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetUtils.cs" />
-     <Compile Include="Assets\GoogleMobileAds\Mediation\AppLovin\Common\DummyClient.cs" />
-     <Compile Include="Assets\GoogleMobileAds\Mediation\AdColony\Platforms\iOS\AdColony\Externs.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\RewardedAdBridge.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\AdMobAdapter.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\YandexMobileAdsAdapter.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\Video\CaptureOverlayStateListener.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\AdColonyAdapter.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\SavedGame\ISavedGameClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\Reward.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdInstance.cs" />
-     <Compile Include="Assets\GoogleMobileAds\Mediation\AdColony\Api\AdColony\AdColonyAppOptions.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\Player.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\InterstitialClient.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\IPlayGamesClient.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AdMob\AdMobConsentProvider.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\CommonTypes.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\UnityAds\UnityAdInstanceBannerParameters.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\DummyInterstitialClient.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Common\CryptString.cs" />
-     <Compile Include="Assets\GooglePlayGames\OurUtils\Logger.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\BannerBridge.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AudienceNetwork\AudienceNetworkMediationUtils.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\SavedGame\SavedGameMetadataUpdate.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\InterstitialAdLoaderClient.cs" />
-     <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesUserProfile.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetSocket.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AdMob\AdMobAppOpenAdManager.cs" />
-     <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidTaskUtils.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\YandexMobileAdsClientFactory.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetManager.cs" />
-     <Compile Include="Assets\GooglePlayGames\OurUtils\PlayGamesHelperObject.cs" />
-     <Compile Include="Assets\GoogleMobileAds\Mediation\AppLovin\Platforms\iOS\Externs.cs" />
-     <Compile Include="Assets\GooglePlayGames\PluginVersion.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\Video\VideoCaptureState.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\Location.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\VungleAdapter.cs" />
-     <Compile Include="Assets\GoogleMobileAds\Mediation\AdColony\Common\AdColony\IAdColonyAppOptionsClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\ScreenUtils.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdType.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\ConnectionResponse.cs" />
-     <Compile Include="Assets\YandexMobileAds\MobileAds.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\GenericEventArgs.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\Events\IEventsClient.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\BaseAdController.cs" />
-     <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidSavedGameClient.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\CommonStatusCodes.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Layers\XorEncryptLayer.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AudienceNetwork\AudienceNetworkAdInstanceBannerParameters.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\AdRequestCreator.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\Events\Event.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdMediator.cs" />
-     <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidEventsClient.cs" />
-     <Compile Include="Assets\GooglePlayGames\Platforms\NearbyConnectionClientFactory.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\UnityAdsAdapter.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\Android\ScreenClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AppOpenAdLoaderBridge.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AdMob\AdMobMediationBehavior.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\IInterstitialAdLoaderClient.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetDebug.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\ConnectionRequest.cs" />
-     <Compile Include="Assets\GooglePlayGames\Platforms\TokenClient.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\IAppOpenAdManager.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\MobileAdsBridge.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\ScreenBridge.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\DictionaryBridge.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdInstanceParameters.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AppLovin\AppLovinAdInstanceBannerParameters.cs" />
-     <Compile Include="Assets\GoogleMobileAds\Mediation\AppLovin\Api\AppLovin.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\AdFailedToLoadEventArgs.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\LeaderboardScoreData.cs" />
-     <Compile Include="Assets\YandexMobileAds\RewardedAd.cs" />
-     <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesPlatform.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdFactory.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetPacket.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\Android\InterstitialAdLoaderClient.cs" />
-     <Compile Include="Assets\AdMediationSystem\Example\ExampleAdController.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\SignInInteractivity.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\DummyRewardedAdClient.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\IFetchStrategy.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\RewardedAdLoadedEventArgs.cs" />
-     <Compile Include="Assets\GoogleMobileAds\Mediation\AdColony\Platforms\Mediation\AdColonyAppOptionsClientFactory.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\DictionaryClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\AppOpenAdLoader.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\BannerAdSizeClient.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\NearbyConnectionConfiguration.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\INetEventListener.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AppOpenAdClient.cs" />
-     <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidNearbyConnectionClient.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AdMob\AdMobAdInstanceBannerParameters.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetPacketPool.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\Android\AdInfoFactory.cs" />
-     <Compile Include="Assets\GooglePlayGames\GameInfo.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\MobileAdsPackageInfo.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\EndpointDetails.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\Events\IEvent.cs" />
-     <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesScore.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\SettingsProviders\AdRemoteSettingsCustomServerProvider.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\IRewardedAdClient.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Layers\Crc32cLayer.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NatPunchModule.cs" />
-     <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidVideoClient.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Common\InternetChecker.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\AdPosition.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\MobileAdsClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\AdSize.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\AppStateObserverClient.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\IronSourceAdapter.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\ChartboostAdapter.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\DummyMobileAdsClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\RewardedAdLoaderBridge.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\NetSerializer.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\DummyClient.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdMediationSystem.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\Constants.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\IBannerAdSizeClient.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\PlayGamesClientConfiguration.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetStatistics.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\Android\BannerClient.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\NtpRequest.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\Yandex\YandexAppOpenAdManager.cs" />
-     <Compile Include="Assets\YandexMobileAds\Banner.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\InterstitialBridge.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\AdRequest.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\AppLovinAdapter.cs" />
-     <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidJavaConverter.cs" />
-     <Compile Include="Assets\GPGSIds.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\AppStateChangedEventArgs.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\AppOpenAdLoadedEventArgs.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetConstants.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\Android\Utils.cs" />
-     <Compile Include="Assets\ConsolePro\ConsoleProDebug.cs" />
-     <Compile Include="Assets\YandexMobileAds\AppOpenAd.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AdSizeBridge.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\PollfishAdapter.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\InterstitialAdLoaderBridge.cs" />
-     <Compile Include="Assets\GoogleMobileAds\Mediation\AdColony\Platforms\iOS\AdColony\AdColonyAppOptionsClient.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\NtpPacket.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\AdInfo.cs" />
-     <Compile Include="Assets\GoogleMobileAds\Mediation\AdColony\Api\AdColony\AdColonyMediationExtras.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\IInterstitialClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\IScreenClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\AdFailureEventArgs.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\FetchStrategies\DummyFetchStrategy.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\DummyBannerClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AdRequestClient.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\Video\IVideoClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\DummyAppOpenAdClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\AppStateObserver.cs" />
-     <Compile Include="Assets\GooglePlayGames\OurUtils\PlatformUtils.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\SignInHelper.cs" />
-     <Compile Include="Assets\GooglePlayGames\Platforms\PlayGamesClientFactory.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\AdTheme.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\IMobileAdsClient.cs" />
-     <Compile Include="Assets\GoogleMobileAds\Mediation\AdColony\Common\AdColony\DummyClient.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\PlayerStats.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\DummyNearbyConnectionClient.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdUnit.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\Android\AppOpenAdLoaderClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\ImpressionData.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\Android\RewardedAdLoaderClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AdInfoBridge.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AdRequestBridge.cs" />
-     <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesLocalUser.cs" />
-     <Compile Include="Assets\GoogleMobileAds\Mediation\AppLovin\Common\IAppLovinClient.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\SequencedChannel.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\Android\AdSizeUtils.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\RewardedAdLoaderClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\InterstitialAdLoader.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AppOpenAdLoaderClient.cs" />
-     <Compile Include="Assets\GoogleMobileAds\Mediation\AppLovin\Platforms\Mediation\AppLovinClientFactory.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Common\RemoteLoader.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\AdvertisingResult.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\LocationClient.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\FastBitConverter.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AdSizeClient.cs" />
-     <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesLeaderboard.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\ConnectionRequest.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\SavedGame\ISavedGameMetadata.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\SettingsProviders\AdRemoteSettingsUnityServerProvider.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\BannerClient.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkAdapter.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\IAppStateObserverClient.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\Video\VideoCapabilities.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetPeer.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\IAppOpenAdLoaderClient.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\SignInStatus.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\InterstitialAdLoadedEventArgs.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\INetSerializable.cs" />
-     <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesAchievement.cs" />
-     <Compile Include="Assets\YandexMobileAds\RewardedAdLoader.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\FetchStrategies\RandomFetchStrategy.cs" />
-     <Compile Include="Assets\GoogleMobileAds\Mediation\AdColony\Platforms\Android\AdColony\AdColonyAppOptionsClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AdRequestConfigurationClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\Android\AppOpenAdClient.cs" />
-     <Compile Include="Assets\GooglePlayGames\OurUtils\NearbyHelperObject.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Layers\PacketLayerBase.cs" />
-     <Compile Include="Assets\YandexMobileAds\Interstitial.cs" />
-     <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidClient.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\NetPacketProcessor.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\MainThreadDispatcher.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\Android\BannerAdSizeUtils.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\FetchStrategies\SequenceFetchStrategy.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\Common\Singleton.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\AdError.cs" />
-     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\NetDataWriter.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\ObjectBridge.cs" />
-     <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidTokenClient.cs" />
-     <Compile Include="Assets\GooglePlayGames\BasicApi\PlayerProfile.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\IRewardedAdLoaderClient.cs" />
-     <Compile Include="Assets\YandexMobileAds\Base\AdRequestError.cs" />
-     <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidSnapshotMetadata.cs" />
-     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\RewardedAdClient.cs" />
-     <Compile Include="Assets\AdMediationSystem\Scripts\AdRemoteSettingsProvider.cs" />
-     <Compile Include="Assets\YandexMobileAds\Common\DummyBannerAdSizeClient.cs" />
-     <Folder Include="Assets" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Platforms\Android" />
-     <Folder Include="Assets\YandexMobileAds\Platforms" />
-     <Folder Include="Assets\YandexMobileAds\Base" />
-     <Folder Include="Assets\Resources\AdMediationSettings\DefaultProject\AdInstanceParameters\AdMob" />
-     <Folder Include="Assets\YandexMobileAds" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Plugins\Android" />
-     <Folder Include="Assets\GoogleMobileAds\Resources" />
-     <Folder Include="Assets\YandexMobileAds\Platforms\Android" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Api" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Common" />
-     <Folder Include="Assets\ConsolePro\Remote" />
-     <Folder Include="Assets\AdMediationSystem\Scripts\Adapters" />
-     <Folder Include="Assets\GeneratedLocalRepo" />
-     <Folder Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AdColony" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AppLovin\Platforms\iOS" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AppLovin" />
-     <None Include="Assets\PlayServicesResolver\play-services-resolver_v1.2.137.0.txt" />
-     <Folder Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AudienceNetwork" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AppLovin\Plugins\Android" />
-     <Folder Include="Assets\AdMediationSystem\Scripts\Common" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AppLovin\Platforms\Mediation" />
-     <None Include="Assets\Resources\AdMediationSettings\DefaultProject\android_settings.json" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Platforms\iOS\AdColony" />
-     <Folder Include="Assets\AssetStoreTools" />
-     <Folder Include="Assets\Resources\AdMediationSettings\DefaultProject\AdInstanceParameters" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Plugins\iOS" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AppLovin\Api" />
-     <None Include="Assets\GoogleMobileAds\link.xml" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony" />
-     <Folder Include="Assets\GooglePlayGames\BasicApi\Events" />
-     <Folder Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\IronSource" />
-     <Folder Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\UnityAds" />
-     <Folder Include="Assets\GoogleMobileAds" />
-     <Folder Include="Assets\AdMediationSystem\Scripts" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Plugins\Android\GoogleMobileAdsAdColonyMediation" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AppLovin\Plugins" />
-     <Folder Include="Assets\Resources\AdMediationSettings" />
-     <Folder Include="Assets\ConsolePro\Remote\LiteNetLib\Layers" />
-     <Folder Include="Assets\GooglePlayGames\Platforms" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AppLovin\Common" />
-     <Folder Include="Assets\GooglePlayGames\BasicApi\Video" />
-     <Folder Include="Assets\ExternalDependencyManager" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AppLovin\Plugins\iOS" />
-     <None Include="Assets\Resources\AdMediationSettings\Empty\android_settings.json" />
-     <Folder Include="Assets\GooglePlayGames\BasicApi\Nearby" />
-     <Folder Include="Assets\GooglePlayGames\BasicApi" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Plugins" />
-     <Folder Include="Assets\AdMediationSystem" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AppLovin\Platforms" />
-     <Folder Include="Assets\GooglePlayGames\BasicApi\SavedGame" />
-     <Folder Include="Assets\YandexMobileAds\Common" />
-     <None Include="Assets\Resources\AdMediationSettings\DefaultProject\ios_settings.json" />
-     <Folder Include="Assets\AdMediationSystem\Scripts\SettingsProviders" />
-     <Folder Include="Assets\Resources\AdMediationSettings\Empty" />
-     <Folder Include="Assets\ConsolePro\Remote\LiteNetLib\Utils" />
-     <Folder Include="Assets\YandexMobileAds\Platforms\iOS" />
-     <Folder Include="Assets\Resources" />
-     <Folder Include="Assets\AdMediationSystem\Example" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation" />
-     <None Include="Assets\GoogleMobileAds\GoogleMobileAds_version-8.6.0_manifest.txt" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Platforms\iOS" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Common\AdColony" />
-     <Folder Include="Assets\ConsolePro\Remote\LiteNetLib" />
-     <Folder Include="Assets\Resources\AdMediationSettings\DefaultProject\AdInstanceParameters\YandexMobileAds" />
-     <Folder Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AdMob" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AppLovin\Platforms\Android" />
-     <Folder Include="Assets\GooglePlayGames\Platforms\Android" />
-     <Folder Include="Assets\ConsolePro" />
-     <Folder Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras" />
-     <Folder Include="Assets\GooglePlayGames\OurUtils" />
-     <Folder Include="Assets\GooglePlayGames" />
-     <Folder Include="Assets\Resources\AdMediationSettings\DefaultProject" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Platforms\Android\AdColony" />
-     <None Include="Assets\Resources\AdMediationSettings\Empty\ios_settings.json" />
-     <Folder Include="Assets\AdMediationSystem\Example\Fonts" />
-     <Folder Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\Yandex" />
-     <Folder Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AppLovin" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Platforms\Mediation" />
-     <Folder Include="Assets\AdMediationSystem\Scripts\FetchStrategies" />
-     <Folder Include="Assets\AdMediationSystem\Example\MediationExample" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Api\AdColony" />
-     <None Include="Assets\GoogleMobileAds\Mediation\AdColony\Plugins\Android\GoogleMobileAdsAdColonyMediation\AndroidManifest.xml" />
-     <Folder Include="Assets\PlayServicesResolver" />
-     <None Include="Assets\Resources\BillingMode.json" />
-     <Folder Include="Assets\GoogleMobileAds\Mediation\AdColony\Platforms" />
-     <Folder Include="Assets\GeneratedLocalRepo\GooglePlayGames" />
-     <Folder Include="Assets\GooglePlayGames\ISocialPlatform" />
-     <None Include="Assets\GoogleMobileAds\Mediation\AppLovin\Plugins\Android\AndroidManifest.xml" />
-     <Reference Include="UnityEngine">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.AIModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.AIModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.ARModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.ARModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.AccessibilityModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.AccessibilityModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.AndroidJNIModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.AndroidJNIModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.AnimationModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.AnimationModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.AssetBundleModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.AssetBundleModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.AudioModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.AudioModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.ClothModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.ClothModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.ContentLoadModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.ContentLoadModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.CoreModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.CoreModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.CrashReportingModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.CrashReportingModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.DSPGraphModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.DSPGraphModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.DirectorModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.DirectorModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.GIModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.GIModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.GameCenterModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.GameCenterModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.GridModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.GridModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.HotReloadModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.HotReloadModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.IMGUIModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.IMGUIModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.ImageConversionModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.ImageConversionModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.InputModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.InputModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.InputLegacyModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.InputLegacyModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.JSONSerializeModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.JSONSerializeModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.LocalizationModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.LocalizationModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.ParticleSystemModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.ParticleSystemModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.PerformanceReportingModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.PerformanceReportingModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.PhysicsModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.PhysicsModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.Physics2DModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.Physics2DModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.ProfilerModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.ProfilerModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.PropertiesModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.PropertiesModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.ScreenCaptureModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.ScreenCaptureModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.SharedInternalsModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.SharedInternalsModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.SpriteMaskModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.SpriteMaskModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.SpriteShapeModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.SpriteShapeModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.StreamingModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.StreamingModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.SubstanceModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.SubstanceModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.SubsystemsModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.SubsystemsModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.TLSModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.TLSModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.TerrainModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.TerrainModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.TerrainPhysicsModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.TerrainPhysicsModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.TextCoreFontEngineModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.TextCoreTextEngineModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.TextRenderingModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.TextRenderingModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.TilemapModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.TilemapModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.UIModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.UIModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.UIElementsModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.UIElementsModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.UmbraModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.UmbraModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.UnityAnalyticsModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityAnalyticsModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.UnityAnalyticsCommonModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityAnalyticsCommonModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.UnityConnectModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityConnectModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.UnityCurlModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityCurlModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.UnityTestProtocolModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityTestProtocolModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.UnityWebRequestModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.UnityWebRequestAudioModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.UnityWebRequestTextureModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.UnityWebRequestWWWModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.VFXModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.VFXModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.VRModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.VRModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.VehiclesModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.VehiclesModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.VideoModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.VideoModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.WindModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.WindModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.XRModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.XRModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.CoreModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.CoreModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.DeviceSimulatorModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.DeviceSimulatorModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.DiagnosticsModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.DiagnosticsModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.EditorToolbarModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.EditorToolbarModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.GraphViewModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.GraphViewModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.PresetsUIModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.PresetsUIModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.QuickSearchModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.QuickSearchModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.SceneTemplateModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.SceneTemplateModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.SceneViewModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.SceneViewModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.TextCoreFontEngineModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.TextCoreFontEngineModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.TextCoreTextEngineModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.TextCoreTextEngineModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.UIBuilderModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.UIBuilderModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.UIElementsModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.UIElementsModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.UIElementsSamplesModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.UIElementsSamplesModule.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.UnityConnectModule">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
-     </Reference>
-     <Reference Include="GoogleMobileAds.Common">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Common.dll</HintPath>
-     </Reference>
-     <Reference Include="GoogleMobileAds">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.dll</HintPath>
-     </Reference>
-     <Reference Include="GoogleMobileAds.Core">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Core.dll</HintPath>
-     </Reference>
-     <Reference Include="GoogleMobileAds.Ump.Unity">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Ump.Unity.dll</HintPath>
-     </Reference>
-     <Reference Include="GoogleMobileAds.Ump">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Ump.dll</HintPath>
-     </Reference>
-     <Reference Include="GoogleMobileAds.Unity">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Unity.dll</HintPath>
-     </Reference>
-     <Reference Include="Newtonsoft.Json">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\PackageCache\com.unity.nuget.newtonsoft-json@3.2.1\Runtime\Newtonsoft.Json.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\PlaybackEngines\iOSSupport\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.iOS.Extensions.Common">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\PlaybackEngines\iOSSupport\UnityEditor.iOS.Extensions.Common.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.Android.Types">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.Android.Gradle">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Gradle.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.Android.GradleProject">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.GradleProject.dll</HintPath>
-     </Reference>
-     <Reference Include="netstandard">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
-     </Reference>
-     <Reference Include="Microsoft.Win32.Primitives">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\Microsoft.Win32.Primitives.dll</HintPath>
-     </Reference>
-     <Reference Include="System.AppContext">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.AppContext.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Buffers">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Buffers.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Collections.Concurrent">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Collections.Concurrent.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Collections">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Collections.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Collections.NonGeneric">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Collections.NonGeneric.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Collections.Specialized">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Collections.Specialized.dll</HintPath>
-     </Reference>
-     <Reference Include="System.ComponentModel">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ComponentModel.dll</HintPath>
-     </Reference>
-     <Reference Include="System.ComponentModel.EventBasedAsync">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ComponentModel.EventBasedAsync.dll</HintPath>
-     </Reference>
-     <Reference Include="System.ComponentModel.Primitives">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ComponentModel.Primitives.dll</HintPath>
-     </Reference>
-     <Reference Include="System.ComponentModel.TypeConverter">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ComponentModel.TypeConverter.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Console">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Console.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Data.Common">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Data.Common.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Diagnostics.Contracts">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.Contracts.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Diagnostics.Debug">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.Debug.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Diagnostics.FileVersionInfo">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.FileVersionInfo.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Diagnostics.Process">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.Process.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Diagnostics.StackTrace">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.StackTrace.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Diagnostics.TextWriterTraceListener">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.TextWriterTraceListener.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Diagnostics.Tools">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.Tools.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Diagnostics.TraceSource">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.TraceSource.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Diagnostics.Tracing">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.Tracing.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Drawing.Primitives">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Drawing.Primitives.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Dynamic.Runtime">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Dynamic.Runtime.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Globalization.Calendars">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Globalization.Calendars.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Globalization">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Globalization.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Globalization.Extensions">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Globalization.Extensions.dll</HintPath>
-     </Reference>
-     <Reference Include="System.IO.Compression">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.Compression.dll</HintPath>
-     </Reference>
-     <Reference Include="System.IO.Compression.ZipFile">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.Compression.ZipFile.dll</HintPath>
-     </Reference>
-     <Reference Include="System.IO">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.dll</HintPath>
-     </Reference>
-     <Reference Include="System.IO.FileSystem">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.FileSystem.dll</HintPath>
-     </Reference>
-     <Reference Include="System.IO.FileSystem.DriveInfo">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.FileSystem.DriveInfo.dll</HintPath>
-     </Reference>
-     <Reference Include="System.IO.FileSystem.Primitives">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.FileSystem.Primitives.dll</HintPath>
-     </Reference>
-     <Reference Include="System.IO.FileSystem.Watcher">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.FileSystem.Watcher.dll</HintPath>
-     </Reference>
-     <Reference Include="System.IO.IsolatedStorage">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.IsolatedStorage.dll</HintPath>
-     </Reference>
-     <Reference Include="System.IO.MemoryMappedFiles">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.MemoryMappedFiles.dll</HintPath>
-     </Reference>
-     <Reference Include="System.IO.Pipes">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.Pipes.dll</HintPath>
-     </Reference>
-     <Reference Include="System.IO.UnmanagedMemoryStream">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.UnmanagedMemoryStream.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Linq">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Linq.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Linq.Expressions">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Linq.Expressions.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Linq.Parallel">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Linq.Parallel.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Linq.Queryable">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Linq.Queryable.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Memory">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Memory.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Net.Http">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Http.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Net.NameResolution">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.NameResolution.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Net.NetworkInformation">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.NetworkInformation.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Net.Ping">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Ping.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Net.Primitives">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Primitives.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Net.Requests">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Requests.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Net.Security">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Security.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Net.Sockets">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Sockets.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Net.WebHeaderCollection">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.WebHeaderCollection.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Net.WebSockets.Client">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.WebSockets.Client.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Net.WebSockets">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.WebSockets.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Numerics.Vectors">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Numerics.Vectors.dll</HintPath>
-     </Reference>
-     <Reference Include="System.ObjectModel">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ObjectModel.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Reflection.DispatchProxy">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.DispatchProxy.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Reflection">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Reflection.Emit">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.Emit.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Reflection.Emit.ILGeneration">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.Emit.ILGeneration.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Reflection.Emit.Lightweight">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.Emit.Lightweight.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Reflection.Extensions">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.Extensions.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Reflection.Primitives">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.Primitives.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Resources.Reader">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Resources.Reader.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Resources.ResourceManager">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Resources.ResourceManager.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Resources.Writer">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Resources.Writer.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Runtime.CompilerServices.VisualC">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.CompilerServices.VisualC.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Runtime">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Runtime.Extensions">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Extensions.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Runtime.Handles">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Handles.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Runtime.InteropServices">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.InteropServices.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Runtime.Numerics">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Numerics.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Runtime.Serialization.Formatters">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Serialization.Formatters.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Runtime.Serialization.Json">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Serialization.Json.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Runtime.Serialization.Primitives">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Serialization.Primitives.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Runtime.Serialization.Xml">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Serialization.Xml.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Security.Claims">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Claims.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Security.Cryptography.Algorithms">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Cryptography.Algorithms.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Security.Cryptography.Csp">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Cryptography.Csp.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Security.Cryptography.Encoding">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Cryptography.Encoding.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Security.Cryptography.Primitives">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Cryptography.Primitives.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Security.Cryptography.X509Certificates">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Cryptography.X509Certificates.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Security.Principal">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Principal.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Security.SecureString">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.SecureString.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Text.Encoding">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Text.Encoding.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Text.Encoding.Extensions">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Text.Encoding.Extensions.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Text.RegularExpressions">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Text.RegularExpressions.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Threading">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Threading.Overlapped">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Overlapped.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Threading.Tasks">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Tasks.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Threading.Tasks.Extensions">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Tasks.Extensions.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Threading.Tasks.Parallel">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Tasks.Parallel.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Threading.Thread">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Thread.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Threading.ThreadPool">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.ThreadPool.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Threading.Timer">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Timer.dll</HintPath>
-     </Reference>
-     <Reference Include="System.ValueTuple">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ValueTuple.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Xml.ReaderWriter">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.ReaderWriter.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Xml.XDocument">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.XDocument.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Xml.XmlDocument">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.XmlDocument.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Xml.XmlSerializer">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.XmlSerializer.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Xml.XPath">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.XPath.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Xml.XPath.XDocument">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.XPath.XDocument.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Runtime.InteropServices.WindowsRuntime">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\Extensions\2.0.0\System.Runtime.InteropServices.WindowsRuntime.dll</HintPath>
-     </Reference>
-     <Reference Include="mscorlib">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\mscorlib.dll</HintPath>
-     </Reference>
-     <Reference Include="System.ComponentModel.Composition">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ComponentModel.Composition.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Core">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Core.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Data">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Data.dll</HintPath>
-     </Reference>
-     <Reference Include="System">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Drawing">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Drawing.dll</HintPath>
-     </Reference>
-     <Reference Include="System.IO.Compression.FileSystem">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.IO.Compression.FileSystem.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Net">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Net.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Numerics">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Numerics.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Runtime.Serialization">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Runtime.Serialization.dll</HintPath>
-     </Reference>
-     <Reference Include="System.ServiceModel.Web">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ServiceModel.Web.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Transactions">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Transactions.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Web">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Web.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Windows">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Windows.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Xml">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Xml.Linq">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.Linq.dll</HintPath>
-     </Reference>
-     <Reference Include="System.Xml.Serialization">
-     <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.Serialization.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.AI.Navigation">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.AI.Navigation.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.RemoteConfig.Editor">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.RemoteConfig.Editor.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.Timeline.Editor">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.Services.Core">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Services.Core.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.VisualStudio.Editor">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEditor.UI">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
-     </Reference>
-     <Reference Include="UnityEngine.UI">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.Rider.Editor">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.2D.Sprite.Editor">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.Timeline">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.InputSystem">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.InputSystem.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.InputSystem.ForUI">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.InputSystem.ForUI.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.Services.Core.Environments">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Services.Core.Environments.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.AI.Navigation.Updater">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.AI.Navigation.Updater.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.Mobile.AndroidLogcat.Editor">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Mobile.AndroidLogcat.Editor.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.RemoteConfig.Editor.Core">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.RemoteConfig.Editor.Core.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.Services.Authentication">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Services.Authentication.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.Services.RemoteConfig">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Services.RemoteConfig.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.TextMeshPro">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.Services.Core.Analytics">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Services.Core.Analytics.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.AI.Navigation.Editor">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.AI.Navigation.Editor.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.TextMeshPro.Editor">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.AI.Navigation.Editor.ConversionSystem">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.AI.Navigation.Editor.ConversionSystem.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.VSCode.Editor">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
-     </Reference>
-     <Reference Include="Unity.2D.Tilemap.Editor">
-     <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.2D.Tilemap.Editor.dll</HintPath>
-     </Reference>
+    <Compile Include="Assets\YandexMobileAds\Common\IBannerClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\Android\InterstitialClient.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\ScorePageToken.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\IAppOpenAdClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AppOpenAdBridge.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\BaseChannel.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\DummyInterstitialAdLoaderClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\Android\MobileAdsClient.cs" />
+    <Compile Include="Assets\GoogleMobileAds\Mediation\AppLovin\Platforms\iOS\AppLovinClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\DummyScreenClient.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\AudienceNetworkAdapter.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\Android\RewardedAdClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\ScreenClient.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\Common\TimeSnapshot.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\DummyAppOpenAdLoaderClient.cs" />
+    <Compile Include="Assets\GoogleMobileAds\Mediation\AppLovin\Platforms\Android\AppLovinClient.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\CRC32C.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\MonoPInvokeCallbackAttribute.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AdColony\AdColonyAdInstanceBannerParameters.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AdInfoClient.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\Yandex\YandexAdInstanceBannerParameters.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\ListClient.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\ConsoleProRemoteServer.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\Android\BannerAdSizeClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\Android\AppStateObserverClient.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\ReliableChannel.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\DummyRewardedAdLoaderClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\LocationBridge.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\AdRequestConfigurationFactory.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\Gender.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\Common\JSONObject.cs" />
+    <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidHelperFragment.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\BannerAdSizeBridge.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\BannerAdSize.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdUtils.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\AdRequestConfiguration.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\INearbyConnectionClient.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\NetDataReader.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\IronSource\IronSourceAdInstanceBannerParameters.cs" />
+    <Compile Include="Assets\GooglePlayGames\OurUtils\Misc.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\ListBridge.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\Achievement.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetUtils.cs" />
+    <Compile Include="Assets\GoogleMobileAds\Mediation\AppLovin\Common\DummyClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\RewardedAdBridge.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\AdMobAdapter.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\YandexMobileAdsAdapter.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\Video\CaptureOverlayStateListener.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\AdColonyAdapter.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\SavedGame\ISavedGameClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\Reward.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdInstance.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\Player.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\InterstitialClient.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\IPlayGamesClient.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AdMob\AdMobConsentProvider.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\CommonTypes.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\UnityAds\UnityAdInstanceBannerParameters.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\DummyInterstitialClient.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\Common\CryptString.cs" />
+    <Compile Include="Assets\GooglePlayGames\OurUtils\Logger.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\BannerBridge.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AudienceNetwork\AudienceNetworkMediationUtils.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\SavedGame\SavedGameMetadataUpdate.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\InterstitialAdLoaderClient.cs" />
+    <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesUserProfile.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetSocket.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AdMob\AdMobAppOpenAdManager.cs" />
+    <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidTaskUtils.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\YandexMobileAdsClientFactory.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetManager.cs" />
+    <Compile Include="Assets\GooglePlayGames\OurUtils\PlayGamesHelperObject.cs" />
+    <Compile Include="Assets\GoogleMobileAds\Mediation\AppLovin\Platforms\iOS\Externs.cs" />
+    <Compile Include="Assets\GooglePlayGames\PluginVersion.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\Video\VideoCaptureState.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\Location.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\VungleAdapter.cs" />
+    <Compile Include="Assets\YandexMobileAds\ScreenUtils.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdType.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\ConnectionResponse.cs" />
+    <Compile Include="Assets\YandexMobileAds\MobileAds.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\GenericEventArgs.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\Events\IEventsClient.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\BaseAdController.cs" />
+    <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidSavedGameClient.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\CommonStatusCodes.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Layers\XorEncryptLayer.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AudienceNetwork\AudienceNetworkAdInstanceBannerParameters.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\AdRequestCreator.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\Events\Event.cs" />
+    <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidEventsClient.cs" />
+    <Compile Include="Assets\GooglePlayGames\Platforms\NearbyConnectionClientFactory.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdMediator.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\UnityAdsAdapter.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\Android\ScreenClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AppOpenAdLoaderBridge.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AdMob\AdMobMediationBehavior.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\IInterstitialAdLoaderClient.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetDebug.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\ConnectionRequest.cs" />
+    <Compile Include="Assets\GooglePlayGames\Platforms\TokenClient.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\IAppOpenAdManager.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\MobileAdsBridge.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\ScreenBridge.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\DictionaryBridge.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdInstanceParameters.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AppLovin\AppLovinAdInstanceBannerParameters.cs" />
+    <Compile Include="Assets\GoogleMobileAds\Mediation\AppLovin\Api\AppLovin.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\AdFailedToLoadEventArgs.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\LeaderboardScoreData.cs" />
+    <Compile Include="Assets\YandexMobileAds\RewardedAd.cs" />
+    <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesPlatform.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdFactory.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetPacket.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\Android\InterstitialAdLoaderClient.cs" />
+    <Compile Include="Assets\AdMediationSystem\Example\ExampleAdController.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\SignInInteractivity.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\DummyRewardedAdClient.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\IFetchStrategy.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\RewardedAdLoadedEventArgs.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\DictionaryClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\AppOpenAdLoader.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\BannerAdSizeClient.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\NearbyConnectionConfiguration.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\INetEventListener.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AppOpenAdClient.cs" />
+    <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidNearbyConnectionClient.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\AdMob\AdMobAdInstanceBannerParameters.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetPacketPool.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\Android\AdInfoFactory.cs" />
+    <Compile Include="Assets\GooglePlayGames\GameInfo.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\MobileAdsPackageInfo.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\EndpointDetails.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\Events\IEvent.cs" />
+    <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesScore.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\SettingsProviders\AdRemoteSettingsCustomServerProvider.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\IRewardedAdClient.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Layers\Crc32cLayer.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NatPunchModule.cs" />
+    <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidVideoClient.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\Common\InternetChecker.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\AdPosition.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\MobileAdsClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\AdSize.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\AppStateObserverClient.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\IronSourceAdapter.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\ChartboostAdapter.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\RewardedAdLoaderBridge.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\DummyMobileAdsClient.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\NetSerializer.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\DummyClient.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdMediationSystem.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\Constants.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\IBannerAdSizeClient.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\PlayGamesClientConfiguration.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetStatistics.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\Android\BannerClient.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\NtpRequest.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkExtras\Yandex\YandexAppOpenAdManager.cs" />
+    <Compile Include="Assets\YandexMobileAds\Banner.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\InterstitialBridge.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\AdRequest.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\AppLovinAdapter.cs" />
+    <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidJavaConverter.cs" />
+    <Compile Include="Assets\GPGSIds.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\AppStateChangedEventArgs.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\AppOpenAdLoadedEventArgs.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetConstants.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\Android\Utils.cs" />
+    <Compile Include="Assets\ConsolePro\ConsoleProDebug.cs" />
+    <Compile Include="Assets\YandexMobileAds\AppOpenAd.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AdSizeBridge.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\PollfishAdapter.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\InterstitialAdLoaderBridge.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\NtpPacket.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\AdInfo.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\IInterstitialClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\IScreenClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\AdFailureEventArgs.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\FetchStrategies\DummyFetchStrategy.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\DummyBannerClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AdRequestClient.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\Video\IVideoClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\DummyAppOpenAdClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\AppStateObserver.cs" />
+    <Compile Include="Assets\GooglePlayGames\OurUtils\PlatformUtils.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\SignInHelper.cs" />
+    <Compile Include="Assets\GooglePlayGames\Platforms\PlayGamesClientFactory.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\AdTheme.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\IMobileAdsClient.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\PlayerStats.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\DummyNearbyConnectionClient.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdUnit.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\Android\AppOpenAdLoaderClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\ImpressionData.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\Android\RewardedAdLoaderClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AdInfoBridge.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AdRequestBridge.cs" />
+    <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesLocalUser.cs" />
+    <Compile Include="Assets\GoogleMobileAds\Mediation\AppLovin\Common\IAppLovinClient.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\SequencedChannel.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\Android\AdSizeUtils.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\RewardedAdLoaderClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\InterstitialAdLoader.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AppOpenAdLoaderClient.cs" />
+    <Compile Include="Assets\GoogleMobileAds\Mediation\AppLovin\Platforms\Mediation\AppLovinClientFactory.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\Common\RemoteLoader.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\Nearby\AdvertisingResult.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\LocationClient.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\FastBitConverter.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AdSizeClient.cs" />
+    <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesLeaderboard.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\ConnectionRequest.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\SavedGame\ISavedGameMetadata.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\SettingsProviders\AdRemoteSettingsUnityServerProvider.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\BannerClient.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdNetworkAdapter.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\IAppStateObserverClient.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\Video\VideoCapabilities.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NetPeer.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\IAppOpenAdLoaderClient.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\SignInStatus.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\InterstitialAdLoadedEventArgs.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\INetSerializable.cs" />
+    <Compile Include="Assets\GooglePlayGames\ISocialPlatform\PlayGamesAchievement.cs" />
+    <Compile Include="Assets\YandexMobileAds\RewardedAdLoader.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\FetchStrategies\RandomFetchStrategy.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\AdRequestConfigurationClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\Android\AppOpenAdClient.cs" />
+    <Compile Include="Assets\GooglePlayGames\OurUtils\NearbyHelperObject.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Layers\PacketLayerBase.cs" />
+    <Compile Include="Assets\YandexMobileAds\Interstitial.cs" />
+    <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidClient.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\NetPacketProcessor.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\MainThreadDispatcher.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\Android\BannerAdSizeUtils.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\FetchStrategies\SequenceFetchStrategy.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\Common\Singleton.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\AdError.cs" />
+    <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\NetDataWriter.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\ObjectBridge.cs" />
+    <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidTokenClient.cs" />
+    <Compile Include="Assets\GooglePlayGames\BasicApi\PlayerProfile.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\IRewardedAdLoaderClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\AdRequestError.cs" />
+    <Compile Include="Assets\GooglePlayGames\Platforms\Android\AndroidSnapshotMetadata.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\RewardedAdClient.cs" />
+    <Compile Include="Assets\AdMediationSystem\Scripts\AdRemoteSettingsProvider.cs" />
+    <Compile Include="Assets\YandexMobileAds\Common\DummyBannerAdSizeClient.cs" />
+    <None Include="Assets\PlayServicesResolver\play-services-resolver_v1.2.137.0.txt" />
+    <None Include="Assets\Resources\AdMediationSettings\DefaultProject\android_settings.json" />
+    <None Include="Assets\GoogleMobileAds\link.xml" />
+    <None Include="Assets\GoogleMobileAds\GoogleMobileAds_version-9.1.1_manifest.txt" />
+    <None Include="Assets\Resources\AdMediationSettings\Empty\android_settings.json" />
+    <None Include="Assets\Resources\AdMediationSettings\DefaultProject\ios_settings.json" />
+    <None Include="Assets\Resources\AdMediationSettings\Empty\ios_settings.json" />
+    <None Include="Assets\Resources\BillingMode.json" />
+    <Reference Include="UnityEngine">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.AIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ARModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.ARModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AccessibilityModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.AccessibilityModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AndroidJNIModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.AndroidJNIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClothModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.ClothModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ContentLoadModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.ContentLoadModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CrashReportingModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.CrashReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.DSPGraphModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.DSPGraphModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.DirectorModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.DirectorModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GIModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.GIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GameCenterModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.GameCenterModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GridModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.GridModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.HotReloadModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.HotReloadModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.InputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.JSONSerializeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.LocalizationModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.LocalizationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PerformanceReportingModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.PerformanceReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ProfilerModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.ProfilerModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PropertiesModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.PropertiesModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.ScreenCaptureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SharedInternalsModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.SharedInternalsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteMaskModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.SpriteMaskModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteShapeModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.SpriteShapeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.StreamingModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.StreamingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SubstanceModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.SubstanceModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SubsystemsModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.SubsystemsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TLSModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.TLSModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.TerrainModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainPhysicsModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreFontEngineModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreTextEngineModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TilemapModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.TilemapModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UmbraModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.UmbraModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsCommonModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityAnalyticsCommonModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityConnectModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityConnectModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityCurlModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityCurlModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityTestProtocolModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityTestProtocolModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VFXModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.VFXModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VRModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.VRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VehiclesModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.VehiclesModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VideoModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.VideoModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.WindModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.WindModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.XRModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.XRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.CoreModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEditor.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.DeviceSimulatorModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEditor.DeviceSimulatorModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.DiagnosticsModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEditor.DiagnosticsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.EditorToolbarModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEditor.EditorToolbarModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.GraphViewModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEditor.GraphViewModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.PresetsUIModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEditor.PresetsUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.QuickSearchModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEditor.QuickSearchModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.SceneTemplateModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEditor.SceneTemplateModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.SceneViewModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEditor.SceneViewModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.TextCoreFontEngineModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEditor.TextCoreFontEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.TextCoreTextEngineModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEditor.TextCoreTextEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UIBuilderModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEditor.UIBuilderModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UIElementsModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEditor.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UIElementsSamplesModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEditor.UIElementsSamplesModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UnityConnectModule">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
+    </Reference>
+    <Reference Include="GoogleMobileAds.Common">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="GoogleMobileAds">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.dll</HintPath>
+    </Reference>
+    <Reference Include="GoogleMobileAds.Core">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GoogleMobileAds.Ump.Unity">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Ump.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="GoogleMobileAds.Ump">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Ump.dll</HintPath>
+    </Reference>
+    <Reference Include="GoogleMobileAds.Unity">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\GoogleMobileAds\GoogleMobileAds.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\PackageCache\com.unity.nuget.newtonsoft-json@3.2.1\Runtime\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\PlaybackEngines\iOSSupport\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Common">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\PlaybackEngines\iOSSupport\UnityEditor.iOS.Extensions.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Android.Types">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Android.Gradle">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Gradle.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Android.GradleProject">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.GradleProject.dll</HintPath>
+    </Reference>
+    <Reference Include="netstandard">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Win32.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\Microsoft.Win32.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.AppContext">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.AppContext.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Buffers">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Concurrent">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Collections.Concurrent.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.NonGeneric">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Collections.NonGeneric.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Specialized">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Collections.Specialized.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ComponentModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.EventBasedAsync">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ComponentModel.EventBasedAsync.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ComponentModel.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.TypeConverter">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ComponentModel.TypeConverter.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Console">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Console.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.Common">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Data.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.Contracts">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.Debug">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.Debug.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.FileVersionInfo">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.FileVersionInfo.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.Process">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.Process.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.StackTrace">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.StackTrace.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.TextWriterTraceListener">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.TextWriterTraceListener.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.Tools">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.Tools.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.TraceSource">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.TraceSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.Tracing">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Diagnostics.Tracing.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Drawing.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Dynamic.Runtime">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Dynamic.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Globalization.Calendars">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Globalization.Calendars.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Globalization">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Globalization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Globalization.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Globalization.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.Compression.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression.ZipFile">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.Compression.ZipFile.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.FileSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.DriveInfo">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.FileSystem.DriveInfo.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.FileSystem.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Watcher">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.FileSystem.Watcher.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.IsolatedStorage">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.IsolatedStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.MemoryMappedFiles">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.MemoryMappedFiles.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Pipes">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.Pipes.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.UnmanagedMemoryStream">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.IO.UnmanagedMemoryStream.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Expressions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Linq.Expressions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Parallel">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Linq.Parallel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Queryable">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Linq.Queryable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.NameResolution">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.NameResolution.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.NetworkInformation">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.NetworkInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Ping">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Ping.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Requests">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Requests.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Security">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Sockets">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.Sockets.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.WebHeaderCollection">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.WebHeaderCollection.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.WebSockets.Client">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.WebSockets.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.WebSockets">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Net.WebSockets.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics.Vectors">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ObjectModel">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.DispatchProxy">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.DispatchProxy.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Emit">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.Emit.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Emit.ILGeneration">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.Emit.ILGeneration.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Emit.Lightweight">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.Emit.Lightweight.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Reflection.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Resources.Reader">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Resources.Reader.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Resources.ResourceManager">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Resources.ResourceManager.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Resources.Writer">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Resources.Writer.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.VisualC">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.CompilerServices.VisualC.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Handles">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Handles.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.InteropServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Numerics">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Formatters">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Serialization.Formatters.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Json">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Serialization.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Serialization.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Xml">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Runtime.Serialization.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Claims">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Claims.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Cryptography.Algorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Csp">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Cryptography.Csp.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Cryptography.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Cryptography.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Principal">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.Principal.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.SecureString">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Security.SecureString.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encoding">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Text.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encoding.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Text.Encoding.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.RegularExpressions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Text.RegularExpressions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Overlapped">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Overlapped.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Parallel">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Tasks.Parallel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Thread">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Thread.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.ThreadPool">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.ThreadPool.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Timer">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Timer.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.ReaderWriter">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.ReaderWriter.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XDocument">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.XDocument.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XmlDocument">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.XmlDocument.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XmlSerializer">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.XmlSerializer.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XPath">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.XPath.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XPath.XDocument">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Xml.XPath.XDocument.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.WindowsRuntime">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\Extensions\2.0.0\System.Runtime.InteropServices.WindowsRuntime.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ComponentModel.Composition.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.IO.Compression.FileSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Runtime.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel.Web">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ServiceModel.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Transactions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Serialization">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.37f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.AI.Navigation">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.AI.Navigation.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RemoteConfig.Editor">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.RemoteConfig.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Timeline.Editor">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Services.Core">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Services.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.VisualStudio.Editor">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Rider.Editor">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.2D.Sprite.Editor">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Timeline">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.InputSystem">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.InputSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.InputSystem.ForUI">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.InputSystem.ForUI.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Services.Core.Environments">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Services.Core.Environments.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.AI.Navigation.Updater">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.AI.Navigation.Updater.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mobile.AndroidLogcat.Editor">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Mobile.AndroidLogcat.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RemoteConfig.Editor.Core">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.RemoteConfig.Editor.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Services.Authentication">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Services.Authentication.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Services.RemoteConfig">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Services.RemoteConfig.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Services.Core.Analytics">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.Services.Core.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.AI.Navigation.Editor">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.AI.Navigation.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro.Editor">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.AI.Navigation.Editor.ConversionSystem">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.AI.Navigation.Editor.ConversionSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.VSCode.Editor">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.2D.Tilemap.Editor">
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\ScriptAssemblies\Unity.2D.Tilemap.Editor.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="GoogleMobileAds.Editor.csproj">

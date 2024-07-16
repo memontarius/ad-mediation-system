@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using UnityEditor;
-using UnityEditor.AnimatedValues;
 using System.Linq;
-using Boomlagoon.JSON;
+
 
 namespace Virterix.AdMediation.Editor
 {

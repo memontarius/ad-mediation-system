@@ -33,5 +33,11 @@ namespace YandexMobileAds.Common
         /// </summary>
         /// <param name="ageRestrictedUser"><c>true</c> if user falls under COPPA restrictions, otherwise <c>false</c>.</param>
         void SetAgeRestrictedUser(bool ageRestrictedUser);
+
+        /// <summary>
+        /// Shows Debug Panel.
+        /// Available only for Android. It will do nothing on iOS.
+        /// </summary>
+        void ShowDebugPanel();
     }
 }

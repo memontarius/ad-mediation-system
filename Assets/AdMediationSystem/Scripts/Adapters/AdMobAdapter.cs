@@ -152,9 +152,12 @@ namespace Virterix.AdMediation
 
                 prop = settingsType.GetProperty("GoogleMobileAdsIOSAppId");
                 prop.SetValue(adMobSettings, iOSAppId);
-
+                
                 prop = settingsType.GetProperty("DelayAppMeasurementInit");
-                prop.SetValue(adMobSettings, true);
+                if (prop != null)
+                {
+                    prop.SetValue(adMobSettings, true);
+                }
 
                 UnityEditor.EditorUtility.SetDirty(adMobSettings);
             }

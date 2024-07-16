@@ -48,6 +48,11 @@ namespace YandexMobileAds.Platforms.iOS
         {
             // TODO(delank): ADLIB-13105 add COPPA for iOS
         }
+
+        public void ShowDebugPanel()
+        {   
+            // nothing
+        }
     }
 
     #endif
