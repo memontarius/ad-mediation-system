@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f3313491ed44a0daff5cf315c95e41a, type: 3}
   m_Name: AdmYandexMobileAdsSettings
   m_EditorClassIdentifier: 
-  _enabled: 1
+  _enabled: 0
   _networkIdentifier: yandex
   _androidAppId: 
   _iosAppId: 

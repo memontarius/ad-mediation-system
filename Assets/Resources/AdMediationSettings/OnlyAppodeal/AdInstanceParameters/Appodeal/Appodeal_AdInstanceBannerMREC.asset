@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e9a382f83f441ef9970a954cdacbfed, type: 3}
+  m_Name: Appodeal_AdInstanceBannerMREC
+  m_EditorClassIdentifier: 
+  m_name: MREC
+  m_bannerPositions:
+  - m_placementName: Top
+    m_bannerPosition: 5
+  m_bannerSize: 1

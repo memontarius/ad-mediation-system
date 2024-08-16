@@ -22,18 +22,25 @@ public class ExampleAdController : BaseAdController
     {
         AdMediationSystem.OnInitialized += OnMediationSystemInitialized;
         AdMediationSystem.OnAllNetworksInitializeResponseReceived += OnAllNetworksInitializeResponseReceived;
-        AdMediationSystem.Load("DefaultProject");
+        AdMediationSystem.Load("OnlyAppodeal");
         m_adPersonalizedText.rectTransform.parent.GetComponent<Button>().interactable = false;
     }
 
     private void Start()
     {
-        StartManualConsent();
+        AdMobAdapter adMobAdapter = AdMediationSystem.Instance.GetNetwork<AdMobAdapter>();
+
+        if (adMobAdapter == null)
+        {
+            AdMediationSystem.Instance.Initialize();
+            return;
+        }
+        
+        InitializeAfterShowingGoogleManualConsent(adMobAdapter);
     }
 
-    private void StartManualConsent()
+    private void InitializeAfterShowingGoogleManualConsent(AdMobAdapter adMobAdapter)
     {
-        AdMobAdapter adMobAdapter = AdMediationSystem.Instance.GetNetwork<AdMobAdapter>();
         adMobAdapter.ConsentProvider.GatherConsent(message =>
         {
             AdMediationSystem.Instance.Initialize();
@@ -55,8 +62,11 @@ public class ExampleAdController : BaseAdController
     {
         //FetchAllAds();
         AdMobAdapter adMobAdapter = AdMediationSystem.Instance.GetNetwork<AdMobAdapter>();
-
-        Debug.Log($"AllNetworksInitializeResponseReceived ClientConsentStatus:{adMobAdapter.ConsentProvider.ClientConsentStatus}");
+        if (adMobAdapter != null)
+        {
+            Debug.Log(
+                $"AllNetworksInitializeResponseReceived ClientConsentStatus:{adMobAdapter.ConsentProvider.ClientConsentStatus}");
+        }
     }
 
     public void FetchAllAds()

@@ -23,7 +23,9 @@ namespace Virterix.AdMediation
             bool userInteractsWithApp = false;
 #if ENABLE_INPUT_SYSTEM
             if (UnityEngine.InputSystem.Touchscreen.current != null)
+            {
                 userInteractsWithApp = UnityEngine.InputSystem.Touchscreen.current.touches.Count > 0;
+            }
 #elif ENABLE_LEGACY_INPUT_MANAGER
             userInteractsWithApp = Input.touches.Length > 0;
 #endif

@@ -51,9 +51,7 @@ namespace Virterix.AdMediation.Editor
         protected virtual string[] BannerTypes { get; set; }
 
         protected virtual bool IsSeparatedPlatformSettings { get; } = false;
-
-        protected virtual bool IsAdInstanceIdsDisplayed { get; } = true;
-
+        
         protected string SettingsFilePath => 
             String.Format("{0}/{1}", AdMediationSettingsWindow.GetProjectFolderPath(_settingsWindow.CurrProjectName), SettingsFileName);
 
@@ -118,6 +116,8 @@ namespace Virterix.AdMediation.Editor
             EditorUtility.SetDirty(_settings);
         }
 
+        protected virtual bool IsAdInstanceIdsDisplayed(AdType adType) => true;
+        
         private void InitAdInstanceBlock(AdType adType, string title, string propertyName)
         {
             if (_settings.IsAdSupported(adType) && _settings.IsAdInstanceSupported(adType))
@@ -224,7 +224,7 @@ namespace Virterix.AdMediation.Editor
         protected float CalculateElementHeight(AdInstanceBlockData blockData)
         {
             float solvedHeight = blockData._adType == AdType.Banner ? DEFAULT_BANNER_INSTANCE_ELEMENT_HEIGHT : DEFAULT_INSTANCE_ELEMENT_HEIGHT;
-            if (blockData._instances != null && blockData._instances.count > 0 && IsAdInstanceIdsDisplayed) {
+            if (blockData._instances != null && blockData._instances.count > 0 && IsAdInstanceIdsDisplayed(blockData._adType)) {
                 if (_settingsWindow.IsAndroid && _settingsWindow.IsIOS)
                 {
                     solvedHeight = blockData._elementHeight.height;
@@ -364,12 +364,12 @@ namespace Virterix.AdMediation.Editor
             instanceBlock._foldAnimation = new AnimBool(!instanceBlock._isCollapsed);
             instanceBlock._foldAnimation.valueChanged.AddListener(_settingsWindow.Repaint);
             instanceBlock._elementHeight = elementHeight;
-            instanceBlock._instances = CreateList(_serializedSettings, instanceBlock);
+            instanceBlock._instances = CreateList(_serializedSettings, instanceBlock, adType);
             SetupReorderableList(instanceBlock._instances, adType);
             _instanceBlocks.Add(instanceBlock);
         }
 
-        protected ReorderableList CreateList(SerializedObject serializedObj, AdInstanceBlockData instanceBlock)
+        protected ReorderableList CreateList(SerializedObject serializedObj, AdInstanceBlockData instanceBlock, AdType adType)
         {
             ReorderableList list = new ReorderableList(serializedObj, instanceBlock._instanceProperty, false, true, true, true);
             list.headerHeight = 1;
@@ -413,7 +413,7 @@ namespace Virterix.AdMediation.Editor
                 );
                 
                 width = Mathf.Clamp(elementWidth - 80, 315, 2800);
-                if (IsAdInstanceIdsDisplayed)
+                if (IsAdInstanceIdsDisplayed(adType))
                 {
                     if (_settingsWindow.IsAndroid)
                     {

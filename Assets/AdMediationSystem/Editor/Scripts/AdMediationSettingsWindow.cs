@@ -393,6 +393,7 @@ namespace Virterix.AdMediation.Editor
         {
             _networks.Clear();
 
+            AddNetwork(new AppodealView(this, "Appodeal", AppodealAdapter.Identifier));
             AddNetwork(new AdMobView(this, "AdMob", AdMobAdapter.Identifier));
             AddNetwork(new AudienceNetworkView(this, "Audience Network", AudienceNetworkAdapter.Identifier));
             AddNetwork(new UnityAdsView(this, "Unity Ads", UnityAdsAdapter.Identifier));
@@ -642,13 +643,17 @@ namespace Virterix.AdMediation.Editor
             GUILayout.BeginHorizontal("box");
             IsAndroid = GUILayout.Toggle(IsAndroid, " Android");
             if (!IsAndroid && !IsIOS)
+            {
                 IsIOS = true;
-            
+            }
+
             GUILayout.Space(20);
             IsIOS = GUILayout.Toggle(IsIOS, " iOS");
             if (!IsAndroid && !IsIOS)
+            {
                 IsAndroid = true;
-            
+            }
+
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             if (_serializedProjectSettings.ApplyModifiedProperties())
@@ -827,7 +832,7 @@ namespace Virterix.AdMediation.Editor
             }
             AssetDatabase.Refresh();
 
-            Debug.Log("Successful build of settings!");
+            Debug.Log($"<color=#5DFF52>Successful</color> build settings of project: <color=#F1FF2E>{_projectName}</color>");
         }
 
         private void UpdateExtraLoggingInScriptingDefineSymbols(BuildTargetGroup buildTarget)

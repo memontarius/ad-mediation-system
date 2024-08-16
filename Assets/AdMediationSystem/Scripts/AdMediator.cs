@@ -234,7 +234,9 @@ namespace Virterix.AdMediation
 
 #if AD_MEDIATION_DEBUG_MODE
             if (unit == null)
+            {
                 Debug.Log("[AMS] AdMediator.Fetch() Not fetched ad unit. Placement: " + m_placementName);
+            }
 #endif
         }
 
@@ -462,7 +464,9 @@ namespace Virterix.AdMediation
             AdInstance adInstance)
         {
             if (!SolveNeedingAdEventHandling(adType, adEvent, adInstance))
+            {
                 return;
+            }
 
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AMS] AdMediator.OnNetworkEvent() Type:" + m_adType + " placementName: " +

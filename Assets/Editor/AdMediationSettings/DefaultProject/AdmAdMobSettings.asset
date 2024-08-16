@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd99f66217cd15b41a8fbdc77ce5c39d, type: 3}
   m_Name: AdmAdMobSettings
   m_EditorClassIdentifier: 
-  _enabled: 1
+  _enabled: 0
   _networkIdentifier: admob
   _androidAppId: ca-app-pub-1726624045989422~7998588197
   _iosAppId: ca-app-pub-1726624045989422~1952054590

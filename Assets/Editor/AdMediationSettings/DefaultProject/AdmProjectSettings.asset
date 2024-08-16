@@ -34,25 +34,9 @@ MonoBehaviour:
     BannerPosition: 3
     Tiers:
     - MaxPassages: 1
-      Units:
-      - NetworkName: AdMob
-        NetworkIndex: 0
-        NetworkIdentifier: admob
-        InstanceIndex: 0
-        InstanceName: Default
-        Replaceable: 0
-        PrepareOnExit: 0
-        Percentage: 100
+      Units: []
     - MaxPassages: 1
-      Units:
-      - NetworkName: Yandex Mobile Ads
-        NetworkIndex: 1
-        NetworkIdentifier: yandex
-        InstanceIndex: 0
-        InstanceName: Default
-        Replaceable: 0
-        PrepareOnExit: 0
-        Percentage: 100
+      Units: []
   - AdvertisingType: 1
     Name: Top
     ContinueAfterEndSession: 1
@@ -64,25 +48,9 @@ MonoBehaviour:
     BannerPosition: 0
     Tiers:
     - MaxPassages: 1
-      Units:
-      - NetworkName: AdMob
-        NetworkIndex: 0
-        NetworkIdentifier: admob
-        InstanceIndex: 1
-        InstanceName: Top
-        Replaceable: 0
-        PrepareOnExit: 0
-        Percentage: 100
+      Units: []
     - MaxPassages: 1
-      Units:
-      - NetworkName: Yandex Mobile Ads
-        NetworkIndex: 1
-        NetworkIdentifier: yandex
-        InstanceIndex: 1
-        InstanceName: Top
-        Replaceable: 0
-        PrepareOnExit: 0
-        Percentage: 100
+      Units: []
   InterstitialMediators:
   - AdvertisingType: 2
     Name: Default
@@ -95,25 +63,9 @@ MonoBehaviour:
     BannerPosition: 0
     Tiers:
     - MaxPassages: 1
-      Units:
-      - NetworkName: AdMob
-        NetworkIndex: 0
-        NetworkIdentifier: admob
-        InstanceIndex: 0
-        InstanceName: Default
-        Replaceable: 0
-        PrepareOnExit: 0
-        Percentage: 100
+      Units: []
     - MaxPassages: 1
-      Units:
-      - NetworkName: Yandex Mobile Ads
-        NetworkIndex: 1
-        NetworkIdentifier: yandex
-        InstanceIndex: 0
-        InstanceName: Default
-        Replaceable: 0
-        PrepareOnExit: 0
-        Percentage: 100
+      Units: []
   IncentivizedMediators:
   - AdvertisingType: 3
     Name: Default
@@ -126,25 +78,9 @@ MonoBehaviour:
     BannerPosition: 0
     Tiers:
     - MaxPassages: 1
-      Units:
-      - NetworkName: AdMob
-        NetworkIndex: 0
-        NetworkIdentifier: admob
-        InstanceIndex: 0
-        InstanceName: Default
-        Replaceable: 0
-        PrepareOnExit: 0
-        Percentage: 100
+      Units: []
     - MaxPassages: 1
-      Units:
-      - NetworkName: Yandex Mobile Ads
-        NetworkIndex: 1
-        NetworkIdentifier: yandex
-        InstanceIndex: 0
-        InstanceName: Default
-        Replaceable: 0
-        PrepareOnExit: 0
-        Percentage: 100
+      Units: []
   - AdvertisingType: 3
     Name: Game Over
     ContinueAfterEndSession: 1
@@ -156,25 +92,9 @@ MonoBehaviour:
     BannerPosition: 0
     Tiers:
     - MaxPassages: 1
-      Units:
-      - NetworkName: AdMob
-        NetworkIndex: 0
-        NetworkIdentifier: admob
-        InstanceIndex: 0
-        InstanceName: Default
-        Replaceable: 0
-        PrepareOnExit: 0
-        Percentage: 100
+      Units: []
     - MaxPassages: 1
-      Units:
-      - NetworkName: Yandex Mobile Ads
-        NetworkIndex: 1
-        NetworkIdentifier: yandex
-        InstanceIndex: 0
-        InstanceName: Default
-        Replaceable: 0
-        PrepareOnExit: 0
-        Percentage: 100
+      Units: []
   IsIOS: 1
   IsAndroid: 1
   EnableUnityRemoteConfigProvider: 0

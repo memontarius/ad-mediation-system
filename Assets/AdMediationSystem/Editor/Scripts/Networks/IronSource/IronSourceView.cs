@@ -12,9 +12,7 @@ namespace Virterix.AdMediation.Editor
 
         private bool _isOverriddenPlacementUncollapsed;
         private AnimBool _overriddenPlacementFoldAnimation;
-
-        protected override bool IsAdInstanceIdsDisplayed => false;
-
+        
         private SerializedProperty _overriddenPlacementsProp;
         private SerializedProperty _useAdTypesProp;
         private ReorderableList _overriddenPlacementList;
@@ -27,8 +25,11 @@ namespace Virterix.AdMediation.Editor
             
             var irnSrcAdTypes = Enum.GetValues(typeof(IronSourceAdapter.IrnSrcAdType)) as IronSourceAdapter.IrnSrcAdType[]; 
             _irnSrcAdTypeNames = new string[irnSrcAdTypes.Length];
-            for(int i = 0; i < _irnSrcAdTypeNames.Length; i++)
+            
+            for (int i = 0; i < _irnSrcAdTypeNames.Length; i++)
+            {
                 _irnSrcAdTypeNames[i] = irnSrcAdTypes[i].ToString();
+            }
 
             _isOverriddenPlacementUncollapsed = EditorPrefs.GetBool(OVERRIDDEN_PLACEMENT_LIST_COLLAPSED_SAVEKEY, false);
             _overriddenPlacementFoldAnimation = new AnimBool(_isOverriddenPlacementUncollapsed);
@@ -68,6 +69,8 @@ namespace Virterix.AdMediation.Editor
                 );
             };
         }
+        
+        protected override bool IsAdInstanceIdsDisplayed(AdType adType) => false;
 
         protected override BaseAdNetworkSettings CreateSettingsModel()
         {
