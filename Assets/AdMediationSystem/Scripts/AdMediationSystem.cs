@@ -45,7 +45,7 @@ namespace Virterix.AdMediation
             public int[] maxPassages;
         }
 
-        public const string VERSION = "2.8.0";
+        public const string VERSION = "2.8.1";
         public const string AD_SETTINGS_FOLDER = "AdMediationSettings";
         public const string PREFAB_NAME = "AdMediationSystem";
         public const string PLACEMENT_DEFAULT_NAME = "Default";
@@ -518,7 +518,14 @@ namespace Virterix.AdMediation
 
             // Notify
             if (previousUserConsent != m_userPersonalisationConsent)
+            {
                 OnUserConsentToPersonalizedAdsChanged();
+            }
+
+            foreach (AdNetworkAdapter network in AdMediationSystem.Instance.NetworkAdapters)
+            {
+                network.SetUserConsentToPersonalizedAds(m_userPersonalisationConsent);
+            }
         }
 
         #endregion // Mediation ad networks

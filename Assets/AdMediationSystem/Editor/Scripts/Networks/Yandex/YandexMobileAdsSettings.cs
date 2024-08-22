@@ -8,6 +8,10 @@ namespace Virterix.AdMediation.Editor
         public bool _useAppOpenAd;
         public string _androidAppOpenAdUnitId;
         public string _iOSAppOpenAdUnitId;
+        public bool _selfControlImpressionAppOpenAd = false;
+        public int _appOpenAdShowingFrequency = 1;
+        public int _appOpenAdDisplayCooldown = 90;
+        public int _appOpenAdLoadAttemptMaxNumber = 4;
         
         public override bool IsAdSupported(AdType adType) => true;
         public override bool IsCheckAvailabilityWhenPreparing(AdType adType) => true;
@@ -30,6 +34,10 @@ namespace Virterix.AdMediation.Editor
             {
                 yandexAdapter.m_androidAppOpenAdId = _androidAppOpenAdUnitId;
                 yandexAdapter.m_iOSAppOpenAdId = _iOSAppOpenAdUnitId;
+                yandexAdapter.m_selfControlImpressionAppOpenAd = _selfControlImpressionAppOpenAd;
+                yandexAdapter.m_appOpenAdShowingFrequency = _appOpenAdShowingFrequency;
+                yandexAdapter.m_appOpenAdDisplayCooldown = _appOpenAdDisplayCooldown;
+                yandexAdapter.m_appOpenAdLoadAttemptMaxNumber = _appOpenAdLoadAttemptMaxNumber;
             }
         }
         

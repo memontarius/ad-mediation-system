@@ -15,8 +15,8 @@ MonoBehaviour:
   m_name: Top
   m_bannerPositions:
   - m_placementName: Top
-    m_bannerPosition: 1
+    m_bannerPosition: 2
   m_bannerSize: 0
   m_prepareOnStart: 0
-  m_maxHeight: 50
+  m_maxHeight: 100
   m_refreshTime: 45

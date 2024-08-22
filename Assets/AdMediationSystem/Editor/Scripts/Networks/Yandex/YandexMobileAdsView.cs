@@ -9,6 +9,11 @@ namespace Virterix.AdMediation.Editor
         private SerializedProperty _useAppOpenAdProp;
         private SerializedProperty _androidAppOpenAdUnitIdProp;
         private SerializedProperty _iOSAppOpenAdUnitIdProp;
+
+        private SerializedProperty _selfControlImpressionAppOpenAdProp;
+        private SerializedProperty _appOpenAdShowingFrequencyProp;
+        private SerializedProperty _appOpenAdDisplayCooldownProp;
+        private SerializedProperty _appOpenAdLoadAttemptMaxNumberProp;
         
         protected override InstanceElementHeight CreateInstanceElementHeight(AdType adType)
         {
@@ -24,6 +29,10 @@ namespace Virterix.AdMediation.Editor
             _useAppOpenAdProp = _serializedSettings.FindProperty("_useAppOpenAd");
             _iOSAppOpenAdUnitIdProp = _serializedSettings.FindProperty("_iOSAppOpenAdUnitId");
             _androidAppOpenAdUnitIdProp = _serializedSettings.FindProperty("_androidAppOpenAdUnitId");
+            _selfControlImpressionAppOpenAdProp = _serializedSettings.FindProperty("_selfControlImpressionAppOpenAd");
+            _appOpenAdShowingFrequencyProp = _serializedSettings.FindProperty("_appOpenAdShowingFrequency");
+            _appOpenAdDisplayCooldownProp =  _serializedSettings.FindProperty("_appOpenAdDisplayCooldown");
+            _appOpenAdLoadAttemptMaxNumberProp = _serializedSettings.FindProperty("_appOpenAdLoadAttemptMaxNumber");
         }
 
         protected override BaseAdNetworkSettings CreateSettingsModel()
@@ -39,16 +48,29 @@ namespace Virterix.AdMediation.Editor
             if (_useAppOpenAdProp.boolValue)
             {
                 if (projectSettings.IsAndroid)
+                {
                     EditorGUILayout.PropertyField(_androidAppOpenAdUnitIdProp, new GUIContent("Android Ad Unit ID"));
+                }
+
                 if (projectSettings.IsIOS)
+                {
                     EditorGUILayout.PropertyField(_iOSAppOpenAdUnitIdProp, new GUIContent("iOS Ad Unit ID"));
+                }
+
+                EditorGUILayout.PropertyField(_selfControlImpressionAppOpenAdProp, new GUIContent("Self Control Impression"));
+                if (_selfControlImpressionAppOpenAdProp.boolValue)
+                {
+                    EditorGUILayout.PropertyField(_appOpenAdShowingFrequencyProp, new GUIContent("Showing Frequency"));
+                    EditorGUILayout.PropertyField(_appOpenAdDisplayCooldownProp, new GUIContent("Display Cooldown"));
+                    EditorGUILayout.PropertyField(_appOpenAdLoadAttemptMaxNumberProp, new GUIContent("Load Attempt Max Number"));
+                }
             }
             GUILayout.EndVertical();
         }
 
         protected override int GetBannerSizeDropdownRightPadding(int bannerType)
         {
-            return bannerType == 0 ? 280 : 140;
+            return bannerType == 1 ? 140 : 280;
         }
         
         protected override void DrawBannerSpecificSettings(Rect rect, SerializedProperty element, float elementWidth, int bannerType)

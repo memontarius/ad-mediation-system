@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AdmAppodealSettings
   m_EditorClassIdentifier: 
   _enabled: 0
-  _networkIdentifier: 
+  _networkIdentifier: appodeal
   _androidAppId: 
   _iosAppId: 
   _responseWaitTime: 0
@@ -22,3 +22,4 @@ MonoBehaviour:
   _bannerAdInstances: []
   _interstitialAdInstances: []
   _rewardAdInstances: []
+  _requestedAdsTypes: 0

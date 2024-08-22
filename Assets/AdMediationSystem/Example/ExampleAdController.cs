@@ -22,7 +22,7 @@ public class ExampleAdController : BaseAdController
     {
         AdMediationSystem.OnInitialized += OnMediationSystemInitialized;
         AdMediationSystem.OnAllNetworksInitializeResponseReceived += OnAllNetworksInitializeResponseReceived;
-        AdMediationSystem.Load("OnlyAppodeal");
+        AdMediationSystem.Load("DefaultProject");
         m_adPersonalizedText.rectTransform.parent.GetComponent<Button>().interactable = false;
     }
 
@@ -33,10 +33,11 @@ public class ExampleAdController : BaseAdController
         if (adMobAdapter == null)
         {
             AdMediationSystem.Instance.Initialize();
-            return;
         }
-        
-        InitializeAfterShowingGoogleManualConsent(adMobAdapter);
+        else
+        {
+            InitializeAfterShowingGoogleManualConsent(adMobAdapter);
+        }
     }
 
     private void InitializeAfterShowingGoogleManualConsent(AdMobAdapter adMobAdapter)
@@ -96,6 +97,12 @@ public class ExampleAdController : BaseAdController
         adMobNetwork.ShowConsentOptionsForm();
     }
 
+    public void ShowYandexDebugPanel()
+    {
+        YandexMobileAdsAdapter yandexNetwork = AdMediationSystem.Instance.GetNetwork<YandexMobileAdsAdapter>();
+        yandexNetwork.ShowDebugPanel();
+    }
+    
     public void ResetGoogleConsentInformation()
     {
         AdMobAdapter adMobNetwork = AdMediationSystem.Instance.GetNetwork<AdMobAdapter>();
@@ -166,9 +173,14 @@ public class ExampleAdController : BaseAdController
         if (AdMediationSystem.InitStatus == InitializedStatus.Initialized) {
             PersonalisationConsent consent = AdMediationSystem.UserPersonalisationConsent;
             if (consent == PersonalisationConsent.Accepted || consent == PersonalisationConsent.Undefined)
+            {
                 consent = PersonalisationConsent.Denied;
+            }
             else
+            {
                 consent = PersonalisationConsent.Accepted;
+            }
+
             AdMediationSystem.SetUserConsentToPersonalizedAds(consent);
             UpdatePersonalizedAdsButtonText();
         }

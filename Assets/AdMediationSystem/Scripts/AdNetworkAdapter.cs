@@ -483,10 +483,15 @@ namespace Virterix.AdMediation
         /// <summary>
         /// GDPR, CCPA and other user privacy of regions compliance
         /// </summary>
-        protected virtual void SetUserConsentToPersonalizedAds(PersonalisationConsent consent)
+        public virtual void SetUserConsentToPersonalizedAds(PersonalisationConsent consent)
         {
         }
 
+        public virtual void SetAgeRestrictedUser(bool ageRestricted)
+        {
+            
+        }
+        
         public void StartWaitResponseHandling(AdInstance adInstance)
         {
             CancelWaitResponseHandling(adInstance);
