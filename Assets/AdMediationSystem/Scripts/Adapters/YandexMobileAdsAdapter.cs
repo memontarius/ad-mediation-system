@@ -200,13 +200,6 @@ namespace Virterix.AdMediation
             }
         }
 
-        public void OnDestroy()
-        {
-#if _AMS_YANDEX_MOBILE_ADS
-            AppStateObserver.OnAppStateChanged -= HandleAppStateChanged;
-#endif
-        }
-
         protected override IAppOpenAdManager CreateAppOpenAdManager()
         {
             IAppOpenAdManager manager = null;

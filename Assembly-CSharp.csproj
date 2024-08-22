@@ -146,14 +146,14 @@
     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Layers\Crc32cLayer.cs" />
     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\NatPunchModule.cs" />
     <Compile Include="Assets\AdMediationSystem\Scripts\Common\InternetChecker.cs" />
-    <Compile Include="Assets\YandexMobileAds\Base\AdPosition.cs" />
     <Compile Include="Assets\YandexMobileAds\Platforms\iOS\MobileAdsClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\AdPosition.cs" />
     <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\IronSourceAdapter.cs" />
-    <Compile Include="Assets\YandexMobileAds\Base\AdSize.cs" />
     <Compile Include="Assets\YandexMobileAds\Common\AppStateObserverClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Base\AdSize.cs" />
     <Compile Include="Assets\AdMediationSystem\Scripts\Adapters\ChartboostAdapter.cs" />
-    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\RewardedAdLoaderBridge.cs" />
     <Compile Include="Assets\YandexMobileAds\Common\DummyMobileAdsClient.cs" />
+    <Compile Include="Assets\YandexMobileAds\Platforms\iOS\RewardedAdLoaderBridge.cs" />
     <Compile Include="Assets\ConsolePro\Remote\LiteNetLib\Utils\NetSerializer.cs" />
     <Compile Include="Assets\AdMediationSystem\Scripts\AdMediationSystem.cs" />
     <Compile Include="Assets\YandexMobileAds\Common\IBannerAdSizeClient.cs" />

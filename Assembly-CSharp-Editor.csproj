@@ -361,7 +361,7 @@
       <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\PackageCache\com.google.external-dependency-manager@a2efe16a4d0b\ExternalDependencyManager\Editor\Google.VersionHandler.dll</HintPath>
     </Reference>
     <Reference Include="Google.VersionHandlerImpl">
-      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\PackageCache\com.google.external-dependency-manager@a2efe16a4d0b\ExternalDependencyManager\Editor\1.2.182\Google.VersionHandlerImpl.dll</HintPath>
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\1.2.177\Google.VersionHandlerImpl.dll</HintPath>
     </Reference>
     <Reference Include="ConsolePro.Editor">
       <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ConsolePro\Editor\ConsolePro.Editor.dll</HintPath>
@@ -370,7 +370,7 @@
       <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\PackageCache\com.google.external-dependency-manager@a2efe16a4d0b\ExternalDependencyManager\Editor\1.2.182\Google.IOSResolver.dll</HintPath>
     </Reference>
     <Reference Include="Google.JarResolver">
-      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\PackageCache\com.google.external-dependency-manager@a2efe16a4d0b\ExternalDependencyManager\Editor\1.2.182\Google.JarResolver.dll</HintPath>
+      <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Assets\ExternalDependencyManager\Editor\1.2.177\Google.JarResolver.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>D:\UnityProjects\Tools\AdMediationSystem\AdMediationSystem\Library\PackageCache\com.unity.nuget.newtonsoft-json@3.2.1\Runtime\Newtonsoft.Json.dll</HintPath>
