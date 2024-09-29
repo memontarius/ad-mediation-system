@@ -227,13 +227,11 @@ namespace Virterix.AdMediation
         {
             int unvalidCount = 0;
             int replaceableCount = 0;
-            SequenceStrategyParams unitSequenceParams;
-            AdUnit unit = null;
-                
+
             for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
             {
-                unit = units[unitIndex];
-                unitSequenceParams = unit.FetchStrategyParams as SequenceStrategyParams;
+                AdUnit unit = units[unitIndex];
+                SequenceStrategyParams unitSequenceParams = (SequenceStrategyParams)unit.FetchStrategyParams;
                 if (unitSequenceParams.m_replaceable)
                     replaceableCount++;
                 else

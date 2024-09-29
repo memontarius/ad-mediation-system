@@ -494,8 +494,12 @@ namespace Virterix.AdMediation
         
         public void StartWaitResponseHandling(AdInstance adInstance)
         {
-            CancelWaitResponseHandling(adInstance);
-            adInstance.m_waitResponseHandler = StartCoroutine(WaitResponse(adInstance));
+            if (!adInstance.m_isWaitingResponse)
+            {
+                CancelWaitResponseHandling(adInstance);
+                adInstance.m_isWaitingResponse = true;
+                adInstance.m_waitResponseHandler = StartCoroutine(WaitResponse(adInstance));
+            }
         }
 
         public void CancelWaitResponseHandling(AdInstance adInstance)
@@ -667,6 +671,7 @@ namespace Virterix.AdMediation
                 }
             }
 
+            adInstance.m_isWaitingResponse = false;
             yield return _waitResponseIntervalInstruction;
         }
 

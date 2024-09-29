@@ -36,7 +36,6 @@ namespace YandexMobileAds.Common
 
         /// <summary>
         /// Shows Debug Panel.
-        /// Available only for Android. It will do nothing on iOS.
         /// </summary>
         void ShowDebugPanel();
     }

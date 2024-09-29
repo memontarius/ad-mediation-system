@@ -82,7 +82,9 @@ namespace Virterix.AdMediation
             get
             {
                 if (AdInstance == null)
+                {
                     return true;
+                }
                 bool isTimeout = AdInstance.m_timeout != null ? AdInstance.m_timeout.Value.IsTimeout : false;
                 return isTimeout;
             }

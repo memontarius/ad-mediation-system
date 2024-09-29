@@ -169,18 +169,21 @@ namespace Virterix.AdMediation
             else
             {
                 adTypes = (m_requestedAdsType.HasFlag(RequestedAdsType.Interstitial) ? AppodealAdType.Interstitial : 0)
-                          | (m_requestedAdsType.HasFlag(RequestedAdsType.RewardedVideo) ? AppodealAdType.RewardedVideo : 0)
+                          | (m_requestedAdsType.HasFlag(RequestedAdsType.RewardedVideo)
+                              ? AppodealAdType.RewardedVideo
+                              : 0)
                           | (m_requestedAdsType.HasFlag(RequestedAdsType.Banner) ? AppodealAdType.Banner : 0)
                           | (m_requestedAdsType.HasFlag(RequestedAdsType.Mrec) ? AppodealAdType.Mrec : 0);
             }
 
             Appodeal.SetAutoCache(AppodealAdType.Interstitial, false);
             Appodeal.SetAutoCache(AppodealAdType.RewardedVideo, false);
-            Appodeal.SetSmartBanners(false);
-            
+            Appodeal.SetSmartBanners(true);
+
             if (AdMediationSystem.Instance.ChildrenMode == ChildDirectedMode.NotAssign)
             {
-                Appodeal.SetChildDirectedTreatment(AdMediationSystem.Instance.ChildrenMode == ChildDirectedMode.Directed);
+                Appodeal.SetChildDirectedTreatment(
+                    AdMediationSystem.Instance.ChildrenMode == ChildDirectedMode.Directed);
             }
 
             if (AdMediationSystem.Instance.IsTestModeEnabled)
@@ -190,7 +193,7 @@ namespace Virterix.AdMediation
             }
 
             SubscribeEvents();
-            
+
             Appodeal.Initialize(appKey, adTypes);
 #endif
         }
@@ -217,7 +220,7 @@ namespace Virterix.AdMediation
 
 #if _AMS_APPODEAL
             AppodealCallbacks.Sdk.OnInitialized += OnInitializationFinished;
-            
+
             AppodealCallbacks.Interstitial.OnLoaded += OnInterstitialLoaded;
             AppodealCallbacks.Interstitial.OnFailedToLoad += OnInterstitialFailedToLoad;
             AppodealCallbacks.Interstitial.OnShown += OnInterstitialShown;
@@ -316,49 +319,18 @@ namespace Virterix.AdMediation
                         break;
                     case AdType.Banner:
                         var bannerPosition = (AppodealBannerPosition)GetBannerPosition(adInstance, placement);
-                        var nativeBannerPosition = ConvertToNativeBannerPosition(bannerPosition);
-                        var instance = adInstance.m_adInstanceParams as AppodealAdInstanceBannerParameters;
-                        
-                        int xPosition = AppodealViewPosition.HorizontalSmart;
-                        int yPosition = AppodealViewPosition.VerticalBottom;
-                                
-                        switch (bannerPosition)
-                        {
-                            case AppodealBannerPosition.BottomLeft:
-                                xPosition = AppodealViewPosition.HorizontalLeft;
-                                break;
-                            case AppodealBannerPosition.BottomRight:
-                                xPosition = AppodealViewPosition.HorizontalRight;
-                                break;
-                            case AppodealBannerPosition.Top:
-                                xPosition = AppodealViewPosition.HorizontalSmart;
-                                yPosition = AppodealViewPosition.VerticalTop;
-                                break;
-                            case AppodealBannerPosition.TopLeft:
-                                xPosition = AppodealViewPosition.HorizontalLeft;
-                                yPosition = AppodealViewPosition.VerticalTop;
-                                break;
-                            case AppodealBannerPosition.TopRight:
-                                xPosition = AppodealViewPosition.HorizontalRight;
-                                yPosition = AppodealViewPosition.VerticalTop;
-                                break;
-                        }
-                        
-                        switch (instance.m_bannerSize)
-                        {
-                            case AppodealBannerSize.MREC:
-                                m_currMrecBannerInstance = adInstance;
-                                m_mrecBannerDisplayed = Appodeal.ShowMrecView(yPosition, xPosition, placement);
-                                break;
-                            case AppodealBannerSize.Standart:
-                                m_currBannerInstance = adInstance;
-                                m_bannerDisplayed = Appodeal.Show(nativeBannerPosition);
-#if AD_MEDIATION_DEBUG_MODE
-                                Debug.Log($"[AMS] Show banner displayed: {m_bannerDisplayed}");
-#endif
-                                break;
-                        }
+                        var instanceParams = (AppodealAdInstanceBannerParameters)adInstance.m_adInstanceParams;
 
+                        if (instanceParams.m_bannerSize == AppodealBannerSize.MREC)
+                        {
+                            m_mrecBannerDisplayed = true;
+                        }
+                        else if (instanceParams.m_bannerSize == AppodealBannerSize.Standart)
+                        {
+                            m_bannerDisplayed = true;
+                        }
+                        
+                        ShowBanner(adInstance, placement, bannerPosition);
                         break;
                 }
 
@@ -409,12 +381,12 @@ namespace Virterix.AdMediation
                     isReady = Appodeal.IsLoaded(AppodealAdType.RewardedVideo);
                     break;
                 case AdType.Banner:
-                    var instanceParams = adInstance.m_adInstanceParams as AppodealAdInstanceBannerParameters;
+                    var instanceParams = (AppodealAdInstanceBannerParameters)adInstance.m_adInstanceParams;
                     int bannerType = instanceParams.m_bannerSize == AppodealBannerSize.MREC
                         ? AppodealAdType.Mrec
                         : AppodealAdType.Banner;
-                    
-                    isReady = bannerType != AppodealAdType.Mrec || Appodeal.IsLoaded(bannerType);
+
+                    isReady = Appodeal.IsLoaded(bannerType);
                     break;
             }
 
@@ -453,7 +425,56 @@ namespace Virterix.AdMediation
                 }
             }
         }
+        
+        private void ShowBanner(AdInstance adInstance, string placement, AppodealBannerPosition bannerPosition)
+        {
+            var instanceParams = adInstance.m_adInstanceParams as AppodealAdInstanceBannerParameters;
 
+            var nativeBannerPosition = ConvertToNativeBannerPosition(bannerPosition);
+            int xPosition = AppodealViewPosition.HorizontalSmart;
+            int yPosition = AppodealViewPosition.VerticalBottom;
+
+            switch (bannerPosition)
+            {
+                case AppodealBannerPosition.BottomLeft:
+                    xPosition = AppodealViewPosition.HorizontalLeft;
+                    break;
+                case AppodealBannerPosition.BottomRight:
+                    xPosition = AppodealViewPosition.HorizontalRight;
+                    break;
+                case AppodealBannerPosition.Top:
+                    xPosition = AppodealViewPosition.HorizontalSmart;
+                    yPosition = AppodealViewPosition.VerticalTop;
+                    break;
+                case AppodealBannerPosition.TopLeft:
+                    xPosition = AppodealViewPosition.HorizontalLeft;
+                    yPosition = AppodealViewPosition.VerticalTop;
+                    break;
+                case AppodealBannerPosition.TopRight:
+                    xPosition = AppodealViewPosition.HorizontalRight;
+                    yPosition = AppodealViewPosition.VerticalTop;
+                    break;
+            }
+
+            switch (instanceParams.m_bannerSize)
+            {
+                case AppodealBannerSize.MREC:
+                    m_currMrecBannerInstance = adInstance;
+                    Appodeal.ShowMrecView(yPosition, xPosition, placement);
+                    break;
+                case AppodealBannerSize.Standart:
+                    m_currBannerInstance = adInstance;
+                    Appodeal.Show(nativeBannerPosition);
+                    if (!m_bannerDisplayed)
+                    {
+                        Appodeal.Hide(AppodealAdType.Banner);
+                    }
+#if AD_MEDIATION_DEBUG_MODE
+                    Debug.Log($"[AMS] Show banner displayed: {m_bannerDisplayed}");
+#endif
+                    break;
+            }
+        }
 #endif
         
 #if _AMS_APPODEAL
@@ -463,6 +484,8 @@ namespace Virterix.AdMediation
 
 #if AD_MEDIATION_DEBUG_MODE
             Debug.Log("[AMS] AppodealAdapter OnInitializationFinished()");
+            
+            
             if (e.Errors != null)
             {
                 Debug.Log("[AMS] AppodealAdapter Have Errors After Initialization");
@@ -761,6 +784,7 @@ namespace Virterix.AdMediation
         }
 
         #endregion
+
 #endif
     }
 }

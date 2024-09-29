@@ -17,7 +17,6 @@ namespace Virterix.AdMediation
 
         public AdInstance(AdNetworkAdapter newtrok, AdType adType, string adID, string name = AD_INSTANCE_DEFAULT_NAME)
         {
-            m_enabledState = true;
             m_adType = adType;
             m_adId = adID;
             Name = name;
@@ -70,12 +69,11 @@ namespace Virterix.AdMediation
         public string m_adId;
         public AdNetworkAdapter.TimeoutParams? m_timeout;
         public bool m_bannerDisplayed;
-        public bool m_enabledState;
-        public object m_adView;
         public IAdInstanceParameters m_adInstanceParams;
         public float m_startImpressionTime;
         public float m_displayTime;
         public Coroutine m_waitResponseHandler;
+        public bool  m_isWaitingResponse;
         
         private bool m_wasLastPreparationFailed;
         private AdNetworkAdapter m_network;

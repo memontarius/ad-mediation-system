@@ -18,8 +18,6 @@ namespace Virterix.AdMediation
 
         #region Properties
 
-        //-------------------------------------------------------------------------------
-
         public IFetchStrategy FetchStrategy
         {
             set { m_fetchStrategy = value; }
@@ -67,16 +65,21 @@ namespace Virterix.AdMediation
                 if (m_tiers == null)
                     return false;
 
-                for (int tierIndex = 0; tierIndex < m_tiers.Length; tierIndex++) {
+                for (int tierIndex = 0; tierIndex < m_tiers.Length; tierIndex++)
+                {
                     AdUnit[] units = m_tiers[tierIndex];
-                    for (int unitIndex = 0; unitIndex < units.Length; unitIndex++) {
-                        try {
-                            if (units[unitIndex].IsReady) {
+                    for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
+                    {
+                        try
+                        {
+                            if (units[unitIndex].IsReady)
+                            {
                                 ready = true;
                                 break;
                             }
                         }
-                        catch (Exception e) {
+                        catch (Exception e)
+                        {
                             Debug.LogWarning($"[AMS] Exception at get Ad Unit Ready. Message: {e.Message}");
                         }
                     }
@@ -103,9 +106,11 @@ namespace Virterix.AdMediation
             {
                 int count = 0;
                 AdUnit[] units = null;
-                for (int tierIndex = 0; tierIndex < m_tiers.Length; tierIndex++) {
+                for (int tierIndex = 0; tierIndex < m_tiers.Length; tierIndex++)
+                {
                     units = m_tiers[tierIndex];
-                    for (int unitIndex = 0; unitIndex < units.Length; unitIndex++) {
+                    for (int unitIndex = 0; unitIndex < units.Length; unitIndex++)
+                    {
                         count += units[unitIndex].IsTimeout ? 0 : 1;
                     }
                 }
@@ -153,7 +158,8 @@ namespace Virterix.AdMediation
         //-------------------------------------------------------------------------------
         private void OnDestroy()
         {
-            for (int i = 0; i < m_networks.Count; i++) {
+            for (int i = 0; i < m_networks.Count; i++)
+            {
                 AdNetworkAdapter network = m_networks[i];
                 if (network != null)
                     network.OnEvent -= OnCurrentNetworkEvent;
@@ -162,7 +168,8 @@ namespace Virterix.AdMediation
 
         private void OnApplicationPause(bool pause)
         {
-            if (pause) {
+            if (pause)
+            {
                 if (m_continueAfterEndSession)
                     SaveLastActiveAdUnit();
             }
@@ -191,9 +198,11 @@ namespace Virterix.AdMediation
             m_deferredFetchCallCount = 1;
             m_tiers = tiers;
 
-            for (int tierIndex = 0; tierIndex < m_tiers.Length; tierIndex++) {
+            for (int tierIndex = 0; tierIndex < m_tiers.Length; tierIndex++)
+            {
                 m_totalUnits += m_tiers[tierIndex].Length;
-                for (int unitIndex = 0; unitIndex < m_tiers[tierIndex].Length; unitIndex++) {
+                for (int unitIndex = 0; unitIndex < m_tiers[tierIndex].Length; unitIndex++)
+                {
                     AdUnit unit = m_tiers[tierIndex][unitIndex];
                     if (!m_networks.Contains(unit.AdNetwork))
                         m_networks.Add(unit.AdNetwork);
@@ -210,24 +219,29 @@ namespace Virterix.AdMediation
 
         public virtual void Fetch()
         {
-            if (m_fetchStrategy == null) {
+            if (m_fetchStrategy == null)
+            {
                 Debug.LogWarning("[AMS] AdMediator.Fetch() Not strategy of fetch! adType:" + m_adType);
                 return;
             }
 
             KillDeferredFetch();
             AdUnit unit = m_fetchStrategy.Fetch(m_tiers);
-
-            if (unit != null) {
+            
+            if (unit != null)
+            {
                 unit.ResetDisplayTime();
-                if ((m_adType == AdType.Banner) && m_isBannerDisplayed) {
+                if ((m_adType == AdType.Banner) && m_isBannerDisplayed)
+                {
                     unit.Show();
                 }
 
                 SetCurrentUnit(unit);
             }
-            else {
-                if (DeferredFetchEnabled && !DeferredFetchActive) {
+            else
+            {
+                if (DeferredFetchEnabled && !DeferredFetchActive)
+                {
                     StartDeferredFetch(DeferredFetchDelay, true);
                 }
             }
@@ -242,25 +256,34 @@ namespace Virterix.AdMediation
 
         public virtual void Show()
         {
-            if (m_adType == AdType.Banner) {
+            if (m_adType == AdType.Banner)
+            {
                 m_isBannerDisplayed = true;
             }
 
-            if (m_currUnit != null) {
+            if (m_currUnit != null)
+            {
                 bool wasShowSuccessfully = false;
-                if (m_currUnit.AdType == AdType.Banner) {
+                if (m_currUnit.AdType == AdType.Banner)
+                {
                     wasShowSuccessfully = m_currUnit.Show();
                 }
-                else {
+                else
+                {
                     wasShowSuccessfully = m_currUnit.IsReady && m_currUnit.Show();
                 }
 
                 if (!wasShowSuccessfully && !ShowAnyReadyNetwork())
+                {
                     Fetch();
+                }
             }
-            else {
+            else
+            {
                 if (!ShowAnyReadyNetwork())
+                {
                     Fetch();
+                }
 
 #if AD_MEDIATION_DEBUG_MODE
                 Debug.Log("[AMS] AdMediator.Show() Not current unit");
@@ -287,9 +310,11 @@ namespace Virterix.AdMediation
         {
             int unitPassedCount = 0;
             AdUnit foundUnit = null;
-            for (int tierIndex = 0; tierIndex < m_tiers.Length; tierIndex++) {
+            for (int tierIndex = 0; tierIndex < m_tiers.Length; tierIndex++)
+            {
                 AdUnit[] tier = m_tiers[tierIndex];
-                if (index < tier.Length + unitPassedCount) {
+                if (index < tier.Length + unitPassedCount)
+                {
                     foundUnit = tier[index - unitPassedCount];
                     break;
                 }
@@ -302,7 +327,8 @@ namespace Virterix.AdMediation
 
         private bool ShowAnyReadyNetwork()
         {
-            if (m_totalUnits == 0) {
+            if (m_totalUnits == 0)
+            {
                 return false;
             }
 
@@ -311,22 +337,25 @@ namespace Virterix.AdMediation
             int startUnitIndex = currUnitIndex + 1;
 
             AdUnit readyUnit = null;
-            AdUnit[] units = null;
             int readyTierIndex = 0;
             int readyUnitIndex = 0;
             bool isFindNext = true;
 
-            for (int tierIndex = currTierIndex; isFindNext; tierIndex++) {
-                if (tierIndex >= m_tiers.Length) {
+            for (int tierIndex = currTierIndex; isFindNext; tierIndex++)
+            {
+                if (tierIndex >= m_tiers.Length)
+                {
                     tierIndex = 0;
                 }
 
-                units = m_tiers[tierIndex];
+                AdUnit[] units = m_tiers[tierIndex];
 
-                for (int unitIndex = startUnitIndex; isFindNext && unitIndex < units.Length; unitIndex++) {
+                for (int unitIndex = startUnitIndex; isFindNext && unitIndex < units.Length; unitIndex++)
+                {
                     readyUnit = units[unitIndex];
 
-                    if (readyUnit.IsReady) {
+                    if (readyUnit.IsReady)
+                    {
                         readyTierIndex = tierIndex;
                         readyUnitIndex = unitIndex;
                         isFindNext = false;
@@ -334,7 +363,8 @@ namespace Virterix.AdMediation
                     }
 
                     bool isCurrentUnit = tierIndex == currTierIndex && unitIndex == currUnitIndex;
-                    if (isCurrentUnit) {
+                    if (isCurrentUnit)
+                    {
                         isFindNext = false;
                         readyUnit = null;
                     }
@@ -343,7 +373,8 @@ namespace Virterix.AdMediation
                 startUnitIndex = 0;
             }
 
-            if (readyUnit != null) {
+            if (readyUnit != null)
+            {
                 SetCurrentUnit(readyUnit);
                 m_fetchStrategy.Reset(m_tiers, readyTierIndex, readyUnitIndex);
                 return readyUnit.Show();
@@ -360,7 +391,8 @@ namespace Virterix.AdMediation
 
         private void StartDeferredFetch(float delay, bool increaseCallCounter = false)
         {
-            if (increaseCallCounter) {
+            if (increaseCallCounter)
+            {
                 m_deferredFetchCallCount++;
             }
 
@@ -370,7 +402,8 @@ namespace Virterix.AdMediation
 
         private void KillDeferredFetch()
         {
-            if (m_deferredFetchCoroutine != null) {
+            if (m_deferredFetchCoroutine != null)
+            {
                 StopCoroutine(m_deferredFetchCoroutine);
                 m_deferredFetchCoroutine = null;
             }
@@ -385,7 +418,8 @@ namespace Virterix.AdMediation
 
         private void ResetCurrentUnit(AdUnit nextUnit)
         {
-            if (m_currUnit != null) {
+            if (m_currUnit != null)
+            {
                 AdUnit currUnit = m_currUnit;
                 m_currUnit = null;
                 if (m_adType == AdType.Banner)
@@ -400,11 +434,14 @@ namespace Virterix.AdMediation
         {
             unit?.ResetLastImpressionSuccessfulState();
 
-            if (unit != m_currUnit) {
+            if (unit != m_currUnit)
+            {
                 bool isNetworkSame = IsUnitContainsSameNetwork(unit, m_currUnit);
                 ResetCurrentUnit(unit);
                 if (!isNetworkSame && m_adType == AdType.Banner && !m_isBannerDisplayed)
+                {
                     unit.Hide();
+                }
 
                 m_currUnit = unit;
                 m_currUnit?.SetupAdInstanceCurrentPlacement();
@@ -413,14 +450,19 @@ namespace Virterix.AdMediation
             m_currUnit.AdNetwork.NotifyEvent(AdEvent.Selected, m_currUnit.AdInstance);
 
             if (m_currUnit.IsReady)
+            {
                 m_currUnit.AdNetwork.NotifyEvent(AdEvent.Prepared, m_currUnit.AdInstance);
+            }
             else
+            {
                 RequestPreparation(m_currUnit);
+            }
         }
 
         private void SaveLastActiveAdUnit()
         {
-            if (m_currUnit != null && m_lastActiveUnitId >= 0) {
+            if (m_currUnit != null && m_lastActiveUnitId >= 0)
+            {
                 string savedData = string.Format(CultureInfo.InvariantCulture, "{0}-{1}", m_lastActiveTierId,
                     m_lastActiveUnitId);
                 PlayerPrefs.SetString(LastAdUnitIdSaveKey, savedData);
@@ -430,9 +472,11 @@ namespace Virterix.AdMediation
         private void RestoreLastActiveAdUnit()
         {
             string savedData = PlayerPrefs.GetString(LastAdUnitIdSaveKey, "");
-            if (!string.IsNullOrEmpty(savedData)) {
+            if (!string.IsNullOrEmpty(savedData))
+            {
                 string[] savedValues = savedData.Split('-');
-                if (savedValues.Length == 2) {
+                if (savedValues.Length == 2)
+                {
                     int tierIndex = Convert.ToInt32(savedValues[0]);
                     int unitIndex = Convert.ToInt32(savedValues[1]);
                     m_fetchStrategy.Reset(m_tiers, tierIndex, unitIndex);
@@ -446,12 +490,14 @@ namespace Virterix.AdMediation
                 return false;
 
             if (m_adType == AdType.Incentivized &&
-                (adEvent == AdEvent.IncentivizationCompleted || adEvent == AdEvent.IncentivizationUncompleted)) {
+                (adEvent == AdEvent.IncentivizationCompleted || adEvent == AdEvent.IncentivizationUncompleted))
+            {
                 return true;
             }
 
             bool needEventHandling = adType == m_currUnit.AdType;
-            if (needEventHandling) {
+            if (needEventHandling)
+            {
                 needEventHandling = m_currUnit.AdInstance == adInstance &&
                                     (!string.IsNullOrEmpty(m_currUnit.AdInstance.CurrPlacement) &&
                                      m_currUnit.AdInstance.CurrPlacement == m_placementName);
@@ -479,29 +525,36 @@ namespace Virterix.AdMediation
             string adInstanceName = adInstance != null ? adInstance.Name : "";
             AdMediationSystem.NotifyAdNetworkEvent(this, network, m_adType, adEvent, adInstanceName);
 
-            if (adEvent == AdEvent.PreparationFailed || adEvent == AdEvent.Hiding || adEvent == AdEvent.Showing) {
-                if (m_currUnit != null) {
+            if (adEvent == AdEvent.PreparationFailed || adEvent == AdEvent.Hiding || adEvent == AdEvent.Showing)
+            {
+                if (m_currUnit != null)
+                {
                     m_lastActiveTierId = m_fetchStrategy.TierIndex;
                     m_lastActiveUnitId = m_fetchStrategy.UnitIndex;
                 }
             }
 
-            switch (adEvent) {
+            switch (adEvent)
+            {
                 case AdEvent.PreparationFailed:
                     m_isLastNetworkSuccessfullyPrepared = false;
-                    if (m_failedPreparationCount == 0) {
+                    if (m_failedPreparationCount == 0)
+                    {
                         m_nonTimeoutUnitCountSinceFirstFailed = UnitNonTimeoutCount;
                     }
 
                     m_failedPreparationCount++;
-                    if (m_failedPreparationCount > m_nonTimeoutUnitCountSinceFirstFailed) {
+                    if (m_failedPreparationCount > m_nonTimeoutUnitCountSinceFirstFailed)
+                    {
                         m_failedPreparationCount = 0;
-                        if (DeferredFetchEnabled && !DeferredFetchActive) {
+                        if (DeferredFetchEnabled && !DeferredFetchActive)
+                        {
                             StartDeferredFetch(DeferredFetchDelay, true);
                         }
                     }
-                    else {
-                        StartDeferredFetch(0.5f);
+                    else
+                    {
+                        StartDeferredFetch(0.3f);
                     }
 
                     break;
@@ -511,18 +564,22 @@ namespace Virterix.AdMediation
                     m_deferredFetchCallCount = 1;
                     break;
                 case AdEvent.Hiding:
-                    if (m_fetchOnAdUnitHidden) {
+                    if (m_fetchOnAdUnitHidden)
+                    {
                         bool isPerformFetch = true;
 
-                        if (m_currUnit != null && m_bannerMinDisplayTime > 0.1f) {
+                        if (m_currUnit != null && m_bannerMinDisplayTime > 0.1f)
+                        {
                             isPerformFetch = m_currUnit.DisplayTime >= m_bannerMinDisplayTime;
-                            if (isPerformFetch) {
+                            if (isPerformFetch)
+                            {
                                 m_currUnit.ResetDisplayTime();
                             }
                         }
 
-                        if (isPerformFetch) {
-                            StartDeferredFetch(0.5f);
+                        if (isPerformFetch)
+                        {
+                            StartDeferredFetch(0.3f);
                         }
                     }
 

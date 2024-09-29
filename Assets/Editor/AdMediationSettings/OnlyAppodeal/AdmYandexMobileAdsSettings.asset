@@ -25,3 +25,7 @@ MonoBehaviour:
   _useAppOpenAd: 0
   _androidAppOpenAdUnitId: 
   _iOSAppOpenAdUnitId: 
+  _selfControlImpressionAppOpenAd: 0
+  _appOpenAdShowingFrequency: 1
+  _appOpenAdDisplayCooldown: 90
+  _appOpenAdLoadAttemptMaxNumber: 4

@@ -1,6 +1,6 @@
 <dependencies>
    <androidPackages>
-      <androidPackage spec="com.yandex.android:mobileads:7.3.0">
+      <androidPackage spec="com.yandex.android:mobileads:7.5.0">
          <repositories>
             <repository>https://maven.google.com/</repository>
          </repositories>
@@ -12,11 +12,11 @@
       </androidPackage>
    </androidPackages>
    <iosPods>
-      <iosPod name="YandexMobileAds" version="7.3.2">
+      <iosPod name="YandexMobileAds" version="7.5.1">
          <sources>
             <source>https://github.com/CocoaPods/Specs</source>
          </sources>
       </iosPod>
-      <iosPod name="DivKit" version="30.11.0"/>
+      <iosPod name="DivKit" version="30.16.0"/>
    </iosPods>
 </dependencies>

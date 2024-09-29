@@ -12,14 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d704c62ed6684739afe1098ecee0ad13, type: 3}
   m_Name: AdmAppodealSettings
   m_EditorClassIdentifier: 
-  _enabled: 0
+  _enabled: 1
   _networkIdentifier: appodeal
-  _androidAppId: 
+  _androidAppId: e77a8359f5201e12f21d4db69d93b96a7c995aadb88dd53c
   _iosAppId: 
-  _responseWaitTime: 0
+  _responseWaitTime: 45
   _timeout: 120
   _directedTowardsChildren: 0
-  _bannerAdInstances: []
+  _bannerAdInstances:
+  - _name: Default
+    _androidId: 
+    _iosId: 
+    _timeout: 120
+    _loadingOnStart: 0
+    _bannerMaxHeight: 100
+    _bannerType: 0
+    _bannerRefreshTime: 45
+  - _name: MREC
+    _androidId: 
+    _iosId: 
+    _timeout: 120
+    _loadingOnStart: 0
+    _bannerMaxHeight: 100
+    _bannerType: 1
+    _bannerRefreshTime: 45
   _interstitialAdInstances: []
   _rewardAdInstances: []
-  _requestedAdsTypes: 0
+  _requestedAdsTypes: -1
