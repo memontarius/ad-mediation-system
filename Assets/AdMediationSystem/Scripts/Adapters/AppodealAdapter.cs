@@ -1,4 +1,4 @@
-//#define _AMS_APPODEAL
+#define _AMS_APPODEAL
 
 using System;
 using System.Collections.Generic;

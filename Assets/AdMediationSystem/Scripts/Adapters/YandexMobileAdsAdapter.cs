@@ -1,4 +1,4 @@
-//#define _AMS_YANDEX_MOBILE_ADS
+#define _AMS_YANDEX_MOBILE_ADS
 
 using System;
 using System.Collections;
@@ -623,6 +623,11 @@ namespace Virterix.AdMediation
 
         private void HandleAppStateChanged(object sender, AppStateChangedEventArgs args)
         {
+            if (SharedInterstitialAdShowing)
+            {
+                return;
+            }
+            
             if (!args.IsInBackground && m_useAppOpenAd && m_selfControlImpressionAppOpenAd)
             {
                 m_appStateForegroundCount++;
@@ -676,8 +681,7 @@ namespace Virterix.AdMediation
 
         private void HandleInterstitialAdLoaded(object sender, InterstitialAdLoadedEventArgs args)
         {
-            YandexAdInstanceData adInstance =
-                (YandexAdInstanceData)GetAdInstanceByAdId(args.Interstitial.GetInfo().AdUnitId);
+            YandexAdInstanceData adInstance = (YandexAdInstanceData)GetAdInstanceByAdId(args.Interstitial.GetInfo().AdUnitId);
 
             adInstance.Interstitial = args.Interstitial;
             adInstance.State = AdState.Received;
@@ -699,8 +703,7 @@ namespace Virterix.AdMediation
             }
 
 #if AD_MEDIATION_DEBUG_MODE
-            Debug.Log(
-                $"[AMS] YandexMobileAds Failed To Load. {adInstance?.m_adType ?? AdType.Unknown} AdUnitId:{args.AdUnitId} Message: {args.Message}");
+            Debug.Log($"[AMS] YandexMobileAds Failed To Load. {adInstance?.m_adType ?? AdType.Unknown} AdUnitId:{args.AdUnitId} Message: {args.Message}");
 #endif
             DestroyYandexAd(adInstance);
             AddEvent(adInstance.m_adType, AdEvent.PreparationFailed, adInstance);

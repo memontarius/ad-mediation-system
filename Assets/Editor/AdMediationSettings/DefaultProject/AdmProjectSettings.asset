@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AdmProjectSettings
   m_EditorClassIdentifier: 
   InitializeOnStart: 0
-  EnableTestMode: 0
+  EnableTestMode: 1
   EnableExtraLogging: 0
   ChildrenMode: 0
   TestDevices:
@@ -94,7 +94,7 @@ MonoBehaviour:
     FetchStrategyType: 0
     BannerPosition: 0
     Tiers:
-    - MaxPassages: 1
+    - MaxPassages: 2
       Units:
       - NetworkName: Appodeal
         NetworkIndex: 0
@@ -102,7 +102,7 @@ MonoBehaviour:
         InstanceIndex: 0
         InstanceName: Default
         Replaceable: 0
-        PrepareOnExit: 0
+        PrepareOnExit: 1
         Percentage: 100
     - MaxPassages: 1
       Units:
@@ -157,6 +157,14 @@ MonoBehaviour:
     Tiers:
     - MaxPassages: 1
       Units:
+      - NetworkName: Appodeal
+        NetworkIndex: 0
+        NetworkIdentifier: appodeal
+        InstanceIndex: 0
+        InstanceName: Default
+        Replaceable: 0
+        PrepareOnExit: 0
+        Percentage: 100
       - NetworkName: Yandex Mobile Ads
         NetworkIndex: 1
         NetworkIdentifier: yandex
@@ -164,7 +172,7 @@ MonoBehaviour:
         InstanceName: Default
         Replaceable: 0
         PrepareOnExit: 0
-        Percentage: 100
+        Percentage: 0
   IsIOS: 1
   IsAndroid: 1
   EnableUnityRemoteConfigProvider: 0

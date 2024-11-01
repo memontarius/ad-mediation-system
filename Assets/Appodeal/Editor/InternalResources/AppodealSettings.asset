@@ -22,7 +22,7 @@ MonoBehaviour:
   nSUserTrackingUsageDescription: 0
   nSLocationWhenInUseUsageDescription: 0
   nSCalendarsUsageDescription: 0
-  nSAppTransportSecurity: 1
+  nSAppTransportSecurity: 0
   iosSkAdNetworkItems: 0
   iosSkAdNetworkItemsList:
   - 22mmun2rn5.skadnetwork
@@ -275,5 +275,5 @@ MonoBehaviour:
   facebookIosClientToken: 
   firebaseAutoConfiguration: 0
   facebookAutoConfiguration: 0
-  facebookAutoLogAppEvents: 0
-  facebookAdvertiserIDCollection: 0
+  facebookAutoLogAppEvents: 1
+  facebookAdvertiserIDCollection: 1

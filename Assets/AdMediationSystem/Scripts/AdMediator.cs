@@ -45,7 +45,7 @@ namespace Virterix.AdMediation
         public AdUnit CurrentUnit => m_currUnit;
 
         public bool IsBannerDisplayed => m_isBannerDisplayed;
-
+        
         public string CurrentNetworkName
         {
             get
@@ -197,7 +197,7 @@ namespace Virterix.AdMediation
             m_lastActiveUnitId = -1;
             m_deferredFetchCallCount = 1;
             m_tiers = tiers;
-
+            
             for (int tierIndex = 0; tierIndex < m_tiers.Length; tierIndex++)
             {
                 m_totalUnits += m_tiers[tierIndex].Length;

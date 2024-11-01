@@ -1,4 +1,4 @@
-//#define _AMS_YANDEX_MOBILE_ADS
+#define _AMS_YANDEX_MOBILE_ADS
 
 #if _AMS_YANDEX_MOBILE_ADS
 using System;
